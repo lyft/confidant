@@ -1,0 +1,34 @@
+Flask==0.10.1
+Flask-Script==2.0.5
+
+# For KMS
+boto3==1.1.3
+
+# For DynamoDB storage
+pynamodb==1.4.2
+
+# For encryption
+cryptography==1.0.1
+
+# For shared sessions
+Flask-Session==0.2.1
+redis==2.10.3
+
+# For SSL redirection and HSTS
+Flask-SSLify==0.1.5
+
+# For google auth
+Authomatic==0.1.0.post1
+
+# For parsing users.yaml
+PyYAML==3.11
+
+# For wsgi running
+gunicorn==19.3.0
+
+# For concurrency
+gevent==1.0.2
+greenlet==0.4.9
+
+# For metrics collection
+statsd==3.1

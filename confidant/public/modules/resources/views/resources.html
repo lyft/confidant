@@ -1,0 +1,51 @@
+<div class="row row-relative">
+  <div class="col-md-4 well row-relative">
+    <div class="row">
+      <div class="form">
+        <div class="form-group col-md-9">
+          <input type="search" class="form-control" data-ng-model="resourceRegex" placeholder="filter (credential or service name)" />
+        </div>
+        <div class="btn-group col-md-3 dropdown">
+          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-plus"> <small><span class="glyphicon glyphicon-chevron-down glyphicon-xs"></span></small></span></button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#/resources/new/credential">Create credential</a></li>
+            <li><a href="#/resources/new/service">Create service</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row has-margin-bottom-lg">
+      <div class="form">
+        <div class="simple-form col-md-12">
+          <label for="showDiabledInput"><input id="showDiabledInput" type="checkbox" data-ng-model="showDisabled" /> Show disabled resources</label>
+        </div>
+      </div>
+    </div>
+    <div class="row row-overflow-resources">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Credentials</div>
+          <div ng-hide="credentialList" class="panel-body">No credentials.</div>
+          <div class="list-group" ng-show="credentialList">
+            <div ng-repeat="cred in credentialList | filter: resourceRegexFilter('name', resourceRegex)" ng-show="cred.enabled || showDisabled">
+                <a href="#/resources/credential/{{ cred.id }}" class="list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ cred.name }}</p></span></a>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">Services</div>
+          <div ng-hide="serviceList" class="panel-body">No services.</div>
+          <div class="list-group" ng-show="serviceList">
+            <div ng-repeat="service in serviceList | filter: resourceRegexFilter('id', resourceRegex)" ng-show="service.enabled || showDisabled">
+                <a href="#/resources/service/{{ service.id }}" class="list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ service.id }}</p></span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8 row-overflow">
+    <div ui-view="details"><div class="row"><div class="no-details-text"><h3>No resource selected.</h3></div></div></div>
+    <div ui-view="docs"></div>
+  </div>
+</div>

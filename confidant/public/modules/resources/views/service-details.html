@@ -1,0 +1,80 @@
+<div class="alert alert-warning" ng-show="grantUpdateError">
+<p>{{ grantUpdateError }}</p>
+</div>
+<div class="alert alert-warning" ng-show="saveError">
+<p>{{ saveError }}</p>
+<div ng-show="credentialPairConflicts">
+  <p>The following credential pair keys conflict in the listed credentials:</p>
+  <ul>
+    <li ng-repeat="(credentialPairKey, conflicts) in credentialPairConflicts">
+      {{ credentialPairKey }}:
+      <ul>
+        <li>Credentials:</li>
+        <ul>
+          <li ng-repeat="credentialId in conflicts.credentials"><a class="color-text-snow" href="#/resources/credential/{{ credentialId }}">{{ getCredentialByID(credentialId).name }}</a></li>
+        </ul>
+      </ul>
+    </li>
+  </ul>
+  <p>Please ensure credential pair keys are unique, then try again.</p>
+</div>
+</div>
+<form editable-form name="editableForm" onaftersave="saveService()" oncancel="cancel()" shown="{{ shown }}" class="well">
+  <div class="form-group">
+    <label for="serviceId">Service ID</label>
+    <span ng-hide="service.id" e-ng-hide="service.id" editable-text="service.id" e-typeahead="profile for profile in profiles | filter:$viewValue" id="serviceIdInput">{{ service.id || "Not set." }}</span>
+    <span ng-show="service.id" id="serviceIdInput">{{ service.id || "Not set." }}</span>
+  </div>
+  <div class="form-group" ng-show="service.id">
+    <label for="serviceEnabled">Service Enabled</label>
+    <span editable-checkbox="service.enabled" id="serviceEnabled">{{ service.enabled }}</span>
+  </div>
+  <div class="form-group">
+    <label for="credentialInputs">Credentials</label>
+    <div class="well">
+      <div ng-repeat="credential in service.credentials | filter:filterCredentials" class="row">
+        <div class="col-md-8">
+          <span editable-select="credential.id" e-ng-selected="credential.id == c.id" e-name="{{ credential.id }}SelectMenu" e-ng-options="c.id as c.name for c in $parent.credentialList | filter:filterCredentialOptions">
+            <a href="#/resources/credential/{{ credential.id }}">{{ credential.name }} <span ng-hide="credential.enabled">(disabled)</span></a>
+          </span>
+          <span ng-hide="editableForm.$visible">(Revision: {{ credential.revision }})</span>
+        </div>
+        <div class="col-md-4" style="padding-bottom: 10px">
+          <button type="button" ng-click="deleteCredential(credential.$$hashKey)" class="btn btn-loud" ng-show="editableForm.$visible">Del</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <span ng-show="editableForm.$visible">
+      <button type="button" ng-disabled="editableForm.$waiting" ng-click="addCredential()" class="btn pull-right">Add credential</button>
+    </span>
+  </div>
+  <div class="form-group" ng-hide="newService || missingService">
+    <label for="serviceModifiedDate">Service Modified Date</label>
+    <span id="serviceModifiedDate">{{ service.modified_date }}</span>
+  </div>
+  <div class="form-group" ng-hide="newService || missingService">
+    <label for="serviceModifiedBy">Service Modified By</label>
+    <span id="serviceModifiedBy">{{ service.modified_by }}</span>
+  </div>
+  <div class="form-group" ng-hide="newService || missingService">
+    <label for="serviceRevision">Service Revision</label>
+    <span id="serviceRevision">{{ service.revision }}</span>
+  </div>
+  <div class="form-group" ng-hide="newService || missingService">
+    <label for="serviceGrants">Service Grants</label>
+    <button type="button" class="btn btn-xs btn-alternate" ng-show="!editableForm.$visible" ng-click="ensureGrants()">Update Grants <span class="glyphicon glyphicon-refresh"></span></button>
+    <ul id="serviceGrants">
+      <li><strong>decrypt:</strong> {{ grants.decrypt_grant }}</li>
+      <li><strong>encrypt:</strong> {{ grants.encrypt_grant }}</span></li>
+    </ul>
+  </div>
+  <div class="buttons">
+    <button type="button" class="btn btn-default" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">Edit</button>
+    <span ng-show="editableForm.$visible">
+      <button type="submit" class="btn" ng-disabled="editableForm.$waiting">Save</button>
+      <button type="button" class="btn btn-alternate" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">Cancel</button>
+    </span>
+  </div>
+</form>

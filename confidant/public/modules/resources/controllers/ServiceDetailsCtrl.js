@@ -1,0 +1,180 @@
+(function(angular) {
+    'use strict';
+
+    angular.module('confidant.resources.controllers.ServiceDetailsCtrl', [
+        'ui.router',
+        'ngResource',
+        'xeditable',
+        'confidant.resources.services'
+    ])
+
+
+    .controller('resources.ServiceDetailsCtrl', [
+        '$scope',
+        '$stateParams',
+        '$q',
+        '$log',
+        '$filter',
+        '$location',
+        'services.service',
+        'services.services',
+        'profiles.list',
+	'services.grants',
+        function ($scope, $stateParams, $q, $log, $filter, $location, Service, Services, Profiles, Grants) {
+            var serviceCopy = null;
+            $scope.$log = $log;
+            $scope.saveError = '';
+            $scope.newService = false;
+            $scope.credentialPairConflicts = null;
+
+            Profiles.get().$promise.then(function(profiles) {
+                $scope.profiles = profiles.profiles;
+            }, function() {
+                $scope.profiles = [];
+            });
+            if ($stateParams.serviceId) {
+                Service.get({'id': $stateParams.serviceId}).$promise.then(function(service) {
+                    $scope.service = service;
+                    if (!$scope.service.credentials) {
+                        $scope.service.credentials = [];
+                    }
+                    serviceCopy = angular.copy($scope.service);
+                });
+                Grants.get({'id': $stateParams.serviceId}).$promise.then(function(grants) {
+                    $scope.grants = grants.grants;
+                });
+            } else {
+                $scope.shown = true;
+                $scope.service = {
+                    id: '',
+                    credentials: [],
+                    enabled: true
+                };
+                serviceCopy = angular.copy($scope.service);
+                $scope.newService = true;
+                $scope.grants = null;
+            }
+
+            $scope.showCredential = function(credential) {
+                return $scope.service.credentials[credential.id];
+            };
+
+            $scope.getCredentialByID = function(id) {
+                return $filter('filter')($scope.$parent.credentialList, {'id': id})[0];
+            };
+
+            $scope.filterCredentials = function(credential) {
+                return credential.isDeleted !== true;
+            };
+
+            $scope.filterCredentialOptions = function(credential) {
+                var found = false;
+                angular.forEach($scope.service.credentials, function(item) {
+                    if (credential.id === item.id) {
+                        found = true;
+                    }
+                });
+                return credential.enabled === true || found;
+            };
+
+            $scope.deleteCredential = function($$hashKey) {
+                var filtered = $filter('filter')($scope.service.credentials, {'$$hashKey': $$hashKey});
+                if (filtered.length) {
+                    filtered[0].isDeleted = true;
+                }
+            };
+
+            $scope.addCredential = function() {
+                $scope.service.credentials.push({
+                    id: '',
+                    name: '',
+                    isNew: true
+                });
+            };
+
+            $scope.cancel = function() {
+                for (var i = $scope.service.credentials.length; i--;) {
+                    var credential = $scope.service.credentials[i];
+                    if (credential.isDeleted) {
+                        delete credential.isDeleted;
+                    }
+                    if (credential.isNew) {
+                        $scope.service.credentials.splice(i, 1);
+                    }
+                }
+                $scope.credentialPairConflicts = null;
+                $scope.saveError = '';
+                $scope.service = angular.copy(serviceCopy);
+            };
+
+            $scope.ensureGrants = function() {
+                var deferred = $q.defer();
+                $scope.grantUpdateError = '';
+                Grants.update({'id': $scope.service.id}).$promise.then(function(newGrants) {
+                    $scope.grants = newGrants.grants;
+                    deferred.resolve();
+                }, function(res) {
+                    if (res.status === 500) {
+                        $scope.saveError = 'Unexpected server error.';
+                        $log.error(res);
+                    } else {
+                        $scope.grantUpdateError = res.data.error;
+                    }
+                    deferred.reject();
+                });
+                return deferred.promise;
+            };
+
+            $scope.saveService = function() {
+                var _service = {},
+                    deferred = $q.defer();
+                _service.id = $scope.service.id;
+                _service.enabled = $scope.service.enabled;
+                _service.credentials = [];
+                $scope.credentialPairConflicts = null;
+                $scope.saveError = '';
+                // Ensure credentials are unique and flatten credentiaList into a list of ids.
+                for (var i = $scope.service.credentials.length; i--;) {
+                    var credential = $scope.service.credentials[i];
+                    if (credential.isDeleted) {
+                        $scope.service.credentials.splice(i, 1);
+                        continue;
+                    }
+                    if (_service.credentials.indexOf(credential.id) > -1) {
+                        $scope.saveError = 'Credentials must be unique.';
+                        return $scope.saveError;
+                    }
+                    _service.credentials.push(credential.id);
+                }
+                if (angular.equals(serviceCopy, $scope.service)) {
+                    $scope.saveError = 'No changes made.';
+                    deferred.reject();
+                    return deferred.promise;
+                }
+                Service.update({'id': $scope.service.id}, _service).$promise.then(function(newService) {
+                    $scope.$emit('updateServiceList');
+                    $scope.service = newService;
+                    serviceCopy = angular.copy($scope.service);
+                    deferred.resolve();
+                    if ($scope.newService) {
+                        $location.path('/resources/service/' + newService.id);
+                    }
+                }, function(res) {
+                    if (res.status === 500) {
+                        $scope.saveError = 'Unexpected server error.';
+                        $log.error(res);
+                    } else {
+                        $scope.saveError = res.data.error;
+                        if ('conflicts' in res.data) {
+                            $scope.credentialPairConflicts = res.data.conflicts;
+                        }
+                    }
+                    deferred.reject();
+                });
+                return deferred.promise;
+            };
+
+        }])
+
+    ;
+})(window.angular);

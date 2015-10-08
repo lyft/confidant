@@ -1,0 +1,10 @@
+service.env
+node_modules
+.sass-cache
+.tmp
+*.pyc
+lib
+test
+tests
+docker-compose.yml
+Dockerfile

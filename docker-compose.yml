@@ -1,0 +1,21 @@
+confidant:
+  image: confidant
+  volumes:
+    - .:/srv/confidant:ro
+  ports:
+   - "80:80"
+  links:
+   - redis
+   - dynamo
+  env_file: ./service.env
+redis:
+  ports:
+    - "6379:6379"
+  image: redis
+dynamo:
+  volumes:
+    - /mnt/dynamo:/mnt/dynamo:rw
+  ports:
+    - "7777:7777"
+  image: tray/dynamodb-local
+  command: -port 7777 -dbPath /mnt/dynamo

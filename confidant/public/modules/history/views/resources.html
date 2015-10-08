@@ -1,0 +1,33 @@
+<div class="row row-relative">
+  <div class="well row-relative col-sm-5">
+    <div class="row">
+      <div class="form">
+        <div class="form-group col-md-12">
+          <input type="search" class="form-control" data-ng-model="resourceRegex" placeholder="filter (credential or service name)">
+        </div>
+      </div>
+    </div>
+    <div class="row row-overflow-history-resources">
+      <div class="col-md-12 row-relative">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Name</th>
+              <th>Revision</th>
+              <th>Modified</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="resource in resourceArchive | filter: resourceRegexFilter('name', resourceRegex) | orderBy:'modified_date':true" ng-click="gotoResource(resource)" style="cursor: pointer">
+              <td>{{ resource.type }}</td>
+              <td>{{ resource.name }}</td>
+              <td>{{ resource.revision }}</td>
+              <td>{{ resource.modified_date }}</td>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div ui-view="details" class="col-md-7 row-overflow"><div class="row"><div class="no-details-text"><h3>No resource selected.</h3></div></div></div>
+</div>
