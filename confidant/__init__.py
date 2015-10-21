@@ -9,8 +9,8 @@ import redis
 from flask import Flask
 from flask.ext.session import Session
 from flask_sslify import SSLify
-from . import lru
-from . import settings
+from confidant import lru
+from confidant import settings
 
 if not settings.get('DEBUG'):
     boto3.set_stream_logger(level=logging.CRITICAL)
@@ -47,4 +47,4 @@ stats = statsd.StatsClient(
 kms = boto3.client('kms')
 iam = boto3.resource('iam')
 
-from . import routes # noqa
+from confidant import routes  # noqa

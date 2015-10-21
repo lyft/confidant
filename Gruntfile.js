@@ -159,7 +159,10 @@ module.exports = function (grunt) {
         ]
       },
       styles: {
-        src: ['<%= project.app %>/styles/**/*.css']
+        src: [
+            '<%= project.app %>/styles/**/*.css',
+            '<%= project.app %>/bower_components/angular/angular-csp.css'
+        ]
       }
     },
 
@@ -297,13 +300,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Replace Google CDN references
-    cdnify: {
-      dist: {
-        html: ['<%= project.dist %>/*.html']
-      }
-    },
-
     // Copies remaining files to places other tasks can use
     copy: {
       dist: {
@@ -331,10 +327,17 @@ module.exports = function (grunt) {
         }]
       },
       styles: {
-        expand: true,
-        cwd: '<%= project.app %>/styles',
-        dest: '.tmp/styles/',
-        src: '**/*.css'
+        files: [{
+          expand: true,
+          cwd: '<%= project.app %>/styles',
+          dest: '.tmp/styles/',
+          src:  '**/*.css'
+        }, {
+          expand: true,
+          cwd: '<%= project.app %>',
+          dest: '<%= project.dist %>',
+          src: 'bower_components/angular/angular-csp.css'
+        }]
       }
     },
 

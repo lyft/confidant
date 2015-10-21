@@ -1,8 +1,8 @@
 import os
 
-from .. import app
-from .. import authnz
-from .. import log
+from confidant import app
+from confidant import authnz
+from confidant import log
 from flask import send_from_directory
 from werkzeug.exceptions import NotFound
 

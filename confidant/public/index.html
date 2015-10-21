@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:ng="http://angularjs.org" id="ng-app" class="no-js" data-ng-controller="ConfidantMainCtrl" ng-class="pageClass" ng-app="confidantApp" data-is-mobile>
+<html xmlns:ng="http://angularjs.org" id="ng-app" class="no-js" data-ng-controller="ConfidantMainCtrl" ng-class="pageClass" ng-app="confidantApp" data-is-mobile ng-csp>
 <head>
     <meta charset="utf-8">
     <title></title>
@@ -16,6 +16,7 @@
     <!-- build:css styles/main.css -->
     <!-- injector:css -->
     <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/bower_components/angular/angular-csp.css">
     <!-- endinjector -->
     <!-- endbuild -->
 </head>
@@ -66,7 +67,7 @@
     <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="/bower_components/angular-xeditable/dist/js/xeditable.js"></script>
     <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="/bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="/bower_components/lodash/lodash.js"></script>
     <script src="/bower_components/spin.js/spin.js"></script>
     <!-- endbower -->
     <!-- endbuild -->

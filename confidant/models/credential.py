@@ -1,4 +1,4 @@
-from .. import app
+from confidant import app
 from datetime import datetime
 from pynamodb.models import Model
 from pynamodb.attributes import (

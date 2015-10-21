@@ -1,5 +1,5 @@
-from . import app
-from . import log
+from confidant import app
+from confidant import log
 
 import requests
 import json

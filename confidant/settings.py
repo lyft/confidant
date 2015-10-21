@@ -65,12 +65,6 @@ STATIC_FOLDER = str_env('STATIC_FOLDER', 'public')
 
 APPLICATION_ENV = str_env('APPLICATION_ENV', 'development')
 
-# Auth
-
-# Whether or not authentication is required. Unless doing testing or
-# development, this should always be set to True.
-USE_AUTH = bool_env('USE_AUTH', True)
-
 # Google authentication
 
 # A yaml file, with email: name mappings that can be used for restricting
@@ -173,6 +167,20 @@ STATSD_PORT = int_env('STATSD_PORT', 8125)
 
 # Directory for customization of AngularJS frontend.
 CUSTOM_FRONTEND_DIRECTORY = str_env('CUSTOM_FRONTEND_DIRECTORY')
+
+# Test/Development
+
+# Whether or not authentication is required. Unless doing testing or
+# development, this should always be set to True.
+USE_AUTH = bool_env('USE_AUTH', True)
+# A boolean to enable/disable encryption. This is meant to be used for
+# test and development only. If this is disabled it will store unencrypted
+# content, rather than encrypted content. This allows you to test
+# or do development of features without a KMS key. Even for test and
+# development purposes, it's possible to avoid using this setting, by exposing
+# AWS credentials to Confidant and giving it access to a KMS key.
+# DO NOT DISABLE THIS EXCEPT FOR TEST AND DEVELOPMENT PURPOSES!
+USE_ENCRYPTION = bool_env('USE_ENCRYPTION', True)
 
 # boto3 configuration
 

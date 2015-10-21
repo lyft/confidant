@@ -1,8 +1,8 @@
 import time
 
-from .. import app
-from credential import Credential
-from service import Service
+from confidant import app
+from confidant.models.credential import Credential
+from confidant.models.service import Service
 from pynamodb.exceptions import TableError
 
 # Only used when using dynamodb local
