@@ -137,12 +137,6 @@ DYNAMODB_TABLE = str_env('DYNAMODB_TABLE')
 
 # The KMS key to use for at-rest encryption for secrets in DynamoDB.
 KMS_MASTER_KEY = str_env('KMS_MASTER_KEY')
-# A keyspec to be used for generating data keys for S3 basic auth. This is
-# only needed if using S3 basic auth, which is disabled by default. The
-# spec used here is defined in KMS and can be AES_128 or AES_256. See the KMS
-# documentation for more information:
-#   http://docs.aws.amazon.com/kms/latest/APIReference/API_GenerateDataKey.html
-KMS_MASTER_KEY_SPEC = str_env('KMS_MASTER_KEY_SPEC', 'AES_128')
 
 # Graphite events
 
