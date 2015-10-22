@@ -1,7 +1,3 @@
-import gevent
-import gevent.monkey
-gevent.monkey.patch_all()
-
 import boto3
 import logging
 import redis
