@@ -70,7 +70,7 @@ APPLICATION_ENV = str_env('APPLICATION_ENV', 'development')
 # A yaml file, with email: name mappings that can be used for restricting
 # access to the web interface. If this file is not set, then any user with
 # google authentication access will be able to access/modify secrets.
-USERS_FILE = str_env('USERS_FILE', '/etc/confidant/users.yaml')
+USERS_FILE = str_env('USERS_FILE')
 # The Google OAuth2 redirect URI endpoint URL.
 REDIRECT_URI = str_env('REDIRECT_URI')
 # An email suffix that can be used to restrict access to the web interface.

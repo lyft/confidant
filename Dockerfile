@@ -16,9 +16,8 @@ RUN gem install compass && \
     npm install && \
     node_modules/grunt-cli/bin/grunt build
 
-RUN pip install -r requirements_export.txt && \
-    pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 EXPOSE 80
 
-CMD ["gunicorn","wsgi:app","--workers=2","-k","gevent"]
+CMD ["gunicorn","wsgi:app","--workers=2","-k","gevent","--access-logfile=-","--error-logfile=-"]

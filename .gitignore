@@ -35,6 +35,7 @@ karma-test-results.xml
 
 # build packages or files that shouldn't be in repo
 node_modules
+npm-debug.log
 bower_components
 .sass-cache
 .tmp

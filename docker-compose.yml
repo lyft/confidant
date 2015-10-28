@@ -1,13 +1,17 @@
 confidant:
   image: confidant
-  volumes:
-    - .:/srv/confidant:ro
+  #build: .
+  #volumes:
+  #  - .:/srv/confidant:rw
   ports:
    - "80:80"
   links:
    - redis
    - dynamo
   env_file: ./service.env
+  environment:
+    HOST: '0.0.0.0'
+    PORT: 80
 redis:
   ports:
     - "6379:6379"
