@@ -13,7 +13,7 @@
         // Keep this list sorted alphabetically!
         'confidant.resources.services.confidantservices',
         'confidant.resources.services.credentials',
-        'confidant.resources.services.profiles'
+        'confidant.resources.services.roles'
     ])
     ;
 }(angular));

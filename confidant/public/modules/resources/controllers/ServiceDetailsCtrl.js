@@ -18,19 +18,19 @@
         '$location',
         'services.service',
         'services.services',
-        'profiles.list',
+        'roles.list',
 	'services.grants',
-        function ($scope, $stateParams, $q, $log, $filter, $location, Service, Services, Profiles, Grants) {
+        function ($scope, $stateParams, $q, $log, $filter, $location, Service, Services, Roles, Grants) {
             var serviceCopy = null;
             $scope.$log = $log;
             $scope.saveError = '';
             $scope.newService = false;
             $scope.credentialPairConflicts = null;
 
-            Profiles.get().$promise.then(function(profiles) {
-                $scope.profiles = profiles.profiles;
+            Roles.get().$promise.then(function(roles) {
+                $scope.roles = roles.roles;
             }, function() {
-                $scope.profiles = [];
+                $scope.roles = [];
             });
             if ($stateParams.serviceId) {
                 Service.get({'id': $stateParams.serviceId}).$promise.then(function(service) {

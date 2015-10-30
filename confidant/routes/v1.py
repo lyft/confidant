@@ -44,14 +44,14 @@ def get_service_list():
     return jsonify({'services': services})
 
 
-@app.route('/v1/profiles', methods=['GET'])
+@app.route('/v1/roles', methods=['GET'])
 @authnz.require_auth
-def get_iam_profile_list():
+def get_iam_roles_list():
     try:
-        profiles = [x.name for x in iam.instance_profiles.all()]
+        roles = [x.name for x in iam.roles.all()]
     except ClientError:
-        return jsonify({'error': 'Unable to fetch iam profiles.'}), 500
-    return jsonify({'profiles': profiles})
+        return jsonify({'error': 'Unable to roles.'}), 500
+    return jsonify({'roles': roles})
 
 
 @app.route('/v1/services/<id>', methods=['GET'])

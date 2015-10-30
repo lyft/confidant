@@ -21,7 +21,7 @@ class ManageGrants(Command):
         try:
             roles = [x for x in iam.roles.all()]
         except ClientError:
-            log.error('Failed to fetch IAM profiles.')
+            log.error('Failed to fetch IAM roles.')
             return
         services = []
         for service in Service.data_type_date_index.query('service'):

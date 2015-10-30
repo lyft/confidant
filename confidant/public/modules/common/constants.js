@@ -22,7 +22,7 @@
         CREDENTIALS: 'v1/credentials',
         ARCHIVE_CREDENTIALS: 'v1/archive/credentials',
         ARCHIVE_CREDENTIAL_REVISIONS: 'v1/archive/credentials/:id/:revision',
-        PROFILES: 'v1/profiles'
+        ROLES: 'v1/roles'
     })
 
     .constant('common.APP_EVENTS', {
