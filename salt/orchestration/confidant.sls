@@ -162,6 +162,37 @@ Ensure {{ grains.cluster_name }} asg exists:
           scripts:
             salt: |
               #!/bin/bash
+              apt-get -y update
+              apt-get -y install python python-pip python-dev build-essential libffi-dev ruby-full npm nodejs nodejs-legacy git git-core
+              cd /srv
+              git clone https://github.com/lyft/confidant
+              cd /srv/confidant
+              virtualenv venv
+              source venv/bin/activate
+              pip install -r requirements.txt
+              deactivate
+              gem install compass
+              npm install grunt-cli
+              npm install
+              node_modules/grunt-cli/bin/grunt build
+              cat << EOF > /srv/confidant/service.env
+              {% for key, val in pillar.confidant_env.items() -%}
+              export {{ key }}='{{ val }}'
+              {% endfor -%}
+              EOF
+              cat << EOF > /etc/init/confidant
+              description "myapp"
+              start on (filesystem)
+              stop on runlevel [016]
+              respawn
+              script
+                 cd /srv/confidant
+                 . service.env
+                 . venv/bin/activate
+                 gunicorn wsgi:app --workers=2 -k gevent
+              end script
+              EOF
+              service confidant start
     - vpc_zone_identifier: {{ pillar.vpc_subnets }}
     - availability_zones: {{ pillar.availability_zones }}
     - min_size: {{ pillar.availability_zones|length }}

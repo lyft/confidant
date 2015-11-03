@@ -1,3 +1,17 @@
+# Environment variables for the confidant process
+confidant_env:
+  AWS_DEFAULT_REGION: 'us-east-1'
+  AUTH_CONTEXT: '{{ grains.cluster_name }}'
+  AUTH_KEY: 'authnz-{{ grains.cluster_name }}'
+  AUTHOMATIC_SALT: 'H39bfLCqLbrYrFyiJIxkK0uf12rlzvgjgo9FqOnttPXIdAAuyQ'
+  DYNAMODB_TABLE: '{{ grains.cluster_name }}'
+  GEVENT_RESOLVER: 'ares'
+  GOOGLE_OAUTH_CLIENT_ID: '123456789-abcdefghijklmnop.apps.googleusercontent.com'
+  GOOGLE_OAUTH_CONSUMER_SECRET: '123456789abcdefghijklmnop'
+  KMS_MASTER_KEY: '{{ grains.cluster_name }}'
+  # TODO: make this point at elasticache.
+  REDIS_URL: ''
+  SESSION_SECRET: 'aBVmJA3zv6zWGjrYto135hkdox6mW2kOu7UaXIHK8ztJvT8w5O'
 # The AWS account the resources should be placed into.
 aws_account_id: '1234'
 # The VPC to place these resources into.
