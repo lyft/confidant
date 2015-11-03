@@ -15,22 +15,29 @@ terminate-rolling your Confidant ASG nodes.
 This orchestration code will launch infrastructure in AWS and will incur
 charges. It will use a predefined format for the naming of AWS resources:
 
-  service\_name-service\_instance-region
+```
+service\_name-service\_instance-region
+```
 
-service\_name, service\_instance and region are user-specified. So, for instance, if
-you pass in: SERVICE\_NAME=confidant SERVICE\_INSTANCE=production REGION=useast1, your
-resources will be named as follows:
+service\_name, service\_instance and region are user-specified through
+environment variables. So, for instance, if you pass in:
 
-ELB: confidant-production-useast1
-DynamoDB table: confidant-production-useast1
-Elasticache: confidant-production-useast1
-KMS at-rest key: confidant-production-useast1
-KMS auth key: authnz-production-useast1
+```bash
+SERVICE\_NAME=confidant SERVICE\_INSTANCE=production REGION=useast1
+```
+
+your resources will be named as follows:
+
+* ELB: confidant-production-useast1
+* DynamoDB table: confidant-production-useast1
+* Elasticache: confidant-production-useast1
+* KMS at-rest key: confidant-production-useast1
+* KMS auth key: authnz-production-useast1
 
 If you specify a DNS domain, this code will also add a route53 CNAME entry for
 the ELB. For instance, if you provide example.com:
 
-Route53: confidant-production-useast1.example.com
+* Route53: confidant-production-useast1.example.com
 
 ## Using the orchestration code
 
