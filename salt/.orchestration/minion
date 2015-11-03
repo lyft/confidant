@@ -1,0 +1,11 @@
+root_dir: .orchestration/
+pki_dir: pki/minion
+cachedir: cache/minion
+file_roots:
+  base:
+    - orchestration
+pillar_roots:
+  base:
+    - pillar
+file_client: local
+ipc_mode: tcp

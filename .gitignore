@@ -54,3 +54,9 @@ service.env
 .DS_store
 .zedstate
 .idea
+
+# Orchestration excludes
+salt/venv
+salt/.orchestration/*
+!salt/.orchestration/minion
+salt/pillar/local.sls
