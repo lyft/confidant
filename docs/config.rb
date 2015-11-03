@@ -6,8 +6,6 @@ activate :livereload
 activate :i18n
 activate :directory_indexes
 activate :autoprefixer
-activate :relative_assets
-set :relative_links, true
 
 set :markdown, :tables => true, :autolink => true, :gh_blockcode => true, :fenced_code_blocks => true, :with_toc_data => true
 set :markdown_engine, :redcarpet
