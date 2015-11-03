@@ -1,1 +1,0 @@
-require 'middleman-gh-pages'
