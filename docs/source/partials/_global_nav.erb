@@ -1,0 +1,21 @@
+<nav class="global-nav" role="navigation">
+  <section class="wrap-container">
+    <header class="global-nav-item logo-text">
+      <%= link_to t("navigation.logo"), "#{locale_prefix}/", class:
+        "global-nav-logo" %>
+    </header>
+
+    <ul class="global-nav-list">
+      <li class="global-nav-item">
+        <%= partial 'partials/twitter_widget' %>
+      </li>
+      <li class="global-nav-item">
+        <%= partial 'partials/github_widget' %>
+      </li>
+      <li class="global-nav-item">
+        <%= link_to t("navigation.docs"),
+          "#{locale_prefix}/basics/install/", class: "cta-link-nav-filled" %>
+      </li>
+    </ul>
+  </section>
+</nav>
