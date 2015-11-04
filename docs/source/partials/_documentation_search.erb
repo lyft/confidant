@@ -1,23 +1,14 @@
 <div id="search" role="search">
   <form>
-    <input class="st-search-input" id="st-search-input" type="search" placeholder="Search the docs">
+    <input class="st-default-search-input" id="st-default-search-input" type="search" placeholder="Search the docs">
   </form>
   <div id="st-results-container"></div>
-  <script>
-    var Swiftype = window.Swiftype || {};
-    (function() {
-    Swiftype.key = 'baT6o75WaYWmsxe1oZx2';
-    Swiftype.inputElement = '#st-search-input';
-    Swiftype.resultContainingElement = '#st-results-container';
-    Swiftype.attachElement = '#st-search-input';
-    Swiftype.renderStyle = "overlay";
+  <script type="text/javascript">
+    (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+    })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
 
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
-    script.src = "//swiftype.com/embed.js";
-    var entry = document.getElementsByTagName('script')[0];
-    entry.parentNode.insertBefore(script, entry);
-    }());
+    _st('install','baT6o75WaYWmsxe1oZx2','2.0.0');
   </script>
 </div>

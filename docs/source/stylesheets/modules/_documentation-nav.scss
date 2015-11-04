@@ -12,7 +12,7 @@
   margin-bottom: 1em;
 }
 
-#st-search-input {
+#st-default-search-input {
   @extend input[type="search"];
   @include fill-parent;
   border: 1px solid $medium-gray;
