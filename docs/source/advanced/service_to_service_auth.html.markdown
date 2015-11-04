@@ -6,7 +6,7 @@ title: Service-to-service authentication and encryption
 
 ## Service-to-service authentication
 
-When a service is created in Confidant, Confidant will generate a couple grants
+When a service is created in Confidant, Confidant will generate a couple of grants
 on the AUTH\_KEY KMS key. One grant allows the service to do encryptions or
 decryptions using the key, as long as the 'from' encryption context is the name
 of the service and the other grant allows the service to do decryptions using the
