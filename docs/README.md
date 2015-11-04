@@ -39,7 +39,7 @@ bundle exec middleman build
 ## Publishing changes to github.io
 
 ```
-rake publish
+bundle exec middleman deploy
 ```
 
 ## Copyright
