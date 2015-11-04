@@ -244,3 +244,29 @@ because the application should never be able to do that.
     ]
 }
 ```
+
+## Confidant DynamoDB table configuration
+
+You'll need to create a dynamodb with two global indexes:
+
+```
+hash id: id
+hash key data type: S
+
+global indexes:
+
+data_type_date_index:
+  hash key: data_type
+  hash key data type: S
+  range key: modified_date
+  range key data type: S
+
+data_type_revision_index:
+  hash key: data_type
+  hash key data type: S
+  range key: revision
+  range key data type: N
+```
+
+Provisioned read/write units can be relative low on both the primary table and
+the indexes. See your usage in cloudwatch and increase throughput as necessary.
