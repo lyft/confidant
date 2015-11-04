@@ -21,7 +21,7 @@ an environment file and use --env-file.
 
 ```bash
 docker pull lyft/confidant
-docker run -t confidant --env-file my_config
+docker run -t lyft/confidant --env-file my_config
 ```
 
 ## To build the image
@@ -32,7 +32,7 @@ do the following:
 ```bash
 git clone https://github.com/lyft/confidant
 cd confidant
-docker build -t confidant .
+docker build -t lyft/confidant .
 ```
 
 # Manual installation
@@ -67,7 +67,7 @@ deactivate
 ## Build the frontend
 
 ```bash
-cd /srv/confidant/confidant
+cd /srv/confidant
 sudo apt-get install -y ruby-full npm nodejs nodejs-legacy git git-core
 gem install compass
 npm install grunt-cli
