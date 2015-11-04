@@ -1,7 +1,7 @@
 <nav class="global-nav" role="navigation">
   <section class="wrap-container">
     <header class="global-nav-item logo-text">
-      <%= link_to t("navigation.logo"), "#{locale_prefix}/", class:
+      <%= link_to t("navigation.logo"), "#{locale_prefix}/index.html", :relative => true, class:
         "global-nav-logo" %>
     </header>
 
@@ -14,7 +14,7 @@
       </li>
       <li class="global-nav-item">
         <%= link_to t("navigation.docs"),
-          "#{locale_prefix}/basics/install/", class: "cta-link-nav-filled" %>
+          "#{locale_prefix}/basics/install.html", class: "cta-link-nav-filled", :relative => true %>
       </li>
     </ul>
   </section>

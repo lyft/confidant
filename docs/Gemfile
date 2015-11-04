@@ -20,7 +20,7 @@ gem 'rails-assets-anchor-js', '~> 1.1.1', source: 'http://rails-assets.org'
 gem 'wdm' if Gem.win_platform?
 
 # Deployment Gems
-gem 'middleman-gh-pages'
+gem 'middleman-deploy', '~> 2.0.0.pre.alpha'
 
 # Debug
 # gem 'pry'
