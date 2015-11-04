@@ -2,6 +2,15 @@
 title: Installation
 ---
 
+# Quickstart for testing
+
+If you just want to checkout Confidant and aren't looking to deploy it into
+production, it's possible to get started without any external dependencies.
+Check out the [test and development quickstart](../../advanced/contributing/#quickstart-for-testing-or-development)
+for this.
+
+Note that you should _never_ run with this quickstart configuration in production.
+
 # Docker installation
 
 ## To run confidant in Docker
