@@ -2,7 +2,7 @@ require "pathname"
 
 module GuideHelpers
   def page_title
-    title = "Middleman: "
+    title = "Confidant: "
     if current_page.data.title
       title << current_page.data.title
     else
@@ -13,7 +13,7 @@ module GuideHelpers
 
   def edit_guide_url
     p = Pathname(current_page.source_file).relative_path_from(Pathname(root))
-    "https://github.com/middleman/middleman-guides/blob/master/#{p}"
+    "https://github.com/lyft/confidant/blob/master/docs/#{p}"
   end
 
   def pages_for_group(group_name)
