@@ -7,11 +7,9 @@ title: Configuration
 Confidant is primarily configured through environment variables. The list of
 all available configuration options can be found in the settings.py file.
 
-Assuptions, from the prerequisites guide:
+Prerequisites not covered by this guide:
 
 1. Your Google application is setup and you know your client id and secret key.
-1. Your KMS auth and encryption keys are created.
-1. Your DynamoDB table has been created.
 
 ## Basic environment configuration
 
