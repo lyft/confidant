@@ -1,5 +1,5 @@
 confidant:
-  image: confidant
+  image: lyft/confidant
   #build: .
   #volumes:
   #  - .:/srv/confidant:rw
