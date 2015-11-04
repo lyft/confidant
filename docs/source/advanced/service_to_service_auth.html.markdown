@@ -195,7 +195,7 @@ same pattern can be applied for doing your own service-to-service
 authentication as well.
 
 Something to notice here is that we're doing extra work based on the payload
-contents of the token. We're adding not_before and not_after data so that we can
+contents of the token. We're adding `not_before` and `not_after` data so that we can
 give this token a lifetime. The client is specifying the lifetime of the token
 itself. You could put additional information into the payload, such as token
 scope, additional contraints, etc.. In Confidant, on the server side we also
