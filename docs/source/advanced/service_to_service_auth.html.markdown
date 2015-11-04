@@ -6,7 +6,7 @@ title: Service-to-service authentication and encryption
 
 ## Service-to-service authentication
 
-When a service is created in Confidant, Confidant will generate a couple grants
+When a service is created in Confidant, Confidant will generate a couple of grants
 on the AUTH\_KEY KMS key. One grant allows the service to do encryptions or
 decryptions using the key, as long as the 'from' encryption context is the name
 of the service and the other grant allows the service to do decryptions using the
@@ -195,7 +195,7 @@ same pattern can be applied for doing your own service-to-service
 authentication as well.
 
 Something to notice here is that we're doing extra work based on the payload
-contents of the token. We're adding not_before and not_after data so that we can
+contents of the token. We're adding `not_before` and `not_after` data so that we can
 give this token a lifetime. The client is specifying the lifetime of the token
 itself. You could put additional information into the payload, such as token
 scope, additional contraints, etc.. In Confidant, on the server side we also
