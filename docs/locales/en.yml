@@ -19,7 +19,7 @@ en:
       data_schema: Data Schema
     communication:
       title: Communication
-      threat_model: Security Reporting
+      security_reporting: Security Reporting
 
   introduction:
     first:
