@@ -17,6 +17,9 @@ en:
       service_to_service_auth: Service-to-service authentication and encryption
       contributing: Contributing
       data_schema: Data Schema
+    communication:
+      title: Communication
+      threat_model: Security Reporting
 
   introduction:
     first:
