@@ -35,6 +35,9 @@
     <h3 class="docs-section-heading"><%= t("navigation.communication.title") %></h3>
     <ul>
       <li class="doc-item">
+        <%= active_link_to t("navigation.communication.support"), "#{locale_prefix}/communication/support.html", :relative => true %>
+	</li>
+      <li class="doc-item">
         <%= active_link_to t("navigation.communication.security_reporting"), "#{locale_prefix}/communication/security_reporting.html", :relative => true %>
 	</li>
     </ul>

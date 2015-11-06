@@ -19,6 +19,7 @@ en:
       data_schema: Data Schema
     communication:
       title: Communication
+      support: Support
       security_reporting: Security Reporting
 
   introduction:
