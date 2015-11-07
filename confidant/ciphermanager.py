@@ -1,3 +1,6 @@
+import base64
+import re
+
 from cryptography.fernet import Fernet
 
 from confidant import app
@@ -22,7 +25,7 @@ class CipherManager:
             log.warning('Not using encryption in CipherManager.encrypt'
                         ' If you are not running in a development or test'
                         ' environment, this should not be happening!')
-            return raw
+            return 'UNENCRYPTED_{0}'.format(base64.b64encode(raw))
         if self.version == 2:
             f = Fernet(self.key)
             return f.encrypt(raw.encode('utf-8'))
@@ -35,7 +38,7 @@ class CipherManager:
             log.warning('Not using encryption in CipherManager.decrypt'
                         ' If you are not running in a development or test'
                         ' environment, this should not be happening!')
-            return enc
+            return base64.b64decode(re.sub(r'^UNENCRYPTED_', '', enc))
         if self.version == 2:
             f = Fernet(self.key)
             return f.decrypt(enc.encode('utf-8'))

@@ -7,16 +7,21 @@ RUN apt-get update && \
     # For backend
     apt-get install -y python python-pip python-dev build-essential libffi-dev
 
-ADD . /srv/confidant
+ADD ./requirements.txt /srv/confidant/requirements.txt
+ADD ./package.json /srv/confidant/package.json
+ADD ./bower.json /srv/confidant/bower.json
 
 WORKDIR /srv/confidant
 
+RUN pip install -r requirements.txt
+
 RUN gem install compass && \
     npm install grunt-cli && \
-    npm install && \
-    node_modules/grunt-cli/bin/grunt build
+    npm install
 
-RUN pip install -r requirements.txt
+ADD . /srv/confidant
+
+RUN node_modules/grunt-cli/bin/grunt build
 
 EXPOSE 80
 
