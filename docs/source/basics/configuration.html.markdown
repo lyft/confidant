@@ -71,7 +71,16 @@ In the above configuration, Confidant will limit authentication to users with
 the email domain @example.com. Additionally, Confidant will look in the
 users.yaml file for a list of email addresses allowed to access Confidant.
 
-It's possible to customize portions of the angularjs application as well.
+It's possible to limit the lifetime of KMS authentication tokens. By default
+Confidant limits token lifetime to 60 minutes, to ensure that tokens are being
+rotated. To change this, you can use the following option:
+
+```bash
+# Limit token lifetime to 10 minutes.
+export AUTH_TOKEN_MAX_LIFETIME='10'
+```
+
+It's possible to customize portions of the angularjs application.
 Currently you can add a documentation section to the credential details view.
 We'd like to make more customization available. Please open a github issue with
 specific customizations you'd like focused on first. The custom js/css/html
