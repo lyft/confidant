@@ -115,3 +115,27 @@ greenlet==0.4.9
 # Upstream url: https://github.com/jsocol/pystatsd
 # Use: For metrics collection
 statsd==3.1
+
+# Python HTTP for Humans.
+# License: Apache2
+# Upstream url: http://python-requests.org
+# Use: REST calls to external services
+requests==2.8.1
+
+# Provides enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
+# License: BSD
+# Upstream url: https://github.com/cedadev/ndg_httpsclient/
+# Use: Securing requests for python < 2.7.9.
+ndg-httpsclient==0.4.0
+
+# ASN.1 types and codecs
+# License: BSD
+# Upstream url: http://sourceforge.net/projects/pyasn1/
+# Use: Securing requests for python < 2.7.9.
+pyasn1==0.1.9
+
+# Python wrapper module around the OpenSSL library
+# License: APL2
+# Upstream url: https://github.com/pyca/pyopenssl
+# Use: Securing requests for python < 2.7.9.
+pyOpenSSL==0.15.1
