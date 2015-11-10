@@ -1,3 +1,6 @@
+# bash needed for pipefail
+SHELL := /bin/bash
+
 test: test_lint test_unit
 
 test_lint:
