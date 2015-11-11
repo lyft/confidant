@@ -1,10 +1,10 @@
 import base64
 import re
+import logging
 
 from cryptography.fernet import Fernet
 
 from confidant import app
-from confidant import log
 
 
 class CipherManager:
@@ -22,9 +22,9 @@ class CipherManager:
     def encrypt(self, raw):
         # Disabled encryption is dangerous, so we don't use falsiness here.
         if app.config['USE_ENCRYPTION'] is False:
-            log.warning('Not using encryption in CipherManager.encrypt'
-                        ' If you are not running in a development or test'
-                        ' environment, this should not be happening!')
+            logging.warning('Not using encryption in CipherManager.encrypt'
+                            ' If you are not running in a development or test'
+                            ' environment, this should not be happening!')
             return 'DANGER_NOT_ENCRYPTED_{0}'.format(base64.b64encode(raw))
         if self.version == 2:
             f = Fernet(self.key)
@@ -35,9 +35,9 @@ class CipherManager:
     def decrypt(self, enc):
         # Disabled encryption is dangerous, so we don't use falsiness here.
         if app.config['USE_ENCRYPTION'] is False:
-            log.warning('Not using encryption in CipherManager.decrypt'
-                        ' If you are not running in a development or test'
-                        ' environment, this should not be happening!')
+            logging.warning('Not using encryption in CipherManager.decrypt'
+                            ' If you are not running in a development or test'
+                            ' environment, this should not be happening!')
             return base64.b64decode(re.sub(r'^DANGER_NOT_ENCRYPTED_', '', enc))
         if self.version == 2:
             f = Fernet(self.key)

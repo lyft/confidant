@@ -1,10 +1,11 @@
 import os
+import logging
+
+from flask import send_from_directory
+from werkzeug.exceptions import NotFound
 
 from confidant import app
 from confidant import authnz
-from confidant import log
-from flask import send_from_directory
-from werkzeug.exceptions import NotFound
 
 
 @app.route('/')
@@ -70,7 +71,9 @@ def custom_modules(path):
             path
         )
     except NotFound:
-        log.warning('Client requested missing custom module {0}.'.format(path))
+        logging.warning(
+            'Client requested missing custom module {0}.'.format(path)
+        )
         return '', 200
 
 
