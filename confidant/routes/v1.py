@@ -1,6 +1,15 @@
+import json
+import uuid
+import copy
+import logging
+
+from pynamodb.exceptions import PutError
+from flask import request
+from flask import jsonify
+from botocore.exceptions import ClientError
+
 from confidant import app
 from confidant import iam
-from confidant import log
 from confidant import keymanager
 from confidant import authnz
 from confidant import stats
@@ -8,14 +17,6 @@ from confidant import graphite
 from confidant.ciphermanager import CipherManager
 from confidant.models.credential import Credential
 from confidant.models.service import Service
-from pynamodb.exceptions import PutError
-from flask import request
-from flask import jsonify
-from botocore.exceptions import ClientError
-
-import json
-import uuid
-import copy
 
 
 @app.route('/v1/user/email', methods=['GET', 'POST'])
@@ -62,10 +63,10 @@ def get_service(id):
     allows basic authentication.
     '''
     if authnz.user_in_role('service') and not authnz.user_is_service(id):
-        log.warning('Authz failed for service {0}.'.format(id))
+        logging.warning('Authz failed for service {0}.'.format(id))
         msg = 'Authenticated user is not authorized.'
         return jsonify({'error': msg}), 401
-    log.debug('Authz succeeded for service {0}.'.format(id))
+    logging.debug('Authz succeeded for service {0}.'.format(id))
     try:
         service = Service.get(id)
     except Service.DoesNotExist:
@@ -153,7 +154,7 @@ def ensure_grants(id):
         keymanager.ensure_grants(id)
     except keymanager.ServiceCreateGrantError:
         msg = 'Failed to add grants for service.'
-        log.error(msg)
+        logging.error(msg)
         return jsonify({'error': msg}), 400
     try:
         grants = keymanager.grants_exist(id)
@@ -222,7 +223,7 @@ def map_service_credentials(id):
             keymanager.ensure_grants(id)
         except keymanager.ServiceCreateGrantError:
             msg = 'Failed to add grants for {0}.'.format(id)
-            log.error(msg)
+            logging.error(msg)
     # Try to save to the archive
     try:
         Service(
@@ -234,7 +235,7 @@ def map_service_credentials(id):
             modified_by=authnz.get_logged_in_user_email()
         ).save(id__null=True)
     except PutError as e:
-        log.error(e)
+        logging.error(e)
         return jsonify({'error': 'Failed to add service to archive.'}), 500
 
     try:
@@ -248,7 +249,7 @@ def map_service_credentials(id):
         )
         service.save()
     except PutError as e:
-        log.error(e)
+        logging.error(e)
         return jsonify({'error': 'Failed to update active service.'}), 500
     added = list(set(service.credentials) - set(_service_credential_ids))
     removed = list(set(_service_credential_ids) - set(service.credentials))
@@ -612,7 +613,7 @@ def update_credential(id):
             modified_by=authnz.get_logged_in_user_email()
         ).save(id__null=True)
     except PutError as e:
-        log.error(e)
+        logging.error(e)
         return jsonify({'error': 'Failed to add credential to archive.'}), 500
     try:
         cred = Credential(
@@ -628,7 +629,7 @@ def update_credential(id):
         )
         cred.save()
     except PutError as e:
-        log.error(e)
+        logging.error(e)
         return jsonify({'error': 'Failed to update active credential.'}), 500
     if services:
         service_names = [x.id for x in services]

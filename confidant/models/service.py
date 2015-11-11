@@ -1,5 +1,5 @@
-from confidant import app
 from datetime import datetime
+
 from pynamodb.models import Model
 from pynamodb.attributes import (
     UnicodeAttribute,
@@ -9,6 +9,8 @@ from pynamodb.attributes import (
     BooleanAttribute
 )
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
+
+from confidant import app
 
 
 class DataTypeDateIndex(GlobalSecondaryIndex):

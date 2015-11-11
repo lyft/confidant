@@ -2,6 +2,8 @@ import base64
 import hashlib
 import datetime
 import json
+import logging
+
 from botocore.exceptions import ClientError
 from cryptography.fernet import Fernet
 
@@ -10,7 +12,6 @@ from confidant import kms
 from confidant import iam
 from confidant import stats
 from confidant import lru
-from confidant import log
 
 DATAKEYS = {}
 SERVICEKEYS = {}
@@ -53,9 +54,9 @@ def create_datakey(encryption_context):
     '''
     # Disabled encryption is dangerous, so we don't use falsiness here.
     if app.config['USE_ENCRYPTION'] is False:
-        log.warning('Creating a mock data key in keymanager.create_datakey.'
-                    ' If you are not running in a development or test'
-                    ' environment, this should not be happening!')
+        logging.warning('Creating a mock datakey in keymanager.create_datakey.'
+                        ' If you are not running in a development or test'
+                        ' environment, this should not be happening!')
         return _create_mock_datakey()
     # Fernet key; from spec and cryptography implementation, but using
     # random from KMS, rather than os.urandom:
@@ -89,9 +90,9 @@ def decrypt_key(data_key, encryption_context=None):
     '''
     # Disabled encryption is dangerous, so we don't use falsiness here.
     if app.config['USE_ENCRYPTION'] is False:
-        log.warning('Decypting a mock data key in keymanager.decrypt_key.'
-                    ' If you are not running in a development or test'
-                    ' environment, this should not be happening!')
+        logging.warning('Decypting a mock data key in keymanager.decrypt_key.'
+                        ' If you are not running in a development or test'
+                        ' environment, this should not be happening!')
         return _decrypt_mock_datakey(data_key)
     sha = hashlib.sha256(data_key).hexdigest()
     if sha not in DATAKEYS:
@@ -138,7 +139,7 @@ def decrypt_token(token, _from):
         # We don't care what exception is thrown. For paranoia's sake, fail
         # here.
         except Exception:
-            log.exception('Failed to validate token.')
+            logging.exception('Failed to validate token.')
             raise TokenDecryptionError('Authentication error.')
     else:
         payload = TOKENS[token_key]
@@ -154,16 +155,16 @@ def decrypt_token(token, _from):
             time_format
         )
     except Exception:
-        log.exception(
+        logging.exception(
             'Failed to get not_before and not_after from token payload.'
         )
         raise TokenDecryptionError('Authentication error.')
     delta = (not_after - not_before).seconds / 60
     if delta > app.config['AUTH_TOKEN_MAX_LIFETIME']:
-        log.warning('Token used which exceeds max token lifetime.')
+        logging.warning('Token used which exceeds max token lifetime.')
         raise TokenDecryptionError('Authentication error.')
     if not (now >= not_before) and (now <= not_after):
-        log.warning('Expired token used.')
+        logging.warning('Expired token used.')
         raise TokenDecryptionError('Authentication error.')
     TOKENS[token_key] = payload
     return payload
@@ -205,7 +206,9 @@ def ensure_grants(service_name):
         grants = get_grants()
         _ensure_grants(role, grants)
     except ClientError:
-        log.exception('Failed to ensure grants for {0}.'.format(service_name))
+        logging.exception(
+            'Failed to ensure grants for {0}.'.format(service_name)
+        )
         raise ServiceCreateGrantError()
 
 
@@ -222,7 +225,7 @@ def grants_exist(service_name):
         grants = get_grants()
         encrypt_grant, decrypt_grant = _grants_exist(role, grants)
     except ClientError:
-        log.exception('Failed to get grants for {0}.'.format(service_name))
+        logging.exception('Failed to get grants for {0}.'.format(service_name))
         raise ServiceGetGrantError()
     return {
         'encrypt_grant': encrypt_grant,
@@ -267,7 +270,7 @@ def _ensure_grants(role, grants):
     }
     encrypt_grant, decrypt_grant = _grants_exist(role, grants)
     if not encrypt_grant:
-        log.info('Creating encrypt grant for {0}'.format(role.arn))
+        logging.info('Creating encrypt grant for {0}'.format(role.arn))
         kms.create_grant(
             KeyId=get_key_id(app.config['AUTH_KEY']),
             GranteePrincipal=role.arn,
@@ -275,7 +278,7 @@ def _ensure_grants(role, grants):
             Constraints=encrypt_constraint
         )
     if not decrypt_grant:
-        log.info('Creating decrypt grant for {0}'.format(role.arn))
+        logging.info('Creating decrypt grant for {0}'.format(role.arn))
         kms.create_grant(
             KeyId=get_key_id(app.config['AUTH_KEY']),
             GranteePrincipal=role.arn,

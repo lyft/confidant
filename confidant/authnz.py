@@ -1,7 +1,8 @@
-from confidant import app
-from confidant import log
-from confidant import keymanager
-from confidant import stats
+import fnmatch
+import yaml
+import random
+import logging
+
 from authomatic import Authomatic
 from authomatic.providers import oauth2
 from authomatic.adapters import WerkzeugAdapter
@@ -10,9 +11,9 @@ from flask import redirect, url_for
 from werkzeug.security import safe_str_cmp
 from functools import wraps
 
-import fnmatch
-import yaml
-import random
+from confidant import app
+from confidant import keymanager
+from confidant import stats
 
 authomatic_config = {
     'google': {
@@ -134,12 +135,12 @@ def require_auth(f):
                         token,
                         _from
                     )
-                log.debug('Auth request had the following payload:'
-                          ' {0}'.format(payload))
+                logging.debug('Auth request had the following payload:'
+                              ' {0}'.format(payload))
                 role = 'service'
                 msg = 'Authenticated {0} with role {1} via kms auth'
                 msg = msg.format(_from, role)
-                log.debug(msg)
+                logging.debug(msg)
                 if role_has_privilege(role, f.func_name):
                     g.auth_role = role
                     g.username = _from
@@ -147,12 +148,12 @@ def require_auth(f):
                 else:
                     msg = '{0} is not authorized to access {1}.'
                     msg = msg.format(_from, f.func_name)
-                    log.warning(msg)
+                    logging.warning(msg)
                     return abort(403)
             except keymanager.TokenDecryptionError:
                 msg = 'Access denied for {0}. Authentication Failed.'
                 msg = msg.format(_from)
-                log.warning(msg)
+                logging.warning(msg)
                 return abort(403)
         # If not using kms auth, require google auth.
         else:
@@ -163,7 +164,7 @@ def require_auth(f):
                 if (app.config['USERS_FILE'] and
                         get_logged_in_user_email() not in users):
                     msg = 'User not authorized: {0}'
-                    log.warning(msg.format(get_logged_in_user_email()))
+                    logging.warning(msg.format(get_logged_in_user_email()))
                     return abort(403)
                 else:
                     g.auth_role = role
@@ -183,7 +184,7 @@ def require_auth(f):
             if result:
                 if result.error:
                     msg = 'Google auth failed with error: {0}'
-                    log.error(msg.format(result.error.message))
+                    logging.error(msg.format(result.error.message))
                     return abort(403)
                 if result.user:
                     result.user.update()

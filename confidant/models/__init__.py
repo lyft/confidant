@@ -1,9 +1,10 @@
 import time
 
+from pynamodb.exceptions import TableError
+
 from confidant import app
 from confidant.models.credential import Credential
 from confidant.models.service import Service
-from pynamodb.exceptions import TableError
 
 # Only used when using dynamodb local
 if app.config.get('DYNAMODB_URL'):

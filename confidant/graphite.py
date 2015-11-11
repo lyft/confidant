@@ -1,8 +1,8 @@
-from confidant import app
-from confidant import log
-
 import requests
 import json
+import logging
+
+from confidant import app
 
 
 def send_event(services, msg):
@@ -29,6 +29,6 @@ def send_event(services, msg):
         )
         if response.status_code != 200:
             msg = 'Post to graphite returned non-2000 status ({0}).'
-            log.warning(msg.format(response.status_code))
+            logging.warning(msg.format(response.status_code))
     except Exception as e:
-        log.warning('Failed to post graphite event. {0}'.format(e))
+        logging.warning('Failed to post graphite event. {0}'.format(e))
