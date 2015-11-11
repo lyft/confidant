@@ -11,6 +11,29 @@ Prerequisites not covered by this guide:
 
 1. Your Google application is setup and you know your client id and secret key.
 
+## Docker vs bash
+
+Note that below the format of the configuration is given in bash format for
+defining and exporting environment variables. Docker environment files have a
+slightly different format than bash. Here's an example of the difference:
+
+In bash format:
+
+```bash
+export MY_VARIABLE='MY_VALUE'
+```
+
+In docker env file format, you don't export the variable, and the value
+shouldn't be quoted, since everything after the equal sign is considered part
+of the value. So, in a docker environment file, you'd define the same variable
+and value like this:
+
+In docker format:
+
+```
+MY_VARIABLE=MY_VALUE
+```
+
 ## Basic environment configuration
 
 This is the minimum configuration needed to use Confidant:
@@ -38,6 +61,10 @@ export KMS_MASTER_KEY='confidant-production'
 export REDIS_URL='redis://localhost:6381'
 # A long randomly generated string for CSRF protection.
 export SESSION_SECRET='aBVmJA3zv6zWGjrYto135hkdox6mW2kOu7UaXIHK8ztJvT8w5O'
+# The IP address to listen on.
+export HOST='0.0.0.0'
+# The port to listen on.
+export PORT='80'
 ```
 
 ## Advanced environment configuration

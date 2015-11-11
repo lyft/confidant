@@ -21,7 +21,7 @@ an environment file and use --env-file.
 
 ```bash
 docker pull lyft/confidant
-docker run -t lyft/confidant --env-file my_config
+docker run --env-file my_config -t lyft/confidant
 ```
 
 ## To build the image
