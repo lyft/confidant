@@ -1,7 +1,7 @@
 # Launch Confidant in AWS using SaltStack orchestration
 
-This Salt orchestraton code can be used to launch a fully operational Confidant
-infrastructure with an ELB, a Confidant ASG, a DynamoDB table with indexes and KMS
+This Salt orchestraton code can be used to launch a Confidant infrastructure
+with an ELB, a Confidant ASG, a DynamoDB table with indexes and KMS
 keys for auth and at-rest encryption.
 
 The ASG will launch with cloud-init injected environment and installation
@@ -10,20 +10,27 @@ what you'll eventually want to run yourself. With this configuration, updating
 environment variables will require re-running the orchestration and
 terminate-rolling your Confidant ASG nodes.
 
+## Work in progress
+
+This example won't currently bring up a fully working Confidant install, but
+should launch the majority of the infrastructure you need. We're continuing to
+improve on this and will remove this section when the orchestration code can
+launch a fully operational example in a single run.
+
 ## Warning
 
 This orchestration code will launch infrastructure in AWS and will incur
 charges. It will use a predefined format for the naming of AWS resources:
 
 ```
-service\_name-service\_instance-region
+service_name-service_instance-region
 ```
 
 service\_name, service\_instance and region are user-specified through
 environment variables. So, for instance, if you pass in:
 
 ```bash
-SERVICE\_NAME=confidant SERVICE\_INSTANCE=production REGION=useast1
+SERVICE_NAME=confidant SERVICE_INSTANCE=production REGION=useast1
 ```
 
 your resources will be named as follows:
