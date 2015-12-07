@@ -117,6 +117,24 @@ will be served from a directory you specify:
 export CUSTOM_FRONTEND_DIRECTORY='/srv/confidant-static'
 ```
 
+There's a few settings that are meant for development or testing purposes only
+and should never be used in production:
+
+```bash
+# Disable all forms of authentication.
+# NEVER USE THIS IN PRODUCTION!
+export USE_AUTH=false
+# Disable any use of at-rest encryption.
+# NEVER USE THIS IN PRODUCTION!
+export USE_ENCRYPTION=false
+# Disable SSLify
+# NEVER USE THIS IN PRODUCTION!
+export SSLIFY=false
+# Enable debug mode, which will also disable SSLify.
+# NEVER USE THIS IN PRODUCTION!
+export DEBUG=true
+```
+
 ## KMS key policy configuration
 
 Confidant needs to have special KMS key policy for both the at-rest
