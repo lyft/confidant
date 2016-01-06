@@ -6,10 +6,12 @@ title: Contributing
 
 ## Contributing code
 
-### Sign the Contributor License Agreement (CLA) (not yet available)
+### Sign the Contributor License Agreement (CLA)
 
 We require a CLA for code contributions, so before we can accept a pull request
-we need to have a signed CLA. Please send signed copies of the form to TBD.
+we need to have a signed CLA. Please [visit our CLA
+repo](https://github.com/lyft/CLA) and follow the
+instructions to sign the CLA.
 
 ### File issues in Github
 
