@@ -56,7 +56,7 @@ git clone https://github.com/lyft/confidant
 ## Make a virtualenv and install pip requirements
 
 ```bash
-sudo apt-get install -y python python-pip python-dev build-essential libffi-dev
+sudo apt-get install -y python python-pip python-virtualenv python-dev build-essential libffi-dev
 cd /srv/confidant
 virtualenv venv
 source venv/bin/activate
