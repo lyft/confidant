@@ -257,8 +257,8 @@ create.
     "Statement": [
         {
             "Action": [
-                "iam:GetInstanceProfile",
-                "iam:ListInstanceProfiles"
+                "iam:ListRoles",
+                "iam:GetRole"
             ],
             "Effect": "Allow",
             "Resource": "*"
