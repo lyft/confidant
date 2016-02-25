@@ -179,7 +179,7 @@ above configuration. Note the following:
       "AWS" : "arn:aws:iam::12345:role/confidant-production"
     },
     "Action" : [ "kms:Decrypt", "kms:GenerateDataKey*", "kms:ReEncrypt*",
-"kms:DescribeKey", "kms:Encrypt", "kms:GenerateRandom" ],
+"kms:DescribeKey", "kms:Encrypt" ],
     "Resource" : "*"
   } ]
 }
@@ -228,7 +228,7 @@ above configuration. Note the following:
       "AWS" : "arn:aws:iam::12345:role/confidant-production"
     },
     "Action" : [ "kms:Decrypt", "kms:GenerateDataKey*", "kms:ReEncrypt*",
-"kms:DescribeKey", "kms:Encrypt", "kms:GenerateRandom" ],
+"kms:DescribeKey", "kms:Encrypt" ],
     "Resource" : "*"
   }, {
     "Sid" : "Allow attachment of persistent resources",
@@ -259,6 +259,23 @@ create.
             "Action": [
                 "iam:GetInstanceProfile",
                 "iam:ListInstanceProfiles"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+Allow Confidant to generate random data from KMS:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "kms:GenerateRandom"
             ],
             "Effect": "Allow",
             "Resource": "*"
