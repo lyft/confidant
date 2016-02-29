@@ -75,7 +75,7 @@ USERS_FILE = str_env('USERS_FILE')
 REDIRECT_URI = str_env('REDIRECT_URI')
 # An email suffix that can be used to restrict access to the web interface.
 # Example: @example.com
-GOOGLE_AUTH_EMAIL_SUFFIX = str_env('GOOGLE_AUTH_EMAIL_SUFFIX')
+GOOGLE_AUTH_EMAIL_SUFFIX = str_env('GOOGLE_AUTH_EMAIL_SUFFIX', '')
 # The client ID provided by Google's developer console.
 GOOGLE_OAUTH_CLIENT_ID = str_env('GOOGLE_OAUTH_CLIENT_ID')
 # The consumer secret provided by Google's developer console.
