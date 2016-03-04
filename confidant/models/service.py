@@ -36,6 +36,7 @@ class Service(Model):
         table_name = app.config.get('DYNAMODB_TABLE')
         if app.config.get('DYNAMODB_URL'):
             host = app.config.get('DYNAMODB_URL')
+        region = app.config.get('AWS_DEFAULT_REGION')
 
     id = UnicodeAttribute(hash_key=True)
     data_type = UnicodeAttribute()

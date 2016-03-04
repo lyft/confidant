@@ -178,11 +178,8 @@ USE_ENCRYPTION = bool_env('USE_ENCRYPTION', True)
 
 # boto3 configuration
 
-# Note that it's important to set this environment variable, even though it
-# isn't exposed in app.config. Must be set to the region the server is running
-# in.
-#
-# AWS_DEFAULT_REGION='us-east-1'
+# Must be set to the region the server is running.
+AWS_DEFAULT_REGION = str_env('AWS_DEFAULT_REGION', 'us-east-1')
 
 # gevent configuration
 
