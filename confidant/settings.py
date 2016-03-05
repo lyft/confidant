@@ -1,3 +1,4 @@
+import json
 from os import getenv
 
 
@@ -90,11 +91,22 @@ AUTHOMATIC_SALT = str_env('AUTHOMATIC_SALT')
 AUTH_CONTEXT = str_env('AUTH_CONTEXT')
 # The alias of the KMS key being used for authentication. This can be the same
 # as KMS_MASTER_KEY, but it's highly recommended to use a different key for
-# authentication and at-rest encryption.
+# authentication and at-rest encryption. This key is specifically for the
+# 'service' role.
 # Example: mykmskey
 AUTH_KEY = str_env('AUTH_KEY')
+# The alias of the KMS key being used for authentication that is specifically
+# for the 'user' role. This should not be the same key as AUTH_KEY if your
+# kms token version is < 2, as it would allow services to masquerade as users.
+USER_AUTH_KEY = str_env('USER_AUTH_KEY')
 # The maximum lifetime of an authentication token in minutes.
 AUTH_TOKEN_MAX_LIFETIME = int_env('AUTH_TOKEN_MAX_LIFETIME', 60)
+# The minimum version of the authentication token accepted.
+KMS_MAXIMUM_TOKEN_VERSION = int_env('KMS_MAXIMUM_TOKEN_VERSION', 2)
+# The maximum version of the authentication token accepted.
+KMS_MINIMUM_TOKEN_VERSION = int_env('KMS_MINIMUM_TOKEN_VERSION', 1)
+# Comma separated list of user types allowed to auth via KMS.
+KMS_AUTH_USER_TYPES = str_env('KMS_AUTH_USER_TYPES', 'service').split(',')
 
 # SSL redirection and HSTS
 
@@ -161,6 +173,22 @@ STATSD_PORT = int_env('STATSD_PORT', 8125)
 
 # Directory for customization of AngularJS frontend.
 CUSTOM_FRONTEND_DIRECTORY = str_env('CUSTOM_FRONTEND_DIRECTORY')
+
+# Custom configuration to bootstrap confidant clients. This
+# configuration is in JSON format and can contain anything you'd like to pass
+# to the clients. Here's an example for passing default configuration for blind
+# secrets to the opinionated CLI client:
+#
+# {
+#   "blind_keys": {
+#      "us-east-1": "alias/blindkey-useast1",
+#      "us-west-2": "alias/blindkey-uswest2"
+#    },
+#    "blind_cipher_type": "fernet",
+#    "blind_cipher_version": "2",
+#    "blind_store_credential_keys": true
+# }
+CLIENT_CONFIG = json.loads(str_env('CLIENT_CONFIG', '{}'))
 
 # Test/Development
 

@@ -10,7 +10,25 @@ from pynamodb.attributes import (
 )
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
-from confidant import app
+from confidant.app import app
+
+
+class NonNullUnicodeSetAttribute(UnicodeSetAttribute):
+    def __get__(self, instance, value):
+        '''
+        Override UnicodeSetAttribute's __get__ method to return a set, rather
+        than None if the attribute isn't set.
+        '''
+        if instance:
+            # Get the attribute. If the object doesn't have the attribute,
+            # ensure we return a set.
+            _value = instance.attribute_values.get(self.attr_name, set())
+            # Attribute is assigned to None, return a set instead.
+            if _value is None:
+                _value = set()
+            return _value
+        else:
+            return self
 
 
 class DataTypeDateIndex(GlobalSecondaryIndex):
@@ -20,15 +38,6 @@ class DataTypeDateIndex(GlobalSecondaryIndex):
         write_capacity_units = 10
     data_type = UnicodeAttribute(hash_key=True)
     modified_date = UTCDateTimeAttribute(range_key=True)
-
-
-class DataTypeRevisionIndex(GlobalSecondaryIndex):
-    class Meta:
-        projection = AllProjection()
-        read_capacity_units = 10
-        write_capacity_units = 10
-    data_type = UnicodeAttribute(hash_key=True)
-    revision = NumberAttribute(range_key=True)
 
 
 class Service(Model):
@@ -41,9 +50,9 @@ class Service(Model):
     id = UnicodeAttribute(hash_key=True)
     data_type = UnicodeAttribute()
     data_type_date_index = DataTypeDateIndex()
-    data_type_revision_index = DataTypeRevisionIndex()
     revision = NumberAttribute()
     enabled = BooleanAttribute(default=True)
-    credentials = UnicodeSetAttribute(default=set([]))
+    credentials = NonNullUnicodeSetAttribute(default=set())
+    blind_credentials = NonNullUnicodeSetAttribute(default=set())
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()

@@ -24,6 +24,8 @@ def get_service(url, from_context, to_context, auth_key, token_lifetime=1):
     '''
     Read secret data from Confidant via its API.
     '''
+    logging.warning('This confidant client is deprecated. The new client can'
+                    ' be installed via pip (pip install confidant).')
     # Return a dict, always with an attribute that specifies whether or not the
     # function was able to successfully get a result.
     ret = {'result': False}

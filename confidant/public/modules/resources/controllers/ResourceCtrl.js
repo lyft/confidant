@@ -15,8 +15,9 @@
         '$q',
         '$log',
         'credentials.CredentialListService',
+        'blindcredentials.BlindCredentialListService',
         'services.ServiceListService',
-        function ($scope, $stateParams, $q, $log, CredentialListService, ServiceListService) {
+        function ($scope, $stateParams, $q, $log, CredentialListService, BlindCredentialListService, ServiceListService) {
             $scope.$log = $log;
             $scope.showDisabled = false;
 
@@ -27,6 +28,14 @@
                 }
             });
             $scope.$emit('updateCredentialList');
+
+            $scope.getBlindCredentialList = BlindCredentialListService.getBlindCredentialList;
+            $scope.$watch('getBlindCredentialList()', function(newBlindCredentialList, oldBlindCredentialList) {
+                if(newBlindCredentialList !== oldBlindCredentialList) {
+                    $scope.blindCredentialList = newBlindCredentialList;
+                }
+            });
+            $scope.$emit('updateBlindCredentialList');
 
             $scope.getServiceList = ServiceListService.getServiceList;
             $scope.$watch('getServiceList()', function(newServiceList, oldServiceList) {

@@ -18,6 +18,7 @@ sdist
 develop-eggs
 .installed.cfg
 lib
+!confidant/lib
 lib64
 __pycache__
 
@@ -54,6 +55,10 @@ service.env
 .DS_store
 .zedstate
 .idea
+
+# virtualenv excludes
+venv
+client_venv
 
 # Orchestration excludes
 salt/venv

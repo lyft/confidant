@@ -15,6 +15,16 @@
         </ul>
       </ul>
     </li>
+    <li ng-repeat="(credentialPairKey, conflicts) in credentialPairConflicts">
+      {{ credentialPairKey }}:
+      <ul>
+        <li>Blind Credentials:</li>
+        <ul>
+          <li ng-repeat="credentialId in conflicts.blind_credentials"><a
+            class="color-text-snow" href="#/resources/credential/{{ credentialId }}">{{ getBlindCredentialByID(credentialId).name }}</a></li>
+        </ul>
+      </ul>
+    </li>
   </ul>
   <p>Please ensure credential pair keys are unique, then try again.</p>
 </div>
@@ -48,6 +58,28 @@
   <div class="row">
     <span ng-show="editableForm.$visible">
       <button type="button" ng-disabled="editableForm.$waiting" ng-click="addCredential()" class="btn pull-right">Add credential</button>
+    </span>
+  </div>
+  <div class="form-group">
+    <label for="blindCredentialInputs">Blind Credentials</label>
+    <div class="well">
+      <div ng-repeat="blind_credential in service.blind_credentials | filter:filterCredentials" class="row">
+        <div class="col-md-8">
+          <span editable-select="blind_credential.id" e-ng-selected="blind_credential.id == c.id" e-name="{{ blind_credential.id }}SelectMenu" e-ng-options="c.id as c.name for c in $parent.blindCredentialList | filter:filterBlindCredentialOptions">
+            <a href="#/resources/blind_credential/{{ blind_credential.id }}">{{ blind_credential.name }} <span ng-hide="blind_credential.enabled">(disabled)</span></a>
+            <!--{{ blind_credential.name }} <span ng-hide="blind_credential.enabled">(disabled)-->
+          </span>
+          <span ng-hide="editableForm.$visible">(Revision: {{ blind_credential.revision }})</span>
+        </div>
+        <div class="col-md-4" style="padding-bottom: 10px">
+          <button type="button" ng-click="deleteBlindCredential(blind_credential.$$hashKey)" class="btn btn-loud" ng-show="editableForm.$visible">Del</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <span ng-show="editableForm.$visible">
+      <button type="button" ng-disabled="editableForm.$waiting" ng-click="addBlindCredential()" class="btn pull-right">Add blind credential</button>
     </span>
   </div>
   <div class="form-group" ng-hide="newService || missingService">

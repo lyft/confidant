@@ -4,8 +4,8 @@ import logging
 from flask import send_from_directory
 from werkzeug.exceptions import NotFound
 
-from confidant import app
 from confidant import authnz
+from confidant.app import app
 
 
 @app.route('/')

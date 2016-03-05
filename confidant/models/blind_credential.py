@@ -3,10 +3,10 @@ from datetime import datetime
 from pynamodb.models import Model
 from pynamodb.attributes import (
     UnicodeAttribute,
+    UnicodeSetAttribute,
     NumberAttribute,
     BooleanAttribute,
     UTCDateTimeAttribute,
-    BinaryAttribute,
     JSONAttribute
 )
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
@@ -23,7 +23,7 @@ class DataTypeDateIndex(GlobalSecondaryIndex):
     modified_date = UTCDateTimeAttribute(range_key=True)
 
 
-class Credential(Model):
+class BlindCredential(Model):
     class Meta:
         table_name = app.config.get('DYNAMODB_TABLE')
         if app.config.get('DYNAMODB_URL'):
@@ -35,11 +35,12 @@ class Credential(Model):
     data_type = UnicodeAttribute()
     data_type_date_index = DataTypeDateIndex()
     name = UnicodeAttribute()
-    credential_pairs = UnicodeAttribute()
+    credential_pairs = JSONAttribute()
+    credential_keys = UnicodeSetAttribute(default=set([]), null=True)
     enabled = BooleanAttribute(default=True)
-    data_key = BinaryAttribute()
-    # TODO: add cipher_type
-    cipher_version = NumberAttribute(null=True)
+    data_key = JSONAttribute()
+    cipher_version = NumberAttribute()
+    cipher_type = UnicodeAttribute()
     metadata = JSONAttribute(default={}, null=True)
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()

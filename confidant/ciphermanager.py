@@ -4,7 +4,7 @@ import logging
 
 from cryptography.fernet import Fernet
 
-from confidant import app
+from confidant.app import app
 
 
 class CipherManager:

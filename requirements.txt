@@ -14,7 +14,7 @@ Flask-Script==2.0.5
 # for Python.
 # License: Apache2
 # Use: For KMS
-boto3==1.1.3
+boto3==1.2.3
 
 # A Pythonic interface for Amazon’s DynamoDB that supports Python 2 and 3.
 # License: MIT
@@ -27,7 +27,7 @@ pynamodb==1.4.3
 # License: BSD
 # Upstream url: https://github.com/pyca/cryptography
 # Use: For encryption
-cryptography==1.0.1
+cryptography==1.2.2
 
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
@@ -55,6 +55,35 @@ Flask-SSLify==0.1.5
 # Upstream url: http://peterhudec.github.io/authomatic
 # Use: For google auth
 Authomatic==0.1.0.post1
+
+# Python HTTP for Humans.
+# License: Apache2
+# Upstream url: http://python-requests.org
+# Use: REST calls to external services
+requests==2.8.1
+
+# Provides enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
+# License: BSD
+# Upstream url: https://github.com/cedadev/ndg_httpsclient/
+# Use: Securing requests for python < 2.7.9.
+ndg-httpsclient==0.4.0
+
+# ASN.1 types and codecs
+# License: BSD
+# Upstream url: http://sourceforge.net/projects/pyasn1/
+# Use: Securing requests for python < 2.7.9.
+pyasn1==0.1.9
+
+# Python wrapper module around the OpenSSL library
+# License: APL2
+# Upstream url: https://github.com/pyca/pyopenssl
+# Use: Securing requests for python < 2.7.9.
+pyOpenSSL==0.15.1
+
+# WSGI middleware to add CSP headers
+# License: Apache2
+# Upstream url: https://github.com/dstufft/guard
+guard==1.0.1
 
 # The modular source code checker: pep8, pyflakes and co
 # License: MIT
@@ -86,11 +115,6 @@ nose-pathmunge==0.1.2
 # Upstream url: http://www.voidspace.org.uk/python/mock
 mock==1.0.1
 
-# WSGI middleware to add CSP headers
-# License: Apache2
-# Upstream url: https://github.com/dstufft/guard
-guard==1.0.1
-
 # License: MIT
 # Upstream url: http://pyyaml.org/wiki/PyYAML
 # Use: For parsing users.yaml
@@ -115,27 +139,3 @@ greenlet==0.4.9
 # Upstream url: https://github.com/jsocol/pystatsd
 # Use: For metrics collection
 statsd==3.1
-
-# Python HTTP for Humans.
-# License: Apache2
-# Upstream url: http://python-requests.org
-# Use: REST calls to external services
-requests==2.8.1
-
-# Provides enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
-# License: BSD
-# Upstream url: https://github.com/cedadev/ndg_httpsclient/
-# Use: Securing requests for python < 2.7.9.
-ndg-httpsclient==0.4.0
-
-# ASN.1 types and codecs
-# License: BSD
-# Upstream url: http://sourceforge.net/projects/pyasn1/
-# Use: Securing requests for python < 2.7.9.
-pyasn1==0.1.9
-
-# Python wrapper module around the OpenSSL library
-# License: APL2
-# Upstream url: https://github.com/pyca/pyopenssl
-# Use: Securing requests for python < 2.7.9.
-pyOpenSSL==0.15.1
