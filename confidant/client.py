@@ -4,6 +4,7 @@ import logging
 import json
 import datetime
 import base64
+import os
 
 # Import third party libs
 import requests
@@ -26,6 +27,7 @@ logging.getLogger('botocore').setLevel(logging.WARNING)
 
 JSON_HEADERS = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 TOKEN_SKEW = 3
+TIME_FORMAT = "%Y%m%dT%H%M%SZ"
 
 
 class ConfidantClient(object):
@@ -39,6 +41,7 @@ class ConfidantClient(object):
             auth_context,
             token_lifetime=10,
             token_version=2,
+            token_cache_file='/dev/shm/confidant/confidant_token',
             assume_role=None,
             mfa_pin=None,
             region=None,
@@ -51,6 +54,7 @@ class ConfidantClient(object):
         self.auth_context = auth_context
         self.token_lifetime = token_lifetime
         self.token_version = token_version
+        self.token_cache_file = token_cache_file
         self.region = region
         self.retries = retries
         self.backoff = backoff
@@ -147,28 +151,75 @@ class ConfidantClient(object):
             TokenCode=mfa_pin
         )['Credentials']
 
+    def _get_cached_token(self):
+        token = None
+        if not self.token_cache_file:
+            return token
+        try:
+            with open(self.token_cache_file, 'r') as f:
+                token_data = json.load(f)
+            _not_after = token_data['not_after']
+            _auth_context = token_data['auth_context']
+            _token = token_data['token']
+            _not_after_cache = datetime.datetime.strptime(
+                _not_after,
+                TIME_FORMAT
+            )
+        except IOError as e:
+            logging.info(
+                'Failed to read confidant auth token cache: {0}'.format(e)
+            )
+            return token
+        except Exception:
+            logging.exception('Failed to read confidant auth token cache.')
+            return token
+        skew_delta = datetime.timedelta(minutes=TOKEN_SKEW)
+        _not_after_cache = _not_after_cache - skew_delta
+        now = datetime.datetime.utcnow()
+        if now <= _not_after_cache and _auth_context == self.auth_context:
+            logging.debug('Using confidant auth token cache.')
+            token = _token
+        return token
+
+    def _cache_token(self, token, not_after):
+        if not self.token_cache_file:
+            return
+        try:
+            cachedir = os.path.dirname(self.token_cache_file)
+            if not os.path.exists(cachedir):
+                os.makedirs(cachedir)
+            with open(self.token_cache_file, 'w') as f:
+                json.dump({
+                    'token': token,
+                    'not_after': not_after,
+                    'auth_context': self.auth_context
+                }, f)
+        except Exception:
+            logging.exception('Failed to write confidant auth token cache.')
+
     def _get_token(self):
         """Get an authentication token."""
-        # Specify the standard time format for dates required by Confidant.
-        time_format = "%Y%m%dT%H%M%SZ"
         # Generate string formatted timestamps for not_before and not_after,
         # for the lifetime specified in minutes.
         now = datetime.datetime.utcnow()
         # Start the not_before time x minutes in the past, to avoid clock skew
         # issues.
         _not_before = now - datetime.timedelta(minutes=TOKEN_SKEW)
-        not_before = _not_before.strftime(time_format)
+        not_before = _not_before.strftime(TIME_FORMAT)
         # Set the not_after time in the future, by the lifetime, but ensure the
         # skew we applied to not_before is taken into account.
         _not_after = now + datetime.timedelta(
             minutes=self.token_lifetime - TOKEN_SKEW
         )
-        not_after = _not_after.strftime(time_format)
+        not_after = _not_after.strftime(TIME_FORMAT)
         # Generate a json string for the encryption payload contents.
         payload = json.dumps({
             'not_before': not_before,
             'not_after': not_after
         })
+        token = self._get_cached_token()
+        if token:
+            return token
         # Generate a base64 encoded KMS encrypted token to use for
         # authentication. We encrypt the token lifetime information as the
         # payload for verification in Confidant.
@@ -192,6 +243,7 @@ class ConfidantClient(object):
         except Exception:
             logging.exception('Failed to create auth token.')
             raise TokenCreationError()
+        self._cache_token(token, not_after)
         return token
 
     def _check_response_code(self, response, expected=None):

@@ -15,7 +15,7 @@ from setuptools import setup
 from pip.req import parse_requirements
 from pip.exceptions import InstallationError
 
-VERSION = "1.1.4"
+VERSION = "1.1.5"
 
 try:
     client_reqs = parse_requirements(
