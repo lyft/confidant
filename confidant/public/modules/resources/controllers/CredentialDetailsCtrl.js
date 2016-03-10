@@ -40,7 +40,8 @@
         'credentials.credential',
         'credentials.credentials',
         'credentials.services',
-        function ($scope, $stateParams, $q, $log, $filter, $location, Credential, Credentials, CredentialServices) {
+        'credentials.valueGenerator',
+        function ($scope, $stateParams, $q, $log, $filter, $location, Credential, Credentials, CredentialServices, ValueGenerator) {
             var credentialCopy = null;
             $scope.$log = $log;
             $scope.saveError = '';
@@ -192,6 +193,13 @@
 
                 return deferred.promise;
             };
+
+            $scope.generateValue = function(credentialPair) {
+              ValueGenerator.get().$promise.then(function(obj) {
+                credentialPair.value = obj.value;
+              });
+            };
+
 
         }])
 

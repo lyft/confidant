@@ -2,6 +2,8 @@ import json
 import uuid
 import copy
 import logging
+import base64
+import re
 
 from pynamodb.exceptions import PutError
 from flask import request
@@ -20,6 +22,9 @@ from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
 
 iam_resource = confidant.services.get_boto_resource('iam')
+kms_client = confidant.services.get_boto_client('kms')
+
+VALUE_LENGTH = 50
 
 
 @app.route('/v1/user/email', methods=['GET', 'POST'])
@@ -1104,3 +1109,13 @@ def update_blind_credential(id):
         'modified_date': cred.modified_date,
         'modified_by': cred.modified_by
     })
+
+
+@app.route('/v1/value_generator', methods=['GET'])
+def generate_value():
+    value = kms_client.generate_random(NumberOfBytes=128)['Plaintext']
+    value = base64.urlsafe_b64encode(value)
+    value = re.sub('[\W_]+', '', value)
+    if len(value) > VALUE_LENGTH:
+        value = value[:VALUE_LENGTH]
+    return jsonify({'value': value})

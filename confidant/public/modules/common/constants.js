@@ -27,7 +27,8 @@
         BLIND_CREDENTIALS: 'v1/blind_credentials',
         BLIND_ARCHIVE_CREDENTIALS: 'v1/archive/blind_credentials',
         BLIND_ARCHIVE_CREDENTIAL_REVISIONS: 'v1/archive/blind_credentials/:id/:revision',
-        ROLES: 'v1/roles'
+        ROLES: 'v1/roles',
+        VALUE_GENERATOR: 'v1/value_generator'
     })
 
     .constant('common.APP_EVENTS', {
