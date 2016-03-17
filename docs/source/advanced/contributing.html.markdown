@@ -4,6 +4,11 @@ title: Contributing
 
 # Contributing
 
+## Code of conduct
+
+This project is governed by [Lyft's code of conduct](https://github.com/lyft/code-of-conduct).
+All contributors and participants agree to abide by its terms.
+
 ## Contributing code
 
 ### Sign the Contributor License Agreement (CLA)
