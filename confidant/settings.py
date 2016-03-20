@@ -66,6 +66,14 @@ STATIC_FOLDER = str_env('STATIC_FOLDER', 'public')
 
 APPLICATION_ENV = str_env('APPLICATION_ENV', 'development')
 
+# User authentication
+USER_AUTH_MODULE = str_env('USER_AUTH_MODULE', 'google')
+
+# An email suffix that can be used to restrict access to the web interface.
+# Example: @example.com
+USER_EMAIL_SUFFIX = (str_env('USER_EMAIL_SUFFIX', None) or
+                     str_env('GOOGLE_AUTH_EMAIL_SUFFIX', None)) # backwards compat
+
 # Google authentication
 
 # A yaml file, with email: name mappings that can be used for restricting
@@ -74,9 +82,6 @@ APPLICATION_ENV = str_env('APPLICATION_ENV', 'development')
 USERS_FILE = str_env('USERS_FILE')
 # The Google OAuth2 redirect URI endpoint URL.
 REDIRECT_URI = str_env('REDIRECT_URI')
-# An email suffix that can be used to restrict access to the web interface.
-# Example: @example.com
-GOOGLE_AUTH_EMAIL_SUFFIX = str_env('GOOGLE_AUTH_EMAIL_SUFFIX')
 # The client ID provided by Google's developer console.
 GOOGLE_OAUTH_CLIENT_ID = str_env('GOOGLE_OAUTH_CLIENT_ID')
 # The consumer secret provided by Google's developer console.
