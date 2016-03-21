@@ -53,7 +53,7 @@ Flask-SSLify==0.1.5
 # Twitter through standards like OAuth and OpenID.
 # License: MIT
 # Upstream url: http://peterhudec.github.io/authomatic
-# Use: For google auth
+# Use: For user authentication via Google OAuth
 Authomatic==0.1.0.post1
 
 # Python HTTP for Humans.
@@ -139,3 +139,8 @@ greenlet==0.4.9
 # Upstream url: https://github.com/jsocol/pystatsd
 # Use: For metrics collection
 statsd==3.1
+
+# License: MIT
+# Upstream url: https://github.com/onelogin/python-saml
+# Use: For user authentication via SAML
+python-saml==2.1.6
