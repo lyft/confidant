@@ -15,7 +15,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="confidant-common",
-    version="1.1.5",
+    version="1.1.6",
     packages=find_packages(exclude=["test*"]),
     author="Ryan Lane",
     author_email="rlane@lyft.com",

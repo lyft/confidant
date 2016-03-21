@@ -11,8 +11,6 @@ import re
 
 import confidant.client
 import confidant.services
-import confidant.formatter
-
 
 KEY_BAD_PATTERN = re.compile(r'(\W|^\d)')
 
@@ -22,12 +20,19 @@ def _get_client_from_args(args):
         mfa_pin = getpass.getpass('Enter the MFA code: ')
     else:
         mfa_pin = None
-    auth_context = {
-        'from': args._from,
-        'to': args._to
-    }
-    if args.token_version > 1:
+    auth_context = {}
+    if args._from:
+        auth_context['from'] = args._from
+    if args._to:
+        auth_context['to'] = args._to
+    if args.user_type:
         auth_context['user_type'] = args.user_type
+    if not auth_context:
+        auth_context = None
+    if args.config_files:
+        config_files = args.config_files.split(',')
+    else:
+        config_files = None
     client = confidant.client.ConfidantClient(
         args.url,
         args.auth_key,
@@ -37,49 +42,14 @@ def _get_client_from_args(args):
         assume_role=args.assume_role,
         mfa_pin=mfa_pin,
         region=args.region,
-        retries=args.retries
+        retries=args.retries,
+        config_files=config_files,
+        profile=args.profile
     )
     return client
 
 
-def _valid_key(key):
-    if KEY_BAD_PATTERN.search(key):
-        msg = ('A key in the returned credential_pairs ({0}) is not a valid'
-               ' shell environment variable. Skipping this key.')
-        logging.warning(msg.format(key))
-        return False
-    return True
-
-
-# http://stackoverflow.com/questions/20094215
-class _HelpAction(argparse._HelpAction):
-
-    def __call__(self, parser, namespace, values, option_string=None):
-        parser.print_help()
-        print ''
-
-        # retrieve subparsers from parser
-        subparsers_actions = [
-            action for action in parser._actions
-            if isinstance(action, argparse._SubParsersAction)]
-        for subparsers_action in subparsers_actions:
-            # get all subparsers and print help
-            for choice, subparser in subparsers_action.choices.items():
-                print ('Subcommand \'{0}\':'.format(choice))
-                print (subparser.format_help())
-
-        print (
-            'example: confidant_client get_service -u'
-            ' "https://confidant-production.example.com" -k'
-            ' "alias/authnz-production" --from myservice-production'
-            ' --to confidant-production --user_type service'
-        )
-
-        parser.exit()
-
-
-def main():
-    """Entrypoint function for confidant cli."""
+def _parse_args():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=('A client for fetching credentials from a confidant'
@@ -93,9 +63,17 @@ def main():
         help='show this help message and exit'
     )
     parser.add_argument(
+        '--config-files',
+        help=('Comma separated list of configuration files to use. Default:'
+              ' ~/.confidant,/etc/confidant/config')
+    )
+    parser.add_argument(
+        '--profile',
+        help='Configuration profile to use. Default: default'
+    )
+    parser.add_argument(
         '-u',
         '--url',
-        required=True,
         help=('url of the confidant server. i.e.'
               ' https://confidant-production.example.com')
     )
@@ -103,13 +81,11 @@ def main():
         '--retries',
         help=('Number of retries that should be attempted on confidant server'
               ' errors. Default 0.'),
-        type=int,
-        default=0
+        type=int
     )
     parser.add_argument(
         '-k',
         '--auth-key',
-        required=True,
         help='The KMS auth key to use. i.e. alias/authnz-production'
     )
     parser.add_argument(
@@ -120,14 +96,12 @@ def main():
               ' token by 3 minutes to avoid clockskew issues, so the minimum'
               ' lifetime you should use is 4. You may also want to pad the'
               ' lifetime by a few minutes to avoid clock skew the other'
-              ' direction, so a safe recommended minimum is 7.'),
-        default=10
+              ' direction, so a safe recommended minimum is 7.')
     )
     parser.add_argument(
         '--token-version',
         type=int,
-        help='The version of the KMS auth token.',
-        default=2
+        help='The version of the KMS auth token.'
     )
     parser.add_argument(
         '--from',
@@ -142,8 +116,7 @@ def main():
     )
     parser.add_argument(
         '--user-type',
-        help='The confidant user-type to authenticate as i.e. user or service',
-        default='service'
+        help='The confidant user-type to authenticate as i.e. user or service'
     )
     parser.add_argument(
         '--mfa',
@@ -154,14 +127,6 @@ def main():
     parser.add_argument(
         '--assume-role',
         help='Assume the specified role.'
-    )
-    parser.add_argument(
-        '--auth-context',
-        help=('A custom encryption context for auth in json format'
-              ' i.e. \'{"collection":"web"}\'. from, to and user_type will be'
-              ' added to the dict, if provided.'),
-        type=json.loads,
-        default='{}'
     )
     parser.add_argument(
         '--region',
@@ -184,18 +149,7 @@ def main():
     get_service_parser = subparsers.add_parser('get_service')
     get_service_parser.add_argument(
         '--service',
-        help='The service to get. Defaults to --from.'
-    )
-    get_service_parser.add_argument(
-        '--only-env-out',
-        help=('Only output credential pairs from credentials, in environment'
-              ' variable format.'),
-        action='store_true'
-    )
-    get_service_parser.add_argument(
-        '--only-env-out-prefix',
-        help='Prefix the environment variables output via --only-env-out.',
-        default='CREDENTIALS_'
+        help='The service to get.'
     )
     get_service_parser.add_argument(
         '--no-decrypt-blind',
@@ -205,8 +159,7 @@ def main():
         dest='decrypt_blind'
     )
     get_service_parser.set_defaults(
-        decrypt_blind=True,
-        only_env_out=False
+        decrypt_blind=True
     )
 
     create_blind_cred_parser = subparsers.add_parser('create_blind_credential')
@@ -388,14 +341,12 @@ def main():
         store_keys=True
     )
 
-    args = parser.parse_args()
+    return parser.parse_args()
 
-    if args.user_type == 'user' and not args._from:
-        iam_client = confidant.services.get_boto_client(
-            'iam',
-            region=args.region
-        )
-        args._from = iam_client.get_user()['User']['UserName']
+
+def main():
+    """Entrypoint function for confidant cli."""
+    args = _parse_args()
 
     numeric_loglevel = getattr(logging, args.log_level.upper(), None)
     if not isinstance(numeric_loglevel, int):
@@ -411,8 +362,6 @@ def main():
     ret = {'result': False}
 
     if args.subcommand == 'get_service':
-        if not args.service:
-            args.service = args._from
         try:
             ret = client.get_service(
                 args.service,
@@ -420,15 +369,6 @@ def main():
             )
         except Exception:
             logging.exception('An unexpected general error occurred.')
-        if args.only_env_out:
-            if not ret['result']:
-                sys.exit(1)
-            print confidant.formatter.bash_export_format(
-                ret,
-                args.only_env_out_prefix
-            )
-            sys.exit()
-
     elif args.subcommand == 'create_blind_credential':
         contexts = {}
         if args.group_context:
@@ -478,6 +418,34 @@ def main():
     print json.dumps(ret, sort_keys=True, indent=4, separators=(',', ': '))
     if not ret['result']:
         sys.exit(1)
+
+
+# http://stackoverflow.com/questions/20094215
+class _HelpAction(argparse._HelpAction):
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        parser.print_help()
+        print ''
+
+        # retrieve subparsers from parser
+        subparsers_actions = [
+            action for action in parser._actions
+            if isinstance(action, argparse._SubParsersAction)]
+        for subparsers_action in subparsers_actions:
+            # get all subparsers and print help
+            for choice, subparser in subparsers_action.choices.items():
+                print ('Subcommand \'{0}\':'.format(choice))
+                print (subparser.format_help())
+
+        print (
+            'example: confidant_client get_service -u'
+            ' "https://confidant-production.example.com" -k'
+            ' "alias/authnz-production" --from myservice-production'
+            ' --to confidant-production --user_type service'
+        )
+
+        parser.exit()
+
 
 if __name__ == '__main__':
     main()

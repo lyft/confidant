@@ -5,6 +5,7 @@ import json
 import datetime
 import base64
 import os
+import yaml
 
 # Import third party libs
 import requests
@@ -36,28 +37,81 @@ class ConfidantClient(object):
 
     def __init__(
             self,
-            url,
-            auth_key,
-            auth_context,
-            token_lifetime=10,
-            token_version=2,
-            token_cache_file='/dev/shm/confidant/confidant_token',
+            url=None,
+            auth_key=None,
+            auth_context=None,
+            token_lifetime=None,
+            token_version=None,
+            token_cache_file=None,
             assume_role=None,
             mfa_pin=None,
             region=None,
-            retries=0,
-            backoff=1
+            retries=None,
+            backoff=None,
+            config_files=None,
+            profile=None
             ):
-        """Create a ConfidantClient object."""
-        self.url = url
-        self.auth_key = auth_key
-        self.auth_context = auth_context
-        self.token_lifetime = token_lifetime
-        self.token_version = token_version
-        self.token_cache_file = token_cache_file
-        self.region = region
-        self.retries = retries
-        self.backoff = backoff
+        """Create a ConfidantClient object.
+
+        Args:
+            url: URL of confidant server. Default: None
+            auth_key: The KMS key ARN or alias to use for authentication.
+                Default: None
+            auth_context: The KMS encryption context to use for authentication.
+                Default: None
+            token_lifetime: Lifetime of the authentication token generated.
+                Default: 10
+            token_version: The version of the authentication token. Default: 2
+            token_cache_file: The location to use for caching the auth token.
+                If set to empty string, no cache will be used. Default:
+                /dev/shm/confidant/confidant_token
+            assume_role: IAM role to assume for getting KMS auth token.
+                Default: None
+            mfa_pin: pin to use when assuming a role or getting an MFA session.
+                Default: None
+            region: AWS region to connect to. Default: None.
+            retries: Number of retries to use on failed requests. Default: 0
+            backoff: Backoff factor for retries. See urllib3's Retry helper.
+                Default: 1
+            config_files: A list of config files to attempt to load
+            configuration from. First file found will be used. Default:
+                ['~/.confidant', '/etc/confidant/config']
+            profile: profile to read config values from.
+        """
+        # Set defaults
+        self.config = {
+            'url': None,
+            'auth_key': None,
+            'auth_context': {},
+            'token_lifetime': 10,
+            'token_version': 2,
+            'token_cache_file': '/dev/shm/confidant/confidant_token',
+            'assume_role': None,
+            'region': None,
+            'retries': 0,
+            'backoff': 1
+        }
+        if config_files is None:
+            config_files = ['~/.confidant', '/etc/confidant/config']
+        if profile is None:
+            profile = 'default'
+        # Override defaults from config file
+        self.config.update(self._load_config(config_files, profile))
+        # Override config from passed-in args
+        args_config = {
+            'url': url,
+            'auth_key': auth_key,
+            'auth_context': auth_context,
+            'token_lifetime': token_lifetime,
+            'token_version': token_version,
+            'token_cache_file': token_cache_file,
+            'region': region,
+            'backoff': backoff,
+            'assume_role': assume_role
+        }
+        for key, val in args_config.iteritems():
+            if val is not None:
+                self.config[key] = val
         # Use session to re-try failed requests.
         self.request_session = requests.Session()
         for proto in ['http://', 'https://']:
@@ -65,58 +119,100 @@ class ConfidantClient(object):
                 proto,
                 HTTPAdapter(
                     max_retries=Retry(
-                        total=self.retries,
+                        total=self.config['retries'],
                         status_forcelist=[500, 503],
-                        backoff_factor=self.backoff
+                        backoff_factor=self.config['backoff']
                     )
                 )
             )
-        self.validate_client()
         self.iam_client = confidant.services.get_boto_client(
             'iam',
-            region=region
+            region=self.config['region']
         )
+        self._load_user_auth_context()
+        self._validate_client()
         self.sts_client = confidant.services.get_boto_client(
             'sts',
-            region=region
+            region=self.config['region']
         )
         self.kms_client = confidant.services.get_boto_client(
             'kms',
-            region=region
+            region=self.config['region']
         )
-        if assume_role:
-            self.aws_creds = self._get_assume_role_creds(assume_role, mfa_pin)
+        if self.config['assume_role']:
+            self.aws_creds = self._get_assume_role_creds(
+                self.config['assume_role'],
+                mfa_pin
+            )
         elif mfa_pin:
             self.aws_creds = self._get_mfa_creds(mfa_pin)
         else:
             self.aws_creds = None
 
-    def validate_client(self):
+    def _load_config(self, config_files, profile):
+        """Initialize client settings from config."""
+        for filename in config_files:
+            try:
+                with open(os.path.expanduser(filename), 'r') as f:
+                    config = yaml.safe_load(f.read())
+                    return config.get(profile, {})
+            except IOError:
+                logging.debug('{0} config file not found.'.format(filename))
+                pass
+            except yaml.YAMLError as e:
+                msg = 'Failed to parse {0}: {1}'.format(filename, e)
+                logging.error(msg)
+                raise ClientConfigurationError(msg)
+        # No file found
+        return {}
+
+    def _load_user_auth_context(self):
+        """Conditionally load from auth context for users."""
+        if self.config['auth_context'].get('user_type') == 'user':
+            if not self.config['auth_context'].get('from'):
+                try:
+                    username = self.iam_client.get_user()['User']['UserName']
+                    self.config['auth_context']['from'] = username
+                except Exception:
+                    logging.warning(
+                        'Could not set from auth_context from get_user.'
+                    )
+
+    def _validate_client(self):
         """Ensure the configuration passed into init is valid."""
+        if not self.config['url']:
+            raise ClientConfigurationError('url not provided.')
+        if not self.config['auth_key']:
+            raise ClientConfigurationError('auth_key not provided.')
+        if not self.config['auth_context']:
+            raise ClientConfigurationError('auth_context not provided.')
         for key in ['from', 'to']:
-            if key not in self.auth_context:
+            if key not in self.config['auth_context']:
                 raise ClientConfigurationError(
                     '{0} missing from auth_context.'.format(key)
                 )
-        if self.token_version > 1:
-            if 'user_type' not in self.auth_context:
+        if self.config['token_version'] > 1:
+            if 'user_type' not in self.config['auth_context']:
                 raise ClientConfigurationError(
                     'user_type missing from auth_context.'
                 )
-        if self.token_version > 2:
+        if self.config['token_version'] > 2:
             raise ClientConfigurationError(
                 'Invalid token_version provided.'
             )
 
+    def get_config(self):
+        return self.config
+
     def _get_username(self):
         """Get a username formatted for a specific token version."""
-        _from = self.auth_context['from']
-        if self.token_version == 1:
+        _from = self.config['auth_context']['from']
+        if self.config['token_version'] == 1:
             return '{0}'.format(_from)
-        elif self.token_version == 2:
-            _user_type = self.auth_context['user_type']
+        elif self.config['token_version'] == 2:
+            _user_type = self.config['auth_context']['user_type']
             return '{0}/{1}/{2}'.format(
-                self.token_version,
+                self.config['token_version'],
                 _user_type,
                 _from
             )
@@ -153,10 +249,10 @@ class ConfidantClient(object):
 
     def _get_cached_token(self):
         token = None
-        if not self.token_cache_file:
+        if not self.config['token_cache_file']:
             return token
         try:
-            with open(self.token_cache_file, 'r') as f:
+            with open(self.config['token_cache_file'], 'r') as f:
                 token_data = json.load(f)
             _not_after = token_data['not_after']
             _auth_context = token_data['auth_context']
@@ -176,23 +272,24 @@ class ConfidantClient(object):
         skew_delta = datetime.timedelta(minutes=TOKEN_SKEW)
         _not_after_cache = _not_after_cache - skew_delta
         now = datetime.datetime.utcnow()
-        if now <= _not_after_cache and _auth_context == self.auth_context:
+        if (now <= _not_after_cache and
+                _auth_context == self.config['auth_context']):
             logging.debug('Using confidant auth token cache.')
             token = _token
         return token
 
     def _cache_token(self, token, not_after):
-        if not self.token_cache_file:
+        if not self.config['token_cache_file']:
             return
         try:
-            cachedir = os.path.dirname(self.token_cache_file)
+            cachedir = os.path.dirname(self.config['token_cache_file'])
             if not os.path.exists(cachedir):
                 os.makedirs(cachedir)
-            with open(self.token_cache_file, 'w') as f:
+            with open(self.config['token_cache_file'], 'w') as f:
                 json.dump({
                     'token': token,
                     'not_after': not_after,
-                    'auth_context': self.auth_context
+                    'auth_context': self.config['auth_context']
                 }, f)
         except Exception:
             logging.exception('Failed to write confidant auth token cache.')
@@ -209,7 +306,7 @@ class ConfidantClient(object):
         # Set the not_after time in the future, by the lifetime, but ensure the
         # skew we applied to not_before is taken into account.
         _not_after = now + datetime.timedelta(
-            minutes=self.token_lifetime - TOKEN_SKEW
+            minutes=self.config['token_lifetime'] - TOKEN_SKEW
         )
         not_after = _not_after.strftime(TIME_FORMAT)
         # Generate a json string for the encryption payload contents.
@@ -226,7 +323,7 @@ class ConfidantClient(object):
         if self.aws_creds:
             _kms_client = confidant.services.get_boto_client(
                 'kms',
-                region=self.region,
+                region=self.config['region'],
                 aws_access_key_id=self.aws_creds['AccessKeyId'],
                 aws_secret_access_key=self.aws_creds['SecretAccessKey'],
                 aws_session_token=self.aws_creds['SessionToken']
@@ -235,9 +332,9 @@ class ConfidantClient(object):
             _kms_client = self.kms_client
         try:
             token = _kms_client.encrypt(
-                KeyId=self.auth_key,
+                KeyId=self.config['auth_key'],
                 Plaintext=payload,
-                EncryptionContext=self.auth_context
+                EncryptionContext=self.config['auth_context']
             )['CiphertextBlob']
             token = base64.b64encode(token)
         except Exception:
@@ -267,7 +364,7 @@ class ConfidantClient(object):
             # service providing the service name and base64 encoded
             # token for authentication.
             response = self.request_session.get(
-                '{0}/v1/services/{1}'.format(self.url, service),
+                '{0}/v1/services/{1}'.format(self.config['url'], service),
                 auth=(self._get_username(), self._get_token()),
                 allow_redirects=False,
                 timeout=2
@@ -307,7 +404,7 @@ class ConfidantClient(object):
             # service providing the service name and base64 encoded
             # token for authentication.
             response = self.request_session.get(
-                '{0}/v1/blind_credentials/{1}'.format(self.url, id),
+                '{0}/v1/blind_credentials/{1}'.format(self.config['url'], id),
                 auth=(self._get_username(), self._get_token()),
                 allow_redirects=False,
                 timeout=2
@@ -454,7 +551,7 @@ class ConfidantClient(object):
             data['credential_keys'] = credential_pairs.keys()
         try:
             response = self.request_session.post(
-                '{0}/v1/blind_credentials'.format(self.url),
+                '{0}/v1/blind_credentials'.format(self.config['url']),
                 auth=(self._get_username(), self._get_token()),
                 headers=JSON_HEADERS,
                 data=json.dumps(data),
@@ -536,7 +633,7 @@ class ConfidantClient(object):
             data['enabled'] = enabled
         try:
             response = self.request_session.put(
-                '{0}/v1/blind_credentials/{1}'.format(self.url, id),
+                '{0}/v1/blind_credentials/{1}'.format(self.config['url'], id),
                 auth=(self._get_username(), self._get_token()),
                 headers=JSON_HEADERS,
                 data=json.dumps(data),

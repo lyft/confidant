@@ -12,29 +12,60 @@
 # limitations under the License.
 
 from setuptools import setup
-from pip.req import parse_requirements
-from pip.exceptions import InstallationError
 
-VERSION = "1.1.5"
+VERSION = "1.1.6"
 
-try:
-    client_reqs = parse_requirements(
-        "requirements_client.txt",
-        session=False
-    )
-    reqs = [str(ir.req) for ir in client_reqs]
-except InstallationError:
-    client_reqs = parse_requirements(
-        "client/requirements_client.txt",
-        session=False
-    )
-    reqs = [str(ir.req) for ir in client_reqs]
-reqs.append('confidant-common=={0}'.format(VERSION))
+requirements = [
+    'confidant-common=={0}'.format(VERSION),
+
+    # Boto3 is the Amazon Web Services (AWS) Software Development Kit (SDK)
+    # for Python.
+    # License: Apache2
+    # Upstream url: https://github.com/boto/boto3
+    # Use: For KMS
+    'boto3>=1.2.0,<1.3.0',
+
+    # cryptography is a package which provides cryptographic recipes and
+    # primitives to Python developers.
+    # License: BSD
+    # Upstream url: https://github.com/pyca/cryptography
+    # Use: For encryption
+    'cryptography>=1.2.1,<1.3.0',
+
+    # Python HTTP for Humans.
+    # License: Apache2
+    # Upstream url: http://python-requests.org
+    # Use: REST calls to external services
+    'requests>=2.9.1,<2.10.0',
+
+    # Provides enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
+    # License: BSD
+    # Upstream url: https://github.com/cedadev/ndg_httpsclient/
+    # Use: Securing requests for python < 2.7.9.
+    'ndg-httpsclient>=0.4.0,<0.5.0',
+
+    # ASN.1 types and codecs
+    # License: BSD
+    # Upstream url: http://sourceforge.net/projects/pyasn1/
+    # Use: Securing requests for python < 2.7.9.
+    'pyasn1>=0.1.9,<0.2.0',
+
+    # Python wrapper module around the OpenSSL library
+    # License: APL2
+    # Upstream url: https://github.com/pyca/pyopenssl
+    # Use: Securing requests for python < 2.7.9.
+    'pyOpenSSL>=0.15.1,<0.16.0',
+
+    # License: MIT
+    # Upstream url: http://pyyaml.org/wiki/PyYAML
+    # Use: For parsing users.yaml
+    'PyYAML>=3.11'
+]
 
 setup(
     name="confidant-client",
     version=VERSION,
-    install_requires=reqs,
+    install_requires=requirements,
     author="Ryan Lane",
     author_email="rlane@lyft.com",
     description="A client for confidant, a secret management system.",
