@@ -16,7 +16,7 @@ Flask-Script==2.0.5
 # Use: For KMS
 boto3==1.2.3
 
-# A Pythonic interface for Amazon’s DynamoDB that supports Python 2 and 3.
+# A Pythonic interface for Amazon's DynamoDB that supports Python 2 and 3.
 # License: MIT
 # Upstream url: http://jlafon.io/pynamodb.html
 # Use: For DynamoDB storage
