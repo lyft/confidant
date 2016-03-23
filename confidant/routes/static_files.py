@@ -1,7 +1,6 @@
 import os
 import logging
 
-import flask
 from flask import send_from_directory
 from werkzeug.exceptions import NotFound
 
@@ -14,10 +13,12 @@ from confidant.app import app
 def index():
     return app.send_static_file('index.html')
 
+
 @app.route('/logout')
 @authnz.require_logout_for_goodbye
 def goodbye():
     return app.send_static_file('goodbye.html')
+
 
 @app.route('/healthcheck')
 def healthcheck():

@@ -1,10 +1,9 @@
 import fnmatch
-import yaml
 import random
 import logging
 
-from flask import abort, request,  make_response, session, g
-from flask import redirect, url_for
+from flask import abort, request, session, g
+from flask import url_for
 from werkzeug.security import safe_str_cmp
 from functools import wraps
 
@@ -12,7 +11,8 @@ from confidant import keymanager
 from confidant.app import app
 from confidant.utils import stats
 
-from .errors import *
+from .errors import (UserUnknownError, TokenVersionError, AuthenticationError,
+                     NotAuthorized)
 from . import userauth
 
 PRIVILEGES = {
@@ -21,6 +21,7 @@ PRIVILEGES = {
 }
 
 user_mod = userauth.init_user_auth_class()
+
 
 def get_logged_in_user():
     '''

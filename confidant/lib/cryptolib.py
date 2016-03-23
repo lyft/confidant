@@ -62,6 +62,7 @@ def create_datakey(encryption_context, keyid, client=None):
     return {'ciphertext': response['CiphertextBlob'],
             'plaintext': key}
 
+
 def load_x509_certificate_pem(path):
     """
     Load an X.509 PEM certificate from a file.
@@ -77,6 +78,7 @@ def load_x509_certificate_pem(path):
         cert = x509.load_pem_x509_certificate(f.read(), default_backend())
         return cert
 
+
 def load_x509_certificate_pem_as_bare_base64(path):
     """
     Load an X.509 PEM certificate from a file, return as bare base64-encoded
@@ -90,6 +92,7 @@ def load_x509_certificate_pem_as_bare_base64(path):
     """
     return _x509_certificate_bare_base64(
         load_x509_certificate_pem(path))
+
 
 def _x509_certificate_bare_base64(certificate):
     """
@@ -105,6 +108,7 @@ def _x509_certificate_bare_base64(certificate):
     """
     return base64.b64encode(certificate.public_bytes(
         serialization.Encoding.DER))
+
 
 def load_private_key_pem(path, password=None):
     """
@@ -123,6 +127,7 @@ def load_private_key_pem(path, password=None):
         return serialization.load_pem_private_key(f.read(), password=password,
                                                   backend=default_backend())
 
+
 def load_private_key_pem_as_bare_base64(path, password=None):
     """
     Load an RSA private key from a file as bare base64-encoded DER.
@@ -138,6 +143,7 @@ def load_private_key_pem_as_bare_base64(path, password=None):
     """
     return _rsa_private_key_bare_base64(
         load_private_key_pem(path, password=password))
+
 
 def _rsa_private_key_bare_base64(key):
     """

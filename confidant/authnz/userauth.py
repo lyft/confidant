@@ -2,6 +2,8 @@ import abc
 import logging
 import urlparse
 
+import yaml
+
 import flask
 from flask import request, session
 from flask import abort, jsonify, redirect
@@ -13,13 +15,13 @@ from authomatic.adapters import WerkzeugAdapter
 
 # saml auth imports
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
-from onelogin.saml2.utils import OneLogin_Saml2_Utils
 from confidant.lib import cryptolib
 from confidant.utils.misc import dict_deep_update
 
 from confidant.app import app
 
-from .errors import *
+from . import errors
+
 
 def init_user_auth_class(*args, **kwargs):
     if not app.config['USE_AUTH']:
@@ -34,10 +36,12 @@ def init_user_auth_class(*args, **kwargs):
         elif module_name == 'null':
             module = NullUserAuthenticator
         else:
-            raise ValueError('Unknown USER_AUTH_MODULE: {!r}'.format(module_name))
+            raise ValueError(
+                'Unknown USER_AUTH_MODULE: {!r}'.format(module_name))
 
     logging.info('Initializing {} user authenticator'.format(module.auth_type))
     return module(*args, **kwargs)
+
 
 class AbstractUserAuthenticator(object):
     __metaclass__ = abc.ABCMeta
@@ -148,12 +152,12 @@ class AbstractUserAuthenticator(object):
         if not self.passes_email_suffix(email):
             msg = 'User {!r} does not have email suffix {!r}'.format(
                 email, self.allowed_email_suffix)
-            raise NotAuthorized(msg)
+            raise errors.NotAuthorized(msg)
 
         if not self.passes_email_whitelist(email):
             msg = 'User not in whitelist: {!r}'.format(
                 email, self.allowed_email_whitelist)
-            raise NotAuthorized(msg)
+            raise errors.NotAuthorized(msg)
 
         return True
 
@@ -168,6 +172,7 @@ class AbstractUserAuthenticator(object):
             return email in self.allowed_email_whitelist
         else:
             return True
+
 
 class NullUserAuthenticator(object):
     """
@@ -200,6 +205,7 @@ class NullUserAuthenticator(object):
     def log_in(self):
         # should never be called
         raise NotImplementedError
+
 
 class GoogleOauthAuthenticator(AbstractUserAuthenticator):
     """
@@ -296,6 +302,9 @@ class SamlAuthenticator(AbstractUserAuthenticator):
             raise ValueError("Must provide SAML_CONFIDANT_URL_ROOT")
         root_url = root_url.rstrip('/')
 
+        # TODO: also support unspecified?
+        name_id_fmt = 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress'
+
         # Service Provider section
         sp_data = {
             'entityId': root_url + '/v1/saml/metadata',
@@ -307,7 +316,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
                 'url': root_url + '/v1/saml/logout',
                 'binding': 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-REDIRECT'
             },
-            'NameIDFormat': 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
+            'NameIDFormat': name_id_fmt,
         }
 
         sp_has_key = False
@@ -331,10 +340,13 @@ class SamlAuthenticator(AbstractUserAuthenticator):
             'nameIdEncrypted': False,
             'authnRequestsSigned': sp_has_key,
             'logoutRequestsSigned': sp_has_key,
-            'logoutResponsesSigned': app.config['SAML_SECURITY_SLO_RESP_SIGNED'],
+            'logoutResponsesSigned':
+                app.config['SAML_SECURITY_SLO_RESP_SIGNED'],
             'signMetadata': sp_has_key,
-            'wantMessagesSigned': app.config['SAML_SECURITY_MESSAGES_SIGNED'],
-            'wantAssertionsSigned': app.config['SAML_SECURITY_ASSERTIONS_SIGNED'],
+            'wantMessagesSigned':
+                app.config['SAML_SECURITY_MESSAGES_SIGNED'],
+            'wantAssertionsSigned':
+                app.config['SAML_SECURITY_ASSERTIONS_SIGNED'],
             'wantNameIdEncrypted': False,
             "signatureAlgorithm": app.config['SAML_SECURITY_SIG_ALGO'],
         }
@@ -356,13 +368,13 @@ class SamlAuthenticator(AbstractUserAuthenticator):
 
         if app.config['SAML_IDP_CERT_FILE']:
             idp_data['x509cert'] = self._load_x509_for_saml(
-                    app.config['SAML_IDP_CERT_FILE'])
+                app.config['SAML_IDP_CERT_FILE'])
         if app.config['SAML_IDP_CERT']:
             idp_data['x509cert'] = app.config['SAML_IDP_CERT']
 
         # put it all together into the settings
         data = {
-            'strict': True, # must not be changed
+            'strict': True,  # must not be changed for security
             'debug': debug,
             'sp': sp_data,
             'idp': idp_data,
@@ -378,7 +390,6 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         logging.debug('Rendered SAML settings: {!r}'.format(data))
 
         return data
-
 
     def log_in(self):
         """
@@ -403,7 +414,6 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         """
 
         auth = self._saml_auth()
-        errors = []
 
         logging.debug('Processing SAML response')
 
@@ -485,7 +495,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         try:
             current_nameid = self._current_user_nameid()
             current_session_id = self._current_saml_session_id()
-        except UserUnknownError:
+        except errors.UserUnknownError:
             # must be already logged out
             logging.warning('No SAML data in session. Cannot SLO log out')
             self.clear_session()
@@ -533,7 +543,6 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         self.clear_session()
 
         return self.redirect_to_goodbye()
-
 
     def _saml_auth(self, req_dict=None):
         """
@@ -589,13 +598,13 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         if 'saml_data' in session:
             return session['saml_data']['nameid']
         else:
-            raise UserUnknownError('No SAML user data in session')
+            raise errors.UserUnknownError('No SAML user data in session')
 
     def _current_saml_session_id(self):
         if 'saml_data' in session:
             return session['saml_data']['session_index']
         else:
-            raise UserUnknownError('No SAML user data in session')
+            raise errors.UserUnknownError('No SAML user data in session')
 
     def generate_metadata(self):
         """

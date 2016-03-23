@@ -74,8 +74,10 @@ USER_AUTH_MODULE = str_env('USER_AUTH_MODULE', 'google')
 
 # An email suffix that can be used to restrict access to the web interface.
 # Example: @example.com
+# For backwards compatibility, also support setting this with
+# GOOGLE_AUTH_EMAIL_SUFFIX.
 USER_EMAIL_SUFFIX = (str_env('USER_EMAIL_SUFFIX', None) or
-                     str_env('GOOGLE_AUTH_EMAIL_SUFFIX', None)) # backwards compat
+                     str_env('GOOGLE_AUTH_EMAIL_SUFFIX', None))
 
 # A yaml file, with email: name mappings that can be used for restricting
 # access to the web interface. If this file is not set, then any user with
@@ -101,7 +103,8 @@ SAML_DEBUG = bool_env('SAML_DEBUG', None)
 
 # Pretend that all requests are HTTPS for purposes of SAML validation. This is
 # useful if your app is behind a weird load balancer and flask isn't respecting
-# X-Forwarded-Proto. For security, this flag will only be respected in debug mode.
+# X-Forwarded-Proto. For security, this flag will only be respected in debug
+# mode.
 SAML_FAKE_HTTPS = bool_env('SAML_FAKE_HTTPS', False)
 
 # Path to SP X.509 certificate file in PEM format
@@ -135,14 +138,16 @@ SAML_IDP_CERT_FILE = str_env('SAML_IDP_CERT_FILE')
 # Algorithm used for SAML signing
 # default: http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
 # see also: http://www.w3.org/2000/09/xmldsig#rsa-sha1
-SAML_SECURITY_SIG_ALGO = str_env('SAML_SECURITY_SIG_ALGO',
-                                 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256')
+SAML_SECURITY_SIG_ALGO = str_env(
+    'SAML_SECURITY_SIG_ALGO',
+    'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256')
 # Whether to require signatures on SLO responses
 SAML_SECURITY_SLO_RESP_SIGNED = bool_env('SAML_SECURITY_SLO_RESP_SIGNED', True)
 # Whether to require signatures on full SAML response messages
 SAML_SECURITY_MESSAGES_SIGNED = bool_env('SAML_SECURITY_MESSAGES_SIGNED', True)
 # Whether to require signatures on individual SAML response assertion fields
-SAML_SECURITY_ASSERTIONS_SIGNED = bool_env('SAML_SECURITY_ASSERTIONS_SIGNED', False)
+SAML_SECURITY_ASSERTIONS_SIGNED = bool_env('SAML_SECURITY_ASSERTIONS_SIGNED',
+                                           False)
 
 # Catchall to provide JSON directly to override SAML settings. Will be provided
 # to OneLogin_Saml2_Auth() for initialization, merging into values set by the

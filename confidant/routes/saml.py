@@ -3,11 +3,9 @@ import logging
 import flask
 from flask import jsonify, request, session
 
-from onelogin.saml2.auth import OneLogin_Saml2_Auth
-from onelogin.saml2.utils import OneLogin_Saml2_Utils
-
 from confidant import authnz
 from confidant.app import app
+
 
 @app.route('/v1/saml/metadata', methods=['GET'])
 def get_saml_metadata():
@@ -16,12 +14,14 @@ def get_saml_metadata():
     """
     return authnz.user_mod.generate_metadata()
 
+
 @app.route('/v1/saml/consume', methods=['POST'])
 def consume_saml_assertion():
     """
     The SAML attribute consumer service receives POST callbacks from the IdP.
     """
     return authnz.user_mod.consume_saml_assertion()
+
 
 @app.route('/v1/saml/login', methods=['GET'])
 def generate_saml_login_redirect():
@@ -31,6 +31,7 @@ def generate_saml_login_redirect():
     """
     return flask.redirect(
         authnz.user_mod.login_redirect_url(return_to='/v1/saml/debug'))
+
 
 @app.route('/v1/saml/logout', methods=['GET'])
 def saml_logout():
@@ -46,6 +47,7 @@ def saml_logout():
     else:
         # initial
         return authnz.user_mod.log_out()
+
 
 @app.route('/v1/saml/debug', methods=['GET'])
 def dump_session_info():
