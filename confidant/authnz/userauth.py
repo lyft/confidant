@@ -53,7 +53,7 @@ class AbstractUserAuthenticator(object):
     def current_user(self):
         return session['user']
 
-    def set_current_user(self, email, first_name, last_name):
+    def set_current_user(self, email, first_name=None, last_name=None):
         session['user'] = {
             'email': email,
             'first_name': first_name,
@@ -437,6 +437,11 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         attributes = auth.get_attributes()
         logging.info('SAML attributes: {!r}'.format(attributes))
 
+        # normalize attributes by flattening single-item arrays
+        for key, val in attributes.iteritems():
+            if isinstance(val, list) and len(val) == 1:
+                attributes[key] = val[0]
+
         session['saml_data'] = {
             'attrs': attributes,
             'nameid': nameid,
@@ -449,9 +454,13 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         kwargs['email'] = attributes.get('email', nameid)
 
         # use first_name, last_name if present
-        for key in ['first_name', 'last_name']:
-            if key in attributes:
-                kwargs[key] = attributes[key]
+        for key, val in attributes.iteritems():
+            if not getattr(key, 'lower', None):
+                logging.error('Bad list attr {!r}'.format({key: val}))
+            if key.lower() in ['firstname', 'first_name']:
+                kwargs['first_name'] = val
+            if key.lower() in ['lastname', 'last_name']:
+                kwargs['last_name'] = val
 
         self.set_current_user(**kwargs)
 
@@ -489,6 +498,10 @@ class SamlAuthenticator(AbstractUserAuthenticator):
             logging.warning('No SingleLogOut endpoint defined for IdP')
             self.clear_session()
             return self.redirect_to_goodbye()
+
+        # TODO: decide whether to always clear the session here or not. Relying
+        # on the IDP to redirect back to us hasn't been super reliable.
+        self.clear_session()
 
         # redirect to SLO endpoint
         return flask.redirect(auth.logout(name_id=current_nameid,

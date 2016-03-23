@@ -107,7 +107,7 @@ SAML_FAKE_HTTPS = bool_env('SAML_FAKE_HTTPS', False)
 # Path to SP X.509 certificate file in PEM format
 SAML_SP_CERT_FILE = str_env('SAML_SP_CERT_FILE')
 # Raw X.509 certificate in base64-encoded DER
-SAML_SP_CERT = str_env('SAML_SP_CERT_FILE')
+SAML_SP_CERT = str_env('SAML_SP_CERT')
 
 # Path to SP private key file in PEM format
 SAML_SP_KEY_FILE = str_env('SAML_SP_KEY_FILE')

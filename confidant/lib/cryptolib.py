@@ -91,7 +91,7 @@ def load_x509_certificate_pem_as_bare_base64(path):
     return _x509_certificate_bare_base64(
         load_x509_certificate_pem(path))
 
-def _x509_certificate_bare_base64(certficate):
+def _x509_certificate_bare_base64(certificate):
     """
     Given a certificate object, return the base64 DER encoded certificate data.
     This looks like PEM encoding but without the -----BEGIN CERTIFICATE-----
@@ -103,7 +103,8 @@ def _x509_certificate_bare_base64(certficate):
     :returns: base64-encoded DER X.509 data.
     :rtype: string
     """
-    return base64.encodestring(cert.public_bytes(serialization.Encoding.DER))
+    return base64.b64encode(certificate.public_bytes(
+        serialization.Encoding.DER))
 
 def load_private_key_pem(path, password=None):
     """
@@ -150,7 +151,7 @@ def _rsa_private_key_bare_base64(key):
     :returns: base64-encoded DER private key data.
     :rtype: string
     """
-    return base64.encodestring(
+    return base64.b64encode(
         key.private_bytes(serialization.Encoding.DER,
                           format=serialization.PrivateFormat.TraditionalOpenSSL,
                           encryption_algorithm=serialization.NoEncryption()))
