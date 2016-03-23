@@ -1,0 +1,56 @@
+<!doctype html>
+<html xmlns:ng="http://angularjs.org" id="ng-app" class="no-js" data-ng-controller="ConfidantMainCtrl" ng-class="pageClass" ng-app="confidantApp" data-is-mobile ng-csp>
+<head>
+    <meta charset="utf-8">
+    <title>Confidant: Logged out</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css styles/main.css -->
+    <!-- injector:css -->
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/bower_components/angular/angular-csp.css">
+    <!-- endinjector -->
+    <!-- endbuild -->
+</head>
+<body>
+    <!--[if lt IE 9]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <header id="page-header" class="header">
+        <nav id="site-navigation">
+          <div class="container-fluid">
+            <p class="navbar-text pull-right">Not logged in.</p>
+            <p class="site-logo visible-sm visible-md visible-lg"></p>
+            <h1>Confidant</h1>
+            <div id="header-subtext" class="has-margin-bottom-lg">Your secret keeper.</div>
+          </div>
+        </nav>
+    </header>
+
+    <div id="page-navigation" class="container-fluid container-bottomborder has-margin-bottom" role="navigation" ng-controller="common.NavCtrl">
+      <ul class="nav nav-pills has-margin-bottom">
+        <li role="presentation"><a href="./">Log In <span class="glyphicon glyphicon-home"></span></a></li>
+      </ul>
+    </div>
+    <div ui-view="main" class="container-fluid container-body">
+      <div ui-view="details" class="col-md-7 row-overflow"><div class="row"><div class="no-details-text"><h3>You have logged out.</h3></div></div></div>
+    </div>
+
+    <!-- build:js scripts/oldieshim.js -->
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <![endif]-->
+    <!-- endbuild -->
+</body>
+</html>

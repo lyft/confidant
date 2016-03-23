@@ -30,7 +30,11 @@
     <header id="page-header" class="header">
         <nav id="site-navigation">
           <div class="container-fluid">
-            <p class="navbar-text pull-right">Logged in as {{ user.email }}</p>
+            <p class="navbar-text pull-right" style="text-align: right">
+              Logged in as {{ user.email }}
+              <br />
+              <a href="./logout">Log out</a>
+            </p>
             <p class="site-logo visible-sm visible-md visible-lg"></p>
             <h1>Confidant</h1>
             <div id="header-subtext" class="has-margin-bottom-lg">Your secret keeper.</div>

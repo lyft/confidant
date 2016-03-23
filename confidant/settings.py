@@ -66,7 +66,10 @@ STATIC_FOLDER = str_env('STATIC_FOLDER', 'public')
 
 APPLICATION_ENV = str_env('APPLICATION_ENV', 'development')
 
-# User authentication
+# User authentication method switcher.
+# Supported methods:
+# - 'google' # Google OAuth
+# - 'saml'   # SAML Identity Provider
 USER_AUTH_MODULE = str_env('USER_AUTH_MODULE', 'google')
 
 # An email suffix that can be used to restrict access to the web interface.
@@ -74,12 +77,80 @@ USER_AUTH_MODULE = str_env('USER_AUTH_MODULE', 'google')
 USER_EMAIL_SUFFIX = (str_env('USER_EMAIL_SUFFIX', None) or
                      str_env('GOOGLE_AUTH_EMAIL_SUFFIX', None)) # backwards compat
 
-# Google authentication
-
 # A yaml file, with email: name mappings that can be used for restricting
 # access to the web interface. If this file is not set, then any user with
-# google authentication access will be able to access/modify secrets.
+# google/saml authentication access will be able to access/modify secrets.
 USERS_FILE = str_env('USERS_FILE')
+
+# SAML authentication
+# SP: Service Provider (i.e. Confidant)
+# IdP: Identity Provider
+#
+# When configuring SAML, the SAML_CONFIDANT_URL_ROOT is required. Other
+# configuration options are mostly used to populate the settings dict passed to
+# OneLogin_Saml2_Auth() for initialization. It is recommended to use the
+# various individual configuration flags, but if you know what you're doing and
+# need to configure more items in detail, use SAML_RAW_JSON_SETTINGS.
+
+# Root URL that browsers use to hit Confidant,
+# e.g. https://confidant.example.com/
+SAML_CONFIDANT_URL_ROOT = str_env('SAML_CONFIDANT_URL_ROOT')
+
+# Debug mode for python-saml library. Follows global DEBUG setting if not set.
+SAML_DEBUG = bool_env('SAML_DEBUG', None)
+
+# Pretend that all requests are HTTPS for purposes of SAML validation. This is
+# useful if your app is behind a weird load balancer and flask isn't respecting
+# X-Forwarded-Proto. For security, this flag will only be respected in debug mode.
+SAML_FAKE_HTTPS = bool_env('SAML_FAKE_HTTPS', False)
+
+# Path to SP X.509 certificate file in PEM format
+SAML_SP_CERT_FILE = str_env('SAML_SP_CERT_FILE')
+# Raw X.509 certificate in base64-encoded DER
+SAML_SP_CERT = str_env('SAML_SP_CERT_FILE')
+
+# Path to SP private key file in PEM format
+SAML_SP_KEY_FILE = str_env('SAML_SP_KEY_FILE')
+# Password for the SAML_SP_KEY_FILE
+SAML_SP_KEY_FILE_PASSWORD = str_env('SAML_SP_KEY_FILE_PASSWORD', None)
+# Raw SP private key in base64-encoded DER
+SAML_SP_KEY = str_env('SAML_SP_KEY')
+
+# SAML IdP Entity ID (typically a URL)
+SAML_IDP_ENTITY_ID = str_env('SAML_IDP_ENTITY_ID')
+# SAML IdP Single Sign On URL (HTTP-REDIRECT binding only)
+SAML_IDP_SIGNON_URL = str_env('SAML_IDP_SIGNON_URL')
+# SAML IdP Single Logout URL, optional, only if IDP supports it
+# (HTTP-REDIRECT binding only)
+SAML_IDP_LOGOUT_URL = str_env('SAML_IDP_LOGOUT_URL')
+
+# SAML IdP X.509 certificate, base64 encoded DER
+SAML_IDP_CERT = str_env('SAML_IDP_CERT')
+# SAML IdP X.509 certificate file in PEM format
+SAML_IDP_CERT_FILE = str_env('SAML_IDP_CERT_FILE')
+
+# SAML security settings. You will very likely want at least one of
+# SAML_SECURITY_MESSAGES_SIGNED or SAML_SECURITY_ASSERTIONS_SIGNED to be True.
+#
+# Algorithm used for SAML signing
+# default: http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+# see also: http://www.w3.org/2000/09/xmldsig#rsa-sha1
+SAML_SECURITY_SIG_ALGO = str_env('SAML_SECURITY_SIG_ALGO',
+                                 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256')
+# Whether to require signatures on SLO responses
+SAML_SECURITY_SLO_RESP_SIGNED = bool_env('SAML_SECURITY_SLO_RESP_SIGNED', True)
+# Whether to require signatures on full SAML response messages
+SAML_SECURITY_MESSAGES_SIGNED = bool_env('SAML_SECURITY_MESSAGES_SIGNED', True)
+# Whether to require signatures on individual SAML response assertion fields
+SAML_SECURITY_ASSERTIONS_SIGNED = bool_env('SAML_SECURITY_ASSERTIONS_SIGNED', False)
+
+# Catchall to provide JSON directly to override SAML settings. Will be provided
+# to OneLogin_Saml2_Auth() for initialization, merging into values set by the
+# other SAML settings.
+SAML_RAW_JSON_SETTINGS = json.loads(str_env('SAML_RAW_JSON_SETTINGS', 'null'))
+
+# Google authentication
+
 # The Google OAuth2 redirect URI endpoint URL.
 REDIRECT_URI = str_env('REDIRECT_URI')
 # The client ID provided by Google's developer console.

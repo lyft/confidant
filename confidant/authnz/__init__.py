@@ -209,3 +209,30 @@ def require_auth(f):
         return abort(403)
 
     return decorated
+
+
+def require_logout_for_goodbye(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not app.config.get('USE_AUTH'):
+            return f(*args, **kwargs)
+
+        # ideally we would call check_csrf_token, but I don't think logout CSRF
+        # is a serious concern for this application
+
+        try:
+            get_logged_in_user()
+        except UserUnknownError:
+            # ok, not logged in
+            return f(*args, **kwargs)
+
+        logging.warning('require_logout(): calling log_out()')
+        resp = user_mod.log_out()
+
+        if resp.headers.get('Location') == url_for('goodbye'):
+            # avoid redirect loop and just render the page
+            return f(*args, **kwargs)
+        else:
+            return resp
+
+    return decorated
