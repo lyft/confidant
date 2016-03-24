@@ -75,6 +75,8 @@ def check_csrf_token():
     if g.auth_type == 'kms':
         return True
     token = request.headers.get('X-XSRF-TOKEN', '')
+    if not token:
+        return False
     return safe_str_cmp(token, session.get('XSRF-TOKEN', ''))
 
 
