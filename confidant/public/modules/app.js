@@ -22,10 +22,11 @@
      * Main controller
      */
     .controller('ConfidantMainCtrl', [
-        '$scope', 'common.userinfo',
-        function ConfidantMainCtrl($scope, userinfo) {
+        '$scope', 'common.userinfo', 'common.clientconfig',
+        function ConfidantMainCtrl($scope, userinfo, clientconfig) {
 
         $scope.user = userinfo.get();
+        $scope.clientconfig = clientconfig.get();
 
     }])
 

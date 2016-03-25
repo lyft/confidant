@@ -277,7 +277,6 @@ class ClientTest(unittest.TestCase):
     )
     def test__get_decrypted_pairs(self, boto_mock):
         config_mock = MagicMock()
-        config_mock.region_name = 'us-east-1'
         kms_mock = MagicMock()
         kms_mock._client_config = config_mock
         boto_mock.return_value = kms_mock
@@ -287,6 +286,7 @@ class ClientTest(unittest.TestCase):
             {'from': 'confidant-unittest',
              'to': 'test',
              'user_type': 'service'},
+            region='us-east-1'
         )
         credential = {
             'metadata': {

@@ -5,7 +5,7 @@ from confidant import app
 from scripts.utils import ManageGrants
 from scripts.utils import RevokeGrants
 
-manager = Manager(app)
+manager = Manager(app.app)
 
 # Ensure KMS grants are setup for services
 manager.add_command("manage_kms_auth_grants", ManageGrants)

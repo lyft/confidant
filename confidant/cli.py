@@ -341,6 +341,27 @@ def _parse_args():
         store_keys=True
     )
 
+    get_blind_cred_parser = subparsers.add_parser('get_blind_credential')
+    get_blind_cred_parser.add_argument(
+        '--id',
+        required=True,
+        help=('An id for this blind credential i.e.'
+              ' \'f232fcd3747c47718e48a034f4cdfc0e\'.'),
+        dest='_id'
+    )
+    get_blind_cred_parser.add_argument(
+        '--decrypt-blind',
+        help=('Decrypt blind credentials, rather than giving back the raw'
+              ' results from get_blind_credential.'),
+        action='store_true',
+        dest='decrypt_blind'
+    )
+    get_blind_cred_parser.set_defaults(
+        decrypt_blind=False
+    )
+
+    subparsers.add_parser('list_blind_credentials')
+
     return parser.parse_args()
 
 
@@ -412,6 +433,16 @@ def main():
                 args.store_keys,
                 args.enabled
             )
+        except Exception:
+            logging.exception('An unexpected general error occurred.')
+    elif args.subcommand == 'get_blind_credential':
+        try:
+            ret = client.get_blind_credential(args._id, args.decrypt_blind)
+        except Exception:
+            logging.exception('An unexpected general error occurred.')
+    elif args.subcommand == 'list_blind_credentials':
+        try:
+            ret = client.list_blind_credentials()
         except Exception:
             logging.exception('An unexpected general error occurred.')
 

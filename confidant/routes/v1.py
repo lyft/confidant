@@ -44,7 +44,13 @@ def get_client_config():
     '''
     Get configuration to help clients bootstrap themselves.
     '''
-    response = jsonify(app.config['CLIENT_CONFIG'])
+    # TODO: add more config in here.
+    response = jsonify({
+        'defined': app.config['CLIENT_CONFIG'],
+        'generated': {
+            'kms_auth_manage_grants': app.config['KMS_AUTH_MANAGE_GRANTS']
+        }
+    })
     return response
 
 

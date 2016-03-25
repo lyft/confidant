@@ -19,9 +19,10 @@
         'services.service',
         'services.services',
         'roles.list',
-	'services.grants',
+        'services.grants',
         function ($scope, $stateParams, $q, $log, $filter, $location, Service, Services, Roles, Grants) {
             var serviceCopy = null;
+            $scope.showGrants = $scope.clientconfig.generated.kms_auth_manage_grants;
             $scope.$log = $log;
             $scope.saveError = '';
             $scope.newService = false;

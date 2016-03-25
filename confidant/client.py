@@ -452,11 +452,12 @@ class ConfidantClient(object):
         of KMS encryption context, a dict of encrypted credential pairs, a
         cipher and a cipher version, return decrypted credential_pairs.
         """
-        region = self.kms_client._client_config.region_name
+        region = self.config['region']
         _context = credential['metadata']['context'][region]
         _data_key = cryptolib.decrypt_datakey(
             base64.b64decode(credential['data_key'][region]),
-            _context
+            _context,
+            self.kms_client
         )
         _credential_pair = credential['credential_pairs'][region]
         f = Fernet(_data_key)
@@ -654,6 +655,38 @@ class ConfidantClient(object):
             logging.error('Received badly formatted json data from confidant.')
             return ret
         ret['blind_credential'] = data
+        ret['result'] = True
+        return ret
+
+    def list_blind_credentials(self):
+        """Get a list of blind credentials."""
+        # Return a dict, always with an attribute that specifies whether or not
+        # the function was able to successfully get a result.
+        ret = {'result': False}
+        try:
+            # Make a request to confidant with the provided url, to fetch the
+            # service providing the service name and base64 encoded
+            # token for authentication.
+            response = self.request_session.get(
+                '{0}/v1/blind_credentials'.format(self.config['url']),
+                auth=(self._get_username(), self._get_token()),
+                allow_redirects=False,
+                timeout=2
+            )
+        except requests.ConnectionError:
+            logging.error('Failed to connect to confidant.')
+            return ret
+        except requests.Timeout:
+            logging.error('Confidant request timed out.')
+            return ret
+        if not self._check_response_code(response, expected=[200]):
+            return ret
+        try:
+            data = response.json()
+        except ValueError:
+            logging.error('Received badly formatted json data from confidant.')
+            return ret
+        ret['blind_credentials'] = data['blind_credentials']
         ret['result'] = True
         return ret
 

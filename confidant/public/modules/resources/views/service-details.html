@@ -94,7 +94,7 @@
     <label for="serviceRevision">Service Revision</label>
     <span id="serviceRevision">{{ service.revision }}</span>
   </div>
-  <div class="form-group" ng-hide="newService || missingService">
+  <div class="form-group" ng-hide="newService || missingService || !showGrants">
     <label for="serviceGrants">Service Grants</label>
     <button type="button" class="btn btn-xs btn-alternate" ng-show="!editableForm.$visible" ng-click="ensureGrants()">Update Grants <span class="glyphicon glyphicon-refresh"></span></button>
     <ul id="serviceGrants">

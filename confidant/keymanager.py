@@ -78,6 +78,7 @@ def decrypt_token(version, user_type, _from, token):
     if (version > app.config['KMS_MAXIMUM_TOKEN_VERSION'] or
             version < app.config['KMS_MINIMUM_TOKEN_VERSION']):
         raise TokenDecryptionError('Unacceptable token version.')
+    stats.incr('token_version_{0}'.format(version))
     try:
         token_key = '{0}{1}'.format(
             hashlib.sha256(token).hexdigest(),
@@ -191,6 +192,8 @@ def ensure_grants(service_name):
     TODO: We should probably orchestrate this, rather than doing it in
           confidant.
     '''
+    if not app.config['KMS_AUTH_MANAGE_GRANTS']:
+        return
     try:
         role = iam_resource.Role(name=service_name)
         role.load()
