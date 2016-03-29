@@ -1,5 +1,12 @@
+import base64
 import json
+import yaml
+import logging
 from os import getenv
+
+from cryptography.fernet import Fernet
+
+from confidant.lib import cryptolib
 
 
 def bool_env(var_name, default=False):
@@ -53,6 +60,36 @@ def str_env(var_name, default=''):
     return getenv(var_name, default)
 
 
+def _bootstrap(secrets):
+    """
+    Decrypt secrets and return a dict of secrets.
+    """
+    if not secrets:
+        logging.info('SECRETS_BOOTSTRAP not set, skipping bootstrapping.')
+        return {}
+    if secrets.startswith('file://'):
+        try:
+            with open(secrets[7:], 'r') as f:
+                _secrets = json.load(f)
+        except IOError:
+            logging.error(
+                'Failed to load file specified in SECRETS_BOOTSTRAP.'
+            )
+            return {}
+    else:
+        _secrets = json.loads(secrets)
+    key = cryptolib.decrypt_datakey(
+        base64.b64decode(_secrets['data_key']),
+        {'type': 'bootstrap'}
+    )
+    f = Fernet(key)
+    decrypted_secrets = yaml.safe_load(
+        f.decrypt(_secrets['secrets'].encode('utf-8'))
+    )
+    logging.info('Loaded SECRETS_BOOTSTRAP.')
+    return decrypted_secrets
+
+
 # Basic setup
 
 # Whether or not Confidant is run in debug mode. Never run confidant in debug
@@ -64,7 +101,17 @@ PORT = int_env('PORT', 8080)
 # to 'dist'.
 STATIC_FOLDER = str_env('STATIC_FOLDER', 'public')
 
-APPLICATION_ENV = str_env('APPLICATION_ENV', 'development')
+# Bootstrapping
+
+# A base64 encoded and KMS encrypted YAML string that contains secrets that
+# confidant should use for its own secrets. The blob should be generated using
+# confidant's generate_secrets_bootstrap script via manage.py. It uses the
+# KMS_MASTER_KEY for decryption.
+# If SECRETS_BOOTSTRAP starts with file://, then it will load the blob from a
+# file, rather than reading the blob from the environment.
+SECRETS_BOOTSTRAP = str_env('SECRETS_BOOTSTRAP')
+
+_secrets_bootstrap = _bootstrap(SECRETS_BOOTSTRAP)
 
 # Google authentication
 
@@ -78,11 +125,23 @@ REDIRECT_URI = str_env('REDIRECT_URI')
 # Example: @example.com
 GOOGLE_AUTH_EMAIL_SUFFIX = str_env('GOOGLE_AUTH_EMAIL_SUFFIX')
 # The client ID provided by Google's developer console.
-GOOGLE_OAUTH_CLIENT_ID = str_env('GOOGLE_OAUTH_CLIENT_ID')
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+GOOGLE_OAUTH_CLIENT_ID = _secrets_bootstrap.get(
+    'GOOGLE_OAUTH_CLIENT_ID',
+    str_env('GOOGLE_OAUTH_CLIENT_ID')
+)
 # The consumer secret provided by Google's developer console.
-GOOGLE_OAUTH_CONSUMER_SECRET = str_env('GOOGLE_OAUTH_CONSUMER_SECRET')
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+GOOGLE_OAUTH_CONSUMER_SECRET = _secrets_bootstrap.get(
+    'GOOGLE_OAUTH_CONSUMER_SECRET',
+    str_env('GOOGLE_OAUTH_CONSUMER_SECRET')
+)
 # A randomly generated string that can be used as a salt for the OAuth2 flow.
-AUTHOMATIC_SALT = str_env('AUTHOMATIC_SALT')
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+AUTHOMATIC_SALT = _secrets_bootstrap.get(
+    'AUTHOMATIC_SALT',
+    str_env('AUTHOMATIC_SALT')
+)
 
 # KMS service authentication
 
@@ -131,7 +190,11 @@ SESSION_KEY_PREFIX = str_env('SESSION_KEY_PREFIX', 'confidant:')
 #   http://pythonhosted.org/Flask-Session/#configuration
 SESSION_USE_SIGNER = bool_env('SESSION_USE_SIGNER', True)
 # A long randomly generated string.
-SESSION_SECRET = str_env('SESSION_SECRET')
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+SESSION_SECRET = _secrets_bootstrap.get(
+    'SESSION_SECRET',
+    str_env('SESSION_SECRET')
+)
 # Whether or not the session cookie will be marked as permanent
 SESSION_PERMANENT = bool_env('SESSION_PERMANENT', False)
 # Cookie name for the session.
@@ -159,10 +222,18 @@ KMS_MASTER_KEY = str_env('KMS_MASTER_KEY')
 GRAPHITE_EVENT_URL = str_env('GRAPHITE_EVENT_URL')
 # A basic auth username.
 # Example: mygraphiteuser
-GRAPHITE_USERNAME = str_env('GRAPHITE_USERNAME')
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+GRAPHITE_USERNAME = _secrets_bootstrap.get(
+    'GRAPHITE_USERNAME',
+    str_env('GRAPHITE_USERNAME')
+)
 # A basic auth password:
 # Example: mylongandsupersecuregraphitepassword
-GRAPHITE_PASSWORD = str_env('GRAPHITE_PASSWORD')
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+GRAPHITE_PASSWORD = _secrets_bootstrap.get(
+    'GRAPHITE_PASSWORD',
+    str_env('GRAPHITE_PASSWORD')
+)
 
 # Statsd metrics
 
