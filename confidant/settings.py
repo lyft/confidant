@@ -209,6 +209,10 @@ DYNAMODB_URL = str_env('DYNAMODB_URL')
 # The DynamoDB table to use for storage.
 # Example: mydynamodbtable
 DYNAMODB_TABLE = str_env('DYNAMODB_TABLE')
+# Have PynamoDB automatically generate the DynamoDB table if it doesn't exist.
+# Note that you need to give Confidant's IAM user or role enough privileges for
+# this to occur.
+DYNAMODB_CREATE_TABLE = bool_env('DYNAMODB_CREATE_TABLE', False)
 
 # Encryption
 

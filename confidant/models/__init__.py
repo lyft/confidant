@@ -7,8 +7,7 @@ from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
 
-# Only used when using dynamodb local
-if app.config.get('DYNAMODB_URL'):
+if app.config['DYNAMODB_CREATE_TABLE']:
     i = 0
     # This loop is absurd, but there's race conditions with dynamodb local
     while i < 5:
