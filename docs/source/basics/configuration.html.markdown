@@ -49,6 +49,8 @@ export AUTH_KEY='authnz-production'
 export AUTHOMATIC_SALT='H39bfLCqLbrYrFyiJIxkK0uf12rlzvgjgo9FqOnttPXIdAAuyQ'
 # The DynamoDB table name for storage.
 export DYNAMODB_TABLE='confidant-production'
+# Auto-generate the dynamodb table.
+export DYNAMODB_CREATE_TABLE=true
 # Set the gevent resolver to ares; see:
 #   https://github.com/surfly/gevent/issues/468
 export GEVENT_RESOLVER='ares'

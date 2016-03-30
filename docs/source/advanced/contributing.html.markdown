@@ -63,6 +63,8 @@ AWS_DEFAULT_REGION=us-east-1
 DYNAMODB_TABLE=confidant-development
 # A local dynamodb service.
 DYNAMODB_URL=http://dynamo:7777
+# Auto-generate the dynamodb table.
+DYNAMODB_CREATE_TABLE=true
 # Set the gevent resolver to ares; see:
 #   https://github.com/surfly/gevent/issues/468
 GEVENT_RESOLVER=ares
