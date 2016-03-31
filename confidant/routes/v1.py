@@ -232,18 +232,10 @@ def map_service_credentials(id):
         revision = 1
         _service_credential_ids = []
 
-    if data.get('credentials'):
-        conflicts = _pair_key_conflicts_for_credentials(data['credentials'])
-        if conflicts:
-            ret = {
-                'error': 'Conflicting key pairs in mapped service.',
-                'conflicts': conflicts
-            }
-            return jsonify(ret), 400
-
-    if data.get('blind_credentials'):
-        conflicts = _pair_key_conflicts_for_blind_credentials(
-            data['blind_credentials']
+    if data.get('credentials') or data.get('blind_credentials'):
+        conflicts = _pair_key_conflicts_for_credentials(
+            data.get('credentials', []),
+            data.get('blind_credentials', []),
         )
         if conflicts:
             ret = {
@@ -427,6 +419,7 @@ def _get_credentials(credential_ids):
             _credential_pairs = json.loads(_credential_pairs)
             credentials.append({
                 'id': cred.id,
+                'data_type': 'credential',
                 'name': cred.name,
                 'enabled': cred.enabled,
                 'revision': cred.revision,
@@ -442,6 +435,7 @@ def _get_blind_credentials(credential_ids):
         for cred in BlindCredential.batch_get(copy.deepcopy(credential_ids)):
             credentials.append({
                 'id': cred.id,
+                'data_type': 'blind-credential',
                 'name': cred.name,
                 'enabled': cred.enabled,
                 'revision': cred.revision,
@@ -455,43 +449,38 @@ def _get_blind_credentials(credential_ids):
     return credentials
 
 
-def _pair_key_conflicts_for_credentials(credential_ids):
+def _pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
     conflicts = {}
     pair_keys = {}
     # For all credentials, get their credential pairs and track which
     # credentials have which keys
     credentials = _get_credentials(credential_ids)
+    credentials.extend(_get_blind_credentials(blind_credential_ids))
     for credential in credentials:
-        for key in credential['credential_pairs']:
+        if credential['data_type'] == 'credential':
+            keys = credential['credential_pairs']
+        elif credential['data_type'] == 'blind-credential':
+            keys = credential['credential_keys']
+        for key in keys:
+            data = {
+                'id': credential['id'],
+                'data_type': credential['data_type']
+            }
             if key in pair_keys:
-                pair_keys[key].append(credential['id'])
+                pair_keys[key].append(data)
             else:
-                pair_keys[key] = [credential['id']]
+                pair_keys[key] = [data]
     # Iterate the credential pair keys, if there's any keys with more than
     # one credential add it to the conflict dict.
-    for key, ids in pair_keys.iteritems():
-        if len(ids) > 1:
-            conflicts[key] = {'credentials': ids}
-    return conflicts
-
-
-def _pair_key_conflicts_for_blind_credentials(credential_ids):
-    conflicts = {}
-    pair_keys = {}
-    # For all credentials, get their credential pairs and track which
-    # credentials have which keys
-    credentials = _get_blind_credentials(credential_ids)
-    for credential in credentials:
-        for key in credential['credential_keys']:
-            if key in pair_keys:
-                pair_keys[key].append(credential['id'])
-            else:
-                pair_keys[key] = [credential['id']]
-    # Iterate the credential pair keys, if there's any keys with more than
-    # one credential add it to the conflict dict.
-    for key, ids in pair_keys.iteritems():
-        if len(ids) > 1:
-            conflicts[key] = {'blind_credentials': ids}
+    for key, data in pair_keys.iteritems():
+        if len(data) > 1:
+            blind_ids = [k['id'] for k in data
+                         if k['data_type'] == 'blind-credential']
+            ids = [k['id'] for k in data if k['data_type'] == 'credential']
+            conflicts[key] = {
+                'credentials': ids,
+                'blind-credentials': blind_ids
+            }
     return conflicts
 
 
@@ -524,66 +513,60 @@ def _get_service_map(services):
     for service in services:
         for credential in service.credentials:
             if credential in service_map:
-                service_map[credential].append(service.id)
+                service_map[credential]['service_ids'].append(service.id)
             else:
-                service_map[credential] = [service.id]
+                service_map[credential] = {
+                    'data_type': 'credential',
+                    'service_ids': [service.id]
+                }
+        for credential in service.blind_credentials:
+            if credential in service_map:
+                service_map[credential]['service_ids'].append(service.id)
+            else:
+                service_map[credential] = {
+                    'data_type': 'blind-credential',
+                    'service_ids': [service.id]
+                }
     return service_map
 
 
 def _pair_key_conflicts_for_services(_id, credential_keys, services):
     conflicts = {}
     service_map = _get_service_map(services)
-    credential_ids = service_map.keys()
-    if _id in credential_ids:
-        credential_ids.remove(_id)
+    credential_ids = []
+    blind_credential_ids = []
+    for credential, data in service_map.iteritems():
+        if _id == credential:
+            continue
+        if data['data_type'] == 'credential':
+            credential_ids.append(credential)
+        elif data['data_type'] == 'blind-credential':
+            blind_credential_ids.append(credential)
     credentials = _get_credentials(credential_ids)
+    credentials.extend(_get_blind_credentials(blind_credential_ids))
     for credential in credentials:
-        services = service_map[credential['id']]
+        services = service_map[credential['id']]['service_ids']
+        if credential['data_type'] == 'credential':
+            data_type = 'credentials'
+            lookup = 'credential_pairs'
+        elif credential['data_type'] == 'blind-credential':
+            data_type = 'blind_credentials'
+            lookup = 'credential_keys'
         for key in credential_keys:
-            if key in credential['credential_pairs']:
+            if key in credential[lookup]:
                 if key not in conflicts:
                     conflicts[key] = {
-                        'credentials': [credential['id']],
+                        data_type: [credential['id']],
                         'services': services
                     }
                 else:
                     conflicts[key]['services'].extend(services)
-                    conflicts[key]['credentials'].append(credential['id'])
+                    conflicts[key][data_type].append(credential['id'])
                 conflicts[key]['services'] = list(
                     set(conflicts[key]['services'])
                 )
-                conflicts[key]['credentials'] = list(
-                    set(conflicts[key]['credentials'])
-                )
-    return conflicts
-
-
-def _blind_pair_key_conflicts_for_services(_id, credential_keys, services):
-    conflicts = {}
-    service_map = _get_service_map(services)
-    credential_ids = service_map.keys()
-    if _id in credential_ids:
-        credential_ids.remove(_id)
-    credentials = _get_credentials(credential_ids)
-    for credential in credentials:
-        services = service_map[credential['id']]
-        for key in credential_keys:
-            if key in credential['credential_keys']:
-                if key not in conflicts:
-                    conflicts[key] = {
-                        'blind_credentials': [credential['id']],
-                        'services': services
-                    }
-                else:
-                    conflicts[key]['services'].extend(services)
-                    conflicts[key]['blind_credentials'].append(
-                        credential['id']
-                    )
-                conflicts[key]['services'] = list(
-                    set(conflicts[key]['services'])
-                )
-                conflicts[key]['blind_credentials'] = list(
-                    set(conflicts[key]['blind_credentials'])
+                conflicts[key][data_type] = list(
+                    set(conflicts[key][data_type])
                 )
     return conflicts
 
@@ -1029,7 +1012,7 @@ def update_blind_credential(id):
             }), 400
         # Ensure credential keys don't conflicts with pairs from other
         # services
-        conflicts = _blind_pair_key_conflicts_for_services(
+        conflicts = _pair_key_conflicts_for_services(
             id,
             data['credential_keys'],
             services
