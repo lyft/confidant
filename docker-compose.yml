@@ -18,7 +18,7 @@ redis:
   image: redis
 dynamo:
   volumes:
-    - /mnt/dynamo:/mnt/dynamo:rw
+    - /mnt/dynamo:/mnt/dynamo:rw,Z
   ports:
     - "7777:7777"
   image: tray/dynamodb-local
