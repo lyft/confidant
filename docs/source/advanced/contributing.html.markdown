@@ -14,9 +14,8 @@ All contributors and participants agree to abide by its terms.
 ### Sign the Contributor License Agreement (CLA)
 
 We require a CLA for code contributions, so before we can accept a pull request
-we need to have a signed CLA. Please [visit our CLA
-repo](https://github.com/lyft/CLA) and follow the
-instructions to sign the CLA.
+we need to have a signed CLA. Please [visit our CLA service](https://oss.lyft.com/cla)
+follow the instructions to sign the CLA.
 
 ### File issues in Github
 
