@@ -20,7 +20,7 @@ from confidant.utils.misc import dict_deep_update
 
 from confidant.app import app
 
-from . import errors
+from confidant.authnz import errors
 
 
 def init_user_auth_class(*args, **kwargs):

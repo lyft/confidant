@@ -11,9 +11,9 @@ from confidant import keymanager
 from confidant.app import app
 from confidant.utils import stats
 
-from .errors import (UserUnknownError, TokenVersionError, AuthenticationError,
-                     NotAuthorized)
-from . import userauth
+from confidant.authnz.errors import (UserUnknownError, TokenVersionError,
+                                     AuthenticationError, NotAuthorized)
+from confidant.authnz import userauth
 
 PRIVILEGES = {
     'user': ['*'],
