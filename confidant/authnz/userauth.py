@@ -423,7 +423,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
             logging.warning('No saml_authn_request_id in session')
             resp = jsonify(errors=['invalid_response'],
                            message='SAML request failed',
-                           reason=('No AuthNRequest ID from SP found ' +
+                           reason=('No AuthNRequest ID from SP found '
                                    'to match with InResponseTo of response'))
             resp.status_code = 401
             return resp
