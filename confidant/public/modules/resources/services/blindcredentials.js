@@ -18,7 +18,9 @@
     }])
 
     .factory('blindcredentials.credential', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
-        return $resource(CONFIDANT_URLS.BLIND_CREDENTIAL, {id: '@id'});
+        return $resource(CONFIDANT_URLS.BLIND_CREDENTIAL, {id: '@id'}, {
+            update: {method: 'PUT', isArray: false}
+        });
     }])
 
     .factory('blindcredentials.archiveCredentialRevisions', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {

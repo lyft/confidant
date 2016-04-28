@@ -20,8 +20,7 @@
       <ul>
         <li>Blind Credentials:</li>
         <ul>
-          <li ng-repeat="credentialId in conflicts.blind_credentials"><a
-            class="color-text-snow" href="#/resources/credential/{{ credentialId }}">{{ getBlindCredentialByID(credentialId).name }}</a></li>
+          <li ng-repeat="credentialId in conflicts.blind_credentials"><a class="color-text-snow" href="#/resources/blind_credential/{{ credentialId }}">{{ getBlindCredentialByID(credentialId).name }}</a></li>
         </ul>
       </ul>
     </li>

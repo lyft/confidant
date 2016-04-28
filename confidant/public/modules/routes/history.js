@@ -35,6 +35,19 @@
             }
         })
 
+        .state('history.blind-credential-history', {
+            url: '/blind_credential/:blindCredentialId',
+            views: {
+                'details': {
+                    controller: 'history.BlindCredentialHistoryCtrl',
+                    templateUrl: '/modules/history/views/blind-credential-history.html'
+                }
+            },
+            data: {
+                viewLocation: 'history',
+            }
+        })
+
         .state('history.service-history', {
             url: '/service/:serviceId',
             views: {

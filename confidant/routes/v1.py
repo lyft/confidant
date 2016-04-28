@@ -347,6 +347,7 @@ def get_credential(id):
         'id': id,
         'name': cred.name,
         'credential_pairs': _credential_pairs,
+        'metadata': cred.metadata,
         'services': services,
         'revision': cred.revision,
         'enabled': cred.enabled,
@@ -479,7 +480,7 @@ def _pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
             ids = [k['id'] for k in data if k['data_type'] == 'credential']
             conflicts[key] = {
                 'credentials': ids,
-                'blind-credentials': blind_ids
+                'blind_credentials': blind_ids
             }
     return conflicts
 
@@ -582,7 +583,7 @@ def create_credential():
     data = request.get_json()
     if not data.get('credential_pairs'):
         return jsonify({'error': 'credential_pairs is a required field'}), 400
-    if data.get('metadata') and not isinstance('metadata', dict):
+    if not isinstance(data.get('metadata', {}), dict):
         return jsonify({'error': 'metadata must be a dict'}), 400
     # Ensure credential pair keys are lowercase
     credential_pairs = _lowercase_credential_pairs(data['credential_pairs'])

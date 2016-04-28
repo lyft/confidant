@@ -66,6 +66,23 @@
             }
         })
 
+        .state('resources.blind-credential-details', {
+            url: '/blind_credential/:blindCredentialId',
+            views: {
+                'details': {
+                    controller: 'resources.BlindCredentialDetailsCtrl',
+                    templateUrl: '/modules/resources/views/blind-credential-details.html'
+                },
+                'docs': {
+                    controller: 'resources.BlindCredentialDocsCtrl',
+                    templateUrl: '/custom/modules/resources/views/blind-credential-docs.html'
+                }
+            },
+            data: {
+                viewLocation: 'resources',
+            }
+        })
+
         .state('resources.service-details', {
             url: '/service/:serviceId',
             views: {

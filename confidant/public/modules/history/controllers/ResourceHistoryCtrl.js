@@ -39,6 +39,8 @@
             $scope.gotoResource = function(resource) {
                 if (resource.type === 'credential') {
                     $location.path('/history/credential/' + resource.id);
+                } else if (resource.type === 'blind_credential') {
+                    $location.path('/history/blind_credential/' + resource.id);
                 } else if (resource.type === 'service') {
                     $location.path('/history/service/' + resource.id);
                 }
