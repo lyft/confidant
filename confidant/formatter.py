@@ -51,7 +51,6 @@ def bash_export_format(data, prefix):
                 key.upper(),
                 pipes.quote(val.encode('utf-8'))
             )
-            var = pipes.quote(var.encode('utf-8'))
             exp = 'export {0}{1}\n'.format(
                 prefix.upper(),
                 key.upper()
