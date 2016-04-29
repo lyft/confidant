@@ -262,7 +262,7 @@ class ConfidantClient(object):
                 TIME_FORMAT
             )
         except IOError as e:
-            logging.info(
+            logging.debug(
                 'Failed to read confidant auth token cache: {0}'.format(e)
             )
             return token
