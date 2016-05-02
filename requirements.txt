@@ -16,7 +16,7 @@ Flask-Script==2.0.5
 # Use: For KMS
 boto3==1.2.3
 
-# A Pythonic interface for Amazon's DynamoDB that supports Python 2 and 3.
+# A Pythonic interface for Amazon’s DynamoDB that supports Python 2 and 3.
 # License: MIT
 # Upstream url: http://jlafon.io/pynamodb.html
 # Use: For DynamoDB storage
@@ -53,8 +53,13 @@ Flask-SSLify==0.1.5
 # Twitter through standards like OAuth and OpenID.
 # License: MIT
 # Upstream url: http://peterhudec.github.io/authomatic
-# Use: For user authentication via Google OAuth
+# Use: For google auth
 Authomatic==0.1.0.post1
+
+# License: MIT
+# Upstream url: https://github.com/onelogin/python-saml
+# Use: For user authentication via SAML
+python-saml==2.1.6
 
 # Python HTTP for Humans.
 # License: Apache2
@@ -139,8 +144,3 @@ greenlet==0.4.9
 # Upstream url: https://github.com/jsocol/pystatsd
 # Use: For metrics collection
 statsd==3.1
-
-# License: MIT
-# Upstream url: https://github.com/onelogin/python-saml
-# Use: For user authentication via SAML
-python-saml==2.1.6
