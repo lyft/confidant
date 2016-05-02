@@ -5,7 +5,8 @@ RUN apt-get update && \
     # For frontend
     apt-get install -y ruby-full npm nodejs nodejs-legacy git git-core && \
     # For backend
-    apt-get install -y python python-pip python-dev build-essential libffi-dev
+    apt-get install -y python python-pip python-dev build-essential libffi-dev \
+                       libxml2-dev libxmlsec1-dev
 
 ADD ./requirements.txt /srv/confidant/requirements.txt
 ADD ./package.json /srv/confidant/package.json

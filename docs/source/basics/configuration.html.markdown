@@ -93,7 +93,7 @@ using Google authentication:
 
 ```bash
 export USERS_FILE='/etc/confidant/users.yaml'
-export GOOGLE_AUTH_EMAIL_SUFFIX='@example.com'
+export USER_EMAIL_SUFFIX='@example.com'
 ```
 
 In the above configuration, Confidant will limit authentication to users with

@@ -14,6 +14,12 @@ def index():
     return app.send_static_file('index.html')
 
 
+@app.route('/logout')
+@authnz.require_logout_for_goodbye
+def goodbye():
+    return app.send_static_file('goodbye.html')
+
+
 @app.route('/healthcheck')
 def healthcheck():
     return '', 200

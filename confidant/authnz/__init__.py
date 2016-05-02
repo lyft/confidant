@@ -1,13 +1,9 @@
 import fnmatch
-import yaml
 import random
 import logging
 
-from authomatic import Authomatic
-from authomatic.providers import oauth2
-from authomatic.adapters import WerkzeugAdapter
-from flask import abort, request,  make_response, session, g
-from flask import redirect, url_for
+from flask import abort, request, session, g
+from flask import url_for
 from werkzeug.security import safe_str_cmp
 from functools import wraps
 
@@ -15,44 +11,26 @@ from confidant import keymanager
 from confidant.app import app
 from confidant.utils import stats
 
-authomatic_config = {
-    'google': {
-        'class_': oauth2.Google,
-        'consumer_key': app.config['GOOGLE_OAUTH_CLIENT_ID'],
-        'consumer_secret': app.config['GOOGLE_OAUTH_CONSUMER_SECRET'],
-        'scope': [
-            'profile',
-            'email'
-        ]
-    }
-}
-
-_authomatic = Authomatic(
-    authomatic_config,
-    app.config['AUTHOMATIC_SALT']
-)
-
-users = {}
-if app.config['USERS_FILE']:
-    with open(app.config.get('USERS_FILE'), 'r') as f:
-        users = yaml.safe_load(f.read())
+from confidant.authnz.errors import (UserUnknownError, TokenVersionError,
+                                     AuthenticationError, NotAuthorized)
+from confidant.authnz import userauth
 
 PRIVILEGES = {
     'user': ['*'],
     'service': ['get_service']
 }
 
+user_mod = userauth.init_user_auth_class()
+
 
 def get_logged_in_user():
     '''
     Retrieve logged-in user's email that is stored in cache
     '''
-    if not app.config.get('USE_AUTH'):
-        return 'unauthenticated user'
-    if 'google_oauth2' in session:
-        return session['google_oauth2']['email'].lower()
     if hasattr(g, 'username'):
         return g.username
+    if user_mod.is_authenticated():
+        return user_mod.current_email()
     raise UserUnknownError()
 
 
@@ -96,8 +74,10 @@ def check_csrf_token():
     # csrf tokens.
     if g.auth_type == 'kms':
         return True
-    token = request.headers.get('X-XSRF-TOKEN')
-    return safe_str_cmp(token, session.get('XSRF-TOKEN'))
+    token = request.headers.get('X-XSRF-TOKEN', '')
+    if not token:
+        return False
+    return safe_str_cmp(token, session.get('XSRF-TOKEN', ''))
 
 
 def require_csrf_token(f):
@@ -205,67 +185,57 @@ def require_auth(f):
                 msg = msg.format(kms_auth_data['from'])
                 logging.warning(msg)
                 return abort(403)
-        # If not using kms auth, require google auth.
+
+        # If not using kms auth, require auth using the user_mod authn module.
         else:
             user_type = 'user'
             if not user_type_has_privilege(user_type, f.func_name):
                 return abort(403)
-            if 'email' in session.get('google_oauth2', []):
-                if (app.config['USERS_FILE'] and
-                        get_logged_in_user() not in users):
-                    msg = 'User not authorized: {0}'
-                    logging.warning(msg.format(get_logged_in_user()))
+
+            if user_mod.is_authenticated():
+                try:
+                    user_mod.check_authorization()
+                except NotAuthorized as e:
+                    logging.warning('Not authorized -- ' + e.message)
                     return abort(403)
                 else:
+                    # auth-N and auth-Z are good, call the decorated function
                     g.user_type = user_type
-                    g.auth_type = 'oauth'
+                    g.auth_type = user_mod.auth_type
                     return f(*args, **kwargs)
-            response = make_response()
-            if request.is_secure:
-                secure_cookie = True
-            else:
-                secure_cookie = False
-            result = _authomatic.login(
-                WerkzeugAdapter(request, response),
-                'google',
-                session=session,
-                session_saver=lambda: app.save_session(session, response),
-                secure_cookie=secure_cookie
-            )
-            if result:
-                if result.error:
-                    msg = 'Google auth failed with error: {0}'
-                    logging.error(msg.format(result.error.message))
-                    return abort(403)
-                if result.user:
-                    result.user.update()
-                    user = result.user
-                    email_suffix = app.config['GOOGLE_AUTH_EMAIL_SUFFIX']
-                    if email_suffix and not user.email.endswith(email_suffix):
-                        return abort(403)
-                    session['google_oauth2'] = {}
-                    session['google_oauth2']['email'] = user.email
-                    session['google_oauth2']['first_name'] = user.first_name
-                    session['google_oauth2']['last_name'] = user.last_name
-                    g.user_type = user_type
-                    g.auth_type = 'oauth'
-                    # TODO: find a way to save the angular args
-                    # authomatic adds url params google auth has stripped the
-                    # angular args anyway, so let's just redirect back to the
-                    # index.
-                    return redirect(url_for('index'))
-            return response
+
+            # Not authenticated, ask log_in() to initiate the redirect (or to
+            # handle the callback if we're using Authomatic).
+            return user_mod.log_in()
+
+        logging.error('Ran out of authentication methods')
         return abort(403)
+
     return decorated
 
 
-class UserUnknownError(Exception):
-    pass
+def require_logout_for_goodbye(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not app.config.get('USE_AUTH'):
+            return f(*args, **kwargs)
 
+        # ideally we would call check_csrf_token, but I don't think logout CSRF
+        # is a serious concern for this application
 
-class TokenVersionError(Exception):
-    pass
+        try:
+            get_logged_in_user()
+        except UserUnknownError:
+            # ok, not logged in
+            return f(*args, **kwargs)
 
+        logging.warning('require_logout(): calling log_out()')
+        resp = user_mod.log_out()
 
-class AuthenticationError(Exception):
-    pass
+        if resp.headers.get('Location') == url_for('goodbye'):
+            # avoid redirect loop and just render the page
+            return f(*args, **kwargs)
+        else:
+            return resp
+
+    return decorated
