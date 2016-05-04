@@ -60,11 +60,23 @@
                 return name;
             };
 
+            $scope.getBlindCredentialName = function(credId) {
+                var name = '';
+                if (!$scope.$parent.blindCredentialList) {
+                    return name;
+                }
+                name = _.result(_.find($scope.$parent.blindCredentialList, function(cred) {
+                    return cred.id.indexOf(credId) === 0;
+                }), 'name');
+                return name;
+            };
+
             $scope.revertToDiffRevision = function() {
                 var diffService = $scope.getServiceByRevision($scope.diffRevision),
                     currentService = $scope.getServiceByRevision($scope.currentRevision),
                     deferred = $q.defer();
                 if (angular.equals(diffService.credentials, currentService.credentials) &&
+                    angular.equals(diffService.blind_credentials, currentService.blind_credentials) &&
                     angular.equals(diffService.enabled, currentService.enabled)) {
                     $scope.saveError = 'Can not revert to revision ' + diffService.revision + '. No difference between it and current revision.';
                     deferred.reject();

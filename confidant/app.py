@@ -1,9 +1,7 @@
 import logging
 
 import boto3
-import redis
 from flask import Flask
-from flask.ext.session import Session
 from flask_sslify import SSLify
 
 from confidant import settings
@@ -24,6 +22,8 @@ if app.config['SSLIFY']:
     sslify = SSLify(app, skips=['healthcheck'])  # noqa
 
 if app.config.get('REDIS_URL'):
+    import redis
+    from flask.ext.session import Session
     app.config['SESSION_REDIS'] = redis.Redis.from_url(
         app.config['REDIS_URL']
     )

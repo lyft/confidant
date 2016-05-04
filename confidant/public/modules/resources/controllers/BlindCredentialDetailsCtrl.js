@@ -26,7 +26,6 @@
                 BlindCredentialServices.get({'id': $stateParams.blindCredentialId}).$promise.then(function(blindCredentialServices) {
                     $scope.blindCredentialServices = blindCredentialServices['services'];
                 });
-                $log.log($scope.blindCredentialServices);
 
                 BlindCredential.get({'id': $stateParams.blindCredentialId}).$promise.then(function(blindCredential) {
                     $scope.blindCredential = blindCredential;

@@ -30,10 +30,16 @@
         <div class="well well-sm">
           <p>{{ getServiceByRevision(diffRevision).enabled }}</p>
         </div>
-        <h6>credentials</h6>
+        <h6>Credentials</h6>
         <div class="well">
           <ul class="list-unstyled" style="overflow: scroll">
             <li ng-repeat="credential in getServiceByRevision(diffRevision).credentials">{{ getCredentialName(credential) }}</li>
+          </ul>
+        </div>
+        <h6>Blind Credentials</h6>
+        <div class="well">
+          <ul class="list-unstyled" style="overflow: scroll">
+            <li ng-repeat="blind_credential in getServiceByRevision(diffRevision).blind_credentials">{{ getBlindCredentialName(blind_credential) }}</li>
           </ul>
         </div>
       </div>
@@ -47,10 +53,16 @@
       <div class="well well-sm">
         <p>{{ getServiceByRevision(currentRevision).enabled }}</p>
       </div>
-      <h6>credentials</h6>
+      <h6>Credentials</h6>
       <div class="well">
         <ul class="list-unstyled" style="overflow: scroll">
           <li ng-repeat="credential in getServiceByRevision(currentRevision).credentials">{{ getCredentialName(credential) }}</li>
+        </ul>
+      </div>
+      <h6>Blind Credentials</h6>
+      <div class="well">
+        <ul class="list-unstyled" style="overflow: scroll">
+          <li ng-repeat="blind_credential in getServiceByRevision(currentRevision).blind_credentials">{{ getBlindCredentialName(blind_credential) }}</li>
         </ul>
       </div>
     </div>

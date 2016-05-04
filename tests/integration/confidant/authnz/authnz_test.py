@@ -4,6 +4,7 @@ from mock import patch
 from mock import PropertyMock
 
 from confidant.app import app
+from confidant.authnz import userauth
 from confidant import routes  # noqa
 
 
@@ -23,17 +24,25 @@ class AuthnzTest(unittest.TestCase):
         app.config['USERS_FILE'] = self.users_file
         app.debug = self.debug
 
-    def test_no_auth(self):
-        app.debug = True
-        app.config['USE_AUTH'] = False
-        ret = self.test_client.get('/')
-        self.assertEquals(ret.status_code, 200)
-
     def test_auth_redirect(self):
         app.debug = True
         app.config['USE_AUTH'] = True
         ret = self.test_client.get('/', follow_redirects=False)
         self.assertEquals(ret.status_code, 302)
+
+    def test_no_auth(self):
+        app.debug = True
+        app.config['USE_AUTH'] = False
+        user_mod = userauth.init_user_auth_class()
+        with patch('confidant.authnz.user_mod', user_mod):
+            ret = self.test_client.get('/v1/user/email')
+            self.assertEquals(ret.status_code, 200)
+
+    def test_auth_failure(self):
+        app.debug = True
+        app.config['USE_AUTH'] = True
+        ret = self.test_client.get('/v1/user/email', follow_redirects=False)
+        self.assertEquals(ret.status_code, 401)
 
     def test_auth_with_email_session_in_users(self):
         app.debug = True
@@ -47,7 +56,10 @@ class AuthnzTest(unittest.TestCase):
             with self.test_client as c:
                 with c.session_transaction() as session:
                     session['user'] = {'email': 'example@example.com'}
-                ret = self.test_client.get('/', follow_redirects=False)
+                ret = self.test_client.get(
+                    '/v1/user/email',
+                    follow_redirects=False
+                )
             self.assertEquals(ret.status_code, 200)
 
     def test_auth_with_email_session_not_in_users(self):
@@ -62,7 +74,10 @@ class AuthnzTest(unittest.TestCase):
             with self.test_client as c:
                 with c.session_transaction() as session:
                     session['user'] = {'email': 'baduser@example.com'}
-                ret = self.test_client.get('/', follow_redirects=False)
+                ret = self.test_client.get(
+                    '/v1/user/email',
+                    follow_redirects=False
+                )
             self.assertEquals(ret.status_code, 403)
 
     def test_auth_with_email_session(self):
@@ -77,7 +92,10 @@ class AuthnzTest(unittest.TestCase):
             with self.test_client as c:
                 with c.session_transaction() as session:
                     session['user'] = {'email': 'example@example.com'}
-                ret = self.test_client.get('/', follow_redirects=False)
+                ret = self.test_client.get(
+                    '/v1/user/email',
+                    follow_redirects=False
+                )
             self.assertEquals(ret.status_code, 200)
 
     def test_invalid_kms_auth_token(self):

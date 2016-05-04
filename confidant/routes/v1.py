@@ -27,14 +27,24 @@ kms_client = confidant.services.get_boto_client('kms')
 VALUE_LENGTH = 50
 
 
+@app.route('/v1/login', methods=['GET', 'POST'])
+def login():
+    '''
+    Send user through login flow.
+    '''
+    return authnz.log_in()
+
+
 @app.route('/v1/user/email', methods=['GET', 'POST'])
 @authnz.require_auth
 def get_user_info():
     '''
     Get the email address of the currently logged-in user.
     '''
-    response = jsonify({'email': authnz.get_logged_in_user()})
-    response.set_cookie('XSRF-TOKEN', authnz.get_csrf_token())
+    try:
+        response = jsonify({'email': authnz.get_logged_in_user()})
+    except authnz.UserUnknownError:
+        response = jsonify({'email': None})
     return response
 
 

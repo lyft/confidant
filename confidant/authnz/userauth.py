@@ -1,12 +1,15 @@
 import abc
 import logging
 import urlparse
+import datetime
+import random
 
 import yaml
 
 import flask
 from flask import request, session
 from flask import abort, jsonify, redirect
+from werkzeug.security import safe_str_cmp
 
 # google auth imports
 from authomatic import Authomatic
@@ -54,8 +57,55 @@ class AbstractUserAuthenticator(object):
     def is_authenticated(self):
         return 'user' in session
 
+    def is_expired(self):
+        if 'expiration' in session:
+            # Paranoia case
+            if session.get('max_expiration') is None:
+                logging.warning(
+                    'max_expiration unset on session, when expiration is set.'
+                )
+                return True
+            now = datetime.datetime.utcnow()
+            if now > session['expiration']:
+                return True
+            elif now > session['max_expiration']:
+                return True
+        else:
+            return False
+
     def current_user(self):
         return session['user']
+
+    def get_csrf_token(self):
+        return session.get('XSRF-TOKEN')
+
+    def set_csrf_token(self, resp):
+        session['XSRF-TOKEN'] = '{0:x}'.format(
+            random.SystemRandom().getrandbits(160)
+        )
+        resp.set_cookie('XSRF-TOKEN', session['XSRF-TOKEN'])
+
+    def check_csrf_token(self):
+        token = request.headers.get('X-XSRF-TOKEN', '')
+        if not token:
+            return False
+        return safe_str_cmp(token, session.get('XSRF-TOKEN', ''))
+
+    def set_expiration(self):
+        if app.config['PERMANENT_SESSION_LIFETIME']:
+            session.permanent = True
+            now = datetime.datetime.utcnow()
+            lifetime = app.config['PERMANENT_SESSION_LIFETIME']
+            expiration = now + datetime.timedelta(seconds=lifetime)
+            session['expiration'] = expiration
+            # We want the max_expiration initially set, but we don't want it to
+            # be extended.
+            if not session.get('max_expiration'):
+                max_lifetime = app.config['MAX_PERMANENT_SESSION_LIFETIME']
+                if not max_lifetime:
+                    max_lifetime = lifetime
+                max_expiration = now + datetime.timedelta(seconds=max_lifetime)
+                session['max_expiration'] = max_expiration
 
     def set_current_user(self, email, first_name=None, last_name=None):
         session['user'] = {
@@ -194,6 +244,15 @@ class NullUserAuthenticator(object):
             'last_name': 'user',
         }
 
+    def current_email(self):
+        return self.current_user()['email'].lower()
+
+    def current_first_name(self):
+        return self.current_user()['first_name']
+
+    def current_last_name(self):
+        return self.current_user()['last_name']
+
     def is_authenticated(self):
         """Null users are always authenticated"""
         return True
@@ -253,6 +312,7 @@ class GoogleOauthAuthenticator(AbstractUserAuthenticator):
             if result.user:
                 result.user.update()
                 user = result.user
+                self.set_expiration()
                 self.set_current_user(email=user.email,
                                       first_name=user.first_name,
                                       last_name=user.last_name)
@@ -260,7 +320,9 @@ class GoogleOauthAuthenticator(AbstractUserAuthenticator):
                 # authomatic adds url params google auth has stripped the
                 # angular args anyway, so let's just redirect back to the
                 # index.
-                return self.redirect_to_index()
+                resp = self.redirect_to_index()
+                self.set_csrf_token(resp)
+                return resp
 
         # Authomatic will have put a redirect in our response here.
         return response
@@ -472,6 +534,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
             if key.lower() in ['lastname', 'last_name']:
                 kwargs['last_name'] = val
 
+        self.set_expiration()
         self.set_current_user(**kwargs)
 
         # success, redirect to RelayState if present or to /
@@ -483,7 +546,9 @@ class SamlAuthenticator(AbstractUserAuthenticator):
             redirect_url = default_redirect
 
         logging.debug("Redirecting to {0}".format(redirect_url))
-        return flask.redirect(redirect_url)
+        resp = flask.redirect(redirect_url)
+        self.set_csrf_token(resp)
+        return resp
 
     def log_out(self):
         """

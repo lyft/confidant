@@ -29,7 +29,7 @@
     <header id="page-header" class="header">
         <nav id="site-navigation">
           <div class="container-fluid">
-            <p class="navbar-text pull-right">Not logged in.</p>
+            <p class="navbar-text pull-right"><a href="v1/login">Log In <span class="glyphicon glyphicon-log-in"></span></a></p>
             <p class="site-logo visible-sm visible-md visible-lg"></p>
             <h1>Confidant</h1>
             <div id="header-subtext" class="has-margin-bottom-lg">Your secret keeper.</div>
@@ -37,13 +37,8 @@
         </nav>
     </header>
 
-    <div id="page-navigation" class="container-fluid container-bottomborder has-margin-bottom" role="navigation" ng-controller="common.NavCtrl">
-      <ul class="nav nav-pills has-margin-bottom">
-        <li role="presentation"><a href="./">Log In <span class="glyphicon glyphicon-home"></span></a></li>
-      </ul>
-    </div>
     <div ui-view="main" class="container-fluid container-body">
-      <div ui-view="details" class="col-md-7 row-overflow"><div class="row"><div class="no-details-text"><h3>You have logged out.</h3></div></div></div>
+      <div ui-view="details"><div class="row"><div class="no-details-text"><h3>You are logged out.</h3></div></div></div>
     </div>
 
     <!-- build:js scripts/oldieshim.js -->

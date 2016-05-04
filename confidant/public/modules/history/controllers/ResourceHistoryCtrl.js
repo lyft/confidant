@@ -15,12 +15,19 @@
         '$log',
         '$location',
         'credentials.list',
+        'blindcredentials.list',
         'history.ResourceArchiveService',
-        function ($scope, $log, $location, CredentialList, ResourceArchiveService) {
+        function ($scope, $log, $location, CredentialList, BlindCredentialList, ResourceArchiveService) {
             CredentialList.get().$promise.then(function(credentialList) {
                 $scope.credentialList = credentialList.credentials;
             }, function() {
                 $scope.credentialList = [];
+            });
+
+            BlindCredentialList.get().$promise.then(function(blindCredentialList) {
+                $scope.blindCredentialList = blindCredentialList.blind_credentials;
+            }, function() {
+                $scope.blindCredentialList = [];
             });
 
             // Reformat archive credential IDs for display. Archive credential IDs

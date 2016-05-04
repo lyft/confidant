@@ -1,10 +1,8 @@
 import fnmatch
-import random
 import logging
 
-from flask import abort, request, session, g
+from flask import abort, request, g
 from flask import url_for
-from werkzeug.security import safe_str_cmp
 from functools import wraps
 
 from confidant import keymanager
@@ -57,33 +55,14 @@ def user_type_has_privilege(user_type, privilege):
     return False
 
 
-def get_csrf_token():
-    if 'XSRF-TOKEN' not in session:
-        set_csrf_token()
-    return session['XSRF-TOKEN']
-
-
-def set_csrf_token():
-    session['XSRF-TOKEN'] = '{0:x}'.format(
-        random.SystemRandom().getrandbits(160)
-    )
-
-
-def check_csrf_token():
-    # KMS is username/password or header auth, so we don't need to check for
-    # csrf tokens.
-    if g.auth_type == 'kms':
-        return True
-    token = request.headers.get('X-XSRF-TOKEN', '')
-    if not token:
-        return False
-    return safe_str_cmp(token, session.get('XSRF-TOKEN', ''))
-
-
 def require_csrf_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if check_csrf_token():
+        # KMS is username/password or header auth, so we don't need to check
+        # for csrf tokens.
+        if g.auth_type == 'kms':
+            return f(*args, **kwargs)
+        if user_mod.check_csrf_token():
             return f(*args, **kwargs)
         return abort(401)
     return decorated
@@ -127,6 +106,27 @@ def _get_kms_auth_data():
          data['from']) = _parse_username(headers['X-Auth-From'])
         data['token'] = headers['X-Auth-Token']
     return data
+
+
+def log_in():
+    return user_mod.log_in()
+
+
+def redirect_to_logout_if_no_auth(f):
+    """
+    Decorator for redirecting users to the logout page when they are
+    not authenticated.
+    """
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if user_mod.is_expired():
+            return user_mod.redirect_to_goodbye()
+
+        if user_mod.is_authenticated():
+            return f(*args, **kwargs)
+        else:
+            return user_mod.redirect_to_goodbye()
+    return decorated
 
 
 def require_auth(f):
@@ -192,6 +192,9 @@ def require_auth(f):
             if not user_type_has_privilege(user_type, f.func_name):
                 return abort(403)
 
+            if user_mod.is_expired():
+                return abort(401)
+
             if user_mod.is_authenticated():
                 try:
                     user_mod.check_authorization()
@@ -199,14 +202,15 @@ def require_auth(f):
                     logging.warning('Not authorized -- ' + e.message)
                     return abort(403)
                 else:
+                    # User took an action, extend the expiration time.
+                    user_mod.set_expiration()
                     # auth-N and auth-Z are good, call the decorated function
                     g.user_type = user_type
                     g.auth_type = user_mod.auth_type
                     return f(*args, **kwargs)
 
-            # Not authenticated, ask log_in() to initiate the redirect (or to
-            # handle the callback if we're using Authomatic).
-            return user_mod.log_in()
+            # Not authenticated
+            return abort(401)
 
         logging.error('Ran out of authentication methods')
         return abort(403)
