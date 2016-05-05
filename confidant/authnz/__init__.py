@@ -58,6 +58,9 @@ def user_type_has_privilege(user_type, privilege):
 def require_csrf_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):
+        # If we're not using auth, there's no point in checking csrf tokens.
+        if not app.config.get('USE_AUTH'):
+            return True
         # KMS is username/password or header auth, so we don't need to check
         # for csrf tokens.
         if g.auth_type == 'kms':
