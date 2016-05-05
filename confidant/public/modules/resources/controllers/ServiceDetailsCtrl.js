@@ -44,9 +44,13 @@
                     }
                     serviceCopy = angular.copy($scope.service);
                 });
-                Grants.get({'id': $stateParams.serviceId}).$promise.then(function(grants) {
-                    $scope.grants = grants.grants;
-                });
+                if ($scope.showGrants) {
+                    Grants.get({'id': $stateParams.serviceId}).$promise.then(function(grants) {
+                        $scope.grants = grants.grants;
+                    });
+                } else {
+                    $scope.grants = null;
+                }
             } else {
                 $scope.shown = true;
                 $scope.service = {

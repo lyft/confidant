@@ -291,14 +291,19 @@ SESSION_SECRET = _secrets_bootstrap.get(
 # the lifetime of the session, rather than being cleared by the browser, which
 # depending on the browser (and its user's configuration) can also be
 # permanent. User actions will extend the permanent session lifetime, so this
-# setting can be relatively small.
-PERMANENT_SESSION_LIFETIME = int_env('PERMANENT_SESSION_LIFETIME')
+# setting can be relatively small. Default is 43200 seconds (12 hours).
+# To disable permanent cookies, set this to 0.
+PERMANENT_SESSION_LIFETIME = int_env('PERMANENT_SESSION_LIFETIME', 43200)
 # Set a maximum lifetime of a session, when using 'permanent' cookies. User
 # actions extend the lifetime of a session cookie, but they will not be
 # extended past this maximum time. This setting should be equal to or larger
 # than PERMANENT_SESSION_LIFETIME. If unset, MAX_PERMANENT_SESSION_LIFETIME
-# will be equal to PERMANENT_SESSION_LIFETIME.
-MAX_PERMANENT_SESSION_LIFETIME = int_env('MAX_PERMANENT_SESSION_LIFETIME')
+# will be equal to PERMANENT_SESSION_LIFETIME. Default is 86400 seconds (24
+# hours).
+MAX_PERMANENT_SESSION_LIFETIME = int_env(
+    'MAX_PERMANENT_SESSION_LIFETIME',
+    86400
+)
 
 # General storage
 

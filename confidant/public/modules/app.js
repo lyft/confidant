@@ -32,10 +32,13 @@
 
     .config([
         '$httpProvider',
-        function($httpProvider) {
+        '$compileProvider',
+        function($httpProvider, $compileProvider) {
 
         // Broadcast events when HTTP requests are made.
         $httpProvider.interceptors.push('common.HttpEventInterceptor');
+
+        $compileProvider.debugInfoEnabled(false);
     }])
 
     ;
