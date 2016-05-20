@@ -1,10 +1,13 @@
+env:
+  - REPO=lyft/confidant
+
 sudo: required
 
 services:
   - docker
 
 before_install:
-  - 'docker pull lyft/confidant -a || echo "Failed to pull confidant docker image, doing full build."'
-  - docker build -t lyft/confidant .
+  - 'docker pull -a lyft/confidant || echo "Failed to pull confidant docker image, doing full build."'
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
 
-script: docker run lyft/confidant /bin/sh -c "make test"
+script: docker run $REPO:$COMMIT /bin/sh -c "make test"
