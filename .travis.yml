@@ -4,6 +4,7 @@ services:
   - docker
 
 before_install:
+  - 'docker pull lyft/confidant -a || echo "Failed to pull confidant docker image, doing full build."'
   - docker build -t lyft/confidant .
 
 script: docker run lyft/confidant /bin/sh -c "make test"
