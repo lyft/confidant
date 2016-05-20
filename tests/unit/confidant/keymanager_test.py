@@ -10,6 +10,14 @@ from confidant.utils import lru
 
 
 class KeyManagerTest(unittest.TestCase):
+    def setUp(self):
+        self.use_auth = app.config['USE_AUTH']
+        self.use_encryption = app.config['USE_ENCRYPTION']
+
+    def tearDown(self):
+        app.config['USE_AUTH'] = self.use_auth
+        app.config['USE_ENCRYPTION'] = self.use_encryption
+
     @patch('confidant.keymanager.KEY_METADATA', {})
     @patch('confidant.keymanager.kms_client.describe_key')
     def test_get_key_arn(self, kms_mock):
@@ -52,7 +60,6 @@ class KeyManagerTest(unittest.TestCase):
 
     @patch('cryptography.fernet.Fernet.generate_key')
     def test_create_datakey_mocked(self, fernet_mock):
-        use_encryption = app.config['USE_ENCRYPTION']
         app.config['USE_ENCRYPTION'] = False
         fernet_mock.return_value = 'mocked_fernet_key'
 
@@ -66,33 +73,47 @@ class KeyManagerTest(unittest.TestCase):
 
         # Assert ciphertext is mocked_fernet_key
         self.assertEquals(ret['ciphertext'], 'mocked_fernet_key')
-        app.config['USE_ENCRYPTION'] = use_encryption
 
     def test_decrypt_datakey_mocked(self):
-        use_encryption = app.config['USE_ENCRYPTION']
         app.config['USE_ENCRYPTION'] = False
         ret = keymanager.decrypt_datakey('mocked_fernet_key')
 
         # Ensure we get the same value out that we sent in.
         self.assertEquals(ret, 'mocked_fernet_key')
-        app.config['USE_ENCRYPTION'] = use_encryption
 
-    def test_datakey(self):
-        use_encryption = app.config['USE_ENCRYPTION']
+    @patch(
+        'confidant.keymanager.cryptolib.create_datakey'
+    )
+    @patch(
+        'confidant.keymanager.cryptolib.create_mock_datakey'
+    )
+    def test_create_datakey_with_encryption(self, cmd_mock, cd_mock):
         app.config['USE_ENCRYPTION'] = True
         context = {'from': 'confidant-development',
                    'to': 'confidant-development'}
-        ret = keymanager.create_datakey(context)
+        keymanager.create_datakey(context)
 
-        # Assert that our ciphertext and plaintext aren't equal.
-        self.assertNotEquals(ret['ciphertext'], ret['plaintext'])
+        # Assert that create_datakey was called and create_mock_datakey was
+        # not called.
+        self.assertTrue(cd_mock.called)
+        self.assertFalse(cmd_mock.called)
 
-        key = keymanager.decrypt_datakey(ret['ciphertext'], context)
+    @patch(
+        'confidant.keymanager.cryptolib.decrypt_datakey'
+    )
+    @patch(
+        'confidant.keymanager.cryptolib.decrypt_mock_datakey'
+    )
+    def test_decrypt_datakey_with_encryption(self, dmd_mock, dd_mock):
+        app.config['USE_ENCRYPTION'] = True
+        context = {'from': 'confidant-development',
+                   'to': 'confidant-development'}
+        keymanager.decrypt_datakey('encrypted', context)
 
-        # Assert that our decrypted key is ciphertext is equal to the original
-        # plaintext.
-        self.assertEquals(ret['plaintext'], key)
-        app.config['USE_ENCRYPTION'] = use_encryption
+        # Assert that decrypt_datakey was called and decrypt_mock_datakey was
+        # not called.
+        self.assertTrue(dd_mock.called)
+        self.assertFalse(dmd_mock.called)
 
     @patch(
         'confidant.keymanager.get_key_arn',
