@@ -13,7 +13,7 @@
 
 from setuptools import setup
 
-VERSION = "1.1.11"
+VERSION = "1.1.12"
 
 requirements = [
     'confidant-common=={0}'.format(VERSION),
@@ -23,7 +23,7 @@ requirements = [
     # License: Apache2
     # Upstream url: https://github.com/boto/boto3
     # Use: For KMS
-    'boto3>=1.2.0,<1.3.0',
+    'boto3>=1.2.0,<1.4.0',
 
     # cryptography is a package which provides cryptographic recipes and
     # primitives to Python developers.
