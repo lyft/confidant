@@ -107,6 +107,51 @@ class ClientTest(unittest.TestCase):
         )
 
     @patch(
+        'confidant.services.get_boto_client',
+        MagicMock()
+    )
+    def test__get_assume_role_creds(self):
+        client = confidant.client.ConfidantClient(
+            'http://localhost/',
+            'alias/authnz-testing',
+            {'from': 'confidant-unittest',
+             'to': 'test',
+             'user_type': 'service'},
+            token_version=2
+        )
+        client.sts_client.assume_role = MagicMock()
+        client._get_assume_role_creds(
+            'arn:aws:iam::12345:role/confidant-unittest'
+        )
+        # Ensure we generate base_arn, role_arn and username from passed-in
+        # role
+        client.sts_client.assume_role.assert_called_with(
+            RoleArn='arn:aws:iam::12345:role/confidant-unittest',
+            RoleSessionName='confidant-unittest_confidant'
+        )
+        client.iam_client = MagicMock()
+        client.iam_client.get_user = MagicMock(return_value={
+            'User': {
+                'Arn': 'arn:aws:iam::12345:user/confidant-unittest2',
+                'UserName': 'unittestuser'
+            }
+        })
+        client._get_assume_role_creds('confidant-unittest2')
+        # Ensure we generate base_arn, role_arn and username from get_user
+        client.sts_client.assume_role.assert_called_with(
+            RoleArn='arn:aws:iam::12345:role/confidant-unittest2',
+            RoleSessionName='confidant-unittest2_confidant'
+        )
+        client._get_assume_role_creds('confidant-unittest2', mfa_pin='1234')
+        # Ensure we generate base_arn, role_arn and username from get_user
+        client.sts_client.assume_role.assert_called_with(
+            RoleArn='arn:aws:iam::12345:role/confidant-unittest2',
+            RoleSessionName='confidant-unittest2_confidant',
+            SerialNumber='arn:aws:iam::12345:mfa/unittestuser',
+            TokenCode='1234'
+        )
+
+    @patch(
         'confidant.services.get_boto_client'
     )
     def test__get_token(self, boto_mock):
