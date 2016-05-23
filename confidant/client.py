@@ -219,22 +219,33 @@ class ConfidantClient(object):
 
     def _get_assume_role_creds(self, role, mfa_pin=None):
         """Get AWS credentials for the specified role."""
-        user = self.iam_client.get_user()
-        base_arn = user['User']['Arn'].rsplit(':', 1)[0]
-        role_arn = '{0}:role/{1}'.format(base_arn, role)
-        username = user['User']['UserName']
+        # A full ARN is passed in
+        if role.startswith('arn:aws'):
+            base_arn = role.rsplit(':', 1)[0]
+            role_name = role.rsplit('/', 1)[1]
+            role_arn = role
+            user = None
+        # A role name is passed in
+        else:
+            user = self.iam_client.get_user()
+            base_arn = user['User']['Arn'].rsplit(':', 1)[0]
+            role_name = role
+            role_arn = '{0}:role/{1}'.format(base_arn, role)
         if mfa_pin:
+            if user is None:
+                user = self.iam_client.get_user()
+            username = user['User']['UserName']
             mfa_arn = '{0}:mfa/{1}'.format(base_arn, username)
             return self.sts_client.assume_role(
                 RoleArn=role_arn,
-                RoleSessionName='{0}_confidant'.format(username),
+                RoleSessionName='{0}_confidant'.format(role_name),
                 SerialNumber=mfa_arn,
                 TokenCode=mfa_pin
             )['Credentials']
         else:
             return self.sts_client.assume_role(
                 RoleArn=role_arn,
-                RoleSessionName='{0}_confidant'.format(username)
+                RoleSessionName='{0}_confidant'.format(role_name)
             )['Credentials']
 
     def _get_mfa_creds(self, mfa_pin):
