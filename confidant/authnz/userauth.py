@@ -546,7 +546,10 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         redirect_url = request.form.get('RelayState', default_redirect)
 
         # avoid redirect loop
-        if redirect_url.endswith('/v1/saml/consume'):
+        # This is enough of a pain that it's not clear that we should even
+        # support RelayState, but it seems good enough for now.
+        if (redirect_url.endswith('/saml/consume') or
+            redirect_url.endswith('/login')):
             redirect_url = default_redirect
 
         logging.debug("Redirecting to {0}".format(redirect_url))
