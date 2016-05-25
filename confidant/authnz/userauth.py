@@ -257,6 +257,10 @@ class NullUserAuthenticator(object):
         """Null users are always authenticated"""
         return True
 
+    def is_expired(self):
+        """Null users are never expired"""
+        return False
+
     def check_authorization(self):
         """Null users are always authorized"""
         return True
