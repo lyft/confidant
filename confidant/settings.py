@@ -162,9 +162,17 @@ SAML_SP_CERT = str_env('SAML_SP_CERT')
 # Path to SP private key file in PEM format
 SAML_SP_KEY_FILE = str_env('SAML_SP_KEY_FILE')
 # Password for the SAML_SP_KEY_FILE
-SAML_SP_KEY_FILE_PASSWORD = str_env('SAML_SP_KEY_FILE_PASSWORD', None)
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+SAML_SP_KEY_FILE_PASSWORD = _secrets_bootstrap.get(
+    'SAML_SP_KEY_FILE_PASSWORD',
+    str_env('SAML_SP_KEY_FILE_PASSWORD', None)
+)
 # Raw SP private key in base64-encoded DER
-SAML_SP_KEY = str_env('SAML_SP_KEY')
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+SAML_SP_KEY = _secrets_bootstrap.get(
+    'SAML_SP_KEY',
+    str_env('SAML_SP_KEY')
+)
 
 # SAML IdP Entity ID (typically a URL)
 SAML_IDP_ENTITY_ID = str_env('SAML_IDP_ENTITY_ID')
