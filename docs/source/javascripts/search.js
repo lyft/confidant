@@ -47,7 +47,7 @@ $(function() {
     // Copied from https://jqueryui.com/autocomplete/#custom-data
     var content = item.noresults
       ? '<span class="noresults">No results found</span>'
-      : '<a href="' + item.url + '">' + item.title + '</a>';
+      : '<a href="/confidant/' + item.url + '">' + item.title + '</a>';
 
     $(this.menu.element).toggleClass('noresults', !!item.noresults);
     return $("<li>").append(content).appendTo(ul);
