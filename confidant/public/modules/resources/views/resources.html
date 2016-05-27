@@ -28,7 +28,7 @@
           <div ng-hide="credentialList" class="panel-body">No credentials.</div>
           <div class="list-group" ng-show="credentialList">
             <div ng-repeat="cred in credentialList | filter: resourceRegexFilter('name', resourceRegex)" ng-show="cred.enabled || showDisabled">
-                <a href="#/resources/credential/{{ cred.id }}" class="list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ cred.name }}</p></span></a>
+                <a href="#/resources/credential/{{ cred.id }}" class="dont-break-out list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ cred.name }}</p></span></a>
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@
           <div ng-hide="blindCredentialList" class="panel-body">No blind credentials.</div>
           <div class="list-group" ng-show="blindCredentialList">
             <div ng-repeat="cred in blindCredentialList | filter: resourceRegexFilter('name', resourceRegex)" ng-show="cred.enabled || showDisabled">
-                <a href="#/resources/blind_credential/{{ cred.id }}" class="list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ cred.name }}</p></span></a>
+                <a href="#/resources/blind_credential/{{ cred.id }}" class="dont-break-out list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ cred.name }}</p></span></a>
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@
           <div ng-hide="serviceList" class="panel-body">No services.</div>
           <div class="list-group" ng-show="serviceList">
             <div ng-repeat="service in serviceList | filter: resourceRegexFilter('id', resourceRegex)" ng-show="service.enabled || showDisabled">
-                <a href="#/resources/service/{{ service.id }}" class="list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ service.id }}</p></span></a>
+                <a href="#/resources/service/{{ service.id }}" class="dont-break-out list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ service.id }}</p></span></a>
             </div>
           </div>
         </div>
