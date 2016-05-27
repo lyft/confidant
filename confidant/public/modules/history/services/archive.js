@@ -45,6 +45,9 @@
                     }
                     _this.resourceArchive = credentialArchive.concat(blindCredentialArchive);
                     _this.resourceArchive = _this.resourceArchive.concat(serviceArchive);
+                    _this.resourceArchive.forEach(function(resource){
+                        resource.modified_date = new Date(resource.modified_date);
+                    });
                 }, function() {
                     _this.resourceArchive = [];
                 });

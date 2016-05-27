@@ -18,6 +18,10 @@
         'blindcredentials.list',
         'history.ResourceArchiveService',
         function ($scope, $log, $location, CredentialList, BlindCredentialList, ResourceArchiveService) {
+            $scope.showCredentials = true;
+            $scope.showBlindCredentials = true;
+            $scope.showServices = true;
+
             CredentialList.get().$promise.then(function(credentialList) {
                 $scope.credentialList = credentialList.credentials;
             }, function() {
@@ -40,6 +44,19 @@
                 return function(resource) {
                     var pattern = new RegExp(regex, 'ig');
                     return pattern.test(resource[field]);
+                };
+            };
+
+            $scope.resourceTypeFilter = function(field) {
+                return function(resource) {
+                    if (resource[field] == 'credential' && $scope.showCredentials) {
+                        return true;
+                    } else if (resource[field] == 'blind_credential' && $scope.showBlindCredentials) {
+                        return true;
+                    } else if (resource[field] == 'service' && $scope.showServices) {
+                        return true;
+                    }
+                    return false;
                 };
             };
 
