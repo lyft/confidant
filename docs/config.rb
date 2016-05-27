@@ -2,8 +2,7 @@ require "builder"
 
 set :layout, :article
 
-
-#activate :livereload
+activate :livereload
 activate :i18n, :langs => [:en], :lang_map => { :en => :english }
 activate :directory_indexes
 activate :autoprefixer
@@ -14,17 +13,6 @@ end
 
 set :markdown, :tables => true, :autolink => true, :gh_blockcode => true, :fenced_code_blocks => true, :with_toc_data => true
 set :markdown_engine, :redcarpet
-
-activate :search do |search|
-  search.resources = ['basics/', 'advanced/', 'communication/']
-  search.index_path = 'search/lunr-index.json' # defaults to `search.json`
-  search.fields = {
-    title:   {boost: 100, store: true, required: true},
-    content: {boost: 50},
-    url:     {index: false, store: true},
-    author:  {boost: 30}
-  }
-end
 
 configure :development do
   set :debug_assets, true
