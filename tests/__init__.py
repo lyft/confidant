@@ -14,6 +14,8 @@ env_settings = [
     ('AWS_DEFAULT_REGION', 'us-east-1'),
     ('USER_AUTH_KEY', 'authnz-usertesting'),
     ('AUTH_KEY', 'authnz-testing'),
+    ('SCOPED_AUTH_KEYS',
+     '{"sandbox-auth-key":"sandbox","primary-auth-key":"primary"}'),
     ('KMS_MASTER_KEY', 'confidant-mastertesting'),
     ('DEBUG', 'true'),
     ('STATIC_FOLDER', 'public')

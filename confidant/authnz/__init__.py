@@ -48,6 +48,19 @@ def user_is_service(service):
     return False
 
 
+def service_in_account(account):
+    # We only scope to account, if an account is specified.
+    if not account:
+        return True
+    if g.account == account:
+        return True
+    return False
+
+
+def account_for_key_alias(key_alias):
+    return app.config['SCOPED_AUTH_KEYS'].get(key_alias)
+
+
 def user_type_has_privilege(user_type, privilege):
     for _privilege in PRIVILEGES[user_type]:
         if fnmatch.fnmatch(privilege, _privilege):
@@ -156,14 +169,14 @@ def require_auth(f):
                     logging.warning(msg)
                     return abort(403)
                 with stats.timer('decrypt_token'):
-                    payload = keymanager.decrypt_token(
+                    token_data = keymanager.decrypt_token(
                         kms_auth_data['version'],
                         kms_auth_data['user_type'],
                         kms_auth_data['from'],
                         kms_auth_data['token']
                     )
-                logging.debug('Auth request had the following payload:'
-                              ' {0}'.format(payload))
+                logging.debug('Auth request had the following token_data:'
+                              ' {0}'.format(token_data))
                 msg = 'Authenticated {0} with user_type {1} via kms auth'
                 msg = msg.format(
                     kms_auth_data['from'],
@@ -175,6 +188,7 @@ def require_auth(f):
                         f.func_name):
                     g.user_type = kms_auth_data['user_type']
                     g.auth_type = 'kms'
+                    g.account = account_for_key_alias(token_data['key_alias'])
                     g.username = kms_auth_data['from']
                     return f(*args, **kwargs)
                 else:

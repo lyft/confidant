@@ -9,6 +9,10 @@ from cryptography.fernet import Fernet
 from confidant.lib import cryptolib
 
 
+class SettingsError(Exception):
+    pass
+
+
 def bool_env(var_name, default=False):
     """
     Get an environment variable coerced to a boolean value.
@@ -243,6 +247,13 @@ AUTH_CONTEXT = str_env('AUTH_CONTEXT')
 # 'service' role.
 # Example: mykmskey
 AUTH_KEY = str_env('AUTH_KEY')
+# A dict of KMS key to account mappings. These keys are for the 'service' role
+# to support multiple AWS accounts. If services are scoped to accounts,
+# confidant will ensure the service authentication KMS auth used the mapped
+# key. The account values in this setting will be shown to the user when
+# creating or editing services.
+# Example: {"sandbox-auth-key":"sandbox","primary-auth-key":"primary"}
+SCOPED_AUTH_KEYS = json.loads(str_env('SCOPED_AUTH_KEYS', '{}'))
 # The alias of the KMS key being used for authentication that is specifically
 # for the 'user' role. This should not be the same key as AUTH_KEY if your
 # kms token version is < 2, as it would allow services to masquerade as users.
@@ -406,6 +417,15 @@ AWS_DEFAULT_REGION = str_env('AWS_DEFAULT_REGION', 'us-east-1')
 # See: https://github.com/surfly/gevent/issues/468
 #
 # GEVENT_RESOLVER='ares'
+
+# Configuration validation
+_settings_failures = False
+if len(list(set(SCOPED_AUTH_KEYS.values()))) != len(SCOPED_AUTH_KEYS.values()):
+    logging.error('SCOPED_AUTH_KEYS values are not unique.')
+    _settings_failures = True
+
+if _settings_failures:
+    raise SettingsError('Refusing to continue with invalid settings.')
 
 
 def get(name, default=None):

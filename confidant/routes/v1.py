@@ -58,7 +58,8 @@ def get_client_config():
     response = jsonify({
         'defined': app.config['CLIENT_CONFIG'],
         'generated': {
-            'kms_auth_manage_grants': app.config['KMS_AUTH_MANAGE_GRANTS']
+            'kms_auth_manage_grants': app.config['KMS_AUTH_MANAGE_GRANTS'],
+            'aws_accounts': app.config['SCOPED_AUTH_KEYS'].values()
         }
     })
     return response
@@ -71,6 +72,7 @@ def get_service_list():
     for service in Service.data_type_date_index.query('service'):
         services.append({
             'id': service.id,
+            'account': service.account,
             'enabled': service.enabled,
             'revision': service.revision,
             'modified_date': service.modified_date,
@@ -96,18 +98,25 @@ def get_service(id):
     Get service metadata and all credentials for this service. This endpoint
     allows basic authentication.
     '''
-    if authnz.user_is_user_type('service') and not authnz.user_is_service(id):
-        logging.warning('Authz failed for service {0}.'.format(id))
-        msg = 'Authenticated user is not authorized.'
-        return jsonify({'error': msg}), 401
-    logging.debug('Authz succeeded for service {0}.'.format(id))
+    if authnz.user_is_user_type('service'):
+        if not authnz.user_is_service(id):
+            logging.warning('Authz failed for service {0}.'.format(id))
+            msg = 'Authenticated user is not authorized.'
+            return jsonify({'error': msg}), 401
     try:
         service = Service.get(id)
+        if not authnz.service_in_account(service.account):
+            logging.warning(
+                'Authz failed for service {0} (wrong account).'.format(id)
+            )
+            msg = 'Authenticated user is not authorized.'
+            return jsonify({'error': msg}), 401
     except Service.DoesNotExist:
         return jsonify({}), 404
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
         return jsonify({}), 404
+    logging.debug('Authz succeeded for service {0}.'.format(id))
     try:
         credentials = _get_credentials(service.credentials)
     except KeyError:
@@ -115,6 +124,7 @@ def get_service(id):
     blind_credentials = _get_blind_credentials(service.blind_credentials)
     return jsonify({
         'id': service.id,
+        'account': service.account,
         'credentials': credentials,
         'blind_credentials': blind_credentials,
         'enabled': service.enabled,
@@ -142,6 +152,7 @@ def get_archive_service_revisions(id):
     for revision in Service.batch_get(ids):
         revisions.append({
             'id': revision.id,
+            'account': revision.account,
             'revision': revision.revision,
             'enabled': revision.enabled,
             'credentials': list(revision.credentials),
@@ -166,6 +177,7 @@ def get_archive_service_list():
             'archive-service', scan_index_forward=False):
         services.append({
             'id': service.id,
+            'account': service.account,
             'revision': service.revision,
             'enabled': service.enabled,
             'credentials': list(service.credentials),
@@ -254,6 +266,11 @@ def map_service_credentials(id):
             }
             return jsonify(ret), 400
 
+    accounts = app.config['SCOPED_AUTH_KEYS'].values()
+    if data.get('account') and data['account'] not in accounts:
+        ret = {'error': '{0} is not a valid account.'}
+        return jsonify(ret), 400
+
     # If this is the first revision, we should attempt to create a grant for
     # this service.
     if revision == 1:
@@ -269,6 +286,7 @@ def map_service_credentials(id):
             data_type='archive-service',
             credentials=data.get('credentials'),
             blind_credentials=data.get('blind_credentials'),
+            account=data.get('account'),
             enabled=data.get('enabled'),
             revision=revision,
             modified_by=authnz.get_logged_in_user()
@@ -283,6 +301,7 @@ def map_service_credentials(id):
             data_type='service',
             credentials=data.get('credentials'),
             blind_credentials=data.get('blind_credentials'),
+            account=data.get('account'),
             enabled=data.get('enabled'),
             revision=revision,
             modified_by=authnz.get_logged_in_user()
@@ -303,6 +322,7 @@ def map_service_credentials(id):
     blind_credentials = _get_blind_credentials(service.blind_credentials)
     return jsonify({
         'id': service.id,
+        'account': service.account,
         'credentials': credentials,
         'blind_credentials': blind_credentials,
         'revision': service.revision,
