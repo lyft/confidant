@@ -6,6 +6,7 @@ from mock import PropertyMock
 from confidant.app import app
 from confidant.authnz import userauth
 from confidant import routes  # noqa
+from confidant.models.service import Service
 
 
 class AuthnzTest(unittest.TestCase):
@@ -116,7 +117,10 @@ class AuthnzTest(unittest.TestCase):
     def test_valid_kms_auth_token(self, keymanager_mock):
         app.debug = True
         app.config['USE_AUTH'] = True
-        keymanager_mock.return_value = {"fake": "payload"}
+        keymanager_mock.return_value = {
+            "payload": {"fake": "payload"},
+            "key_alias": "authnz-testing"
+        }
         auth = base64.b64encode(
             '{0}:{1}'.format('confidant-development', 'faketoken')
         )
@@ -132,7 +136,10 @@ class AuthnzTest(unittest.TestCase):
     def test_valid_kms_auth_token_invalid_user(self, keymanager_mock):
         app.debug = True
         app.config['USE_AUTH'] = True
-        keymanager_mock.return_value = {"fake": "payload"}
+        keymanager_mock.return_value = {
+            "payload": {"fake": "payload"},
+            "key_alias": "authnz-testing"
+        }
         auth = base64.b64encode(
             '{0}:{1}'.format('confidant-development-baduser', 'faketoken')
         )
@@ -143,3 +150,95 @@ class AuthnzTest(unittest.TestCase):
             follow_redirects=False
         )
         self.assertEquals(ret.status_code, 401)
+
+    @patch('confidant.keymanager.decrypt_token')
+    def test_valid_kms_auth_token_invalid_account(self, keymanager_mock):
+        app.debug = True
+        app.config['USE_AUTH'] = True
+        service = Service(
+            id='confidant-development',
+            data_type='service',
+            credentials=[],
+            blind_credentials=[],
+            account='sandbox',
+            enabled=True,
+            revision=1,
+            modified_by='test-user'
+        )
+        service.save()
+        keymanager_mock.return_value = {
+            "payload": {"fake": "payload"},
+            "key_alias": "authnz-testing"
+        }
+        auth = base64.b64encode(
+            '{0}:{1}'.format('confidant-development', 'faketoken')
+        )
+        ret = self.test_client.open(
+            '/v1/services/confidant-development',
+            'GET',
+            headers={'Authorization': 'Basic {0}'.format(auth)},
+            follow_redirects=False
+        )
+        service.delete()
+        self.assertEquals(ret.status_code, 401)
+
+    @patch('confidant.keymanager.decrypt_token')
+    def test_valid_kms_auth_token_no_account(self, keymanager_mock):
+        app.debug = True
+        app.config['USE_AUTH'] = True
+        service = Service(
+            id='confidant-development',
+            data_type='service',
+            credentials=[],
+            blind_credentials=[],
+            enabled=True,
+            revision=1,
+            modified_by='test-user'
+        )
+        service.save()
+        keymanager_mock.return_value = {
+            "payload": {"fake": "payload"},
+            "key_alias": "authnz-testing"
+        }
+        auth = base64.b64encode(
+            '{0}:{1}'.format('confidant-development', 'faketoken')
+        )
+        ret = self.test_client.open(
+            '/v1/services/confidant-development',
+            'GET',
+            headers={'Authorization': 'Basic {0}'.format(auth)},
+            follow_redirects=False
+        )
+        service.delete()
+        self.assertEquals(ret.status_code, 200)
+
+    @patch('confidant.keymanager.decrypt_token')
+    def test_valid_kms_auth_token_good_account(self, keymanager_mock):
+        app.debug = True
+        app.config['USE_AUTH'] = True
+        service = Service(
+            id='confidant-development',
+            data_type='service',
+            account='sandbox',
+            credentials=[],
+            blind_credentials=[],
+            enabled=True,
+            revision=1,
+            modified_by='test-user'
+        )
+        service.save()
+        keymanager_mock.return_value = {
+            "payload": {"fake": "payload"},
+            "key_alias": "sandbox-auth-key"
+        }
+        auth = base64.b64encode(
+            '{0}:{1}'.format('confidant-development', 'faketoken')
+        )
+        ret = self.test_client.open(
+            '/v1/services/confidant-development',
+            'GET',
+            headers={'Authorization': 'Basic {0}'.format(auth)},
+            follow_redirects=False
+        )
+        service.delete()
+        self.assertEquals(ret.status_code, 200)

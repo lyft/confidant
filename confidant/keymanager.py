@@ -37,6 +37,19 @@ def get_key_id(key_alias):
     return KEY_METADATA[key_alias]['KeyMetadata']['KeyId']
 
 
+def get_key_alias_from_cache(key_arn):
+    '''
+    Find a key's alias by looking up its key_arn in the KEY_METADATA
+    cache. This function will only work after a key has been lookedup by its
+    alias and is meant as a convenience function for turning an ARN that's
+    already been looked up back into its alias.
+    '''
+    for alias in KEY_METADATA:
+        if KEY_METADATA[alias]['KeyMetadata']['Arn'] == key_arn:
+            return alias
+    return None
+
+
 def create_datakey(encryption_context):
     '''
     Create a datakey from KMS.
@@ -69,6 +82,15 @@ def decrypt_datakey(data_key, encryption_context=None):
         plaintext = cryptolib.decrypt_datakey(data_key, encryption_context)
         DATAKEYS[sha] = plaintext
     return DATAKEYS[sha]
+
+
+def valid_service_auth_key(key_arn):
+    if key_arn == get_key_arn(app.config['AUTH_KEY']):
+        return True
+    for key in app.config['SCOPED_AUTH_KEYS']:
+        if key_arn == get_key_arn(key):
+            return True
+    return True
 
 
 def decrypt_token(version, user_type, _from, token):
@@ -107,7 +129,7 @@ def decrypt_token(version, user_type, _from, token):
             # Annoyingly, the KeyId from the data is actually an arn.
             key_arn = data['KeyId']
             if user_type == 'service':
-                if key_arn != get_key_arn(app.config['AUTH_KEY']):
+                if not valid_service_auth_key(key_arn):
                     raise TokenDecryptionError(
                         'Authentication error (wrong KMS key).'
                     )
@@ -122,6 +144,8 @@ def decrypt_token(version, user_type, _from, token):
                 )
             plaintext = data['Plaintext']
             payload = json.loads(plaintext)
+            key_alias = get_key_alias_from_cache(key_arn)
+            ret = {'payload': payload, 'key_alias': key_alias}
         except TokenDecryptionError:
             raise
         # We don't care what exception is thrown. For paranoia's sake, fail
@@ -130,16 +154,16 @@ def decrypt_token(version, user_type, _from, token):
             logging.exception('Failed to validate token.')
             raise TokenDecryptionError('Authentication error. General error.')
     else:
-        payload = TOKENS[token_key]
+        ret = TOKENS[token_key]
     time_format = "%Y%m%dT%H%M%SZ"
     now = datetime.datetime.utcnow()
     try:
         not_before = datetime.datetime.strptime(
-            payload['not_before'],
+            ret['payload']['not_before'],
             time_format
         )
         not_after = datetime.datetime.strptime(
-            payload['not_after'],
+            ret['payload']['not_after'],
             time_format
         )
     except Exception:
@@ -158,8 +182,8 @@ def decrypt_token(version, user_type, _from, token):
         raise TokenDecryptionError(
             'Authentication error. Invalid time validity for token.'
         )
-    TOKENS[token_key] = payload
-    return payload
+    TOKENS[token_key] = ret
+    return TOKENS[token_key]
 
 
 def get_grants():

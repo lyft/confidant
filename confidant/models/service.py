@@ -54,5 +54,6 @@ class Service(Model):
     enabled = BooleanAttribute(default=True)
     credentials = NonNullUnicodeSetAttribute(default=set())
     blind_credentials = NonNullUnicodeSetAttribute(default=set())
+    account = UnicodeAttribute(null=True)
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()

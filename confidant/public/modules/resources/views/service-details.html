@@ -34,6 +34,12 @@
     <span ng-hide="service.id" e-ng-hide="service.id" editable-text="service.id" e-typeahead="role for role in roles | filter:$viewValue" id="serviceIdInput">{{ service.id || "Not set." }}</span>
     <span ng-show="service.id" id="serviceIdInput">{{ service.id || "Not set." }}</span>
   </div>
+  <div class="form-group">
+    <label for="serviceAccount">AWS Account</label>
+    <span editable-select="service.account" id="serviceAccount" ng-show="service.account" e-ng-selected="account == service.account" e-ng-options="account for account in aws_account_options" e-ng-hide="clientconfig.generated.aws_accounts.length == 0">{{ service.account }}</span>
+    <span ng-hide="service.account || editableForm.$visible">No account scoping</span>
+    <span ng-show="clientconfig.generated.aws_accounts.length == 0 && editableForm.$visible">No account scoping</span>
+  </div>
   <div class="form-group" ng-show="service.id">
     <label for="serviceEnabled">Service Enabled</label>
     <span editable-checkbox="service.enabled" id="serviceEnabled">{{ service.enabled }}</span>

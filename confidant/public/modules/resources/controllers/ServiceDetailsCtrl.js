@@ -27,6 +27,7 @@
             $scope.saveError = '';
             $scope.newService = false;
             $scope.credentialPairConflicts = null;
+            $scope.aws_account_options = $scope.clientconfig.generated.aws_accounts;
 
             Roles.get().$promise.then(function(roles) {
                 $scope.roles = roles.roles;
@@ -36,6 +37,11 @@
             if ($stateParams.serviceId) {
                 Service.get({'id': $stateParams.serviceId}).$promise.then(function(service) {
                     $scope.service = service;
+                    if ($scope.aws_account_options[0] !== '' && $scope.service.account !== null) {
+                        $scope.aws_account_options.unshift('');
+                    } else if ($scope.aws_account_options[0] === '' && $scope.service.account === null) {
+                        $scope.aws_account_options.shift('');
+                    }
                     if (!$scope.service.credentials) {
                         $scope.service.credentials = [];
                     }
@@ -57,7 +63,8 @@
                     id: '',
                     credentials: [],
                     blind_credentials: [],
-                    enabled: true
+                    enabled: true,
+                    account: null
                 };
                 serviceCopy = angular.copy($scope.service);
                 $scope.newService = true;
@@ -172,6 +179,7 @@
                 var _service = {},
                     deferred = $q.defer();
                 _service.id = $scope.service.id;
+                _service.account = $scope.service.account;
                 _service.enabled = $scope.service.enabled;
                 _service.credentials = [];
                 _service.blind_credentials = [];

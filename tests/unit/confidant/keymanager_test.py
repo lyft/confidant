@@ -120,8 +120,8 @@ class KeyManagerTest(unittest.TestCase):
         MagicMock(return_value='mocked')
     )
     @patch(
-        'confidant.keymanager.get_key_arn',
-        MagicMock(return_value='mocked')
+        'confidant.keymanager.get_key_alias_from_cache',
+        MagicMock(return_value='authnz-testing')
     )
     @patch('confidant.keymanager.kms_client.decrypt')
     def test_decrypt_token(self, kms_mock):
@@ -145,7 +145,10 @@ class KeyManagerTest(unittest.TestCase):
                 'confidant-unittest',
                 'ZW5jcnlwdGVk'
             ),
-            json.loads(payload)
+            {
+                'payload': json.loads(payload),
+                'key_alias': 'authnz-testing'
+            }
         )
         keymanager.TOKENS = lru.LRUCache(4096)
         self.assertEqual(
@@ -155,7 +158,10 @@ class KeyManagerTest(unittest.TestCase):
                 'testuser',
                 'ZW5jcnlwdGVk'
             ),
-            json.loads(payload)
+            {
+                'payload': json.loads(payload),
+                'key_alias': 'authnz-testing'
+            }
         )
         keymanager.TOKENS = lru.LRUCache(4096)
         with self.assertRaisesRegexp(
