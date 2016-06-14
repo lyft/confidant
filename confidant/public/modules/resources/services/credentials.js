@@ -37,6 +37,10 @@
         });
     }])
 
+    .factory('credentials.valueGenerator', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
+        return $resource(CONFIDANT_URLS.VALUE_GENERATOR);
+    }])
+
     .service('credentials.CredentialListService', [
         '$rootScope',
         'credentials.list',

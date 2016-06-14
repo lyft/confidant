@@ -11,6 +11,7 @@
      */
     angular.module('confidant.common.services', [
         // Keep this list sorted alphabetically!
+        'confidant.common.services.clientconfig',
         'confidant.common.services.http',
         'confidant.common.services.NavService',
         'confidant.common.services.SpinOn',

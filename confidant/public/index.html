@@ -30,7 +30,9 @@
     <header id="page-header" class="header">
         <nav id="site-navigation">
           <div class="container-fluid">
-            <p class="navbar-text pull-right">Logged in as {{ user.email }}</p>
+            <p class="navbar-text pull-right" style="text-align: right">
+              Logged in as {{ user.email }} | <a href="loggedout">Log Out <span class="glyphicon glyphicon-log-out"></span></a>
+            </p>
             <p class="site-logo visible-sm visible-md visible-lg"></p>
             <h1>Confidant</h1>
             <div id="header-subtext" class="has-margin-bottom-lg">Your secret keeper.</div>
@@ -83,10 +85,12 @@
     <script src="/modules/common/directives/loading_spinner.js"></script>
     <script src="/modules/common/services/NavService.js"></script>
     <script src="/modules/common/services/body.js"></script>
+    <script src="/modules/common/services/clientconfig.js"></script>
     <script src="/modules/common/services/http.js"></script>
     <script src="/modules/common/services/services.js"></script>
     <script src="/modules/common/services/spin-on.js"></script>
     <script src="/modules/common/services/userinfo.js"></script>
+    <script src="/modules/history/controllers/BlindCredentialHistoryCtrl.js"></script>
     <script src="/modules/history/controllers/CredentialHistoryCtrl.js"></script>
     <script src="/modules/history/controllers/ResourceHistoryCtrl.js"></script>
     <script src="/modules/history/controllers/ServiceHistoryCtrl.js"></script>
@@ -94,12 +98,15 @@
     <script src="/modules/history/history.js"></script>
     <script src="/modules/history/services/archive.js"></script>
     <script src="/modules/history/services/services.js"></script>
+    <script src="/modules/resources/controllers/BlindCredentialDetailsCtrl.js"></script>
+    <script src="/modules/resources/controllers/BlindCredentialDocsCtrl.js"></script>
     <script src="/modules/resources/controllers/CredentialDetailsCtrl.js"></script>
     <script src="/modules/resources/controllers/CredentialDocsCtrl.js"></script>
     <script src="/modules/resources/controllers/ResourceCtrl.js"></script>
     <script src="/modules/resources/controllers/ServiceDetailsCtrl.js"></script>
     <script src="/modules/resources/controllers/controllers.js"></script>
     <script src="/modules/resources/resources.js"></script>
+    <script src="/modules/resources/services/blindcredentials.js"></script>
     <script src="/modules/resources/services/confidantservices.js"></script>
     <script src="/modules/resources/services/credentials.js"></script>
     <script src="/modules/resources/services/roles.js"></script>

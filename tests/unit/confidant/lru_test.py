@@ -1,6 +1,6 @@
 import unittest
 
-from confidant import lru
+from confidant.utils import lru
 
 
 class LruTest(unittest.TestCase):

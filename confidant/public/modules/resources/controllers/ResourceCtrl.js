@@ -15,8 +15,9 @@
         '$q',
         '$log',
         'credentials.CredentialListService',
+        'blindcredentials.BlindCredentialListService',
         'services.ServiceListService',
-        function ($scope, $stateParams, $q, $log, CredentialListService, ServiceListService) {
+        function ($scope, $stateParams, $q, $log, CredentialListService, BlindCredentialListService, ServiceListService) {
             $scope.$log = $log;
             $scope.showDisabled = false;
 
@@ -27,6 +28,14 @@
                 }
             });
             $scope.$emit('updateCredentialList');
+
+            $scope.getBlindCredentialList = BlindCredentialListService.getBlindCredentialList;
+            $scope.$watch('getBlindCredentialList()', function(newBlindCredentialList, oldBlindCredentialList) {
+                if(newBlindCredentialList !== oldBlindCredentialList) {
+                    $scope.blindCredentialList = newBlindCredentialList;
+                }
+            });
+            $scope.$emit('updateBlindCredentialList');
 
             $scope.getServiceList = ServiceListService.getServiceList;
             $scope.$watch('getServiceList()', function(newServiceList, oldServiceList) {
@@ -40,6 +49,19 @@
                 return function(resource) {
                     var pattern = new RegExp(regex, 'ig');
                     return pattern.test(resource[field]);
+                };
+            };
+
+            $scope.resourceTypeFilter = function(field) {
+                return function(resource) {
+                    if (field == 'credential' && $scope.showCredential) {
+                        return true;
+                    } else if (field == 'blind-credential' && $scope.showBlindCredential) {
+                        return true;
+                    } else if (field == 'service' && $scope.showService) {
+                        return true;
+                    }
+                    return false;
                 };
             };
 

@@ -12,8 +12,9 @@
     .service('history.ResourceArchiveService', [
         '$q',
         'credentials.archiveList',
+        'blindcredentials.archiveList',
         'services.archiveList',
-        function($q, CredentialArchive, ServiceArchive) {
+        function($q, CredentialArchive, BlindCredentialArchive, ServiceArchive) {
             function doQuery(service) {
                 var d = $q.defer(),
                     result = service.get(function() { d.resolve(result); });
@@ -24,12 +25,17 @@
 
             this.updateResourceArchive = function() {
                 var credentialArchivePromise = doQuery(CredentialArchive),
+                    blindCredentialArchivePromise = doQuery(BlindCredentialArchive),
                     serviceArchivePromise = doQuery(ServiceArchive);
-                $q.all([credentialArchivePromise, serviceArchivePromise]).then(function(results) {
+                $q.all([credentialArchivePromise, blindCredentialArchivePromise, serviceArchivePromise]).then(function(results) {
                     var credentialArchive = results[0].credentials,
-                        serviceArchive = results[1].services;
+                        blindCredentialArchive = results[1].blind_credentials,
+                        serviceArchive = results[2].services;
                     for (var i = credentialArchive.length; i--;) {
                         credentialArchive[i].type = 'credential';
+                    }
+                    for (var i = blindCredentialArchive.length; i--;) {
+                        blindCredentialArchive[i].type = 'blind_credential';
                     }
                     for (i = serviceArchive.length; i--;) {
                         serviceArchive[i].type = 'service';
@@ -37,7 +43,11 @@
                         nameArr.pop();
                         serviceArchive[i].name = nameArr.join('-');
                     }
-                    _this.resourceArchive = credentialArchive.concat(serviceArchive);
+                    _this.resourceArchive = credentialArchive.concat(blindCredentialArchive);
+                    _this.resourceArchive = _this.resourceArchive.concat(serviceArchive);
+                    _this.resourceArchive.forEach(function(resource){
+                        resource.modified_date = new Date(resource.modified_date);
+                    });
                 }, function() {
                     _this.resourceArchive = [];
                 });

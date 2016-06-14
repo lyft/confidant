@@ -49,6 +49,8 @@ export AUTH_KEY='authnz-production'
 export AUTHOMATIC_SALT='H39bfLCqLbrYrFyiJIxkK0uf12rlzvgjgo9FqOnttPXIdAAuyQ'
 # The DynamoDB table name for storage.
 export DYNAMODB_TABLE='confidant-production'
+# Auto-generate the dynamodb table.
+export DYNAMODB_CREATE_TABLE=true
 # Set the gevent resolver to ares; see:
 #   https://github.com/surfly/gevent/issues/468
 export GEVENT_RESOLVER='ares'
@@ -91,7 +93,7 @@ using Google authentication:
 
 ```bash
 export USERS_FILE='/etc/confidant/users.yaml'
-export GOOGLE_AUTH_EMAIL_SUFFIX='@example.com'
+export USER_EMAIL_SUFFIX='@example.com'
 ```
 
 In the above configuration, Confidant will limit authentication to users with

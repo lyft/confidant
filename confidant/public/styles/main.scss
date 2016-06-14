@@ -54,7 +54,7 @@ body {
     overflow-y: auto;
     // subtract number of pixels between the overflow element and its parent
     // container (height of object between them).
-    height: calc(100% - 40px);
+    height: calc(100% - 70px);
 }
 
 .row-overflow {
@@ -114,6 +114,18 @@ body {
 
 .well {
     background-color: #FFF;
+}
+
+.dont-break-out {
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
 }
 
 /*

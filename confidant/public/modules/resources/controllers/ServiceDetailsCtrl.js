@@ -19,13 +19,15 @@
         'services.service',
         'services.services',
         'roles.list',
-	'services.grants',
+        'services.grants',
         function ($scope, $stateParams, $q, $log, $filter, $location, Service, Services, Roles, Grants) {
             var serviceCopy = null;
+            $scope.showGrants = $scope.clientconfig.generated.kms_auth_manage_grants;
             $scope.$log = $log;
             $scope.saveError = '';
             $scope.newService = false;
             $scope.credentialPairConflicts = null;
+            $scope.aws_account_options = $scope.clientconfig.generated.aws_accounts;
 
             Roles.get().$promise.then(function(roles) {
                 $scope.roles = roles.roles;
@@ -35,32 +37,46 @@
             if ($stateParams.serviceId) {
                 Service.get({'id': $stateParams.serviceId}).$promise.then(function(service) {
                     $scope.service = service;
+                    if ($scope.aws_account_options[0] !== '' && $scope.service.account !== null) {
+                        $scope.aws_account_options.unshift('');
+                    } else if ($scope.aws_account_options[0] === '' && $scope.service.account === null) {
+                        $scope.aws_account_options.shift('');
+                    }
                     if (!$scope.service.credentials) {
                         $scope.service.credentials = [];
                     }
+                    if (!$scope.service.blind_credentials) {
+                        $scope.service.blind_credentials = [];
+                    }
                     serviceCopy = angular.copy($scope.service);
                 });
-                Grants.get({'id': $stateParams.serviceId}).$promise.then(function(grants) {
-                    $scope.grants = grants.grants;
-                });
+                if ($scope.showGrants) {
+                    Grants.get({'id': $stateParams.serviceId}).$promise.then(function(grants) {
+                        $scope.grants = grants.grants;
+                    });
+                } else {
+                    $scope.grants = null;
+                }
             } else {
                 $scope.shown = true;
                 $scope.service = {
                     id: '',
                     credentials: [],
-                    enabled: true
+                    blind_credentials: [],
+                    enabled: true,
+                    account: null
                 };
                 serviceCopy = angular.copy($scope.service);
                 $scope.newService = true;
                 $scope.grants = null;
             }
 
-            $scope.showCredential = function(credential) {
-                return $scope.service.credentials[credential.id];
-            };
-
             $scope.getCredentialByID = function(id) {
                 return $filter('filter')($scope.$parent.credentialList, {'id': id})[0];
+            };
+
+            $scope.getBlindCredentialByID = function(id) {
+                return $filter('filter')($scope.$parent.blindCredentialList, {'id': id})[0];
             };
 
             $scope.filterCredentials = function(credential) {
@@ -77,6 +93,16 @@
                 return credential.enabled === true || found;
             };
 
+            $scope.filterBlindCredentialOptions = function(blind_credential) {
+                var found = false;
+                angular.forEach($scope.service.blind_credentials, function(item) {
+                    if (blind_credential.id === item.id) {
+                        found = true;
+                    }
+                });
+                return blind_credential.enabled === true || found;
+            };
+
             $scope.deleteCredential = function($$hashKey) {
                 var filtered = $filter('filter')($scope.service.credentials, {'$$hashKey': $$hashKey});
                 if (filtered.length) {
@@ -84,8 +110,23 @@
                 }
             };
 
+            $scope.deleteBlindCredential = function($$hashKey) {
+                var filtered = $filter('filter')($scope.service.blind_credentials, {'$$hashKey': $$hashKey});
+                if (filtered.length) {
+                    filtered[0].isDeleted = true;
+                }
+            };
+
             $scope.addCredential = function() {
                 $scope.service.credentials.push({
+                    id: '',
+                    name: '',
+                    isNew: true
+                });
+            };
+
+            $scope.addBlindCredential = function() {
+                $scope.service.blind_credentials.push({
                     id: '',
                     name: '',
                     isNew: true
@@ -100,6 +141,15 @@
                     }
                     if (credential.isNew) {
                         $scope.service.credentials.splice(i, 1);
+                    }
+                }
+                for (var i = $scope.service.blind_credentials.length; i--;) {
+                    var blind_credential = $scope.service.blind_credentials[i];
+                    if (blind_credential.isDeleted) {
+                        delete blind_credential.isDeleted;
+                    }
+                    if (blind_credential.isNew) {
+                        $scope.service.blind_credentials.splice(i, 1);
                     }
                 }
                 $scope.credentialPairConflicts = null;
@@ -129,8 +179,10 @@
                 var _service = {},
                     deferred = $q.defer();
                 _service.id = $scope.service.id;
+                _service.account = $scope.service.account;
                 _service.enabled = $scope.service.enabled;
                 _service.credentials = [];
+                _service.blind_credentials = [];
                 $scope.credentialPairConflicts = null;
                 $scope.saveError = '';
                 // Ensure credentials are unique and flatten credentiaList into a list of ids.
@@ -145,6 +197,18 @@
                         return $scope.saveError;
                     }
                     _service.credentials.push(credential.id);
+                }
+                for (var i = $scope.service.blind_credentials.length; i--;) {
+                    var blind_credential = $scope.service.blind_credentials[i];
+                    if (blind_credential.isDeleted) {
+                        $scope.service.blind_credentials.splice(i, 1);
+                        continue;
+                    }
+                    if (_service.blind_credentials.indexOf(blind_credential.id) > -1) {
+                        $scope.saveError = 'Credentials must be unique.';
+                        return $scope.saveError;
+                    }
+                    _service.blind_credentials.push(blind_credential.id);
                 }
                 if (angular.equals(serviceCopy, $scope.service)) {
                     $scope.saveError = 'No changes made.';
