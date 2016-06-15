@@ -36,6 +36,8 @@ def init_user_auth_class(*args, **kwargs):
             module = GoogleOauthAuthenticator
         elif module_name == 'saml':
             module = SamlAuthenticator
+        elif module_name == 'header':
+            module = HeaderAuthenticator
         elif module_name == 'null':
             module = NullUserAuthenticator
         else:
@@ -268,6 +270,84 @@ class NullUserAuthenticator(object):
     def log_in(self):
         # should never be called
         raise NotImplementedError
+
+
+class HeaderAuthenticator(AbstractUserAuthenticator):
+    """
+    User authenticator that pulls user information from HTTP headers.
+    Note that this assumes we're running behind some form of load-balancer or
+    reverse proxy that performs the authentication, and that simply being able
+    to make requests to this service implies that the user is authenticated.
+    """
+
+    def __init__(self):
+        self.username_header = app.config['HEADER_AUTH_USERNAME_HEADER']
+        self.email_header = app.config['HEADER_AUTH_EMAIL_HEADER']
+        self.first_name_header = app.config.get('HEADER_AUTH_FIRST_NAME_HEADER')
+        self.last_name_header = app.config.get('HEADER_AUTH_LAST_NAME_HEADER')
+
+    @property
+    def auth_type(self):
+        return 'header'
+
+    def assert_headers(self):
+        """Asserts that the current request contains the appropriate headers."""
+        if self.username_header not in request.headers:
+            raise errors.UserUnknownError('No username header in request')
+
+        if self.email_header not in request.headers:
+            raise errors.UserUnknownError('No email header in request')
+
+    def current_user(self):
+        self.assert_headers()
+
+        info = {
+            'email': request.headers[self.email_header],
+
+            # TODO: should we use a string like "unknown", fall back to the
+            # email/username, ...?
+            'first_name': '',
+            'last_name': '',
+        }
+
+        if self.first_name_header and self.first_name_header in request.headers:
+            info['first_name'] = request.headers[self.first_name_header]
+
+        if self.last_name_header and self.last_name_header in request.headers:
+            info['last_name'] = request.headers[self.last_name_header]
+
+        return info
+
+    def current_email(self):
+        return self.current_user()['email'].lower()
+
+    def current_first_name(self):
+        return self.current_user()['first_name']
+
+    def current_last_name(self):
+        return self.current_user()['last_name']
+
+    def is_authenticated(self):
+        """Any user that is able to make requests is authenticated"""
+        self.assert_headers()
+        return True
+
+    def is_expired(self):
+        """Sessions are not managed here and do not expire"""
+        return False
+
+    def check_authorization(self):
+        """Header users are always authorized"""
+        self.assert_headers()
+        return True
+
+    def log_in(self):
+        self.assert_headers()
+
+        # Does nothing, since simply being able to reach this endpoint is 'logging in'.
+        resp = self.redirect_to_index()
+        self.set_csrf_token(resp)
+        return resp
 
 
 class GoogleOauthAuthenticator(AbstractUserAuthenticator):

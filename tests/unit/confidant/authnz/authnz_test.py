@@ -3,6 +3,7 @@ from mock import patch
 from mock import Mock
 from werkzeug.exceptions import Unauthorized
 
+import confidant.routes
 from confidant.app import app
 from confidant import authnz
 
@@ -209,3 +210,57 @@ class AuthnzTest(unittest.TestCase):
             u_mock.is_authenticated = Mock(return_value=False)
             u_mock.redirect_to_goodbye = Mock(return_value='redirect_return')
             self.assertEqual(wrapped(), 'redirect_return')
+
+
+class HeaderAuthenticatorTest(unittest.TestCase):
+
+    def setUp(self):
+        # Save old values
+        self.username_header = app.config['HEADER_AUTH_USERNAME_HEADER']
+        self.email_header = app.config['HEADER_AUTH_EMAIL_HEADER']
+        self.first_name_header = app.config['HEADER_AUTH_FIRST_NAME_HEADER']
+        self.last_name_header = app.config['HEADER_AUTH_LAST_NAME_HEADER']
+        self.user_mod = authnz.user_mod
+
+        # Update config
+        app.config['USE_AUTH'] = True
+        app.config['USER_AUTH_MODULE'] = 'header'
+        app.config['HEADER_AUTH_USERNAME_HEADER'] = 'X-Confidant-Username'
+        app.config['HEADER_AUTH_EMAIL_HEADER'] = 'X-Confidant-Email'
+
+        # Reset the user module in use
+        authnz.user_mod = authnz.userauth.init_user_auth_class()
+
+    def tearDown(self):
+        app.config['HEADER_AUTH_USERNAME_HEADER'] = self.username_header
+        app.config['HEADER_AUTH_EMAIL_HEADER'] = self.email_header
+        app.config['HEADER_AUTH_FIRST_NAME_HEADER'] = self.first_name_header
+        app.config['HEADER_AUTH_LAST_NAME_HEADER'] = self.last_name_header
+
+        authnz.user_mod = self.user_mod
+
+    def test_will_extract_from_request(self):
+        with app.test_request_context('/fake'):
+            # No headers given: an error
+            with self.assertRaises(authnz.UserUnknownError):
+                authnz.get_logged_in_user()
+
+            # Both headers given: success
+            with patch('confidant.authnz.userauth.request') as request_mock:
+                request_mock.headers = {
+                    app.config['HEADER_AUTH_USERNAME_HEADER']: 'unittestuser',
+                    app.config['HEADER_AUTH_EMAIL_HEADER']: 'unittestuser@example.com',
+                }
+                self.assertEqual(authnz.get_logged_in_user(), 'unittestuser@example.com')
+
+    def test_will_log_in(self):
+        with app.test_request_context('/fake'):
+            with patch('confidant.authnz.userauth.request') as request_mock:
+                request_mock.headers = {
+                    app.config['HEADER_AUTH_USERNAME_HEADER']: 'unittestuser',
+                    app.config['HEADER_AUTH_EMAIL_HEADER']: 'unittestuser@example.com',
+                }
+                resp = authnz.user_mod.log_in()
+
+                self.assertEqual(resp.status_code, 302)
+                self.assertEqual(resp.headers['Location'], '/')
