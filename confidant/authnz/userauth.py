@@ -344,7 +344,8 @@ class HeaderAuthenticator(AbstractUserAuthenticator):
     def log_in(self):
         self.assert_headers()
 
-        # Does nothing, since simply being able to reach this endpoint is 'logging in'.
+        # Does nothing, since simply being able to reach this endpoint is
+        # 'logging in'.
         resp = self.redirect_to_index()
         self.set_csrf_token(resp)
         return resp
