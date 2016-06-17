@@ -13,7 +13,7 @@ then
     export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
     echo "TAG is $TAG"
     docker tag $REPO:$COMMIT $REPO:$TAG
-    docker push $REPO:$TAG
+    docker push -f $REPO:$TAG
 else
     echo 'Ignoring PR branch for docker push.'
 fi
