@@ -260,9 +260,9 @@ SCOPED_AUTH_KEYS = json.loads(str_env('SCOPED_AUTH_KEYS', '{}'))
 USER_AUTH_KEY = str_env('USER_AUTH_KEY')
 # The maximum lifetime of an authentication token in minutes.
 AUTH_TOKEN_MAX_LIFETIME = int_env('AUTH_TOKEN_MAX_LIFETIME', 60)
-# The minimum version of the authentication token accepted.
-KMS_MAXIMUM_TOKEN_VERSION = int_env('KMS_MAXIMUM_TOKEN_VERSION', 2)
 # The maximum version of the authentication token accepted.
+KMS_MAXIMUM_TOKEN_VERSION = int_env('KMS_MAXIMUM_TOKEN_VERSION', 2)
+# The minimum version of the authentication token accepted.
 KMS_MINIMUM_TOKEN_VERSION = int_env('KMS_MINIMUM_TOKEN_VERSION', 1)
 # Comma separated list of user types allowed to auth via KMS.
 KMS_AUTH_USER_TYPES = str_env('KMS_AUTH_USER_TYPES', 'service').split(',')
