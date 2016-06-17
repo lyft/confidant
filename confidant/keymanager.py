@@ -163,7 +163,7 @@ def decrypt_token(token, _from):
     if delta > app.config['AUTH_TOKEN_MAX_LIFETIME']:
         logging.warning('Token used which exceeds max token lifetime.')
         raise TokenDecryptionError('Authentication error.')
-    if not (now >= not_before) and (now <= not_after):
+    if (now < not_before) or (now > not_after):
         logging.warning('Expired token used.')
         raise TokenDecryptionError('Authentication error.')
     TOKENS[token_key] = payload
