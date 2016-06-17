@@ -1,7 +1,16 @@
-language: python
-python:
-  - "2.7"
-# command to install dependencies
-install: "pip install -r requirements.txt"
-# command to run tests
-script: make test
+env:
+  - REPO=lyft/confidant
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - 'docker pull -a lyft/confidant || echo "Failed to pull confidant docker image, doing full build."'
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
+
+script: docker run $REPO:$COMMIT /bin/sh -c "make test"
+
+after_success:
+  - ./docker_push.sh
