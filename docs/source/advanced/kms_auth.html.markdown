@@ -225,6 +225,45 @@ scope, additional contraints, etc.. In Confidant, on the server side we also
 limit the maximum lifetime of a token, to ensure clients are occasionally
 rotating their authentication tokens.
 
+### IAM policy configuration for service-to-service auth
+
+If you wish to disable grant management for KMS auth, it's possible to manage
+IAM policy for service-to-service authentication. An assumption of this example
+is that a confidant service (serviceA-production) maps directly to an IAM role
+(serviceA-production) and your confidant service is confidant-production. Let's
+add a policy to the service, to allow authentication:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "kms:GenerateRandom"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "kms:Encrypt"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:kms:us-east-1:12345:key/your-authnz-key-id"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "kms:EncryptionContext:to": "confidant-production",
+                    "kms:EncryptionContext:user_type": "service",
+                    "kms:EncryptionContext:from": "serviceA-production"
+                }
+            }
+        }
+    ]
+}
+```
+
 ## Passing encrypted data between services
 
 In the service-to-service section we actually passed encrypted
