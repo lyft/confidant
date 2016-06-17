@@ -14,7 +14,7 @@ end
 set :markdown, :tables => true, :autolink => true, :gh_blockcode => true, :fenced_code_blocks => true, :with_toc_data => true
 set :markdown_engine, :redcarpet
 
-redirect "/advanced/service_to_service_auth/", to: "/advanced/kms_auth/"
+redirect "advanced/service_to_service_auth.html", to: "advanced/kms_auth.html"
 
 configure :development do
   set :debug_assets, true
