@@ -2,6 +2,18 @@
 
 ## 1.1
 
+### 1.1.14
+
+* Security fix: While preparing for the 1.1 stable release Lyft found a KMS
+  authentication vulnerability in the unreleased 1.1 branch while performing an
+  audit of the code. The vulnerability was introduced while adding the scoped auth
+  key feature (for limiting authentication keys and services to specific AWS
+  accounts), where the key was not properly checked after decryption. This check is
+  an additional verification to add additional safety on-top of the IAM policy of
+  your KMS keys. If IAM policy allows users to use KMS keys without limits on
+  encryption context, a KMS key that wasn't intended to be used for auth, could be
+  used for auth.
+
 ### 1.1.13
 
 versions 1.1.0 - 1.1.12 were pre-release versions of the 1.1 branch. The

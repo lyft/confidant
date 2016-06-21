@@ -60,6 +60,8 @@ def create_datakey(encryption_context):
                         ' If you are not running in a development or test'
                         ' environment, this should not be happening!')
         return cryptolib.create_mock_datakey()
+    # underlying lib does generate random and encrypt, so increment by 2
+    stats.incr('at_rest_action', 2)
     return cryptolib.create_datakey(
         encryption_context,
         'alias/{0}'.format(app.config.get('KMS_MASTER_KEY'))
@@ -79,6 +81,7 @@ def decrypt_datakey(data_key, encryption_context=None):
         return cryptolib.decrypt_mock_datakey(data_key)
     sha = hashlib.sha256(data_key).hexdigest()
     if sha not in DATAKEYS:
+        stats.incr('at_rest_action')
         plaintext = cryptolib.decrypt_datakey(data_key, encryption_context)
         DATAKEYS[sha] = plaintext
     return DATAKEYS[sha]
@@ -90,7 +93,7 @@ def valid_service_auth_key(key_arn):
     for key in app.config['SCOPED_AUTH_KEYS']:
         if key_arn == get_key_arn(key):
             return True
-    return True
+    return False
 
 
 def decrypt_token(version, user_type, _from, token):
