@@ -13,7 +13,7 @@
 
 from setuptools import setup
 
-VERSION = "1.1.13"
+VERSION = "1.1.14"
 
 requirements = [
     'confidant-common=={0}'.format(VERSION),

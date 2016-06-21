@@ -13,10 +13,12 @@ class KeyManagerTest(unittest.TestCase):
     def setUp(self):
         self.use_auth = app.config['USE_AUTH']
         self.use_encryption = app.config['USE_ENCRYPTION']
+        self.scoped_auth_keys = app.config['SCOPED_AUTH_KEYS']
 
     def tearDown(self):
         app.config['USE_AUTH'] = self.use_auth
         app.config['USE_ENCRYPTION'] = self.use_encryption
+        app.config['SCOPED_AUTH_KEYS'] = self.scoped_auth_keys
 
     @patch('confidant.keymanager.KEY_METADATA', {})
     @patch('confidant.keymanager.kms_client.describe_key')
@@ -80,6 +82,25 @@ class KeyManagerTest(unittest.TestCase):
 
         # Ensure we get the same value out that we sent in.
         self.assertEquals(ret, 'mocked_fernet_key')
+
+    @patch(
+        'confidant.keymanager.get_key_arn'
+    )
+    def test_valid_service_auth_key(self, gka_mock):
+        # Test AUTH_KEY arn checking
+        gka_mock.side_effect = ['test::arn']
+        self.assertTrue(keymanager.valid_service_auth_key('test::arn'))
+        # Test SCOPED_AUTH_KEYS arn checking. There's two items in the side
+        # effect because get_key_arn will be called twice: once for AUTH_KEY
+        # check (which will fail) and another for the SCOPED_AUTH_KEYS check.
+        gka_mock.side_effect = ['auth::key', 'test::arn']
+        app.config['SCOPED_AUTH_KEYS'] = {'test-key': 'test-account'}
+        self.assertTrue(keymanager.valid_service_auth_key('test::arn'))
+        # Test failure mode, where both AUTH_KEY and SCOPED_AUTH_KEYS checks
+        # fail. We have two items in side effects because get_key_arn will be
+        # called twice.
+        gka_mock.side_effect = ['auth::key', 'test::arn']
+        self.assertFalse(keymanager.valid_service_auth_key('bad::arn'))
 
     @patch(
         'confidant.keymanager.cryptolib.create_datakey'
