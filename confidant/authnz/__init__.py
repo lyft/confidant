@@ -224,7 +224,10 @@ def require_auth(f):
                     # auth-N and auth-Z are good, call the decorated function
                     g.user_type = user_type
                     g.auth_type = user_mod.auth_type
-                    return f(*args, **kwargs)
+                    # ensure that the csrf cookie value is set
+                    resp = f(*args, **kwargs)
+                    user_mod.set_csrf_token(resp)
+                    return resp
 
             # Not authenticated
             return abort(401)

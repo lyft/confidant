@@ -82,9 +82,10 @@ class AbstractUserAuthenticator(object):
         return session.get('XSRF-TOKEN')
 
     def set_csrf_token(self, resp):
-        session['XSRF-TOKEN'] = '{0:x}'.format(
-            random.SystemRandom().getrandbits(160)
-        )
+        if 'XSRF-TOKEN' not in session:
+            session['XSRF-TOKEN'] = '{0:x}'.format(
+                random.SystemRandom().getrandbits(160)
+            )
         resp.set_cookie('XSRF-TOKEN', session['XSRF-TOKEN'])
 
     def check_csrf_token(self):
