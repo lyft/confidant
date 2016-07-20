@@ -44,8 +44,9 @@ def init_user_auth_class(*args, **kwargs):
             raise ValueError(
                 'Unknown USER_AUTH_MODULE: {!r}'.format(module_name))
 
-    logging.info('Initializing {} user authenticator'.format(module.auth_type))
-    return module(*args, **kwargs)
+    auth = module(*args, **kwargs)
+    logging.info('Initializing {} user authenticator'.format(auth.auth_type))
+    return auth
 
 
 class AbstractUserAuthenticator(object):
