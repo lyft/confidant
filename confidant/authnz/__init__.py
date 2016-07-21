@@ -1,7 +1,7 @@
 import fnmatch
 import logging
 
-from flask import abort, request, g
+from flask import abort, request, g, make_response
 from flask import url_for
 from functools import wraps
 
@@ -225,7 +225,7 @@ def require_auth(f):
                     g.user_type = user_type
                     g.auth_type = user_mod.auth_type
                     # ensure that the csrf cookie value is set
-                    resp = f(*args, **kwargs)
+                    resp = make_response(f(*args, **kwargs))
                     user_mod.set_csrf_token(resp)
                     return resp
 
