@@ -99,6 +99,33 @@ class AuthnzTest(unittest.TestCase):
                 )
             self.assertEquals(ret.status_code, 200)
 
+    def test_header_csrf(self):
+        app.debug = True
+        app.config['USE_AUTH'] = True
+        app.config['USER_AUTH_MODULE'] = 'header'
+        app.config['HEADER_AUTH_USERNAME_HEADER'] = 'X-Confidant-User'
+        app.config['HEADER_AUTH_EMAIL_HEADER'] = 'X-Confidant-Email'
+        user_mod = userauth.init_user_auth_class()
+        with patch('confidant.authnz.user_mod', user_mod):
+            ret = self.test_client.get(
+                '/v1/user/email',
+                headers={
+                    "X-Confidant-User": "user",
+                    "X-Confidant-Email": "user@example.com",
+                },
+            )
+
+            self.assertEquals(ret.status_code, 200)
+
+            def has_xsrf_cookie(headers):
+                cookies = headers.get_all('Set-Cookie')
+                for cookie in cookies:
+                    if cookie.startswith('XSRF-TOKEN='):
+                        return True
+                return False
+
+            self.assertTrue(has_xsrf_cookie(ret.headers))
+
     def test_invalid_kms_auth_token(self):
         app.debug = True
         app.config['USE_AUTH'] = True

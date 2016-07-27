@@ -121,6 +121,7 @@ _secrets_bootstrap = _bootstrap(SECRETS_BOOTSTRAP)
 # Supported methods:
 # - 'google' # Google OAuth
 # - 'saml'   # SAML Identity Provider
+# - 'header' # Header-based authentication
 USER_AUTH_MODULE = str_env('USER_AUTH_MODULE', 'google')
 
 # An email suffix that can be used to restrict access to the web interface.
@@ -235,6 +236,20 @@ AUTHOMATIC_SALT = _secrets_bootstrap.get(
     'AUTHOMATIC_SALT',
     str_env('AUTHOMATIC_SALT')
 )
+
+# Header-based authentication
+
+# The name of the header that will contain the username.  Required if using
+# header authentication.
+HEADER_AUTH_USERNAME_HEADER = str_env('HEADER_AUTH_USERNAME_HEADER')
+# The name of the header that will contain the user's email.  Required if using
+# header authentication.
+HEADER_AUTH_EMAIL_HEADER = str_env('HEADER_AUTH_EMAIL_HEADER')
+# The name of the header that will contain the user's first name.  Optional.
+HEADER_AUTH_FIRST_NAME_HEADER = str_env('HEADER_AUTH_FIRST_NAME_HEADER')
+# The name of the header that will contain the user's last name.  Optional.
+HEADER_AUTH_LAST_NAME_HEADER = str_env('HEADER_AUTH_LAST_NAME_HEADER')
+
 
 # KMS service authentication
 
