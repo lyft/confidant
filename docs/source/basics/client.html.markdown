@@ -11,7 +11,7 @@ Make a virtualenv and install pip requirements:
 ```bash
 virtualenv venv
 source venv/bin/activate
-pip install confidant
+pip install confidant-client
 ```
 
 ## Configuration
