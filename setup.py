@@ -19,7 +19,7 @@ reqs = [str(ir.req) for ir in server_reqs]
 
 setup(
     name="confidant",
-    version="1.1.16",
+    version="1.1.15",
     packages=find_packages(exclude=["test*"]),
     package_data={
         'confidant': ['confidant/dist/*']
