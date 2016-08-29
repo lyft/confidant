@@ -35,6 +35,28 @@ cd confidant
 docker build -t lyft/confidant .
 ```
 
+# pip installation
+
+1. Using Ubuntu or Debian (please help with non-Ubuntu/Debian install
+   instructions!)
+1. Using gunicorn as the wsgi server
+1. venv location: /srv/confidant/venv
+
+## Make a virtualenv and install pip requirements
+
+```bash
+sudo apt-get install -y python python-pip python-virtualenv python-dev build-essential libffi-dev libxml2-dev libxmlsec1-dev
+cd /srv/confidant
+virtualenv venv
+source venv/bin/activate
+pip install -U pip
+pip install confidant
+deactivate
+```
+
+Note that the pip package includes the minified, generated frontend artifacts,
+in the dist directory. This can be configured via the STATIC_FOLDER setting.
+
 # Manual installation
 
 Assumptions:
@@ -60,6 +82,7 @@ sudo apt-get install -y python python-pip python-virtualenv python-dev build-ess
 cd /srv/confidant
 virtualenv venv
 source venv/bin/activate
+pip install -U pip
 pip install -r requirements.txt
 deactivate
 ```

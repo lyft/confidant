@@ -144,7 +144,14 @@ rotated. To change this, you can use the following option:
 export AUTH_TOKEN_MAX_LIFETIME='10'
 ```
 
-### Frontend customization
+### Frontend configuration
+
+If you're using the generated, minified output in the dist directory, you
+need to tell confidant to change its static folder:
+
+```bash
+export STATIC_FOLDER='dist'
+```
 
 It's possible to customize portions of the angularjs application.
 Currently you can add a documentation section to the credential details view.

@@ -12,11 +12,19 @@
 # limitations under the License.
 
 from setuptools import setup, find_packages
+from pip.req import parse_requirements
+
+server_reqs = parse_requirements("requirements.txt", session=False)
+reqs = [str(ir.req) for ir in server_reqs]
 
 setup(
-    name="confidant-common",
-    version="1.1.14",
+    name="confidant",
+    version="1.1.15",
     packages=find_packages(exclude=["test*"]),
+    package_data={
+        'confidant': ['confidant/dist/*']
+    },
+    install_requires=reqs,
     author="Ryan Lane",
     author_email="rlane@lyft.com",
     description="A secret management system and client.",
