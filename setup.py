@@ -12,10 +12,9 @@
 # limitations under the License.
 
 from setuptools import setup, find_packages
-from pip.req import parse_requirements
 
-server_reqs = parse_requirements("requirements.txt", session=False)
-reqs = [str(ir.req) for ir in server_reqs]
+with open('requirements.txt') as f:
+    reqs = f.read().splitlines()
 
 setup(
     name="confidant",
