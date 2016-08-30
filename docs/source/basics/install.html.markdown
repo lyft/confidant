@@ -37,6 +37,9 @@ docker build -t lyft/confidant .
 
 # pip installation
 
+Warning: this is still a work in progress and it may not be working right now.
+We'll remove this warning when we have pip installation fully working.
+
 1. Using Ubuntu or Debian (please help with non-Ubuntu/Debian install
    instructions!)
 1. Using gunicorn as the wsgi server
