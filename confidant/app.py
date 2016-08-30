@@ -1,9 +1,11 @@
 import logging
 
+import guard
 import boto3
 from flask import Flask
 from flask_sslify import SSLify
 
+import confidant.workarounds  # noqa
 from confidant import settings
 
 
@@ -30,3 +32,15 @@ if app.config.get('REDIS_URL'):
     Session(app)
 
 app.secret_key = app.config['SESSION_SECRET']
+
+CSP_POLICY = {
+    'default-src': ["'self'"],
+    'style-src': [
+        "'self'",
+        "'unsafe-inline'"  # for spin.js
+    ]
+}
+
+app = guard.ContentSecurityPolicy(app, CSP_POLICY)
+
+from confidant import routes  # noqa
