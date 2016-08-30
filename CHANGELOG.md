@@ -2,6 +2,14 @@
 
 ## 1.1
 
+### 1.1.16 - 1.1.17
+
+* Getting the pypi package into a working state
+
+### 1.1.15
+
+* Split the client away from the confidant repo
+
 ### 1.1.14
 
 * Security fix: While preparing for the 1.1 stable release Lyft found a KMS
