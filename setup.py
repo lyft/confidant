@@ -18,7 +18,7 @@ with open('requirements.txt') as f:
 
 setup(
     name="confidant",
-    version="1.1.16",
+    version="1.1.17",
     packages=find_packages(exclude=["test*"]),
     package_data={
         'confidant': ['confidant/dist/*', 'requirements.txt', 'wsgi.py']
