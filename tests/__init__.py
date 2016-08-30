@@ -9,7 +9,7 @@ env_settings = [
     ('SESSION_SECRET', 'secret'),
     ('DYNAMODB_TABLE', 'confidant-testing'),
     ('DYNAMODB_URL', 'http://dynamo:7777'),
-    ('DYNAMODB_CREATE_TABLE', 'true'),
+    ('DYNAMODB_CREATE_TABLE', 'false'),
     ('GEVENT_RESOLVER', 'ares'),
     ('AWS_DEFAULT_REGION', 'us-east-1'),
     ('USER_AUTH_KEY', 'authnz-usertesting'),
