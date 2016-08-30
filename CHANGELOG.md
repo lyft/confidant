@@ -2,7 +2,7 @@
 
 ## 1.1
 
-### 1.1.16 - 1.1.17
+### 1.1.16 - 1.1.18
 
 * Getting the pypi package into a working state
 
