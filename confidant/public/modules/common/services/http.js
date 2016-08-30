@@ -16,8 +16,8 @@
      * request's config object.
      */
     .factory('common.HttpEventInterceptor', [
-        '$q', '$rootScope', 'common.APP_EVENTS',
-        function($q, $rootScope, APP_EVENTS) {
+        '$q', '$window', '$rootScope', '$log', 'common.APP_EVENTS',
+        function($q, $window, $rootScope, $log, APP_EVENTS) {
 
             var pendingRequests = 0,
                 notifyFinish = false;
@@ -78,7 +78,11 @@
                 },
 
                 responseError: function(rejection) {
+                    var status = rejection.status;
                     finish();
+                    if (status == 401) {
+                        window.location.href = 'loggedout';
+                    }
                     return $q.reject(rejection);
                 }
             };

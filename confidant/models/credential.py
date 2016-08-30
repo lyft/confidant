@@ -6,11 +6,12 @@ from pynamodb.attributes import (
     NumberAttribute,
     BooleanAttribute,
     UTCDateTimeAttribute,
-    BinaryAttribute
+    BinaryAttribute,
+    JSONAttribute
 )
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
-from confidant import app
+from confidant.app import app
 
 
 class DataTypeDateIndex(GlobalSecondaryIndex):
@@ -20,15 +21,6 @@ class DataTypeDateIndex(GlobalSecondaryIndex):
         write_capacity_units = 10
     data_type = UnicodeAttribute(hash_key=True)
     modified_date = UTCDateTimeAttribute(range_key=True)
-
-
-class DataTypeRevisionIndex(GlobalSecondaryIndex):
-    class Meta:
-        projection = AllProjection()
-        read_capacity_units = 10
-        write_capacity_units = 10
-    data_type = UnicodeAttribute(hash_key=True)
-    revision = NumberAttribute(range_key=True)
 
 
 class Credential(Model):
@@ -42,11 +34,12 @@ class Credential(Model):
     revision = NumberAttribute()
     data_type = UnicodeAttribute()
     data_type_date_index = DataTypeDateIndex()
-    data_type_revision_index = DataTypeRevisionIndex()
     name = UnicodeAttribute()
     credential_pairs = UnicodeAttribute()
     enabled = BooleanAttribute(default=True)
     data_key = BinaryAttribute()
+    # TODO: add cipher_type
     cipher_version = NumberAttribute(null=True)
+    metadata = JSONAttribute(default={}, null=True)
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()

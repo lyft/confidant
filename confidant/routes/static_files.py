@@ -4,14 +4,20 @@ import logging
 from flask import send_from_directory
 from werkzeug.exceptions import NotFound
 
-from confidant import app
 from confidant import authnz
+from confidant.app import app
 
 
 @app.route('/')
-@authnz.require_auth
+@authnz.redirect_to_logout_if_no_auth
 def index():
     return app.send_static_file('index.html')
+
+
+@app.route('/loggedout')
+@authnz.require_logout_for_goodbye
+def goodbye():
+    return app.send_static_file('goodbye.html')
 
 
 @app.route('/healthcheck')
@@ -40,7 +46,6 @@ def components(path):
 
 
 @app.route('/modules/<path:path>')
-@authnz.require_auth
 def modules(path):
     return app.send_static_file(os.path.join('modules', path))
 

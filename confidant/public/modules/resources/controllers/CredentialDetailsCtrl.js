@@ -40,7 +40,8 @@
         'credentials.credential',
         'credentials.credentials',
         'credentials.services',
-        function ($scope, $stateParams, $q, $log, $filter, $location, Credential, Credentials, CredentialServices) {
+        'credentials.valueGenerator',
+        function ($scope, $stateParams, $q, $log, $filter, $location, Credential, Credentials, CredentialServices, ValueGenerator) {
             var credentialCopy = null;
             $scope.$log = $log;
             $scope.saveError = '';
@@ -52,11 +53,17 @@
                 });
 
                 Credential.get({'id': $stateParams.credentialId}).$promise.then(function(credential) {
-                    var _credentialPairs = [];
+                    var _credentialPairs = [],
+                        _metadata = [];
                     angular.forEach(credential.credential_pairs, function(value, key) {
                         this.push({'key': key, 'value': value});
                     }, _credentialPairs);
                     credential.credentialPairs = _credentialPairs;
+                    angular.forEach(credential.metadata, function(value, key) {
+                        this.push({'key': key, 'value': value});
+                    }, _metadata);
+                    credential.credentialPairs = _credentialPairs;
+                    credential.mungedMetadata = _metadata;
                     $scope.credential = credential;
                     credentialCopy = angular.copy($scope.credential);
                     $scope.shown = false;
@@ -65,7 +72,8 @@
                 $scope.credential = {
                     name: '',
                     enabled: true,
-                    credentialPairs: [{'key': '', 'value': ''}]
+                    credentialPairs: [{'key': '', 'value': ''}],
+                    mungedMetadata: []
                 };
                 credentialCopy = angular.copy($scope.credential);
                 $scope.shown = true;
@@ -91,8 +99,16 @@
                 return credentialPair.isDeleted !== true;
             };
 
+            $scope.filterMetadata = function(metadataItem) {
+                return metadataItem.isDeleted !== true;
+            };
+
             $scope.getCredentialByID = function(id) {
                 return $filter('filter')($scope.$parent.credentialList, {'id': id})[0];
+            };
+
+            $scope.getBlindCredentialByID = function(id) {
+                return $filter('filter')($scope.$parent.blindCredentialList, {'id': id})[0];
             };
 
             $scope.deleteCredentialPair = function($$hashKey) {
@@ -104,6 +120,21 @@
 
             $scope.addCredentialPair = function() {
                 $scope.credential.credentialPairs.push({
+                    key: '',
+                    value: '',
+                    isNew: true
+                });
+            };
+
+            $scope.deleteMetadata = function($$hashKey) {
+                var filtered = $filter('filter')($scope.credential.mungedMetadata, {'$$hashKey': $$hashKey});
+                if (filtered.length) {
+                    filtered[0].isDeleted = true;
+                }
+            };
+
+            $scope.addMetadata = function() {
+                $scope.credential.mungedMetadata.push({
                     key: '',
                     value: '',
                     isNew: true
@@ -123,6 +154,7 @@
                 _credential.name = $scope.credential.name;
                 _credential.enabled = $scope.credential.enabled;
                 _credential.credential_pairs = {};
+                _credential.metadata = {};
                 $scope.saveError = '';
                 // Ensure credential pair keys are unique and transform them
                 // into key/value dict.
@@ -138,6 +170,20 @@
                     }
                     _credential.credential_pairs[credentialPair.key] = credentialPair.value;
                 }
+                // Ensure metadata keys are unique and transform them
+                // into key/value dict.
+                for (var i = $scope.credential.mungedMetadata.length; i--;) {
+                    var metadataItem = $scope.credential.mungedMetadata[i];
+                    if (metadataItem.isDeleted) {
+                        $scope.credential.mungedMetadata.splice(i, 1);
+                        continue;
+                    }
+                    if (metadataItem.key in _credential.metadata) {
+                        $scope.saveError = 'Metadata keys must be unique.';
+                        return $scope.saveError;
+                    }
+                    _credential.metadata[metadataItem.key] = metadataItem.value;
+                }
                 if (angular.equals(credentialCopy, $scope.credential)) {
                     $scope.saveError = 'No changes made.';
                     deferred.reject();
@@ -146,11 +192,16 @@
                 // Update an existing credential.
                 if ($scope.credential.id) {
                     Credential.update({'id': $scope.credential.id}, _credential).$promise.then(function(newCredential) {
-                        var _credentialPairs = [];
+                        var _credentialPairs = [],
+                            _metadata = [];
                         angular.forEach(newCredential.credential_pairs, function(value, key) {
                             this.push({'key': key, 'value': value});
                         }, _credentialPairs);
+                        angular.forEach(newCredential.metadata, function(value, key) {
+                            this.push({'key': key, 'value': value});
+                        }, _metadata);
                         newCredential.credentialPairs = _credentialPairs;
+                        newCredential.mungedMetadata = _metadata;
                         $scope.credential = newCredential;
                         if (credentialCopy.name !== $scope.credential.name ||
                             credentialCopy.enabled != $scope.credential.enabled) {
@@ -192,6 +243,13 @@
 
                 return deferred.promise;
             };
+
+            $scope.generateValue = function(credentialPair) {
+              ValueGenerator.get().$promise.then(function(obj) {
+                credentialPair.value = obj.value;
+              });
+            };
+
 
         }])
 

@@ -1,17 +1,18 @@
 ---
-title: Service-to-service authentication and encryption
+title: KMS authentication
 ---
 
-# Service-to-service authentication and encryption
+# KMS authentication
 
 ## Service-to-service authentication
 
-When a service is created in Confidant, Confidant will generate a couple of grants
-on the AUTH\_KEY KMS key. One grant allows the service to do encryptions or
-decryptions using the key, as long as the 'from' encryption context is the name
-of the service and the other grant allows the service to do decryptions using the
-key, as long as the 'to' encryption context is the name of the service. This is what
-enables the services to get their secrets from Confidant.
+When a service is created in Confidant, Confidant, by default, will generate a
+couple of grants on the AUTH\_KEY KMS key. One grant allows the service to do
+encryptions or decryptions using the key, as long as the 'from' encryption context
+is the name of the service and the 'user\_type' is 'service'; the other grant allows
+the service to do decryptions using the key, as long as the 'to' encryption context
+is the name of the service. This is what enables the services to get their secrets
+from Confidant.
 
 This guide is mostly going to be a crash-course on how KMS works, since we're
 just leveraging it for authentication. If you're not very familiar with KMS,
@@ -41,7 +42,8 @@ Let's take a quick look at a basic example using boto3:
 >>>     KeyId='alias/authnz-testing', Plaintext=plaintext,
 >>>     EncryptionContext={
 >>>         'from': 'myservice-production',
->>>         'to': 'confidant-production'
+>>>         'to': 'confidant-production',
+>>>         'user_type': 'service'
 >>>     }
 >>> )
 >>>
@@ -55,7 +57,8 @@ Let's take a quick look at a basic example using boto3:
 >>>     CiphertextBlob=token['CiphertextBlob'],
 >>>     EncryptionContext={
 >>>         'from': 'myservice-production',
->>>         'to': 'confidant-production'
+>>>         'to': 'confidant-production',
+>>>         'user_type': 'service'
 >>>     }
 >>> )
 {u'Plaintext': '{"not_before": "20150914T172347Z", "not_after": "20150914T182347Z"}', u'KeyId':
@@ -74,7 +77,8 @@ Now let's change the encryption context slightly:
 >>>     CiphertextBlob=token['CiphertextBlob'],
 >>>     EncryptionContext={
 >>>         'from': 'notmyservice-production',
->>>         'to': 'confidant-production'
+>>>         'to': 'confidant-production',
+>>>         'user_type': 'service'
 >>>     }
 >>> )
 Traceback (most recent call last):
@@ -105,8 +109,24 @@ def get_key_arn():
     )
     return key['KeyMetadata']['Arn']
 
+def _parse_username(username):
+    username_arr = username.split('/')
+    if len(username_arr) == 3:
+        # V2 token format: version/service/myservice or version/user/myuser
+        version = int(username_arr[0])
+        user_type = username_arr[1]
+        username = username_arr[2]
+    elif len(username_arr) == 1:
+        # Old format, specific to services: myservice
+        version = 1
+        username = username_arr[0]
+        user_type = 'service'
+    else:
+        raise TokenVersionError('Unsupported username format.')
+    return version, user_type, username
 
-def decrypt_token(token, _from):
+def decrypt_token(token, username):
+    version, user_type, _username = _parse_username(username)
     try:
         token = base64.b64decode(token)
         data = kms.decrypt(
@@ -115,7 +135,8 @@ def decrypt_token(token, _from):
                 # This token is sent to us.
                 'to': app.config['IAM_ROLE'],
                 # From another service.
-                'from': _from
+                'from': _username,
+                'user_type': user_type
             }
         )
         # Decrypt doesn't take KeyId as an argument. We need to verify the
@@ -136,7 +157,7 @@ def decrypt_token(token, _from):
     except Exception:
         raise TokenDecryptError('Authentication error.')
     # Ensure the token is within the validity window.
-    if not (now >= not_before) and (now <= not_after):
+    if (now < not_before) or (now > not_after):
         raise TokenDecryptError('Authentication error.')
     return payload
 
@@ -173,7 +194,8 @@ not_before = now.strftime("%Y%m%dT%H%M%SZ")
 not_after = not_after.strftime("%Y%m%dT%H%M%SZ")
 auth_context = {
     'from': 'servicea-development',
-    'to': 'serviceb-development'
+    'to': 'serviceb-development',
+    'user_type': 'service'
 }
 plaintext = '{"not_before": "{0}", "not_after": "{1}"}'.format(not_before, not_after)
 kms = boto3.client('kms')
@@ -185,7 +207,8 @@ token = kms.encrypt(
 token = base64.b64encode(token)
 headers = {
     'X-Auth-Token': token,
-    'X-Auth-From': auth_context['from']
+    # version: 2, user_type: service, username (2/service/username)
+    'X-Auth-From': '2/service/{1}'.format(auth_context['from'])
 }
 response = requests.get('/v1/services/servicea-development', headers=headers)
 ```
@@ -202,6 +225,45 @@ scope, additional contraints, etc.. In Confidant, on the server side we also
 limit the maximum lifetime of a token, to ensure clients are occasionally
 rotating their authentication tokens.
 
+### IAM policy configuration for service-to-service auth
+
+If you wish to disable grant management for KMS auth, it's possible to manage
+IAM policy for service-to-service authentication. An assumption of this example
+is that a confidant service (serviceA-production) maps directly to an IAM role
+(serviceA-production) and your confidant service is confidant-production. Let's
+add a policy to the service, to allow authentication:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "kms:GenerateRandom"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "kms:Encrypt"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:kms:us-east-1:12345:key/your-authnz-key-id"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "kms:EncryptionContext:to": "confidant-production",
+                    "kms:EncryptionContext:user_type": "service",
+                    "kms:EncryptionContext:from": "serviceA-production"
+                }
+            }
+        }
+    ]
+}
+```
+
 ## Passing encrypted data between services
 
 In the service-to-service section we actually passed encrypted
@@ -216,7 +278,7 @@ implementation. It doesn't matter which language or library you use, the steps
 are basically the same:
 
 1. Generate a data key, with context: {'from': 'servicea-production', 'to':
-   'serviceb-production'}
+   'serviceb-production', 'user_type': 'service'}
 1. Use the Plaintext portion the data key to encrypt your data.
 1. Pass the CiphertextBlob portion of the data key along with the data to the
    other service.
@@ -224,3 +286,104 @@ are basically the same:
    giving it the Plaintext portion.
 1. The other service will use the Plaintext portion of the data key to decrypt
    the data.
+
+## User-to-service authentication
+
+Confidant does not setup grants for user authentication. To enable user to service
+KMS authentication, it's necessary to setup IAM policy for your KMS keys. Thankfully,
+the IAM policy for this is pretty straightforward:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "kms:GenerateRandom"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "kms:Encrypt"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:kms:us-east-1:12345:key/your-authnz-key-id"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "kms:EncryptionContext:to": "confidant-production",
+                    "kms:EncryptionContext:user_type": "user",
+                    "kms:EncryptionContext:from": "${aws:username}"
+                },
+                "Bool": {
+                    "aws:MultiFactorAuthPresent": "true"
+                }
+            }
+        }
+    ]
+}
+```
+
+This policy allows a user to generate KMS authentication tokens, as long as the
+'from' context matches their IAM user name, the 'to' context is to 'confidant-production'
+and the 'user_type' is 'user'. Note that if you wanted to allow authentication from users
+to any service, you can change the second statement slightly:
+
+```json
+        {
+            "Action": [
+                "kms:Encrypt"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:kms:us-east-1:12345:key/your-authnz-key-id"
+            ],
+            "Condition": {
+                "StringLike": {
+                    "kms:EncryptionContext:to": "*",
+                },
+                "StringEquals": {
+                    "kms:EncryptionContext:user_type": "user",
+                    "kms:EncryptionContext:from": "${aws:username}"
+                },
+                "Bool": {
+                    "aws:MultiFactorAuthPresent": "true"
+                }
+            }
+        }
+```
+
+When the user authenticates, they'll use a header like: `'X-Auth-From': '2/user/rlane'`.
+From the server side, you'll be able to verify the token, then you can mark the user
+by user_type, so that you can do access control based on their type (service or user).
+
+## Multi-account KMS authentication
+
+Without much change it's possible to do KMS authentication across accounts. In
+the simplest approach, you can simply allow multiple accounts to use the KMS
+authnz key. The downside to this is that when you allow another account to use
+the KMS key, you're trusting that account with the IAM policy of whichever
+actions you're allowing. So, if you have two accounts: sandbox and production,
+and you allow sandbox to use the KMS authnz key in production, sandbox can
+write IAM policies that allow it to generate tokens for any service in
+confidant, which may not be what you intend.
+
+Starting in version 1.1, Confidant added support for using scoped KMS
+authentication keys. Rather than using a single KMS authentication key for all
+accounts, you'll create a KMS key for each account. The key policy for each key
+will allow its specific account to use the key. Note that it's important that
+all of these keys live in the same AWS account as the confidant service.
+
+After creating and configuring the keys, you can use the SCOPED_AUTH_KEYS
+setting in confidant to map key aliases to friendly account names. Once this is
+configured, users can scope services to accounts.
+
+If you're implementing KMS auth outside of confidant: we map keys to account
+names. When a token is decrypted, part of what KMS returns is the key ARN used
+for the decryption. We take that ARN and lookup the alias that's associated with
+it. We take the alias and look it up in the SCOPED_AUTH_KEYS mapping to find its
+associated account. If the scoped service matches the key used, we accept the
+request.

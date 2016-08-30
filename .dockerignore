@@ -4,8 +4,7 @@ node_modules
 .tmp
 *.pyc
 lib
-test
-tests
 docker-compose.yml
 Dockerfile
 docs
+.git

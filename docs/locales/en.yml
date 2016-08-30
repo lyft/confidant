@@ -10,13 +10,16 @@ en:
       quickstart: Quickstart
       install: Install
       configuration: Configure
-      using_confidant: Managing secrets and mappings
+      using_confidant: Managing Secrets and Mappings
+      client: Using the Client
     advanced:
       title: Advanced
+      blind_secrets: Server-blinded Secrets
+      kms_auth: KMS Authentication
       threat_model: Threat Model
-      service_to_service_auth: Service-to-service authentication and encryption
       contributing: Contributing
       data_schema: Data Schema
+      changelog: Changelog
     communication:
       title: Communication
       support: Support

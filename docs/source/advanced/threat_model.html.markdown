@@ -18,9 +18,10 @@ be reported as an issue in the github project.
 
 ### What an authenticated user can achieve
 
-1. A user can view all secrets.
+1. A user can view all secrets, but can not view the credential pairs of blind
+   secrets.
 1. A user can view all secret to service mappings.
-1. A user can create new revisions of a secret.
+1. A user can create new revisions of a secret or blind secret.
 1. A user can create new revisions of a service mapping.
 
 ### What compromise of an authenticated user's computer can achieve
@@ -52,9 +53,10 @@ rather than directly accessible on the internet.
 ### What an attacker can achieve through compromise of the Confidant web server
 
 1. An attacker who successfully compromises the Confidant flask server has full
-   control of the service's IAM credentials and can read all secrets, corrupt or
+   control of the service's IAM credentials and can read secrets, corrupt or
    delete secrets, remap secrets to other services, manipulate web server logs,
-   and modify KMS AUTH\_KEY grants.
+   and modify KMS AUTH\_KEY grants. The attacker can not read blind secrets
+   that confidant's IAM credentials do not allow access to.
 
 ## Service client threat model
 
@@ -68,6 +70,8 @@ rather than directly accessible on the internet.
 ### What the service can achieve
 
 1. A service can retrieve the unencrypted secrets mapped to it.
+1. A service can read blind secrets mapped to it, assuming the service's IAM
+   policy allows it to decrypt the blind secrets.
 
 ### What an attacker can achieve with a filesystem read vulnerability
 

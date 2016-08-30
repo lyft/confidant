@@ -15,12 +15,23 @@
         '$log',
         '$location',
         'credentials.list',
+        'blindcredentials.list',
         'history.ResourceArchiveService',
-        function ($scope, $log, $location, CredentialList, ResourceArchiveService) {
+        function ($scope, $log, $location, CredentialList, BlindCredentialList, ResourceArchiveService) {
+            $scope.showCredentials = true;
+            $scope.showBlindCredentials = true;
+            $scope.showServices = true;
+
             CredentialList.get().$promise.then(function(credentialList) {
                 $scope.credentialList = credentialList.credentials;
             }, function() {
                 $scope.credentialList = [];
+            });
+
+            BlindCredentialList.get().$promise.then(function(blindCredentialList) {
+                $scope.blindCredentialList = blindCredentialList.blind_credentials;
+            }, function() {
+                $scope.blindCredentialList = [];
             });
 
             // Reformat archive credential IDs for display. Archive credential IDs
@@ -36,9 +47,24 @@
                 };
             };
 
+            $scope.resourceTypeFilter = function(field) {
+                return function(resource) {
+                    if (resource[field] == 'credential' && $scope.showCredentials) {
+                        return true;
+                    } else if (resource[field] == 'blind_credential' && $scope.showBlindCredentials) {
+                        return true;
+                    } else if (resource[field] == 'service' && $scope.showServices) {
+                        return true;
+                    }
+                    return false;
+                };
+            };
+
             $scope.gotoResource = function(resource) {
                 if (resource.type === 'credential') {
                     $location.path('/history/credential/' + resource.id);
+                } else if (resource.type === 'blind_credential') {
+                    $location.path('/history/blind_credential/' + resource.id);
                 } else if (resource.type === 'service') {
                     $location.path('/history/service/' + resource.id);
                 }

@@ -1,16 +1,20 @@
 env:
-  - REPO=lyft/confidant
-
+- REPO=lyft/confidant
 sudo: required
-
 services:
-  - docker
-
+- docker
 before_install:
-  - 'docker pull -a lyft/confidant || echo "Failed to pull confidant docker image, doing full build."'
-  - docker build -f Dockerfile -t $REPO:$COMMIT .
-
-script: docker run $REPO:$COMMIT /bin/sh -c "make test"
-
+- docker build -f Dockerfile -t $REPO:$TRAVIS_COMMIT .
+- docker run -v $PWD/confidant/dist:/tmp/dist $REPO:$TRAVIS_COMMIT /bin/sh -c "cp -r /srv/confidant/confidant/dist/. /tmp/dist/."
+script: docker run $REPO:$TRAVIS_COMMIT /bin/sh -c "make test"
 after_success:
-  - ./docker_push.sh
+- ./docker_push.sh
+deploy:
+  provider: pypi
+  user: lyftpypi
+  password:
+    secure: J56TAJm3sarDyy5yvAX3m/4NOJwF4DlJx/Io0MJbiWSLu1/RzH3akXOtFk37GL+CqnK+ffFMPcjKGX+UO9Gc7+cMX7Z58nk6aeDF+sf2Irh8arZVhNenLQVYuVxtlfqOfagTJEyVAjFU8T9Iya5f2VontkMdrraXdrNmNRTJfbgp/sWKFnR2Z2vqS66aQ2hOdviYJVzQ/Vr5cGq/epiZ8g4BG42pXHqYgA73AZELzhdavNnLSP9UGZZ49dW9ek+PDo4iFcVSfJ7BkICJelC4nxTv7SYSMOzhDbDjIB7Il7XtrrkvVetWAyCtoF3CEDTloKV0KLtKkHkYIF8slaMTETQhOEgnv0jzpvTtJHcZ60z05njyPMt3UGtvlGYhDgg9LvO5saj/cW2uI++CJ/QInD7wP64UlTFraWasi02Ir190wKnOPRlBD24xF0udvlHqIOE+wVvA4tZBXgW6cGZ3szYFSsfKTZAmSMT7ey3tiudhMh4bQ3riduJPULpCuIaEQazsbiUmTKSy2SjBUpKcpDNKK8062NnVWjaI/1wsV/I37GTpAWOtLdxp81BPBwM4XyvnNNBUxcuExgE36YG2c01+MdGPqBFf++IyfcZPY8vtIggE9rvg8tbWbiCFFI7It1pVNZufYm5o64RZVo7GJqL3/DR0PfxC8xSidW6E9OU=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: lyft/confidant

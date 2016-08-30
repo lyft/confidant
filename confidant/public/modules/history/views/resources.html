@@ -7,6 +7,15 @@
         </div>
       </div>
     </div>
+    <div class="row has-margin-bottom-lg">
+      <div class="form">
+        <div class="simple-form col-md-12">
+          <label for="showCredentials"><input id="showCredentials" type="checkbox" data-ng-model="showCredentials" /> Credentials&nbsp;</label>
+          <label for="showBlindCredentials"><input id="showBlindCredentials" type="checkbox" data-ng-model="showBlindCredentials" /> Blind Credentials&nbsp;</label>
+          <label for="showServices"><input id="showServices" type="checkbox" data-ng-model="showServices" /> Services</label>
+        </div>
+      </div>
+    </div>
     <div class="row row-overflow-history-resources">
       <div class="col-md-12 row-relative">
         <table class="table table-hover">
@@ -19,11 +28,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="resource in resourceArchive | filter: resourceRegexFilter('name', resourceRegex) | orderBy:'modified_date':true" ng-click="gotoResource(resource)" style="cursor: pointer">
+            <tr ng-repeat="resource in resourceArchive | filter: resourceRegexFilter('name', resourceRegex) | filter: resourceTypeFilter('type') | orderBy:'-modified_date'" ng-click="gotoResource(resource)" style="cursor: pointer">
               <td>{{ resource.type }}</td>
-              <td>{{ resource.name }}</td>
+              <td class="dont-break-out">{{ resource.name }}</td>
               <td>{{ resource.revision }}</td>
-              <td>{{ resource.modified_date }}</td>
+              <td>{{ resource.modified_date | date:'medium':'GMT' }} GMT</td>
           </tbody>
         </table>
       </div>

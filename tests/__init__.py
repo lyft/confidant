@@ -5,12 +5,21 @@ import os
 
 # Inject mandatory environment variables
 
-os.environ['REGION'] = os.getenv('REGION', 'us-east-1')
-os.environ['SESSION_SECRET'] = os.getenv('SESSION_SECRET', 'secret')
-# Use a separate table for unit tests so local unittests don't alter your
-# development environment. This table will be frequently deleted and created
-# multiple times.
-os.environ['DYNAMODB_TABLE'] = os.getenv(
-    'DYNAMODB_TESTING_TABLE',
-    'confidant-testing'
-)
+env_settings = [
+    ('SESSION_SECRET', 'secret'),
+    ('DYNAMODB_TABLE', 'confidant-testing'),
+    ('DYNAMODB_URL', 'http://dynamo:7777'),
+    ('DYNAMODB_CREATE_TABLE', 'false'),
+    ('GEVENT_RESOLVER', 'ares'),
+    ('AWS_DEFAULT_REGION', 'us-east-1'),
+    ('USER_AUTH_KEY', 'authnz-usertesting'),
+    ('AUTH_KEY', 'authnz-testing'),
+    ('SCOPED_AUTH_KEYS',
+     '{"sandbox-auth-key":"sandbox","primary-auth-key":"primary"}'),
+    ('KMS_MASTER_KEY', 'confidant-mastertesting'),
+    ('DEBUG', 'true'),
+    ('STATIC_FOLDER', 'public')
+]
+
+for env_setting in env_settings:
+    os.environ[env_setting[0]] = os.getenv(env_setting[0], env_setting[1])

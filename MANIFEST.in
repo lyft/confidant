@@ -1,0 +1,2 @@
+recursive-include confidant/dist *
+include requirements.txt

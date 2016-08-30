@@ -3,14 +3,16 @@ import logging
 from flask.ext.script import Command
 from botocore.exceptions import ClientError
 
-from confidant import app
-from confidant import iam
-from confidant import kms
+import confidant.services
 from confidant import keymanager
+from confidant.app import app
 from confidant.models.service import Service
 
-logging.addHandler(logging.StreamHandler(sys.stdout))
-logging.setLevel(logging.INFO)
+iam_resource = confidant.services.get_boto_resource('iam')
+kms_client = confidant.services.get_boto_client('kms')
+
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.INFO)
 
 
 class ManageGrants(Command):
@@ -18,18 +20,18 @@ class ManageGrants(Command):
     def run(self):
         grants = keymanager.get_grants()
         try:
-            roles = [x for x in iam.roles.all()]
+            roles = [x for x in iam_resource.roles.all()]
         except ClientError:
-            logging.error('Failed to fetch IAM roles.')
+            app.logger.error('Failed to fetch IAM roles.')
             return
         services = []
         for service in Service.data_type_date_index.query('service'):
             services.append(service.id)
         for role in roles:
             if role.name in services:
-                logging.info('Managing grants for {0}.'.format(role.name))
+                app.logger.info('Managing grants for {0}.'.format(role.name))
                 keymanager._ensure_grants(role, grants)
-        logging.info('Finished managing grants.')
+        app.logger.info('Finished managing grants.')
 
 
 class RevokeGrants(Command):
@@ -37,8 +39,8 @@ class RevokeGrants(Command):
     def run(self):
         grants = keymanager.get_grants()
         for grant in grants:
-            kms.revoke_grant(
+            kms_client.revoke_grant(
                 KeyId=keymanager.get_key_id(app.config['AUTH_KEY']),
                 GrantId=grant['GrantId']
             )
-        logging.info('Finished revoking grants.')
+        app.logger.info('Finished revoking grants.')

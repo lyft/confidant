@@ -11,6 +11,9 @@
       <li class="doc-item">
         <%= active_link_to t("navigation.basics.using_confidant"), "#{locale_prefix}/basics/using_confidant.html", :relative => true %>
         </li>
+      <li class="doc-item">
+        <%= active_link_to t("navigation.basics.client"), "#{locale_prefix}/basics/client.html", :relative => true %>
+        </li>
     </ul>
   </div>
 
@@ -18,16 +21,22 @@
     <h3 class="docs-section-heading"><%= t("navigation.advanced.title") %></h3>
     <ul>
       <li class="doc-item">
-        <%= active_link_to t("navigation.advanced.threat_model"), "#{locale_prefix}/advanced/threat_model.html", :relative => true %>
+        <%= active_link_to t("navigation.advanced.blind_secrets"), "#{locale_prefix}/advanced/blind_secrets.html", :relative => true %>
         </li>
       <li class="doc-item">
-        <%= active_link_to t("navigation.advanced.service_to_service_auth"), "#{locale_prefix}/advanced/service_to_service_auth.html", :relative => true %>
+        <%= active_link_to t("navigation.advanced.kms_auth"), "#{locale_prefix}/advanced/kms_auth.html", :relative => true %>
+        </li>
+      <li class="doc-item">
+        <%= active_link_to t("navigation.advanced.threat_model"), "#{locale_prefix}/advanced/threat_model.html", :relative => true %>
         </li>
       <li class="doc-item">
         <%= active_link_to t("navigation.advanced.contributing"), "#{locale_prefix}/advanced/contributing.html", :relative => true %>
         </li>
       <li class="doc-item">
         <%= active_link_to t("navigation.advanced.data_schema"), "#{locale_prefix}/advanced/data_schema.html", :relative => true %>
+        </li>
+      <li class="doc-item">
+        <%= active_link_to t("navigation.advanced.changelog"), "#{locale_prefix}/advanced/changelog.html", :relative => true %>
         </li>
     </ul>
   </div>
