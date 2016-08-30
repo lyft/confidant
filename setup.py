@@ -21,7 +21,7 @@ setup(
     version="1.1.17",
     packages=find_packages(exclude=["test*"]),
     package_data={
-        'confidant': ['confidant/dist/*', 'requirements.txt', 'wsgi.py']
+        'confidant': ['confidant/dist/*', 'requirements.txt']
     },
     install_requires=reqs,
     author="Ryan Lane",
