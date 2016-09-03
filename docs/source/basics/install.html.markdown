@@ -111,7 +111,7 @@ running confidant.
 source my_config
 cd /srv/confidant
 source venv/bin/activate
-gunicorn wsgi:app --workers=2 -k gevent
+gunicorn confidant.wsgi:app --workers=2 -k gevent
 ```
 
 That's it. See the configuration documentation about how to configure and run.
