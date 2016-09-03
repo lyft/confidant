@@ -2,7 +2,14 @@
 
 ## 1.1
 
-### 1.1.16 - 1.1.19
+### 1.1.19
+
+* Important change: the location of the wsgi.py has moved inside of the
+  confidant module to make the pypi package runnable. This changes the gunicorn
+  invocation from `gunicorn wsgi:app -k gevent` to `gunicorn confidant.wsgi:app
+  -k gevent`
+
+### 1.1.16 - 1.1.18
 
 * Getting the pypi package into a working state
 
