@@ -1,4 +1,4 @@
-language: ruby
+language: python
 env:
   - REPO=lyft/confidant
 sudo: required
