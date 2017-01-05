@@ -18,7 +18,7 @@ with open('requirements.txt') as f:
 
 setup(
     name="confidant",
-    version="1.1.19",
+    version="1.1.20",
     packages=find_packages(exclude=["test*"]),
     include_package_data=True,
     zip_safe=False,

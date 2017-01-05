@@ -1,4 +1,3 @@
-import confidant.workarounds  # noqa
 from confidant.app import app
 
 if __name__ == '__main__':

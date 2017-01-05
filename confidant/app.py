@@ -4,7 +4,6 @@ import boto3
 from flask import Flask
 from flask_sslify import SSLify
 
-import confidant.workarounds  # noqa
 from confidant import settings
 
 

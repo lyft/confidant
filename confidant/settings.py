@@ -99,8 +99,6 @@ def _bootstrap(secrets):
 # Whether or not Confidant is run in debug mode. Never run confidant in debug
 # mode outside of development!
 DEBUG = bool_env('DEBUG', False)
-# The host the WSGI app should use.
-HOST = str_env('HOST', '127.0.0.1')
 # The port the WSGI app should use.
 PORT = int_env('PORT', 8080)
 # The directory to use for static content. To use minified resources, set this
@@ -285,6 +283,10 @@ KMS_MINIMUM_TOKEN_VERSION = int_env('KMS_MINIMUM_TOKEN_VERSION', 1)
 KMS_AUTH_USER_TYPES = str_env('KMS_AUTH_USER_TYPES', 'service').split(',')
 # Manage auth key grants for service to service authentication.
 KMS_AUTH_MANAGE_GRANTS = bool_env('KMS_AUTH_MANAGE_GRANTS', True)
+# Number of tokens to cache for authentication. This should be roughly
+# equivalent to the number of tokens you expect to generate within the lifetime
+# of your tokens.
+KMS_AUTH_TOKEN_CACHE_SIZE = int_env('KMS_AUTH_TOKEN_CACHE_SIZE', 4096)
 
 # SSL redirection and HSTS
 
@@ -354,6 +356,9 @@ DYNAMODB_TABLE = str_env('DYNAMODB_TABLE')
 # Note that you need to give Confidant's IAM user or role enough privileges for
 # this to occur.
 DYNAMODB_CREATE_TABLE = bool_env('DYNAMODB_CREATE_TABLE', False)
+# Connection pool size for PynamoDB connections to DynamoDB
+PYNAMO_CONNECTION_POOL_SIZE = int_env('PYNAMO_CONNECTION_POOL_SIZE', 100)
+PYNAMO_REQUEST_TIMEOUT_SECONDS = int_env('PYNAMO_REQUEST_TIMEOUT_SECONDS', 1)
 
 # Encryption
 
@@ -423,6 +428,16 @@ USE_AUTH = bool_env('USE_AUTH', True)
 USE_ENCRYPTION = bool_env('USE_ENCRYPTION', True)
 
 # boto3 configuration
+
+# Timeout settings for connecting to KMS (see:
+# https://botocore.readthedocs.io/en/stable/reference/config.html)
+KMS_CONNECTION_TIMEOUT = int_env('KMS_CONNECTION_TIMEOUT', 1)
+# Timeout settings for reading from KMS (see:
+# https://botocore.readthedocs.io/en/stable/reference/config.html)
+KMS_READ_TIMEOUT = int_env('KMS_READ_TIMEOUT', 1)
+# Connection pool settings for connecting to KMS (see:
+# https://botocore.readthedocs.io/en/stable/reference/config.html)
+KMS_MAX_POOL_CONNECTIONS = int_env('KMS_MAX_POOL_CONNECTIONS', 100)
 
 # Must be set to the region the server is running.
 AWS_DEFAULT_REGION = str_env('AWS_DEFAULT_REGION', 'us-east-1')
