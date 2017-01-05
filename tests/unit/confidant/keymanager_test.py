@@ -21,7 +21,7 @@ class KeyManagerTest(unittest.TestCase):
         app.config['SCOPED_AUTH_KEYS'] = self.scoped_auth_keys
 
     @patch('confidant.keymanager.KEY_METADATA', {})
-    @patch('confidant.keymanager.kms_client.describe_key')
+    @patch('confidant.keymanager.auth_kms_client.describe_key')
     def test_get_key_arn(self, kms_mock):
         kms_mock.return_value = {'KeyMetadata': {'Arn': 'mocked:arn'}}
         self.assertEqual(
@@ -33,7 +33,7 @@ class KeyManagerTest(unittest.TestCase):
         'confidant.keymanager.KEY_METADATA',
         {'mockalias': {'KeyMetadata': {'Arn': 'mocked:arn'}}}
     )
-    @patch('confidant.keymanager.kms_client.describe_key')
+    @patch('confidant.keymanager.auth_kms_client.describe_key')
     def test_get_key_arn_cached(self, kms_mock):
         self.assertEqual(
             keymanager.get_key_arn('mockalias'),
@@ -41,7 +41,7 @@ class KeyManagerTest(unittest.TestCase):
         )
 
     @patch('confidant.keymanager.KEY_METADATA', {})
-    @patch('confidant.keymanager.kms_client.describe_key')
+    @patch('confidant.keymanager.auth_kms_client.describe_key')
     def test_get_key_id(self, kms_mock):
         kms_mock.return_value = {'KeyMetadata': {'KeyId': 'mockid'}}
         self.assertEqual(
@@ -53,7 +53,7 @@ class KeyManagerTest(unittest.TestCase):
         'confidant.keymanager.KEY_METADATA',
         {'mockalias': {'KeyMetadata': {'KeyId': 'mockid'}}}
     )
-    @patch('confidant.keymanager.kms_client.describe_key')
+    @patch('confidant.keymanager.auth_kms_client.describe_key')
     def test_get_key_id_cached(self, kms_mock):
         self.assertEqual(
             keymanager.get_key_id('mockalias'),
@@ -144,7 +144,7 @@ class KeyManagerTest(unittest.TestCase):
         'confidant.keymanager.get_key_alias_from_cache',
         MagicMock(return_value='authnz-testing')
     )
-    @patch('confidant.keymanager.kms_client.decrypt')
+    @patch('confidant.keymanager.at_rest_kms_client.decrypt')
     def test_decrypt_token(self, kms_mock):
         time_format = "%Y%m%dT%H%M%SZ"
         now = datetime.datetime.utcnow()

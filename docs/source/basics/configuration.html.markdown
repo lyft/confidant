@@ -290,6 +290,59 @@ export CLIENT_CONFIG='{"blind_keys":{"us-east-1":"alias/blindkey-useast1","us-we
 The native client, or custom clients can use this data to help configure
 themselves.
 
+### Confidant performance settings
+
+Confidant comes setup to perform well by default, but it's possible you may
+find some of these settings too aggressive, or you may have enough clients or
+services that the defaults aren't high enough.
+
+The primary performance setting is for authentication token caching, and is set
+to 4096. This should be set to something near your total number of clients with
+unique authentication tokens. Assuming every client has a unique token, it
+should be equal to greater than your number of clients. This cache avoids calls
+to KMS for authentication, reducing latency and reducing likelyhood of
+ratelimiting from KMS. The following configuration can adjust this:
+
+```
+export KMS_AUTH_TOKEN_CACHE_SIZE=4096
+```
+
+Confidant has a couple settings for tuning pynamodb performance. By default
+confidant is pretty aggressive with pynamodb timeouts, setting the default
+timeout to 1s. This is to fail fast and retry, rather than waiting on a blocked
+request that could be general networking failures, attempting to avoid request
+pileups. If this setting is too aggressive, you can adjust it via:
+
+```
+export PYNAMO_REQUEST_TIMEOUT_SECONDS=1
+```
+
+To avoid recreating connections to dynamodb on each request, we open a larger
+than default number of pooled connections to dynamodb. Our default is 100. The
+number of connections should be greater than or equal to the number of
+concurrent requests per worker. To adjust this:
+
+```
+export PYNAMO_CONNECTION_POOL_SIZE=100
+```
+
+Similar to the performance tuning for dynamodb, we also have similar tuning
+settings for KMS. For both connection and read timeouts, we aggressively set
+the timeout to be 1s, since we assume any request that takes this long is
+related to some network failure. To adjust these settings:
+
+```
+export KMS_CONNECTION_TIMEOUT=1
+export KMS_READ_TIMEOUT=1
+```
+
+We also increase the default connection pool to KMS. This should be greater
+than or equal to the number of concurrent requests per worker. To adjust this:
+
+```
+export KMS_MAX_POOL_CONNECTIONS=100
+```
+
 ## KMS key policy configuration
 
 Confidant needs to have special KMS key policy for both the at-rest

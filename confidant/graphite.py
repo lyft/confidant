@@ -25,7 +25,7 @@ def send_event(services, msg):
             auth=(username, password),
             headers=headers,
             data=json.dumps(event),
-            timeout=1
+            timeout=3
         )
         if response.status_code != 200:
             msg = 'Post to graphite returned non-2000 status ({0}).'

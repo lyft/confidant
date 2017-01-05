@@ -345,6 +345,8 @@ def get_credential_list():
             'modified_date': cred.modified_date,
             'modified_by': cred.modified_by
         })
+
+    credentials = sorted(credentials, key=lambda k: k['name'])
     return jsonify({'credentials': credentials})
 
 

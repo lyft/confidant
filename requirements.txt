@@ -10,17 +10,25 @@ Flask==0.10.1
 # Use: For CLI scripts.
 Flask-Script==2.0.5
 
+# A low-level interface to a growing number of Amazon Web Services. The
+# botocore package is the foundation for the AWS CLI as well as boto3.
+# License: Apache2
+# Upstream url: https://github.com/boto/botocore
+# Use: For boto3
+botocore==1.4.58
+
 # Boto3 is the Amazon Web Services (AWS) Software Development Kit (SDK)
 # for Python.
 # License: Apache2
+# Upstream url: https://github.com/boto/boto3
 # Use: For KMS
-boto3==1.2.3
+boto3==1.4.0
 
 # A Pythonic interface for Amazon's DynamoDB that supports Python 2 and 3.
 # License: MIT
 # Upstream url: http://jlafon.io/pynamodb.html
 # Use: For DynamoDB storage
-pynamodb==1.5.1
+pynamodb==1.5.3
 
 # cryptography is a package which provides cryptographic recipes and
 # primitives to Python developers.
@@ -65,7 +73,7 @@ python-saml==2.1.6
 # License: Apache2
 # Upstream url: http://python-requests.org
 # Use: REST calls to external services
-requests==2.8.1
+requests==2.11.1
 
 # Provides enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
 # License: BSD

@@ -3,6 +3,7 @@ import hashlib
 import datetime
 import json
 import logging
+import botocore
 
 from botocore.exceptions import ClientError
 
@@ -12,18 +13,30 @@ from confidant.utils import stats
 from confidant.utils import lru
 from confidant.lib import cryptolib
 
-kms_client = confidant.services.get_boto_client('kms')
+config = botocore.config.Config(
+    connect_timeout=app.config['KMS_CONNECTION_TIMEOUT'],
+    read_timeout=app.config['KMS_READ_TIMEOUT'],
+    max_pool_connections=app.config['KMS_MAX_POOL_CONNECTIONS']
+)
+auth_kms_client = confidant.services.get_boto_client(
+    'kms',
+    config={'name': 'keymanager', 'config': config}
+)
+at_rest_kms_client = confidant.services.get_boto_client(
+    'kms',
+    config={'name': 'keymanager', 'config': config}
+)
 iam_resource = confidant.services.get_boto_resource('iam')
 
 DATAKEYS = {}
 SERVICEKEYS = {}
-TOKENS = lru.LRUCache(4096)
+TOKENS = lru.LRUCache(app.config['KMS_AUTH_TOKEN_CACHE_SIZE'])
 KEY_METADATA = {}
 
 
 def get_key_arn(key_alias):
     if key_alias not in KEY_METADATA:
-        KEY_METADATA[key_alias] = kms_client.describe_key(
+        KEY_METADATA[key_alias] = auth_kms_client.describe_key(
             KeyId='alias/{0}'.format(key_alias)
         )
     return KEY_METADATA[key_alias]['KeyMetadata']['Arn']
@@ -31,7 +44,7 @@ def get_key_arn(key_alias):
 
 def get_key_id(key_alias):
     if key_alias not in KEY_METADATA:
-        KEY_METADATA[key_alias] = kms_client.describe_key(
+        KEY_METADATA[key_alias] = auth_kms_client.describe_key(
             KeyId='alias/{0}'.format(key_alias)
         )
     return KEY_METADATA[key_alias]['KeyMetadata']['KeyId']
@@ -64,7 +77,8 @@ def create_datakey(encryption_context):
     stats.incr('at_rest_action', 2)
     return cryptolib.create_datakey(
         encryption_context,
-        'alias/{0}'.format(app.config.get('KMS_MASTER_KEY'))
+        'alias/{0}'.format(app.config.get('KMS_MASTER_KEY')),
+        client=at_rest_kms_client
     )
 
 
@@ -82,7 +96,11 @@ def decrypt_datakey(data_key, encryption_context=None):
     sha = hashlib.sha256(data_key).hexdigest()
     if sha not in DATAKEYS:
         stats.incr('at_rest_action')
-        plaintext = cryptolib.decrypt_datakey(data_key, encryption_context)
+        plaintext = cryptolib.decrypt_datakey(
+            data_key,
+            encryption_context,
+            client=at_rest_kms_client
+        )
         DATAKEYS[sha] = plaintext
     return DATAKEYS[sha]
 
@@ -123,7 +141,7 @@ def decrypt_token(version, user_type, _from, token):
             if version > 1:
                 context['user_type'] = user_type
             with stats.timer('kms_decrypt_token'):
-                data = kms_client.decrypt(
+                data = auth_kms_client.decrypt(
                     CiphertextBlob=token,
                     EncryptionContext=context
                 )
@@ -194,13 +212,13 @@ def get_grants():
     next_marker = None
     while True:
         if next_marker:
-            grants = kms_client.list_grants(
+            grants = auth_kms_client.list_grants(
                 KeyId=get_key_id(app.config['AUTH_KEY']),
                 Marker=next_marker,
                 Limit=250
             )
         else:
-            grants = kms_client.list_grants(
+            grants = auth_kms_client.list_grants(
                 KeyId=get_key_id(app.config['AUTH_KEY'])
             )
         for grant in grants['Grants']:
@@ -300,7 +318,7 @@ def _ensure_grants(role, grants):
     encrypt_grant, decrypt_grant = _grants_exist(role, grants)
     if not encrypt_grant:
         logging.info('Creating encrypt grant for {0}'.format(role.arn))
-        kms_client.create_grant(
+        auth_kms_client.create_grant(
             KeyId=get_key_id(app.config['AUTH_KEY']),
             GranteePrincipal=role.arn,
             Operations=['Encrypt', 'Decrypt'],
@@ -308,7 +326,7 @@ def _ensure_grants(role, grants):
         )
     if not decrypt_grant:
         logging.info('Creating decrypt grant for {0}'.format(role.arn))
-        kms_client.create_grant(
+        auth_kms_client.create_grant(
             KeyId=get_key_id(app.config['AUTH_KEY']),
             GranteePrincipal=role.arn,
             Operations=['Decrypt'],

@@ -12,6 +12,8 @@ from pynamodb.attributes import (
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
 from confidant.app import app
+from confidant.models.session_cls import DDBSession
+from confidant.models.connection_cls import DDBConnection
 
 
 class DataTypeDateIndex(GlobalSecondaryIndex):
@@ -29,6 +31,8 @@ class BlindCredential(Model):
         if app.config.get('DYNAMODB_URL'):
             host = app.config.get('DYNAMODB_URL')
         region = app.config.get('AWS_DEFAULT_REGION')
+        connection_cls = DDBConnection
+        session_cls = DDBSession
 
     id = UnicodeAttribute(hash_key=True)
     revision = NumberAttribute()

@@ -1,6 +1,5 @@
 from flask.ext.script import Manager
 
-import confidant.workarounds  # noqa
 from confidant import app
 from scripts.utils import ManageGrants
 from scripts.utils import RevokeGrants
