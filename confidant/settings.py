@@ -99,6 +99,8 @@ def _bootstrap(secrets):
 # Whether or not Confidant is run in debug mode. Never run confidant in debug
 # mode outside of development!
 DEBUG = bool_env('DEBUG', False)
+# The host the WSGI app should use.
+HOST = str_env('HOST', '127.0.0.1')
 # The port the WSGI app should use.
 PORT = int_env('PORT', 8080)
 # The directory to use for static content. To use minified resources, set this
