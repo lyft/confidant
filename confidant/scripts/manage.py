@@ -20,5 +20,6 @@ manager.add_command("generate_secrets_bootstrap", GenerateSecretsBootstrap)
 # Show the YAML formatted secrets_bootstrap in a decrypted form
 manager.add_command("decrypt_secrets_bootstrap", DecryptSecretsBootstrap)
 
-if __name__ == "__main__":
+
+def main():
     manager.run()
