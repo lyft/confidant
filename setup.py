@@ -18,7 +18,7 @@ with open('requirements.txt') as f:
 
 setup(
     name="confidant",
-    version="1.1.20",
+    version="1.1.21",
     packages=find_packages(exclude=["test*"]),
     include_package_data=True,
     zip_safe=False,
@@ -27,5 +27,10 @@ setup(
     author_email="rlane@lyft.com",
     description="A secret management system and client.",
     license="apache2",
-    url="https://github.com/lyft/confidant"
+    url="https://github.com/lyft/confidant",
+    entry_points={
+        'console_scripts': [
+            'confidant-admin = confidant.scripts.manage:main',
+        ]
+    }
 )
