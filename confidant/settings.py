@@ -301,6 +301,9 @@ SSLIFY = bool_env('SSLIFY', True)
 # Cookie name for the session.
 SESSION_COOKIE_NAME = str_env('SESSION_COOKIE_NAME', 'confidant_session')
 
+# Cookie name for the XSRF token
+XSRF_COOKIE_NAME = str_env('XSRF_COOKIE_NAME', 'XSRF-TOKEN')
+
 # Session cache
 # Mutually exclusive with secure cookie session settings.
 

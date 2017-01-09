@@ -59,7 +59,8 @@ def get_client_config():
         'defined': app.config['CLIENT_CONFIG'],
         'generated': {
             'kms_auth_manage_grants': app.config['KMS_AUTH_MANAGE_GRANTS'],
-            'aws_accounts': app.config['SCOPED_AUTH_KEYS'].values()
+            'aws_accounts': app.config['SCOPED_AUTH_KEYS'].values(),
+            'xsrf_cookie_name': app.config['XSRF_COOKIE_NAME']
         }
     })
     return response
