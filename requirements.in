@@ -1,0 +1,154 @@
+# Flask
+# License: BSD
+# Upstream url: http://github.com/mitsuhiko/flask/
+# Use: For API.
+Flask==0.10.1
+
+# Flask Scripting support for Flask
+# License: BSD
+# Upstream url: http://github.com/techniq/flask-script
+# Use: For CLI scripts.
+Flask-Script==2.0.5
+
+# A low-level interface to a growing number of Amazon Web Services. The
+# botocore package is the foundation for the AWS CLI as well as boto3.
+# License: Apache2
+# Upstream url: https://github.com/boto/botocore
+# Use: For boto3
+botocore==1.4.58
+
+# Boto3 is the Amazon Web Services (AWS) Software Development Kit (SDK)
+# for Python.
+# License: Apache2
+# Upstream url: https://github.com/boto/boto3
+# Use: For KMS
+boto3==1.4.0
+
+# A Pythonic interface for Amazon's DynamoDB that supports Python 2 and 3.
+# License: MIT
+# Upstream url: http://jlafon.io/pynamodb.html
+# Use: For DynamoDB storage
+pynamodb==1.5.3
+
+# cryptography is a package which provides cryptographic recipes and
+# primitives to Python developers.
+# License: BSD
+# Upstream url: https://github.com/pyca/cryptography
+# Use: For encryption
+cryptography==1.7.1
+
+# License: BSD
+# Upstream url: https://github.com/fengsp/flask-session
+# Use: For shared sessions
+Flask-Session==0.2.1
+
+# Redis
+# License: MIT
+# Upstream url: https://github.com/andymccurdy/redis-py
+# Use: For shared sessions
+redis==2.10.3
+
+# Flask extension that configures the Flask application to redirect all
+# incoming requests to https
+# License: BSD
+# Upstream url: https://github.com/kennethreitz/flask-sslify
+# Use: For SSL redirection and HSTS
+Flask-SSLify==0.1.5
+
+# Authomatic is a framework agnostic library for Python web applications
+# with a minimalistic but powerful interface which simplifies
+# authentication of users by third party providers like Facebook or
+# Twitter through standards like OAuth and OpenID.
+# License: MIT
+# Upstream url: http://peterhudec.github.io/authomatic
+# Use: For google auth
+Authomatic==0.1.0.post1
+
+# License: MIT
+# Upstream url: https://github.com/onelogin/python-saml
+# Use: For user authentication via SAML
+python-saml==2.1.6
+
+# Python HTTP for Humans.
+# License: Apache2
+# Upstream url: http://python-requests.org
+# Use: REST calls to external services
+requests==2.11.1
+
+# Provides enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
+# License: BSD
+# Upstream url: https://github.com/cedadev/ndg_httpsclient/
+# Use: Securing requests for python < 2.7.9.
+ndg-httpsclient==0.4.2
+
+# ASN.1 types and codecs
+# License: BSD
+# Upstream url: http://sourceforge.net/projects/pyasn1/
+# Use: Securing requests for python < 2.7.9.
+pyasn1==0.1.9
+
+# Python wrapper module around the OpenSSL library
+# License: APL2
+# Upstream url: https://github.com/pyca/pyopenssl
+# Use: Securing requests for python < 2.7.9.
+pyOpenSSL==16.2.0
+
+# WSGI middleware to add CSP headers
+# License: Apache2
+# Upstream url: https://github.com/dstufft/guard
+guard==1.0.1
+
+# The modular source code checker: pep8, pyflakes and co
+# License: MIT
+# Upstream url: http://bitbucket.org/tarek/flake8
+flake8==2.3.0
+
+# Measures code coverage and emits coverage reports
+# Licence: BSD
+# Upstream url: https://pypi.python.org/pypi/coverage
+coverage==3.7.1
+
+# tool to check your Python code against some of the style conventions
+# License: Expat License
+# Upstream url: https://github.com/jcrocholl/pep8.git
+pep8==1.5.7
+
+# nose makes testing easier
+# License: GNU Library or Lesser General Public License (LGPL)
+# Upstream url: http://readthedocs.org/docs/nose
+nose==1.3.3
+
+# Add additional directories to sys.path for nose.
+# License: Apache2
+# Upstream url: http://bitbucket.org/jnoller/nose-pathmunge/
+nose-pathmunge==0.1.2
+
+# Mocking and Patching Library for Testing
+# License: BSD
+# Upstream url: http://www.voidspace.org.uk/python/mock
+mock==1.0.1
+
+# License: MIT
+# Upstream url: http://pyyaml.org/wiki/PyYAML
+# Use: For parsing users.yaml
+PyYAML==3.11
+
+# License: MIT
+# Upstream url: http://gunicorn.org/
+# Use: For wsgi running
+gunicorn>=19.1.1,<20.0.0
+
+# License: MIT
+# Upstream url: http://www.gevent.org/
+# Use: For concurrency
+gevent==1.0.2
+
+# License: MIT
+# Upstream url: https://github.com/python-greenlet/greenlet
+# Use: For concurrency
+greenlet==0.4.9
+
+# License: MIT
+# Upstream url: https://github.com/jsocol/pystatsd
+# Use: For metrics collection
+statsd==3.1

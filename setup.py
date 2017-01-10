@@ -13,12 +13,12 @@
 
 from setuptools import setup, find_packages
 
-with open('requirements.txt') as f:
+with open('requirements.in') as f:
     reqs = f.read().splitlines()
 
 setup(
     name="confidant",
-    version="1.1.21",
+    version="1.2.0",
     packages=find_packages(exclude=["test*"]),
     include_package_data=True,
     zip_safe=False,
