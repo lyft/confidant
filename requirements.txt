@@ -35,7 +35,7 @@ pynamodb==1.5.3
 # License: BSD
 # Upstream url: https://github.com/pyca/cryptography
 # Use: For encryption
-cryptography==1.2.3
+cryptography==1.7.1
 
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
@@ -79,7 +79,7 @@ requests==2.11.1
 # License: BSD
 # Upstream url: https://github.com/cedadev/ndg_httpsclient/
 # Use: Securing requests for python < 2.7.9.
-ndg-httpsclient==0.4.0
+ndg-httpsclient==0.4.2
 
 # ASN.1 types and codecs
 # License: BSD
@@ -91,7 +91,7 @@ pyasn1==0.1.9
 # License: APL2
 # Upstream url: https://github.com/pyca/pyopenssl
 # Use: Securing requests for python < 2.7.9.
-pyOpenSSL==0.15.1
+pyOpenSSL==16.2.0
 
 # WSGI middleware to add CSP headers
 # License: Apache2
