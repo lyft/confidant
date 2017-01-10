@@ -80,20 +80,22 @@ class AbstractUserAuthenticator(object):
         return session['user']
 
     def get_csrf_token(self):
-        return session.get('XSRF-TOKEN')
+        return session.get(app.config['XSRF_COOKIE_NAME'])
 
     def set_csrf_token(self, resp):
-        if 'XSRF-TOKEN' not in session:
-            session['XSRF-TOKEN'] = '{0:x}'.format(
+        cookie_name = app.config['XSRF_COOKIE_NAME']
+        if cookie_name not in session:
+            session[cookie_name] = '{0:x}'.format(
                 random.SystemRandom().getrandbits(160)
             )
-        resp.set_cookie('XSRF-TOKEN', session['XSRF-TOKEN'])
+        resp.set_cookie(cookie_name, session[cookie_name])
 
     def check_csrf_token(self):
+        cookie_name = app.config['XSRF_COOKIE_NAME']
         token = request.headers.get('X-XSRF-TOKEN', '')
         if not token:
             return False
-        return safe_str_cmp(token, session.get('XSRF-TOKEN', ''))
+        return safe_str_cmp(token, session.get(cookie_name, ''))
 
     def set_expiration(self):
         if app.config['PERMANENT_SESSION_LIFETIME']:

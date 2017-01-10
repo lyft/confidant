@@ -95,6 +95,38 @@ TODO: As of Confidant version 1.1 it's possible to use SAML as an alternative
 to google authentication. We still need to document all of the options, though.
 Basic documentation for each SAML option is described in the settings.py file.
 
+### User authentication session settings
+
+By default (in confidant 1.1) confidant will use itsdangerous secure cookies
+for session management, with a session lifetime and maximum session lifetime. A
+user's session lifetime with automatically be extended any time a user performs
+any action in the interface, but the user's session lifetime can only be
+extended up to the maximum session lifetime, in which they'll be required to
+login again. The session lifetime and maximum session lifetime can be adjusted:
+
+```bash
+# Session lifetime in seconds. Default is 12 hours.
+export PERMANENT_SESSION_LIFETIME='43200'
+# Maximum session lifetime in seconds. Default is 24 hours.
+export MAX_PERMANENT_SESSION_LIFETIME='86400'
+```
+
+An alternative to using itsdangerous cookies is to store cookies in a redis
+backend:
+
+```bash
+export REDIS_URL='redis://localhost:6381'
+export PERMANENT_SESSION_LIFETIME='0'
+```
+
+It's possible to use custom cookie names for both the session cookie, and for
+the XSRF token cookie:
+
+```bash
+export SESSION_COOKIE_NAME='confidant_session'
+export XSRF_COOKIE_NAME='XSRF-TOKEN'
+```
+
 ## Advanced environment configuration
 
 ### statsd metrics
@@ -252,30 +284,6 @@ manually, or you'll need to manage your IAM policy for KMS.
 ```bash
 # Manage auth key grants for service to service authentication. Default True
 export KMS_AUTH_MANAGE_GRANTS='False'
-```
-
-### User authentication session settings
-
-By default (in confidant 1.1) confidant will use itsdangerous secure cookies
-for session management, with a session lifetime and maximum session lifetime. A
-user's session lifetime with automatically be extended any time a user performs
-any action in the interface, but the user's session lifetime can only be
-extended up to the maximum session lifetime, in which they'll be required to
-login again. The session lifetime and maximum session lifetime can be adjusted:
-
-```bash
-# Session lifetime in seconds. Default is 12 hours.
-export PERMANENT_SESSION_LIFETIME='43200'
-# Maximum session lifetime in seconds. Default is 24 hours.
-export MAX_PERMANENT_SESSION_LIFETIME='86400'
-```
-
-An alternative to using itsdangerous cookies is to store cookies in a redis
-backend:
-
-```bash
-export REDIS_URL='redis://localhost:6381'
-export PERMANENT_SESSION_LIFETIME='0'
 ```
 
 ### Confidant client configuration

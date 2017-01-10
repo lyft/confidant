@@ -105,6 +105,7 @@ class AuthnzTest(unittest.TestCase):
         app.config['USER_AUTH_MODULE'] = 'header'
         app.config['HEADER_AUTH_USERNAME_HEADER'] = 'X-Confidant-User'
         app.config['HEADER_AUTH_EMAIL_HEADER'] = 'X-Confidant-Email'
+        app.config['XSRF_COOKIE_NAME'] = 'XSRF-TOKEN'
         user_mod = userauth.init_user_auth_class()
         with patch('confidant.authnz.user_mod', user_mod):
             ret = self.test_client.get(
