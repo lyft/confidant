@@ -14,7 +14,7 @@ COPY ./bower.json /srv/confidant/bower.json
 
 WORKDIR /srv/confidant
 
-RUN pip install -U pip && pip install -r requirements.txt
+RUN pip install -U pip && pip install -r piptools_requirements.txt && pip install -r requirements.txt
 
 RUN gem install compass && \
     npm install grunt-cli && \
