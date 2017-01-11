@@ -18,7 +18,7 @@ with open('requirements.in') as f:
 
 setup(
     name="confidant",
-    version="1.2.0",
+    version="1.3.0",
     packages=find_packages(exclude=["test*"]),
     include_package_data=True,
     zip_safe=False,
