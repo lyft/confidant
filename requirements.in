@@ -151,4 +151,4 @@ greenlet==0.4.9
 # License: MIT
 # Upstream url: https://github.com/jsocol/pystatsd
 # Use: For metrics collection
-statsd==3.1
+statsd==3.2.1
