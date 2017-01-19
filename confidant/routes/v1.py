@@ -14,6 +14,7 @@ import confidant.services
 from confidant import keymanager
 from confidant import authnz
 from confidant import graphite
+from confidant import webhook
 from confidant.app import app
 from confidant.utils import stats
 from confidant.ciphermanager import CipherManager
@@ -316,6 +317,7 @@ def map_service_credentials(id):
     msg = 'Added credentials: {0}; Removed credentials {1}; Revision {2}'
     msg = msg.format(added, removed, service.revision)
     graphite.send_event([id], msg)
+    webhook.send_event('service_update', [service.id], service.credentials)
     try:
         credentials = _get_credentials(service.credentials)
     except KeyError:
@@ -781,6 +783,7 @@ def update_credential(id):
         msg = 'Updated credential "{0}" ({1}); Revision {2}'
         msg = msg.format(cred.name, cred.id, cred.revision)
         graphite.send_event(service_names, msg)
+        webhook.send_event('credential_update', service_names, [cred.id])
     return jsonify({
         'id': cred.id,
         'name': cred.name,
@@ -1118,6 +1121,7 @@ def update_blind_credential(id):
         msg = 'Updated credential "{0}" ({1}); Revision {2}'
         msg = msg.format(cred.name, cred.id, cred.revision)
         graphite.send_event(service_names, msg)
+        webhook.send_event('blind_credential_update', service_names, [cred.id])
     return jsonify({
         'id': cred.id,
         'name': cred.name,

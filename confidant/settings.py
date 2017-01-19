@@ -397,6 +397,25 @@ STATSD_HOST = str_env('STATSD_HOST', 'localhost')
 # A statsd port
 STATSD_PORT = int_env('STATSD_PORT', 8125)
 
+# Webhook configuration
+
+# Endpoint URL to send webhook events to.
+WEBHOOK_URL = str_env('WEBHOOK_URL')
+# A basic auth username.
+# Example: myhookuser
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+WEBHOOK_USERNAME = _secrets_bootstrap.get(
+    'WEBHOOK_USERNAME',
+    str_env('WEBHOOK_USERNAME')
+)
+# A basic auth password:
+# Example: mylongandsupersecurehookpassword
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+WEBHOOK_PASSWORD = _secrets_bootstrap.get(
+    'WEBHOOK_PASSWORD',
+    str_env('WEBHOOK_PASSWORD')
+)
+
 # Customization
 
 # Directory for customization of AngularJS frontend.
