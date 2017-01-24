@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4
+
+### 1.4.0
+
+* Added support for sending basic webhooks; see configuration docs for
+  WEBHOOK\_URL
+
 ## 1.1
 
 ### 1.1.19
