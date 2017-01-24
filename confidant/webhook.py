@@ -5,11 +5,11 @@ import logging
 from confidant.app import app
 
 
-def send_event(event_type, services, credentials):
+def send_event(event_type, services, credential_ids):
     try:
         webhook_url = app.config.get('WEBHOOK_URL')
         if not webhook_url:
-            logging.warning('Failed to find a WEBHOOK_URL in config')
+            logging.debug('Failed to find a WEBHOOK_URL in config')
             return
         username = app.config.get('WEBHOOK_USERNAME')
         password = app.config.get('WEBHOOK_PASSWORD')
@@ -18,7 +18,7 @@ def send_event(event_type, services, credentials):
         event = {
             'event_type': event_type,
             'services': services,
-            'credentials': credentials
+            'credentials': credential_ids
         }
         response = requests.post(
             webhook_url,
