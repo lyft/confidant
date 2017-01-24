@@ -7,7 +7,36 @@
 * Added support for sending basic webhooks; see configuration docs for
   WEBHOOK\_URL
 
+## 1.3
+
+### 1.3.0
+
+* Update statsd depencency from 3.1 to 3.2.1
+
+## 1.2
+
+### 1.2.0
+
+* Switch to doing semver in a more proper way. Though generally all previous
+  releases were backwards compatible, we had been releasing features in point
+  releases rather than minor releases. Going forward, breaking changes will be
+  in major releases, features in minor releases, and bugfixes in point
+  releases. When dependencies are updated we'll consider the impact of the
+  dependency update to determine the semver release
+* Made the XSRF cookie name configurable. See the configuration docs for how to
+  changet he XSRF cookie name.
+
 ## 1.1
+
+### 1.1.21
+
+* Move scripts into the confidant module to be able to use the scripts when pip
+  installed
+
+### 1.1.20
+
+* Added changes and settings for better performance in confidant. See the
+  performance section in the configuration docs
 
 ### 1.1.19
 
