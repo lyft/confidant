@@ -261,7 +261,7 @@ def map_service_credentials(id):
             data.get('credentials', []),
             data.get('blind_credentials', []),
         )
-        if conflicts:
+        if conflicts and not app.config['IGNORE_CONFLICTS']:
             ret = {
                 'error': 'Conflicting key pairs in mapped service.',
                 'conflicts': conflicts
