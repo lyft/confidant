@@ -725,7 +725,7 @@ def update_credential(id):
             credential_pairs.keys(),
             services
         )
-        if conflicts:
+        if conflicts and not app.config['IGNORE_CONFLICTS']:
             ret = {
                 'error': 'Conflicting key pairs in mapped service.',
                 'conflicts': conflicts
@@ -1054,7 +1054,7 @@ def update_blind_credential(id):
             data['credential_keys'],
             services
         )
-        if conflicts:
+        if conflicts and not app.config['IGNORE_CONFLICTS']:
             ret = {
                 'error': 'Conflicting key pairs in mapped service.',
                 'conflicts': conflicts
