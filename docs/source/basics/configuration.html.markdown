@@ -127,6 +127,17 @@ export SESSION_COOKIE_NAME='confidant_session'
 export XSRF_COOKIE_NAME='XSRF-TOKEN'
 ```
 
+### Disabling credential conflict checks
+
+By default confidant will ensure that credentials mapped to a service don't
+have any conflicting credential pair keys. These checks occur when mapping
+credentials to a service, or when modifying credentials that are mapped to a
+service. To disable this check:
+
+```bash
+export IGNORE_CONFLICTS='True'
+```
+
 ## Advanced environment configuration
 
 ### statsd metrics
