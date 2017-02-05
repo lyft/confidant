@@ -1,6 +1,6 @@
 #!/bin/bash
 want_push='false'
-for branch in "master" "1.0" "1.1"
+for branch in "master" "1.0" "1.1" "1.2" "1.3" "1.4" "1.5"
 do
    if [ "$TRAVIS_BRANCH" == "$branch" ]
    then
