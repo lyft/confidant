@@ -488,6 +488,9 @@ def _get_blind_credentials(credential_ids):
 def _pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
     conflicts = {}
     pair_keys = {}
+    # If we don't care about conflicts, return immediately
+    if app.config['IGNORE_CONFLICTS']:
+        return conflicts
     # For all credentials, get their credential pairs and track which
     # credentials have which keys
     credentials = _get_credentials(credential_ids)
@@ -568,6 +571,9 @@ def _get_service_map(services):
 
 def _pair_key_conflicts_for_services(_id, credential_keys, services):
     conflicts = {}
+    # If we don't care about conflicts, return immediately
+    if app.config['IGNORE_CONFLICTS']:
+        return conflicts
     service_map = _get_service_map(services)
     credential_ids = []
     blind_credential_ids = []
