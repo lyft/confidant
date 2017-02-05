@@ -2,6 +2,10 @@
 
 ## 1.5
 
+### 1.5.1
+
+* Fix docker\_push.sh
+
 ### 1.5.0
 
 * Added a feature to disable the credential conflict checks; see configuration
