@@ -45,7 +45,7 @@ pyflakes==1.5.0           # via flake8
 pynamodb==1.5.3
 pyopenssl==16.2.0
 python-dateutil==2.6.0    # via botocore, delorean
-python-saml==2.1.6
+python-saml==2.2.1
 pytz==2016.10             # via babel, delorean, tzlocal
 PyYAML==3.11
 redis==2.10.3
