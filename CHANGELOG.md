@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6
+
+### 1.6.0
+
+* Update python-saml for CVE-2016-1000252.
+
 ## 1.5
 
 ### 1.5.1
