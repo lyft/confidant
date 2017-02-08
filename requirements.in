@@ -67,7 +67,7 @@ Authomatic==0.1.0.post1
 # License: MIT
 # Upstream url: https://github.com/onelogin/python-saml
 # Use: For user authentication via SAML
-python-saml==2.1.6
+python-saml==2.2.1
 
 # Python HTTP for Humans.
 # License: Apache2
