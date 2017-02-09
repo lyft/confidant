@@ -210,6 +210,8 @@ SAML_SECURITY_MESSAGES_SIGNED = bool_env('SAML_SECURITY_MESSAGES_SIGNED', True)
 # Whether to require signatures on individual SAML response assertion fields
 SAML_SECURITY_ASSERTIONS_SIGNED = bool_env('SAML_SECURITY_ASSERTIONS_SIGNED',
                                            False)
+# Whether you want an attribute statement from the SAML assertion
+SAML_WANT_ATTRIBUTE_STATEMENT = bool_env('SAML_WANT_ATTRIBUTE_STATEMENT', True)
 
 # Catchall to provide JSON directly to override SAML settings. Will be provided
 # to OneLogin_Saml2_Auth() for initialization, merging into values set by the

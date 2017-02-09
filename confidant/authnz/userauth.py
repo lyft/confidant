@@ -499,6 +499,8 @@ class SamlAuthenticator(AbstractUserAuthenticator):
             'wantAssertionsSigned':
                 app.config['SAML_SECURITY_ASSERTIONS_SIGNED'],
             'wantNameIdEncrypted': False,
+            'wantAttributeStatement':
+                app.config['SAML_WANT_ATTRIBUTE_STATEMENT'],
             "signatureAlgorithm": app.config['SAML_SECURITY_SIG_ALGO'],
         }
 
