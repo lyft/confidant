@@ -102,7 +102,7 @@ You will first need to create a SAML application in your Identity Provider
 (IdP) and provide the following details to it:
 
 * ACS URL: https://your-confidant-url-here.com/v1/saml/consume
-* Entity ID: https://your-confidant-url-here.com/v1/saml/consume
+* Entity ID: https://your-confidant-url-here.com/v1/saml/metadata
 
 You can optionally include an attribute mapping on the (IdP) to pass the first
 name as `first_name` and last name as `last_name` to the service provider (SP)
