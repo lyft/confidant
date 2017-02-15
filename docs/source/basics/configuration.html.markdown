@@ -91,9 +91,159 @@ export AUTHOMATIC_SALT='H39bfLCqLbrYrFyiJIxkK0uf12rlzvgjgo9FqOnttPXIdAAuyQ'
 
 ### SAML authentication configuration
 
-TODO: As of Confidant version 1.1 it's possible to use SAML as an alternative
-to google authentication. We still need to document all of the options, though.
-Basic documentation for each SAML option is described in the settings.py file.
+To enable SAML authentication, set the `USER_AUTH_MODULE` environment variable.
+
+```bash
+# The authentication type we'll be using for user authentication - set to SAML.
+export USER_AUTH_MODULE='saml'
+```
+
+You will first need to create a SAML application in your Identity Provider
+(IdP) and provide the following details to it:
+
+* ACS URL: https://your-confidant-url-here.com/v1/saml/consume
+* Entity ID: https://your-confidant-url-here.com/v1/saml/metadata
+
+You can optionally include an attribute mapping on the (IdP) to pass the first
+name as `first_name` and last name as `last_name` to the service provider (SP)
+so that this information is captured when logging in to Confidant. The IdP
+should provide some details about the Entity ID, the IdP certificate, the
+Sign-On URL and the Log-Out URL (the Log-Out URL may not be provided depending
+on the IdP). Export your SAML details as environment variables for Confidant to
+read:
+
+```bash
+# Root URL that browsers use to hit Confidant.
+export SAML_CONFIDANT_URL_ROOT='https://your-confidant-url-here.com'
+# SAML IdP Entity ID (typically a URL)
+export SAML_IDP_ENTITY_ID='https://idp-provided-url-here.com/'
+# SAML IdP Single Sign On URL (HTTP-REDIRECT binding only)
+export SAML_IDP_SIGNON_URL='https://idp-provided-url-here.com/'
+# SAML IdP Single Logout URL, optional, only if IDP supports it
+# (HTTP-REDIRECT binding only)
+export SAML_IDP_LOGOUT_URL='https://idp-provided-url-here.com/'
+# SAML IdP X.509 certificate in PEM format
+export SAML_IDP_CERT="-----BEGIN CERTIFICATE-----
+MIICsDCCAhmgAwIBAgIJALw1z/rM2pg2MA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
+BAYTAkFVMRMwEQYDVQQIEwpTb21lLVN0YXRlMSEwHwYDVQQKExhJbnRlcm5ldCBX
+aWRnaXRzIFB0eSBMdGQwHhcNMTcwMjE1MTk0NjAyWhcNMjcwMjE1MTk0NjAyWjBF
+MQswCQYDVQQGEwJBVTETMBEGA1UECBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50
+ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
+gQDVlwBwiK9S9uQo0uNT1ho0TzfPSQ3MZ0QNS7MAUSBUWwqx7B8orjmzohSliWjC
+0vlb14F8bqkJpcpMEZRrG4AM2H41XG2T/aCBjH4w3SUHZzTsCxuC1VUym4sLbWBU
+DtvApkpEJDnQiYyQH4M3KMFqKzEB/cu1YEKcDsXqUjHKMQIDAQABo4GnMIGkMB0G
+A1UdDgQWBBT4HpgZAnlydQzcbhE7xPB9zendbDB1BgNVHSMEbjBsgBT4HpgZAnly
+dQzcbhE7xPB9zendbKFJpEcwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgTClNvbWUt
+U3RhdGUxITAfBgNVBAoTGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZIIJALw1z/rM
+2pg2MAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAirAqPWuc7zX/Qc7Q
+6xbYd/NdCLIVXoQoPbnNDGuv25b1PZKYcfEuGBt+2kU7Xo0AAxgFUEQ00juyBg/r
+616V3SRuXi0r+xbUOdTvEz7visAXu2e3kyDQncvryEhq3DCffc4UTGbpZrnTxhRm
+1DJr81eyo8/xREBnRcK5/DCj+U4=
+-----END CERTIFICATE-----"
+# SAML IdP X.509 certificate file in PEM format
+export SAML_IDP_CERT_FILE='/path/to/idp_cert.pem'
+# NOTE: Only provide either SAML_IDP_CERT or SAML_IDP_CERT_FILE (you should not
+# provide both).
+```
+
+If your IdP requires you to sign your SAML requests, you will need to set up
+the service provider (SP) details. If you do not already have a certificate
+and private key for the SP, you can generate one using the command below:
+
+```bash
+# Generate a self-signed certificate and place the certificate in
+# sp.crt and the private key in private.key. It will ask for input for a
+# passphrase.
+openssl req -new -x509 -days 365 -out sp.crt -keyout private.key
+```
+
+Export the SP details as environment variables for Confidant to read:
+
+```bash
+# Raw X.509 certificate in PEM format
+export SAML_SP_CERT="-----BEGIN CERTIFICATE-----
+MIICsDCCAhmgAwIBAgIJAKTiHVFA9kAbMA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
+BAYTAkFVMRMwEQYDVQQIEwpTb21lLVN0YXRlMSEwHwYDVQQKExhJbnRlcm5ldCBX
+aWRnaXRzIFB0eSBMdGQwHhcNMTcwMjE1MjIyODQzWhcNMTgwMjE1MjIyODQzWjBF
+MQswCQYDVQQGEwJBVTETMBEGA1UECBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50
+ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
+gQDF4sRC8SXwhYB6al8UhGjeAB6xJXYnjFEqhd8U3Kc1Gs9SyxDsId4tOHYotWdK
+C3doeLbCuM0xqVbWZX8XUptLR1PImZvUX2KmLOtO0NVIGGa17XlUJBcgd9uKLrCO
+lizS8saWTLuPdNdlv7WNYyGSRAgw9/H06Szy2b7735thiQIDAQABo4GnMIGkMB0G
+A1UdDgQWBBQW3mpcpfpspIF4pKleytfm3gP6bzB1BgNVHSMEbjBsgBQW3mpcpfps
+pIF4pKleytfm3gP6b6FJpEcwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgTClNvbWUt
+U3RhdGUxITAfBgNVBAoTGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZIIJAKTiHVFA
+9kAbMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAi4fOkax7ZMKw9wbF
+Do1A1c8YXmPERHtfNuGJb3QINLqeMXl+4p/ryzTJR0UP6iqDTPOq02mtJ+eR4AhC
+Fmgrm671fKCTYu3vjQS33IXOoGW+0f2XX+gWVHie8ZC4vi/dfh30At+A6wJelXkz
+cRNGXl5zn4uyC6T8g1rC544tbb8=
+-----END CERTIFICATE-----"
+# Path to SP X.509 certificate file in PEM format
+export SAML_SP_CERT_FILE='/path/to/sp_cert.pem'
+# NOTE: Only provide either SAML_SP_CERT or SAML_SP_CERT_FILE (you should not
+# provide both).
+
+# Path to SP private key file in PEM format
+export SAML_SP_KEY_FILE='/path/to/sp_key.key'
+# Raw SP private key in PEM format
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+export SAML_SP_KEY="-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: DES-EDE3-CBC,241900635D644CE6
+
+RcUZgdpnT2ZUdMGoKb2+3TbenSuT/dsi3SRajCL6IvbFOG9wUo4TvIcH0CCZB5ZY
+u08B/zmuOpm5QDEFbfiipqs76SXHKUZssKrEiiJPI5FZKfkyCkK5vV7eLhuI/B5U
+f0S6MBXXvP1dUg5LzZPOhNfJVcaNxOCFPBgl6HJ6sn0qkLOzrcc4wHycHsJmDxhe
+SC8EfIWv94vk8EsW/pWRsc+AQ1HPw3SHEPMGv6ojUdGPlF136ZTNSTjUlygHjhPX
+nes9+PKgt+Rfpb+kolXSGlvujFsWTxGz9h08X37RhyVGV8V9bS6REt62OGdErofp
+BSRO3791dOhYcEywDt8oaFaieR3ND+iL4RnsfKseQRM+EAUBhjVjxqP64h5DlaNc
+UHzaBuCWUeGoorzVqSG+UotcWYaXeyq+WjkCaDFPI/sCpk0goJtUjzJZP3nL1vKy
+BMfDyjrz3QPkLU7hksWH4G89H2NXGGSvHttzzY3ihYqVXVJiNASCXPqo3qjnO+/Z
+Qsis6z//zd/URtqmk2pr6RznqJJg74NL4wj8pMHRlJ3Li7LDYm6q6GCmQugIZ+4l
+M1nlyELLrq4fRellVmXXA+z0FGqDxEe2q8g4KBbdjpFCzYO0kgqbNiFNilx3SAZY
+B5FP+dxNU+ZkA1mkS6u2j/sRpdDvPMJJ9R0xdUmrJODwdVL+B2jvfhLsTmNuOnzF
+hBK/zw00MXYq37qv7x3JcdCrUAtEhinXbdx3xmBPshGHy6YYH5L4UPkrxlV7yAmg
+Uiql+YCDH79JiVLf8jvKJa3WDPeTEPBEmZDjpdefimdswU73J+oPmg==
+-----END RSA PRIVATE KEY-----"
+# Password for the SAML_SP_KEY_FILE
+# This setting can be loaded from the SECRETS_BOOTSTRAP.
+export SAML_SP_KEY_FILE_PASSWORD='verysecurepassword'
+```
+
+There are some other SAML options that you can set that may need to be changed
+depending on the IdP that you use. If you get SAML errors, tweaking these
+variables may help solve your issue. The values listed below are the defaults
+that Confidant uses.
+
+```bash
+# Algorithm used for SAML signing
+# default: http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+# see also: http://www.w3.org/2000/09/xmldsig#rsa-sha1
+export SAML_SECURITY_SIG_ALGO='http://www.w3.org/2001/04/xmldsig-more#rsa-sha256'
+# Whether to require signatures on SLO responses
+export SAML_SECURITY_SLO_RESP_SIGNED=true
+# Whether to require signatures on full SAML response messages
+export SAML_SECURITY_MESSAGES_SIGNED=true
+# Whether to require signatures on individual SAML response assertion fields
+export SAML_SECURITY_ASSERTIONS_SIGNED=false
+# NOTE: You will very likely want at least one of
+# SAML_SECURITY_MESSAGES_SIGNED or SAML_SECURITY_ASSERTIONS_SIGNED to be true.
+# Whether you want an attribute statement from the SAML assertion
+export SAML_WANT_ATTRIBUTE_STATEMENT=true
+```
+
+To debug SAML and/or test SAML in development, you may want to set either of
+the following flags to true.
+
+```bash
+# Debug mode for python-saml library. Follows global DEBUG setting if not set.
+export SAML_DEBUG=false
+# Pretend that all requests are HTTPS for purposes of SAML validation. This is
+# useful if your app is behind a weird load balancer and flask isn't respecting
+# X-Forwarded-Proto. For security, this flag will only be respected in debug
+# mode.
+export SAML_FAKE_HTTPS=false
+```
 
 ### User authentication session settings
 

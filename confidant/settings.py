@@ -163,7 +163,7 @@ SAML_FAKE_HTTPS = bool_env('SAML_FAKE_HTTPS', False)
 
 # Path to SP X.509 certificate file in PEM format
 SAML_SP_CERT_FILE = str_env('SAML_SP_CERT_FILE')
-# Raw X.509 certificate in base64-encoded DER
+# Raw X.509 certificate in PEM format
 SAML_SP_CERT = str_env('SAML_SP_CERT')
 
 # Path to SP private key file in PEM format
@@ -174,7 +174,7 @@ SAML_SP_KEY_FILE_PASSWORD = _secrets_bootstrap.get(
     'SAML_SP_KEY_FILE_PASSWORD',
     str_env('SAML_SP_KEY_FILE_PASSWORD', None)
 )
-# Raw SP private key in base64-encoded DER
+# Raw SP private key in PEM format
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
 SAML_SP_KEY = _secrets_bootstrap.get(
     'SAML_SP_KEY',
@@ -189,7 +189,7 @@ SAML_IDP_SIGNON_URL = str_env('SAML_IDP_SIGNON_URL')
 # (HTTP-REDIRECT binding only)
 SAML_IDP_LOGOUT_URL = str_env('SAML_IDP_LOGOUT_URL')
 
-# SAML IdP X.509 certificate, base64 encoded DER
+# SAML IdP X.509 certificate in PEM format
 SAML_IDP_CERT = str_env('SAML_IDP_CERT')
 # SAML IdP X.509 certificate file in PEM format
 SAML_IDP_CERT_FILE = str_env('SAML_IDP_CERT_FILE')
