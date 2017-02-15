@@ -91,10 +91,6 @@ export AUTHOMATIC_SALT='H39bfLCqLbrYrFyiJIxkK0uf12rlzvgjgo9FqOnttPXIdAAuyQ'
 
 ### SAML authentication configuration
 
-TODO: As of Confidant version 1.1 it's possible to use SAML as an alternative
-to google authentication. We still need to document all of the options, though.
-Basic documentation for each SAML option is described in the settings.py file.
-
 To enable SAML authentication, set the `USER_AUTH_MODULE` environment variable.
 
 ```bash
