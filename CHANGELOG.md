@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.7
+
+### 1.7.0
+
+* Update appdirs requirement
+
 ## 1.6
 
 ### 1.6.0
