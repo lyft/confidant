@@ -13,20 +13,11 @@ from confidant.app import app
 from confidant.utils import stats
 from confidant.lib import cryptolib
 
-config = botocore.config.Config(
+BOTOCORE_CONFIG = botocore.config.Config(
     connect_timeout=app.config['KMS_CONNECTION_TIMEOUT'],
     read_timeout=app.config['KMS_READ_TIMEOUT'],
     max_pool_connections=app.config['KMS_MAX_POOL_CONNECTIONS']
 )
-auth_kms_client = confidant.services.get_boto_client(
-    'kms',
-    config={'name': 'keymanager', 'config': config}
-)
-at_rest_kms_client = confidant.services.get_boto_client(
-    'kms',
-    config={'name': 'keymanager', 'config': config}
-)
-iam_resource = confidant.services.get_boto_resource('iam')
 
 DATAKEYS = {}
 SERVICEKEYS = {}
@@ -35,6 +26,10 @@ KEY_METADATA = {}
 
 
 def get_key_arn(key_alias):
+    auth_kms_client = confidant.services.get_boto_client(
+        'kms',
+        config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
+    )
     if key_alias not in KEY_METADATA:
         KEY_METADATA[key_alias] = auth_kms_client.describe_key(
             KeyId='alias/{0}'.format(key_alias)
@@ -43,6 +38,10 @@ def get_key_arn(key_alias):
 
 
 def get_key_id(key_alias):
+    auth_kms_client = confidant.services.get_boto_client(
+        'kms',
+        config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
+    )
     if key_alias not in KEY_METADATA:
         KEY_METADATA[key_alias] = auth_kms_client.describe_key(
             KeyId='alias/{0}'.format(key_alias)
@@ -51,22 +50,26 @@ def get_key_id(key_alias):
 
 
 def get_key_alias_from_cache(key_arn):
-    '''
+    """
     Find a key's alias by looking up its key_arn in the KEY_METADATA
     cache. This function will only work after a key has been lookedup by its
     alias and is meant as a convenience function for turning an ARN that's
     already been looked up back into its alias.
-    '''
+    """
     for alias in KEY_METADATA:
         if KEY_METADATA[alias]['KeyMetadata']['Arn'] == key_arn:
             return alias
     return None
 
 
-def create_datakey(encryption_context):
-    '''
-    Create a datakey from KMS.
-    '''
+def get_datakey_regions():
+    return app.config['KMS_MASTER_KEYS'].keys()
+
+
+def create_datakey(encryption_context, region):
+    """
+    Create a datakey from KMS, for the specified region
+    """
     # Disabled encryption is dangerous, so we don't use falsiness here.
     if app.config['USE_ENCRYPTION'] is False:
         logging.warning('Creating a mock datakey in keymanager.create_datakey.'
@@ -75,17 +78,22 @@ def create_datakey(encryption_context):
         return cryptolib.create_mock_datakey()
     # underlying lib does generate random and encrypt, so increment by 2
     stats.incr('at_rest_action', 2)
+    at_rest_kms_client = confidant.services.get_boto_client(
+        'kms',
+        region=region,
+        config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
+    )
     return cryptolib.create_datakey(
         encryption_context,
-        'alias/{0}'.format(app.config.get('KMS_MASTER_KEY')),
+        'alias/{0}'.format(app.config['KMS_MASTER_KEYS'][region]),
         client=at_rest_kms_client
     )
 
 
 def decrypt_datakey(data_key, encryption_context=None):
-    '''
+    """
     Decrypt a datakey.
-    '''
+    """
     # Disabled encryption is dangerous, so we don't use falsiness here.
     if app.config['USE_ENCRYPTION'] is False:
         logging.warning('Decrypting a mock data key in'
@@ -96,6 +104,10 @@ def decrypt_datakey(data_key, encryption_context=None):
     sha = hashlib.sha256(data_key).hexdigest()
     if sha not in DATAKEYS:
         stats.incr('at_rest_action')
+        at_rest_kms_client = confidant.services.get_boto_client(
+            'kms',
+            config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
+        )
         plaintext = cryptolib.decrypt_datakey(
             data_key,
             encryption_context,
@@ -115,9 +127,9 @@ def valid_service_auth_key(key_arn):
 
 
 def decrypt_token(version, user_type, _from, token):
-    '''
+    """
     Decrypt a token.
-    '''
+    """
     if (version > app.config['KMS_MAXIMUM_TOKEN_VERSION'] or
             version < app.config['KMS_MINIMUM_TOKEN_VERSION']):
         raise TokenDecryptionError('Unacceptable token version.')
@@ -140,6 +152,10 @@ def decrypt_token(version, user_type, _from, token):
             }
             if version > 1:
                 context['user_type'] = user_type
+            auth_kms_client = confidant.services.get_boto_client(
+                'kms',
+                config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
+            )
             with stats.timer('kms_decrypt_token'):
                 data = auth_kms_client.decrypt(
                     CiphertextBlob=token,
@@ -210,6 +226,10 @@ def decrypt_token(version, user_type, _from, token):
 def get_grants():
     _grants = []
     next_marker = None
+    auth_kms_client = confidant.services.get_boto_client(
+        'kms',
+        config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
+    )
     while True:
         if next_marker:
             grants = auth_kms_client.list_grants(
@@ -231,15 +251,16 @@ def get_grants():
 
 
 def ensure_grants(service_name):
-    '''
+    """
     Add encryption and decryption grants for the service.
 
     TODO: We should probably orchestrate this, rather than doing it in
           confidant.
-    '''
+    """
     if not app.config['KMS_AUTH_MANAGE_GRANTS']:
         return
     try:
+        iam_resource = confidant.services.get_boto_resource('iam')
         role = iam_resource.Role(name=service_name)
         role.load()
         grants = get_grants()
@@ -253,6 +274,7 @@ def ensure_grants(service_name):
 
 def grants_exist(service_name):
     try:
+        iam_resource = confidant.services.get_boto_resource('iam')
         role = iam_resource.Role(name=service_name)
         role.load()
     except ClientError:
@@ -315,6 +337,10 @@ def _ensure_grants(role, grants):
             'to': role.role_name
         }
     }
+    auth_kms_client = confidant.services.get_boto_client(
+        'kms',
+        config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
+    )
     encrypt_grant, decrypt_grant = _grants_exist(role, grants)
     if not encrypt_grant:
         logging.info('Creating encrypt grant for {0}'.format(role.arn))

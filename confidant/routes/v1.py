@@ -12,6 +12,7 @@ from botocore.exceptions import ClientError
 
 import confidant.services
 from confidant import keymanager
+from confidant import credentialmanager
 from confidant import authnz
 from confidant import graphite
 from confidant import webhook
@@ -639,41 +640,26 @@ def create_credential():
     # Generate an initial stable ID to allow name changes
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
-    revision = 1
-    credential_pairs = json.dumps(credential_pairs)
-    data_key = keymanager.create_datakey(encryption_context={'id': id})
-    cipher = CipherManager(data_key['plaintext'], version=2)
-    credential_pairs = cipher.encrypt(credential_pairs)
-    cred = Credential(
-        id='{0}-{1}'.format(id, revision),
-        data_type='archive-credential',
-        name=data['name'],
-        credential_pairs=credential_pairs,
-        metadata=data.get('metadata'),
-        revision=revision,
-        enabled=data.get('enabled'),
-        data_key=data_key['ciphertext'],
-        cipher_version=2,
-        modified_by=authnz.get_logged_in_user()
-    ).save(id__null=True)
-    # Make this the current revision
-    cred = Credential(
-        id=id,
-        data_type='credential',
-        name=data['name'],
-        credential_pairs=credential_pairs,
-        metadata=data.get('metadata'),
-        revision=revision,
-        enabled=data.get('enabled'),
-        data_key=data_key['ciphertext'],
-        cipher_version=2,
-        modified_by=authnz.get_logged_in_user()
+    encrypted_data = credentialmanager.encrypt_credential(
+        json.dumps(credential_pairs),
+        encryption_context={'id': id}
     )
-    cred.save()
+    try:
+        cred = credentialmanager.save_credential(
+            id=id,
+            revision=1,
+            name=data['name'],
+            encrypted_data=encrypted_data,
+            metadata=data.get('metadata'),
+            enabled=data.get('enabled'),
+            modified_by=authnz.get_logged_in_user()
+        )
+    except credentialmanager.SaveError as e:
+        return jsonify({'error': e}), 500
     return jsonify({
         'id': cred.id,
         'name': cred.name,
-        'credential_pairs': json.loads(cipher.decrypt(cred.credential_pairs)),
+        'credential_pairs': credential_pairs,
         'metadata': cred.metadata,
         'revision': cred.revision,
         'enabled': cred.enabled,
@@ -746,44 +732,23 @@ def update_credential(id):
         cipher_version = _cred.cipher_version
         cipher = CipherManager(data_key, cipher_version)
         update['credential_pairs'] = cipher.decrypt(_cred.credential_pairs)
-    data_key = keymanager.create_datakey(encryption_context={'id': id})
-    cipher = CipherManager(data_key['plaintext'], version=2)
-    credential_pairs = cipher.encrypt(update['credential_pairs'])
     update['metadata'] = data.get('metadata', _cred.metadata)
-    # Try to save to the archive
+    encrypted_data = credentialmanager.encrypt_credential(
+        json.dumps(credential_pairs),
+        encryption_context={'id': id}
+    )
     try:
-        Credential(
-            id='{0}-{1}'.format(id, revision),
-            name=update['name'],
-            data_type='archive-credential',
-            credential_pairs=credential_pairs,
-            metadata=update['metadata'],
-            enabled=update['enabled'],
-            revision=revision,
-            data_key=data_key['ciphertext'],
-            cipher_version=2,
-            modified_by=authnz.get_logged_in_user()
-        ).save(id__null=True)
-    except PutError as e:
-        logging.error(e)
-        return jsonify({'error': 'Failed to add credential to archive.'}), 500
-    try:
-        cred = Credential(
+        cred = credentialmanager.save_credential(
             id=id,
-            name=update['name'],
-            data_type='credential',
-            credential_pairs=credential_pairs,
+            revision=revision,
+            name=data['name'],
+            encrypted_data=encrypted_data,
             metadata=update['metadata'],
             enabled=update['enabled'],
-            revision=revision,
-            data_key=data_key['ciphertext'],
-            cipher_version=2,
             modified_by=authnz.get_logged_in_user()
         )
-        cred.save()
-    except PutError as e:
-        logging.error(e)
-        return jsonify({'error': 'Failed to update active credential.'}), 500
+    except credentialmanager.SaveError as e:
+        return jsonify({'error': e}), 500
     if services:
         service_names = [x.id for x in services]
         msg = 'Updated credential "{0}" ({1}); Revision {2}'
@@ -793,7 +758,7 @@ def update_credential(id):
     return jsonify({
         'id': cred.id,
         'name': cred.name,
-        'credential_pairs': json.loads(cipher.decrypt(cred.credential_pairs)),
+        'credential_pairs': credential_pairs,
         'metadata': cred.metadata,
         'revision': cred.revision,
         'enabled': cred.enabled,

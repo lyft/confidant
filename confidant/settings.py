@@ -73,6 +73,21 @@ PORT = int_env('PORT', 8080)
 # to 'dist'.
 STATIC_FOLDER = str_env('STATIC_FOLDER', 'public')
 
+# boto3 configuration
+
+# Timeout settings for connecting to KMS (see:
+# https://botocore.readthedocs.io/en/stable/reference/config.html)
+KMS_CONNECTION_TIMEOUT = int_env('KMS_CONNECTION_TIMEOUT', 1)
+# Timeout settings for reading from KMS (see:
+# https://botocore.readthedocs.io/en/stable/reference/config.html)
+KMS_READ_TIMEOUT = int_env('KMS_READ_TIMEOUT', 1)
+# Connection pool settings for connecting to KMS (see:
+# https://botocore.readthedocs.io/en/stable/reference/config.html)
+KMS_MAX_POOL_CONNECTIONS = int_env('KMS_MAX_POOL_CONNECTIONS', 100)
+
+# Must be set to the region the server is running.
+AWS_DEFAULT_REGION = str_env('AWS_DEFAULT_REGION', 'us-east-1')
+
 # Bootstrapping
 
 # A base64 encoded and KMS encrypted YAML string that contains secrets that
@@ -332,8 +347,13 @@ PYNAMO_REQUEST_TIMEOUT_SECONDS = int_env('PYNAMO_REQUEST_TIMEOUT_SECONDS', 1)
 
 # Encryption
 
-# The KMS key to use for at-rest encryption for secrets in DynamoDB.
+# The KMS keys to use for at-rest encryption for secrets in DynamoDB, in each
+# region supported.
+KMS_MASTER_KEYS = json.loads(str_env('KMS_MASTER_KEYS', '{}'))
+# Backwards compat for older setting
 KMS_MASTER_KEY = str_env('KMS_MASTER_KEY')
+if not KMS_MASTER_KEYS and KMS_MASTER_KEY:
+    KMS_MASTER_KEYS = {AWS_DEFAULT_REGION: KMS_MASTER_KEY}
 
 # Graphite events
 
@@ -421,21 +441,6 @@ USE_AUTH = bool_env('USE_AUTH', True)
 # AWS credentials to Confidant and giving it access to a KMS key.
 # DO NOT DISABLE THIS EXCEPT FOR TEST AND DEVELOPMENT PURPOSES!
 USE_ENCRYPTION = bool_env('USE_ENCRYPTION', True)
-
-# boto3 configuration
-
-# Timeout settings for connecting to KMS (see:
-# https://botocore.readthedocs.io/en/stable/reference/config.html)
-KMS_CONNECTION_TIMEOUT = int_env('KMS_CONNECTION_TIMEOUT', 1)
-# Timeout settings for reading from KMS (see:
-# https://botocore.readthedocs.io/en/stable/reference/config.html)
-KMS_READ_TIMEOUT = int_env('KMS_READ_TIMEOUT', 1)
-# Connection pool settings for connecting to KMS (see:
-# https://botocore.readthedocs.io/en/stable/reference/config.html)
-KMS_MAX_POOL_CONNECTIONS = int_env('KMS_MAX_POOL_CONNECTIONS', 100)
-
-# Must be set to the region the server is running.
-AWS_DEFAULT_REGION = str_env('AWS_DEFAULT_REGION', 'us-east-1')
 
 # gevent configuration
 

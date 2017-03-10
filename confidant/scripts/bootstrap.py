@@ -30,9 +30,10 @@ class GenerateSecretsBootstrap(Command):
         else:
             with open(os.path.join(_in), 'r') as f:
                 secrets = f.read()
+        region = app.config['AWS_DEFAULT_REGION']
         data_key = cryptolib.create_datakey(
             {'type': 'bootstrap'},
-            'alias/{0}'.format(app.config['KMS_MASTER_KEY'])
+            'alias/{0}'.format(app.config['KMS_MASTER_KEYS'][region])
         )
         f = Fernet(data_key['plaintext'])
         data = {
