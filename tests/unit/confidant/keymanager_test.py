@@ -1,12 +1,13 @@
 import unittest
 import datetime
 import json
+
 from mock import patch
 from mock import MagicMock
+from lru import LRU
 
 from confidant import keymanager
 from confidant.app import app
-from confidant.utils import lru
 
 
 class KeyManagerTest(unittest.TestCase):
@@ -171,7 +172,7 @@ class KeyManagerTest(unittest.TestCase):
                 'key_alias': 'authnz-testing'
             }
         )
-        keymanager.TOKENS = lru.LRUCache(4096)
+        keymanager.TOKENS = LRU(4096)
         self.assertEqual(
             keymanager.decrypt_token(
                 2,
@@ -184,7 +185,7 @@ class KeyManagerTest(unittest.TestCase):
                 'key_alias': 'authnz-testing'
             }
         )
-        keymanager.TOKENS = lru.LRUCache(4096)
+        keymanager.TOKENS = LRU(4096)
         with self.assertRaisesRegexp(
                 keymanager.TokenDecryptionError,
                 'Unacceptable token version.'):

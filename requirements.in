@@ -152,3 +152,8 @@ greenlet==0.4.9
 # Upstream url: https://github.com/jsocol/pystatsd
 # Use: For metrics collection
 statsd==3.2.1
+
+# License: MIT
+# Upstream url: https://github.com/amitdev/lru-dict
+# Use: in-memory LRU for caching auth tokens and at-rest keys
+lru-dict==1.1.6
