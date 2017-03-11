@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.8
+
+### 1.8.0
+
+* Switch LRU for in-memory cache from an inefficient python implementation to
+  lru-dict.
+
 ## 1.7
 
 ### 1.7.0
