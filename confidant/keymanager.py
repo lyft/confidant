@@ -6,11 +6,11 @@ import logging
 import botocore
 
 from botocore.exceptions import ClientError
+from lru import LRU
 
 import confidant.services
 from confidant.app import app
 from confidant.utils import stats
-from confidant.utils import lru
 from confidant.lib import cryptolib
 
 config = botocore.config.Config(
@@ -30,7 +30,7 @@ iam_resource = confidant.services.get_boto_resource('iam')
 
 DATAKEYS = {}
 SERVICEKEYS = {}
-TOKENS = lru.LRUCache(app.config['KMS_AUTH_TOKEN_CACHE_SIZE'])
+TOKENS = LRU(app.config['KMS_AUTH_TOKEN_CACHE_SIZE'])
 KEY_METADATA = {}
 
 
