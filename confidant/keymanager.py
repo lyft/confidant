@@ -88,7 +88,7 @@ def decrypt_datakey(data_key, encryption_context=None):
     '''
     # Disabled encryption is dangerous, so we don't use falsiness here.
     if app.config['USE_ENCRYPTION'] is False:
-        logging.warning('Decypting a mock data key in'
+        logging.warning('Decrypting a mock data key in'
                         ' keymanager.decrypt_datakey. If you are not running'
                         ' in a development or test environment, this should'
                         ' not be happening!')
