@@ -8,7 +8,7 @@ import yaml
 
 import flask
 from flask import request, session
-from flask import abort, jsonify, redirect
+from flask import abort, redirect
 from werkzeug.security import safe_str_cmp
 
 # google auth imports
@@ -20,6 +20,7 @@ from authomatic.adapters import WerkzeugAdapter
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from confidant.lib import cryptolib
 from confidant.utils.misc import dict_deep_update
+from confidant.utils.render import jsonify_fast as jsonify
 
 from confidant.app import app
 

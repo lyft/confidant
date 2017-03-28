@@ -1,12 +1,12 @@
 import base64
 import hashlib
 import datetime
-import json
 import logging
 import botocore
 
 from botocore.exceptions import ClientError
 from lru import LRU
+import ujson as json
 
 import confidant.services
 from confidant.app import app

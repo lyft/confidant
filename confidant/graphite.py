@@ -1,6 +1,7 @@
-import requests
-import json
 import logging
+
+import requests
+import ujson as json
 
 from confidant.app import app
 

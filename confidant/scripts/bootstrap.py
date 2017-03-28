@@ -2,12 +2,12 @@ import sys
 import os
 import logging
 import base64
-import json
 import yaml
 
 from cryptography.fernet import Fernet
 from flask.ext.script import Command
 from flask.ext.script import Option
+import ujson as json
 
 from confidant import settings
 from confidant.app import app

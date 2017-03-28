@@ -1,4 +1,3 @@
-import json
 import uuid
 import copy
 import logging
@@ -7,8 +6,8 @@ import re
 
 from pynamodb.exceptions import PutError
 from flask import request
-from flask import jsonify
 from botocore.exceptions import ClientError
+import ujson as json
 
 import confidant.services
 from confidant import keymanager
@@ -17,6 +16,7 @@ from confidant import graphite
 from confidant import webhook
 from confidant.app import app
 from confidant.utils import stats
+from confidant.utils.render import jsonify_fast as jsonify
 from confidant.ciphermanager import CipherManager
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential

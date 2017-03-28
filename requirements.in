@@ -10,6 +10,11 @@ Flask==0.10.1
 # Use: For CLI scripts.
 Flask-Script==2.0.5
 
+# Ultra fast JSON encoder and decoder for Python
+# License: BSD
+# Upstream url: http://github.com/esnme/ultrajson
+ujson==1.35
+
 # A low-level interface to a growing number of Amazon Web Services. The
 # botocore package is the foundation for the AWS CLI as well as boto3.
 # License: Apache2

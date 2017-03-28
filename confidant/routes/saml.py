@@ -1,10 +1,11 @@
 import logging
 
 import flask
-from flask import jsonify, request, session
+from flask import request, session
 
 from confidant import authnz
 from confidant.app import app
+from confidant.utils.render import jsonify_fast as jsonify
 
 
 @app.route('/v1/saml/metadata', methods=['GET'])
