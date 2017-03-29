@@ -2,8 +2,8 @@ import sys
 import os
 import logging
 import base64
-import yaml
 import json
+import yaml
 
 from cryptography.fernet import Fernet
 from flask.ext.script import Command
