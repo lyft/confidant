@@ -6,11 +6,11 @@ import botocore
 
 from botocore.exceptions import ClientError
 from lru import LRU
-import ujson as json
 
 import confidant.services
 from confidant.app import app
 from confidant.utils import stats
+from confidant.utils import json as json
 from confidant.lib import cryptolib
 
 config = botocore.config.Config(

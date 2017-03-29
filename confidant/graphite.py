@@ -1,9 +1,9 @@
 import logging
 
 import requests
-import ujson as json
 
 from confidant.app import app
+from confidant.utils import json as json
 
 
 def send_event(services, msg):

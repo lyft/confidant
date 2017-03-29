@@ -3,11 +3,11 @@ import os
 import logging
 import base64
 import yaml
+import json
 
 from cryptography.fernet import Fernet
 from flask.ext.script import Command
 from flask.ext.script import Option
-import ujson as json
 
 from confidant import settings
 from confidant.app import app

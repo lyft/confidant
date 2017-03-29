@@ -1,10 +1,10 @@
 import base64
+import json
 import yaml
 import logging
 from os import getenv
 
 from cryptography.fernet import Fernet
-import ujson as json
 
 from confidant.lib import cryptolib
 

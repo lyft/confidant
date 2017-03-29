@@ -7,7 +7,6 @@ import re
 from pynamodb.exceptions import PutError
 from flask import request
 from botocore.exceptions import ClientError
-import ujson as json
 
 import confidant.services
 from confidant import keymanager
@@ -17,6 +16,7 @@ from confidant import webhook
 from confidant.app import app
 from confidant.utils import stats
 from confidant.utils.render import jsonify_fast as jsonify
+from confidant.utils import json as json
 from confidant.ciphermanager import CipherManager
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
