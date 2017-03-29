@@ -573,13 +573,10 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         try:
             request_id = session['saml_authn_request_id']
         except KeyError:
+            # TODO: change this to logging.info or logging.debug
+            # once stricter checks can be enabled in python-saml
             logging.warning('No saml_authn_request_id in session')
-            resp = jsonify(errors=['invalid_response'],
-                           message='SAML request failed',
-                           reason=('No AuthNRequest ID from SP found '
-                                   'to match with InResponseTo of response'))
-            resp.status_code = 401
-            return resp
+            request_id = None
 
         auth.process_response(request_id=request_id)
 
