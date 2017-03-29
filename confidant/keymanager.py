@@ -10,7 +10,7 @@ from lru import LRU
 import confidant.services
 from confidant.app import app
 from confidant.utils import stats
-from confidant.utils import json as json
+from confidant.utils import jsonutil as json
 from confidant.lib import cryptolib
 
 config = botocore.config.Config(

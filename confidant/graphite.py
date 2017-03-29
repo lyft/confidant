@@ -3,7 +3,7 @@ import logging
 import requests
 
 from confidant.app import app
-from confidant.utils import json as json
+from confidant.utils import jsonutil as json
 
 
 def send_event(services, msg):

@@ -1,6 +1,6 @@
 from flask import Response
 
-from confidant.utils import json as json
+from confidant.utils import jsonutil as json
 
 
 def jsonify_fast(*args, **kwargs):
