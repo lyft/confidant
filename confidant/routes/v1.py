@@ -639,16 +639,14 @@ def create_credential():
     # Generate an initial stable ID to allow name changes
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
-    encrypted_data = credentialmanager.encrypt_credential(
-        json.dumps(credential_pairs),
-        encryption_context={'id': id}
-    )
     try:
         cred = credentialmanager.save_credential(
             id=id,
             revision=1,
             name=data['name'],
-            encrypted_data=encrypted_data,
+            blind=False,
+            credential_pairs=json.dumps(credential_pairs),
+            encryption_context={'id': id},
             metadata=data.get('metadata'),
             enabled=data.get('enabled'),
             modified_by=authnz.get_logged_in_user()
@@ -732,16 +730,13 @@ def update_credential(id):
         cipher = CipherManager(data_key, cipher_version)
         update['credential_pairs'] = cipher.decrypt(_cred.credential_pairs)
     update['metadata'] = data.get('metadata', _cred.metadata)
-    encrypted_data = credentialmanager.encrypt_credential(
-        json.dumps(credential_pairs),
-        encryption_context={'id': id}
-    )
     try:
         cred = credentialmanager.save_credential(
             id=id,
             revision=revision,
             name=data['name'],
-            encrypted_data=encrypted_data,
+            credential_pairs=update['credential_pairs'],
+            encryption_context={'id': id},
             metadata=update['metadata'],
             enabled=update['enabled'],
             modified_by=authnz.get_logged_in_user()
