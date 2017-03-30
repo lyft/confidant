@@ -1,3 +1,5 @@
+import json
+
 from confidant import keymanager
 from confidant.ciphermanager import CipherManager
 from confidant.models.credential import Credential
@@ -6,15 +8,18 @@ from confidant.models.credential import Credential
 def _encrypt_credential(credential_pairs, encryption_context, cipher_version=2):
     regions = keymanager.get_datakey_regions()
     data_key = {}
-    credential_pairs = {}
+    _credential_pairs = {}
     for region in regions:
-        _data_key = keymanager.create_datakey(encryption_context={'id': id})
+        _data_key = keymanager.create_datakey(
+            encryption_context=encryption_context,
+            region=region
+        )
         data_key[region] = _data_key['ciphertext']
         cipher = CipherManager(_data_key['plaintext'], version=cipher_version)
-        credential_pairs[region] = cipher.encrypt(credential_pairs)
+        _credential_pairs[region] = cipher.encrypt(credential_pairs)
     return {
-        'data_key': data_key,
-        'credential_pairs': credential_pairs,
+        'data_key': json.dumps(data_key),
+        'credential_pairs': json.dumps(_credential_pairs),
         'cipher_version': cipher_version
     }
 
@@ -29,6 +34,7 @@ def save_credential(
         metadata,
         enabled,
         modified_by,
+        credential_keys=None,
         cipher_version=2,
         cipher_type='fernet',
         data_key=None
@@ -36,6 +42,10 @@ def save_credential(
     if blind:
         # blind credentials are pre-encrypted
         _credential_pairs = credential_pairs
+        if credential_keys is None:
+            _credential_keys = []
+        else:
+            _credential_keys = credential_keys
     else:
         encrypted_data = _encrypt_credential(
             credential_pairs,
@@ -43,8 +53,9 @@ def save_credential(
             cipher_version=cipher_version
         )
         _credential_pairs = encrypted_data['credential_pairs']
-        cipher_version = encrypted_data['encrypted_data']
-        cipher_type = encrypted_data['encrypted_type']
+        # TODO: add a setting for this and include the keys, if the setting is
+        # true.
+        _credential_keys = []
         data_key = encrypted_data['data_key']
     cred = Credential(
         id='{0}-{1}'.format(id, revision),
@@ -52,7 +63,8 @@ def save_credential(
         name=name,
         blind=blind,
         credential_pairs=_credential_pairs,
-        metadata=metadata,
+        credential_keys=json.dumps(_credential_keys),
+        metadata=json.dumps(metadata),
         revision=revision,
         enabled=enabled,
         data_key=data_key,
@@ -68,7 +80,8 @@ def save_credential(
         name=name,
         blind=blind,
         credential_pairs=_credential_pairs,
-        metadata=metadata,
+        credential_keys=json.dumps(_credential_keys),
+        metadata=json.dumps(metadata),
         revision=revision,
         enabled=enabled,
         data_key=data_key,

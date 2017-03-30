@@ -735,13 +735,14 @@ def update_credential(id):
             id=id,
             revision=revision,
             name=data['name'],
+            blind=False,
             credential_pairs=update['credential_pairs'],
             encryption_context={'id': id},
             metadata=update['metadata'],
             enabled=update['enabled'],
             modified_by=authnz.get_logged_in_user()
         )
-    except credentialmanager.SaveError as e:
+    except PutError as e:
         return jsonify({'error': e}), 500
     if services:
         service_names = [x.id for x in services]
