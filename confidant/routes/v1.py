@@ -20,7 +20,6 @@ from confidant.app import app
 from confidant.utils import stats
 from confidant.ciphermanager import CipherManager
 from confidant.models.credential import Credential
-from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
 
 iam_resource = confidant.services.get_boto_resource('iam')
@@ -469,7 +468,7 @@ def _get_credentials(credential_ids):
 def _get_blind_credentials(credential_ids):
     credentials = []
     with stats.timer('service_batch_get_blind_credentials'):
-        for cred in BlindCredential.batch_get(copy.deepcopy(credential_ids)):
+        for cred in Credential.batch_get(copy.deepcopy(credential_ids)):
             credentials.append({
                 'id': cred.id,
                 'data_type': 'blind-credential',
@@ -771,7 +770,7 @@ def update_credential(id):
 @authnz.require_auth
 def get_blind_credential_list():
     blind_credentials = []
-    for cred in BlindCredential.data_type_date_index.query('blind-credential'):
+    for cred in Credential.data_type_date_index.query('blind-credential'):
         blind_credentials.append({
             'id': cred.id,
             'name': cred.name,
@@ -787,8 +786,8 @@ def get_blind_credential_list():
 @authnz.require_auth
 def get_blind_credential(id):
     try:
-        cred = BlindCredential.get(id)
-    except BlindCredential.DoesNotExist:
+        cred = Credential.get(id)
+    except Credential.DoesNotExist:
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
@@ -825,8 +824,8 @@ def _get_latest_blind_credential_revision(id, revision):
     while True:
         _id = '{0}-{1}'.format(id, i)
         try:
-            BlindCredential.get(_id)
-        except BlindCredential.DoesNotExist:
+            Credential.get(_id)
+        except Credential.DoesNotExist:
             return i
         i = i + 1
 
@@ -835,8 +834,8 @@ def _get_latest_blind_credential_revision(id, revision):
 @authnz.require_auth
 def get_archive_blind_credential_revisions(id):
     try:
-        cred = BlindCredential.get(id)
-    except BlindCredential.DoesNotExist:
+        cred = Credential.get(id)
+    except Credential.DoesNotExist:
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
@@ -846,7 +845,7 @@ def get_archive_blind_credential_revisions(id):
     ids = []
     for i in _range:
         ids.append("{0}-{1}".format(id, i))
-    for revision in BlindCredential.batch_get(ids):
+    for revision in Credential.batch_get(ids):
         revisions.append({
             'id': cred.id,
             'name': cred.name,
@@ -874,7 +873,7 @@ def get_archive_blind_credential_revisions(id):
 @authnz.require_auth
 def get_archive_blind_credential_list():
     blind_credentials = []
-    for cred in BlindCredential.data_type_date_index.query(
+    for cred in Credential.data_type_date_index.query(
             'archive-blind-credential', scan_index_forward=False):
         blind_credentials.append({
             'id': cred.id,
@@ -917,7 +916,7 @@ def create_blind_credential():
         }), 400
     if not isinstance(data.get('metadata', {}), dict):
         return jsonify({'error': 'metadata must be a dict'}), 400
-    for cred in BlindCredential.data_type_date_index.query(
+    for cred in Credential.data_type_date_index.query(
             'blind-credential', name__eq=data['name']):
         # Conflict, the name already exists
         msg = 'Name already exists. See id: {0}'.format(cred.id)
@@ -926,7 +925,7 @@ def create_blind_credential():
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
     revision = 1
-    cred = BlindCredential(
+    cred = Credential(
         id='{0}-{1}'.format(id, revision),
         data_type='archive-blind-credential',
         name=data['name'],
@@ -941,7 +940,7 @@ def create_blind_credential():
         modified_by=authnz.get_logged_in_user()
     ).save(id__null=True)
     # Make this the current revision
-    cred = BlindCredential(
+    cred = Credential(
         id=id,
         data_type='blind-credential',
         name=data['name'],
@@ -987,7 +986,7 @@ def get_blind_credential_dependencies(id):
 @authnz.require_csrf_token
 def update_blind_credential(id):
     try:
-        _cred = BlindCredential.get(id)
+        _cred = Credential.get(id)
     except Credential.DoesNotExist:
         return jsonify({'error': 'Blind credential not found.'}), 404
     if _cred.data_type != 'blind-credential':
@@ -1047,7 +1046,7 @@ def update_blind_credential(id):
     update['metadata'] = data.get('metadata', _cred.metadata)
     # Try to save to the archive
     try:
-        BlindCredential(
+        Credential(
             id='{0}-{1}'.format(id, revision),
             data_type='archive-blind-credential',
             name=update['name'],
@@ -1067,7 +1066,7 @@ def update_blind_credential(id):
             {'error': 'Failed to add blind-credential to archive.'}
         ), 500
     try:
-        cred = BlindCredential(
+        cred = Credential(
             id=id,
             data_type='blind-credential',
             name=update['name'],
