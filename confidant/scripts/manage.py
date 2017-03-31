@@ -5,6 +5,7 @@ from confidant.scripts.utils import ManageGrants
 from confidant.scripts.utils import RevokeGrants
 from confidant.scripts.bootstrap import GenerateSecretsBootstrap
 from confidant.scripts.bootstrap import DecryptSecretsBootstrap
+from confidant.scripts.bootstrap import CreateDynamoTables
 
 manager = Manager(app.app)
 
@@ -19,6 +20,9 @@ manager.add_command("generate_secrets_bootstrap", GenerateSecretsBootstrap)
 
 # Show the YAML formatted secrets_bootstrap in a decrypted form
 manager.add_command("decrypt_secrets_bootstrap", DecryptSecretsBootstrap)
+
+# Create dynamodb tables
+manager.add_command("create_dynamodb_tables", CreateDynamoTables)
 
 
 def main():
