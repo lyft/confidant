@@ -92,6 +92,7 @@ def str_env(var_name, default=''):
 def _bootstrap(secrets):
     return EncryptedSecrets(secrets)
 
+
 def _kms_bootstrap(secrets):
     """
     Decrypt secrets and return a dict of secrets.
