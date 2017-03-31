@@ -32,7 +32,7 @@ class EncryptedSecrets(object):
     def registered(self, name):
         return name in self.secret_names
 
-    def get_for_realz(self, name):
+    def lazy_load(self, name):
         if self.decrypted_secrets is None:
             self.decrypted_secrets = _kms_bootstrap(self.secret_string)
         return self.decrypted_secrets.get(name, self.secret_defaults[name])
@@ -526,5 +526,5 @@ def get(name, default=None):
     Get the value of a variable in the settings module scope.
     """
     if _secrets_bootstrap.registered(name):
-        return _secrets_bootstrap.get_for_realz(name)
+        return _secrets_bootstrap.lazy_load(name)
     return globals().get(name, default)
