@@ -1,3 +1,5 @@
+import time
+
 from pynamodb.exceptions import TableError
 
 from confidant.models.credential import Credential

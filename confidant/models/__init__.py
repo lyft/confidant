@@ -1,5 +1,3 @@
-import time
-
 from confidant.app import app
 from confidant.utils.dynamodb import create_dynamodb_tables
 
