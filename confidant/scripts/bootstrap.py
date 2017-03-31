@@ -12,7 +12,6 @@ from flask.ext.script import Option
 from confidant import settings
 from confidant.app import app
 from confidant.lib import cryptolib
-from confidant.utils.dynamodb import create_dynamodb_tables
 
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.INFO)
@@ -62,11 +61,3 @@ class DecryptSecretsBootstrap(Command):
         else:
             with open(os.path.join(_out), 'w') as f:
                 f.write(data)
-
-
-class CreateDynamoTables(Command):
-    """
-    Setup dynamo tables
-    """
-    def run(self):
-        create_dynamodb_tables()

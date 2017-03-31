@@ -3,9 +3,9 @@ from flask.ext.script import Manager
 from confidant import app
 from confidant.scripts.utils import ManageGrants
 from confidant.scripts.utils import RevokeGrants
+from confidant.scripts.utils import CreateDynamoTables
 from confidant.scripts.bootstrap import GenerateSecretsBootstrap
 from confidant.scripts.bootstrap import DecryptSecretsBootstrap
-from confidant.scripts.bootstrap import CreateDynamoTables
 
 manager = Manager(app.app)
 
