@@ -3,7 +3,6 @@ from mock import patch
 from mock import Mock
 from werkzeug.exceptions import Unauthorized
 
-import confidant.routes
 from confidant.app import app
 from confidant import authnz
 
