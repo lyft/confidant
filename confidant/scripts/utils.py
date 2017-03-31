@@ -7,6 +7,7 @@ import confidant.services
 from confidant import keymanager
 from confidant.app import app
 from confidant.models.service import Service
+from confidant.utils.dynamodb import create_dynamodb_tables
 
 iam_resource = confidant.services.get_boto_resource('iam')
 kms_client = confidant.services.get_boto_client('kms')
@@ -44,3 +45,11 @@ class RevokeGrants(Command):
                 GrantId=grant['GrantId']
             )
         app.logger.info('Finished revoking grants.')
+
+
+class CreateDynamoTables(Command):
+    """
+    Setup dynamo tables
+    """
+    def run(self):
+        create_dynamodb_tables()
