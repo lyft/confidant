@@ -254,6 +254,7 @@ class HeaderAuthenticatorTest(unittest.TestCase):
                 self.assertEqual(authnz.get_logged_in_user(), 'unittestuser@example.com')
 
     def test_will_log_in(self):
+        app.secret_key = 'TEST_XSRF_SECRET' # nosec
         with app.test_request_context('/fake'):
             with patch('confidant.authnz.userauth.request') as request_mock:
                 request_mock.headers = {
