@@ -653,7 +653,8 @@ def create_credential():
         cred.data_type = 'credential'
         cred.save()
     except PutError as e:
-        return jsonify({'error': e}), 500
+        logging.error(e)
+        return jsonify({'error': 'Failed to update active credential.'}), 500
     return jsonify({
         'id': cred.id,
         'name': cred.name,
@@ -757,7 +758,8 @@ def update_credential(id):
         cred.data_type = 'credential'
         cred.save()
     except PutError as e:
-        return jsonify({'error': e}), 500
+        logging.error(e)
+        return jsonify({'error': 'Failed to update active credential.'}), 500
     if services:
         service_names = [x.id for x in services]
         msg = 'Updated credential "{0}" ({1}); Revision {2}'
