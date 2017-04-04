@@ -26,9 +26,14 @@ class KeyManagerTest(unittest.TestCase):
         app.config['SCOPED_AUTH_KEYS'] = self.scoped_auth_keys
 
     @patch('confidant.keymanager.KEY_METADATA', {})
-    @patch('confidant.keymanager.auth_kms_client.describe_key')
-    def test_get_key_arn(self, kms_mock):
-        kms_mock.return_value = {'KeyMetadata': {'Arn': 'mocked:arn'}}
+    @patch('confidant.services.get_boto_client')
+    def test_get_key_arn(self, boto_mock):
+        kms_mock = MagicMock()
+        kms_mock.describe_key = MagicMock(
+            return_value={'KeyMetadata': {'Arn': 'mocked:arn'}}
+        )
+        boto_mock.return_value = kms_mock
+
         self.assertEqual(
             keymanager.get_key_arn('mockalias'),
             'mocked:arn'
@@ -38,17 +43,21 @@ class KeyManagerTest(unittest.TestCase):
         'confidant.keymanager.KEY_METADATA',
         {'mockalias': {'KeyMetadata': {'Arn': 'mocked:arn'}}}
     )
-    @patch('confidant.keymanager.auth_kms_client.describe_key')
-    def test_get_key_arn_cached(self, kms_mock):
+    def test_get_key_arn_cached(self):
         self.assertEqual(
             keymanager.get_key_arn('mockalias'),
             'mocked:arn'
         )
 
     @patch('confidant.keymanager.KEY_METADATA', {})
-    @patch('confidant.keymanager.auth_kms_client.describe_key')
-    def test_get_key_id(self, kms_mock):
-        kms_mock.return_value = {'KeyMetadata': {'KeyId': 'mockid'}}
+    @patch('confidant.services.get_boto_client')
+    def test_get_key_id(self, boto_mock):
+        kms_mock = MagicMock()
+        kms_mock.describe_key = MagicMock(
+            return_value={'KeyMetadata': {'KeyId': 'mockid'}}
+        )
+        boto_mock.return_value = kms_mock
+
         self.assertEqual(
             keymanager.get_key_id('mockalias'),
             'mockid'
@@ -58,8 +67,7 @@ class KeyManagerTest(unittest.TestCase):
         'confidant.keymanager.KEY_METADATA',
         {'mockalias': {'KeyMetadata': {'KeyId': 'mockid'}}}
     )
-    @patch('confidant.keymanager.auth_kms_client.describe_key')
-    def test_get_key_id_cached(self, kms_mock):
+    def test_get_key_id_cached(self):
         self.assertEqual(
             keymanager.get_key_id('mockalias'),
             'mockid'
@@ -70,7 +78,7 @@ class KeyManagerTest(unittest.TestCase):
         app.config['USE_ENCRYPTION'] = False
         fernet_mock.return_value = 'mocked_fernet_key'
 
-        ret = keymanager.create_datakey({})
+        ret = keymanager.create_datakey({}, 'us-east-1')
 
         self.assertTrue(fernet_mock.called)
 
@@ -117,7 +125,7 @@ class KeyManagerTest(unittest.TestCase):
         app.config['USE_ENCRYPTION'] = True
         context = {'from': 'confidant-development',
                    'to': 'confidant-development'}
-        keymanager.create_datakey(context)
+        keymanager.create_datakey(context, 'us-east-1')
 
         # Assert that create_datakey was called and create_mock_datakey was
         # not called.
@@ -149,8 +157,8 @@ class KeyManagerTest(unittest.TestCase):
         'confidant.keymanager.get_key_alias_from_cache',
         MagicMock(return_value='authnz-testing')
     )
-    @patch('confidant.keymanager.at_rest_kms_client.decrypt')
-    def test_decrypt_token(self, kms_mock):
+    @patch('confidant.services.get_boto_client')
+    def test_decrypt_token(self, boto_mock):
         time_format = "%Y%m%dT%H%M%SZ"
         now = datetime.datetime.utcnow()
         not_before = now.strftime(time_format)
@@ -160,10 +168,12 @@ class KeyManagerTest(unittest.TestCase):
             'not_before': not_before,
             'not_after': not_after
         })
-        kms_mock.return_value = {
-            'Plaintext': payload,
-            'KeyId': 'mocked'
-        }
+        kms_mock = MagicMock()
+        kms_mock.decrypt = MagicMock(
+            return_value={'Plaintext': payload, 'KeyId': 'mocked'}
+        )
+        boto_mock.return_value = kms_mock
+
         self.assertEqual(
             keymanager.decrypt_token(
                 1,
@@ -209,9 +219,11 @@ class KeyManagerTest(unittest.TestCase):
                 'ZW5jcnlwdGVk'
             )
         # Missing KeyId, will cause an exception to be thrown
-        kms_mock.return_value = {
-            'Plaintext': payload
-        }
+        kms_mock = MagicMock()
+        kms_mock.decrypt = MagicMock(
+            return_value={'Plaintext': payload}
+        )
+        boto_mock.return_value = kms_mock
         with self.assertRaisesRegexp(
                 keymanager.TokenDecryptionError,
                 'Authentication error. General error.'):
@@ -223,10 +235,11 @@ class KeyManagerTest(unittest.TestCase):
             )
         # Payload missing not_before/not_after
         empty_payload = json.dumps({})
-        kms_mock.return_value = {
-            'Plaintext': empty_payload,
-            'KeyId': 'mocked'
-        }
+        kms_mock = MagicMock()
+        kms_mock.decrypt = MagicMock(
+            return_value={'Plaintext': empty_payload, 'KeyId': 'mocked'}
+        )
+        boto_mock.return_value = kms_mock
         with self.assertRaisesRegexp(
                 keymanager.TokenDecryptionError,
                 'Authentication error. Missing validity.'):
@@ -240,10 +253,11 @@ class KeyManagerTest(unittest.TestCase):
         # checking.
         lifetime = app.config['AUTH_TOKEN_MAX_LIFETIME']
         app.config['AUTH_TOKEN_MAX_LIFETIME'] = 0
-        kms_mock.return_value = {
-            'Plaintext': payload,
-            'KeyId': 'mocked'
-        }
+        kms_mock = MagicMock()
+        kms_mock.decrypt = MagicMock(
+            return_value={'Plaintext': payload, 'KeyId': 'mocked'}
+        )
+        boto_mock.return_value = kms_mock
         with self.assertRaisesRegexp(
                 keymanager.TokenDecryptionError,
                 'Authentication error. Token lifetime exceeded.'):
@@ -264,10 +278,11 @@ class KeyManagerTest(unittest.TestCase):
             'not_before': not_before,
             'not_after': not_after
         })
-        kms_mock.return_value = {
-            'Plaintext': payload,
-            'KeyId': 'mocked'
-        }
+        kms_mock = MagicMock()
+        kms_mock.decrypt = MagicMock(
+            return_value={'Plaintext': payload, 'KeyId': 'mocked'}
+        )
+        boto_mock.return_value = kms_mock
         with self.assertRaisesRegexp(
                 keymanager.TokenDecryptionError,
                 'Authentication error. Invalid time validity for token'):
@@ -287,10 +302,11 @@ class KeyManagerTest(unittest.TestCase):
             'not_before': not_before,
             'not_after': not_after
         })
-        kms_mock.return_value = {
-            'Plaintext': payload,
-            'KeyId': 'mocked'
-        }
+        kms_mock = MagicMock()
+        kms_mock.decrypt = MagicMock(
+            return_value={'Plaintext': payload, 'KeyId': 'mocked'}
+        )
+        boto_mock.return_value = kms_mock
         with self.assertRaisesRegexp(
                 keymanager.TokenDecryptionError,
                 'Authentication error. Invalid time validity for token'):

@@ -26,11 +26,11 @@ KEY_METADATA = {}
 
 
 def get_key_arn(key_alias):
-    auth_kms_client = confidant.services.get_boto_client(
-        'kms',
-        config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
-    )
     if key_alias not in KEY_METADATA:
+        auth_kms_client = confidant.services.get_boto_client(
+            'kms',
+            config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
+        )
         KEY_METADATA[key_alias] = auth_kms_client.describe_key(
             KeyId='alias/{0}'.format(key_alias)
         )
@@ -38,11 +38,11 @@ def get_key_arn(key_alias):
 
 
 def get_key_id(key_alias):
-    auth_kms_client = confidant.services.get_boto_client(
-        'kms',
-        config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
-    )
     if key_alias not in KEY_METADATA:
+        auth_kms_client = confidant.services.get_boto_client(
+            'kms',
+            config={'name': 'keymanager', 'config': BOTOCORE_CONFIG}
+        )
         KEY_METADATA[key_alias] = auth_kms_client.describe_key(
             KeyId='alias/{0}'.format(key_alias)
         )
