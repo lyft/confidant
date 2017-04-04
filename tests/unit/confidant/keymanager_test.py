@@ -6,6 +6,10 @@ from mock import patch
 from mock import MagicMock
 from lru import LRU
 
+# Prevent call to KMS during tests
+from confidant import settings
+settings.encrypted_settings.secret_string = {}
+
 from confidant import keymanager
 from confidant.app import app
 

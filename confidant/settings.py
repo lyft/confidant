@@ -1,41 +1,12 @@
-import base64
 import json
-import yaml
 import logging
 from os import getenv
 
-from cryptography.fernet import Fernet
-
-from confidant.lib import cryptolib
+from confidant.encrypted_settings import EncryptedSettings
 
 
 class SettingsError(Exception):
     pass
-
-
-class EncryptedSecrets(object):
-
-    def __init__(self, secret_string):
-        self.secret_names = []
-        self.secret_defaults = {}
-        self.secret_string = secret_string
-        self.secrets = None
-
-    def register(self, name, default):
-        """
-        Lazy setup things that we want to get if we have kms
-        """
-        if name not in self.secret_names:
-            self.secret_names.append(name)
-            self.secret_defaults[name] = default
-
-    def registered(self, name):
-        return name in self.secret_names
-
-    def lazy_load(self, name):
-        if self.decrypted_secrets is None:
-            self.decrypted_secrets = _kms_bootstrap(self.secret_string)
-        return self.decrypted_secrets.get(name, self.secret_defaults[name])
 
 
 def bool_env(var_name, default=False):
@@ -90,37 +61,7 @@ def str_env(var_name, default=''):
 
 
 def _bootstrap(secrets):
-    return EncryptedSecrets(secrets)
-
-
-def _kms_bootstrap(secrets):
-    """
-    Decrypt secrets and return a dict of secrets.
-    """
-    if not secrets:
-        logging.info('SECRETS_BOOTSTRAP not set, skipping bootstrapping.')
-        return {}
-    if secrets.startswith('file://'):
-        try:
-            with open(secrets[7:], 'r') as f:
-                _secrets = json.load(f)
-        except IOError:
-            logging.error(
-                'Failed to load file specified in SECRETS_BOOTSTRAP.'
-            )
-            return {}
-    else:
-        _secrets = json.loads(secrets)
-    key = cryptolib.decrypt_datakey(
-        base64.b64decode(_secrets['data_key']),
-        {'type': 'bootstrap'}
-    )
-    f = Fernet(key)
-    decrypted_secrets = yaml.safe_load(
-        f.decrypt(_secrets['secrets'].encode('utf-8'))
-    )
-    logging.info('Loaded SECRETS_BOOTSTRAP.')
-    return decrypted_secrets
+    return EncryptedSettings(secrets)
 
 
 # Basic setup
@@ -146,7 +87,8 @@ STATIC_FOLDER = str_env('STATIC_FOLDER', 'public')
 # file, rather than reading the blob from the environment.
 SECRETS_BOOTSTRAP = str_env('SECRETS_BOOTSTRAP')
 
-_secrets_bootstrap = _bootstrap(SECRETS_BOOTSTRAP)
+# _secrets_bootstrap = _bootstrap(SECRETS_BOOTSTRAP)
+encrypted_settings = EncryptedSettings(SECRETS_BOOTSTRAP)
 
 # User authentication method switcher.
 # Supported methods:
@@ -199,13 +141,13 @@ SAML_SP_CERT = str_env('SAML_SP_CERT')
 SAML_SP_KEY_FILE = str_env('SAML_SP_KEY_FILE')
 # Password for the SAML_SP_KEY_FILE
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
-SAML_SP_KEY_FILE_PASSWORD = _secrets_bootstrap.register(
+SAML_SP_KEY_FILE_PASSWORD = encrypted_settings.register(
     'SAML_SP_KEY_FILE_PASSWORD',
     str_env('SAML_SP_KEY_FILE_PASSWORD', None)
 )
 # Raw SP private key in PEM format
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
-SAML_SP_KEY = _secrets_bootstrap.register(
+SAML_SP_KEY = encrypted_settings.register(
     'SAML_SP_KEY',
     str_env('SAML_SP_KEY')
 )
@@ -253,19 +195,19 @@ SAML_RAW_JSON_SETTINGS = json.loads(str_env('SAML_RAW_JSON_SETTINGS', 'null'))
 REDIRECT_URI = str_env('REDIRECT_URI')
 # The client ID provided by Google's developer console.
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
-GOOGLE_OAUTH_CLIENT_ID = _secrets_bootstrap.register(
+GOOGLE_OAUTH_CLIENT_ID = encrypted_settings.register(
     'GOOGLE_OAUTH_CLIENT_ID',
     str_env('GOOGLE_OAUTH_CLIENT_ID')
 )
 # The consumer secret provided by Google's developer console.
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
-GOOGLE_OAUTH_CONSUMER_SECRET = _secrets_bootstrap.register(
+GOOGLE_OAUTH_CONSUMER_SECRET = encrypted_settings.register(
     'GOOGLE_OAUTH_CONSUMER_SECRET',
     str_env('GOOGLE_OAUTH_CONSUMER_SECRET')
 )
 # A randomly generated string that can be used as a salt for the OAuth2 flow.
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
-AUTHOMATIC_SALT = _secrets_bootstrap.register(
+AUTHOMATIC_SALT = encrypted_settings.register(
     'AUTHOMATIC_SALT',
     str_env('AUTHOMATIC_SALT')
 )
@@ -352,7 +294,7 @@ SESSION_KEY_PREFIX = str_env('SESSION_KEY_PREFIX', 'confidant:')
 SESSION_USE_SIGNER = bool_env('SESSION_USE_SIGNER', True)
 # A long randomly generated string.
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
-SESSION_SECRET = _secrets_bootstrap.register(
+SESSION_SECRET = encrypted_settings.register(
     'SESSION_SECRET',
     str_env('SESSION_SECRET')
 )
@@ -409,14 +351,14 @@ GRAPHITE_EVENT_URL = str_env('GRAPHITE_EVENT_URL')
 # A basic auth username.
 # Example: mygraphiteuser
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
-GRAPHITE_USERNAME = _secrets_bootstrap.register(
+GRAPHITE_USERNAME = encrypted_settings.register(
     'GRAPHITE_USERNAME',
     str_env('GRAPHITE_USERNAME')
 )
 # A basic auth password:
 # Example: mylongandsupersecuregraphitepassword
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
-GRAPHITE_PASSWORD = _secrets_bootstrap.register(
+GRAPHITE_PASSWORD = encrypted_settings.register(
     'GRAPHITE_PASSWORD',
     str_env('GRAPHITE_PASSWORD')
 )
@@ -435,14 +377,14 @@ WEBHOOK_URL = str_env('WEBHOOK_URL')
 # A basic auth username.
 # Example: myhookuser
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
-WEBHOOK_USERNAME = _secrets_bootstrap.register(
+WEBHOOK_USERNAME = encrypted_settings.register(
     'WEBHOOK_USERNAME',
     str_env('WEBHOOK_USERNAME')
 )
 # A basic auth password:
 # Example: mylongandsupersecurehookpassword
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
-WEBHOOK_PASSWORD = _secrets_bootstrap.register(
+WEBHOOK_PASSWORD = encrypted_settings.register(
     'WEBHOOK_PASSWORD',
     str_env('WEBHOOK_PASSWORD')
 )
@@ -525,6 +467,6 @@ def get(name, default=None):
     """
     Get the value of a variable in the settings module scope.
     """
-    if _secrets_bootstrap.registered(name):
-        return _secrets_bootstrap.lazy_load(name)
+    if encrypted_settings.registered(name):
+        return encrypted_settings.get_secret(name)
     return globals().get(name, default)
