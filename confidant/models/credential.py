@@ -1,5 +1,6 @@
 import json
 import base64
+import logging
 from datetime import datetime
 
 from pynamodb.models import Model
@@ -61,27 +62,46 @@ class Credential(Model):
         if self.blind:
             return None
         if self.schema_version and self.schema_version >= 2:
-            _data_key = self.data_key[app.config['AWS_DEFAULT_REGION']]
+            _data_key = json.loads(
+                self.data_key
+            )[app.config['AWS_DEFAULT_REGION']]
         else:
             _data_key = self.data_key
+        if self.data_type == 'credential':
+            id_context = self.id
+        else:
+            id_context = self.id.split('-')[0]
         return keymanager.decrypt_datakey(
-            _data_key,
-            encryption_context={'id': self.id}
+            base64.b64decode(_data_key),
+            encryption_context={'id': id_context}
         )
 
     @property
     def decrypted_credential_pairs(self):
         if self.blind:
             return None
+        if self.schema_version and self.schema_version >= 2:
+            encrypted_credential_pairs = json.loads(
+                self.credential_pairs
+            )[app.config['AWS_DEFAULT_REGION']]
         cipher = CipherManager(self.decrypted_data_key, self.cipher_version)
         return json.loads(
-            cipher.decrypt(self.credential_pairs)
+            cipher.decrypt(encrypted_credential_pairs)
         )
 
     def encrypt_and_set_pairs(self, credential_pairs, encryption_context):
+        # We only support this for blind credentials
+        if self.blind:
+            logging.warning(
+                'Calling encrypt_and_set_pairs on a blind credential.'
+            )
+            return
         # We explicitly use the newest cipher_version when saving new
         # credentials
         self.cipher_version = 2
+        # We don't currently expose cipher_type in credentials that aren't
+        # blind, so we'll set it explicitly here until we do.
+        self.cipher_type = 'fernet'
         # Fetch the regions we're going to encrypt against
         regions = keymanager.get_datakey_regions()
         encrypted_credential_pairs = {}
@@ -102,5 +122,5 @@ class Credential(Model):
             encrypted_credential_pairs[region] = cipher.encrypt(
                 _credential_pairs
             )
-        self.data_keys = json.dumps(encrypted_data_keys)
+        self.data_key = json.dumps(encrypted_data_keys)
         self.credential_pairs = json.dumps(encrypted_credential_pairs)

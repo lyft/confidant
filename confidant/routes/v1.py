@@ -365,22 +365,10 @@ def get_credential(id):
     services = []
     for service in Service.data_type_date_index.query('service'):
         services.append(service.id)
-    if cred.data_type == 'credential':
-        context = id
-    else:
-        context = id.split('-')[0]
-    data_key = keymanager.decrypt_datakey(
-        cred.data_key,
-        encryption_context={'id': context}
-    )
-    cipher_version = cred.cipher_version
-    cipher = CipherManager(data_key, cipher_version)
-    _credential_pairs = cipher.decrypt(cred.credential_pairs)
-    _credential_pairs = json.loads(_credential_pairs)
     return jsonify({
         'id': id,
         'name': cred.name,
-        'credential_pairs': _credential_pairs,
+        'credential_pairs': cred.decrypted_credential_pairs,
         'metadata': cred.metadata,
         'services': services,
         'revision': cred.revision,
@@ -654,9 +642,16 @@ def create_credential():
         cred.encrypt_and_set_pairs(credential_pairs, {'id': id})
         # Save archive
         cred.save(id__null=True)
+    except PutError as e:
+        logging.error(e)
+        return jsonify(
+            {'error': 'Failed to add credential to archive.'}
+        ), 500
+    try:
         # Update the id and save as current
         cred.id = id
-        cred.save(id__null=True)
+        cred.data_type = 'credential'
+        cred.save()
     except PutError as e:
         return jsonify({'error': e}), 500
     return jsonify({
@@ -751,9 +746,16 @@ def update_credential(id):
         cred.encrypt_and_set_pairs(credential_pairs, {'id': id})
         # Save archive
         cred.save(id__null=True)
+    except PutError as e:
+        logging.error(e)
+        return jsonify(
+            {'error': 'Failed to add credential to archive.'}
+        ), 500
+    try:
         # Update the id and save as current
         cred.id = id
-        cred.save(id__null=True)
+        cred.data_type = 'credential'
+        cred.save()
     except PutError as e:
         return jsonify({'error': e}), 500
     if services:
@@ -933,36 +935,36 @@ def create_blind_credential():
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
     revision = 1
-    cred = Credential(
-        id='{0}-{1}'.format(id, revision),
-        data_type='archive-blind-credential',
-        name=data['name'],
-        credential_pairs=data['credential_pairs'],
-        credential_keys=data.get('credential_keys'),
-        metadata=data.get('metadata'),
-        revision=revision,
-        enabled=data.get('enabled'),
-        data_key=data['data_key'],
-        cipher_type=data['cipher_type'],
-        cipher_version=data['cipher_version'],
-        modified_by=authnz.get_logged_in_user()
-    ).save(id__null=True)
-    # Make this the current revision
-    cred = Credential(
-        id=id,
-        data_type='blind-credential',
-        name=data['name'],
-        credential_pairs=data['credential_pairs'],
-        credential_keys=data.get('credential_keys'),
-        metadata=data.get('metadata'),
-        revision=revision,
-        enabled=data.get('enabled'),
-        data_key=data['data_key'],
-        cipher_type=data['cipher_type'],
-        cipher_version=data['cipher_version'],
-        modified_by=authnz.get_logged_in_user()
-    )
-    cred.save()
+    try:
+        cred = Credential(
+            id='{0}-{1}'.format(id, revision),
+            data_type='archive-blind-credential',
+            name=data['name'],
+            credential_pairs=data['credential_pairs'],
+            credential_keys=data.get('credential_keys'),
+            metadata=data.get('metadata'),
+            revision=revision,
+            enabled=data.get('enabled'),
+            data_key=data['data_key'],
+            cipher_type=data['cipher_type'],
+            cipher_version=data['cipher_version'],
+            modified_by=authnz.get_logged_in_user()
+        )
+        cred.save(id__null=True)
+    except PutError as e:
+        logging.error(e)
+        return jsonify(
+            {'error': 'Failed to add blind-credential to archive.'}
+        ), 500
+    try:
+        cred.id = id
+        cred.data_type = 'blind-credential'
+        cred.save()
+    except PutError as e:
+        logging.error(e)
+        return jsonify(
+            {'error': 'Failed to save blind-credential to current revision.'}
+        ), 500
     return jsonify({
         'id': cred.id,
         'name': cred.name,
@@ -1054,7 +1056,7 @@ def update_blind_credential(id):
     update['metadata'] = data.get('metadata', _cred.metadata)
     # Try to save to the archive
     try:
-        Credential(
+        cred = Credential(
             id='{0}-{1}'.format(id, revision),
             data_type='archive-blind-credential',
             name=update['name'],
@@ -1067,27 +1069,16 @@ def update_blind_credential(id):
             cipher_type=update['cipher_type'],
             cipher_version=update['cipher_version'],
             modified_by=authnz.get_logged_in_user()
-        ).save(id__null=True)
+        )
+        cred.save(id__null=True)
     except PutError as e:
         logging.error(e)
         return jsonify(
             {'error': 'Failed to add blind-credential to archive.'}
         ), 500
     try:
-        cred = Credential(
-            id=id,
-            data_type='blind-credential',
-            name=update['name'],
-            credential_pairs=update['credential_pairs'],
-            credential_keys=update['credential_keys'],
-            metadata=update['metadata'],
-            revision=revision,
-            enabled=update['enabled'],
-            data_key=update['data_key'],
-            cipher_type=update['cipher_type'],
-            cipher_version=update['cipher_version'],
-            modified_by=authnz.get_logged_in_user()
-        )
+        cred.id = id
+        cred.data_type = 'blind-credential'
         cred.save()
     except PutError as e:
         logging.error(e)
