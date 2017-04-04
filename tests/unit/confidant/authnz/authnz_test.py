@@ -3,9 +3,10 @@ from mock import patch
 from mock import Mock
 from werkzeug.exceptions import Unauthorized
 
-# Prevent call to KMS during tests
+# Prevent call to KMS when app is imported
 from confidant import settings
 settings.encrypted_settings.secret_string = {}
+settings.encrypted_settings.decrypted_secrets = {'SESSION_SECRET': 'TEST_KEY'}
 
 import confidant.routes
 from confidant.app import app
@@ -258,7 +259,6 @@ class HeaderAuthenticatorTest(unittest.TestCase):
                 self.assertEqual(authnz.get_logged_in_user(), 'unittestuser@example.com')
 
     def test_will_log_in(self):
-        app.secret_key = 'TEST_XSRF_SECRET' # nosec
         with app.test_request_context('/fake'):
             with patch('confidant.authnz.userauth.request') as request_mock:
                 request_mock.headers = {
