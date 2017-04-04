@@ -1,3 +1,5 @@
+import json
+import base64
 from datetime import datetime
 
 from pynamodb.models import Model
@@ -13,6 +15,8 @@ from pynamodb.attributes import (
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
 from confidant.app import app
+from confidant import keymanager
+from confidant.ciphermanager import CipherManager
 from confidant.models.session_cls import DDBSession
 from confidant.models.connection_cls import DDBConnection
 
@@ -43,7 +47,7 @@ class Credential(Model):
     blind = BooleanAttribute(default=True)
     credential_pairs = UnicodeAttribute()
     credential_keys = UnicodeSetAttribute(default=set([]), null=True)
-    schema_version = NumberAttribute(null=True)
+    schema_version = NumberAttribute(default=2, null=True)
     enabled = BooleanAttribute(default=True)
     data_key = BinaryAttribute()
     cipher_type = UnicodeAttribute()
@@ -51,3 +55,52 @@ class Credential(Model):
     metadata = JSONAttribute(default={}, null=True)
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
+
+    @property
+    def decrypted_data_key(self):
+        if self.blind:
+            return None
+        if self.schema_version and self.schema_version >= 2:
+            _data_key = self.data_key[app.config['AWS_DEFAULT_REGION']]
+        else:
+            _data_key = self.data_key
+        return keymanager.decrypt_datakey(
+            _data_key,
+            encryption_context={'id': self.id}
+        )
+
+    @property
+    def decrypted_credential_pairs(self):
+        if self.blind:
+            return None
+        cipher = CipherManager(self.decrypted_data_key, self.cipher_version)
+        return json.loads(
+            cipher.decrypt(self.credential_pairs)
+        )
+
+    def encrypt_and_set_pairs(self, credential_pairs, encryption_context):
+        # We explicitly use the newest cipher_version when saving new
+        # credentials
+        self.cipher_version = 2
+        # Fetch the regions we're going to encrypt against
+        regions = keymanager.get_datakey_regions()
+        encrypted_credential_pairs = {}
+        encrypted_data_keys = {}
+        _credential_pairs = json.dumps(credential_pairs)
+        for region in regions:
+            data_key = keymanager.create_datakey(
+                encryption_context=encryption_context,
+                region=region
+            )
+            encrypted_data_keys[region] = base64.b64encode(
+                data_key['ciphertext']
+            )
+            cipher = CipherManager(
+                data_key['plaintext'],
+                version=self.cipher_version
+            )
+            encrypted_credential_pairs[region] = cipher.encrypt(
+                _credential_pairs
+            )
+        self.data_keys = json.dumps(encrypted_data_keys)
+        self.credential_pairs = json.dumps(encrypted_credential_pairs)

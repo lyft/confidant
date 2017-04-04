@@ -12,7 +12,6 @@ from botocore.exceptions import ClientError
 
 import confidant.services
 from confidant import keymanager
-from confidant import credentialmanager
 from confidant import authnz
 from confidant import graphite
 from confidant import webhook
@@ -640,18 +639,25 @@ def create_credential():
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
     try:
-        cred = credentialmanager.save_credential(
-            id=id,
+        cred = Credential(
+            id='{0}-{1}'.format(id, 1),
             revision=1,
             name=data['name'],
             blind=False,
-            credential_pairs=json.dumps(credential_pairs),
-            encryption_context={'id': id},
+            data_type='archive-credential',
+            credential_keys=[],
             metadata=data.get('metadata'),
             enabled=data.get('enabled'),
             modified_by=authnz.get_logged_in_user()
         )
-    except credentialmanager.SaveError as e:
+        # Set credential_pairs and data_key
+        cred.encrypt_and_set_pairs(credential_pairs, {'id': id})
+        # Save archive
+        cred.save(id__null=True)
+        # Update the id and save as current
+        cred.id = id
+        cred.save(id__null=True)
+    except PutError as e:
         return jsonify({'error': e}), 500
     return jsonify({
         'id': cred.id,
@@ -698,6 +704,10 @@ def update_credential(id):
         update['enabled'] = _cred.enabled
     if not isinstance(data.get('metadata', {}), dict):
         return jsonify({'error': 'metadata must be a dict'}), 400
+    if not isinstance(data.get('credential_keys', []), list):
+        return jsonify({
+            'error': 'credential_keys must be a list.'
+        }), 400
     services = _get_services_for_credential(id)
     if 'credential_pairs' in data:
         # Ensure credential pair keys are lowercase
@@ -720,28 +730,30 @@ def update_credential(id):
                 'conflicts': conflicts
             }
             return jsonify(ret), 400
-        update['credential_pairs'] = json.dumps(credential_pairs)
+        update['credential_pairs'] = credential_pairs
     else:
-        data_key = keymanager.decrypt_datakey(
-            _cred.data_key,
-            encryption_context={'id': id}
-        )
-        cipher_version = _cred.cipher_version
-        cipher = CipherManager(data_key, cipher_version)
-        update['credential_pairs'] = cipher.decrypt(_cred.credential_pairs)
+        update['credential_pairs'] = _cred.decrypted_credential_pairs()
     update['metadata'] = data.get('metadata', _cred.metadata)
     try:
-        cred = credentialmanager.save_credential(
-            id=id,
-            revision=revision,
-            name=data['name'],
+        cred = Credential(
+            id='{0}-{1}'.format(id, revision),
+            name=update['name'],
             blind=False,
-            credential_pairs=update['credential_pairs'],
-            encryption_context={'id': id},
+            data_type='archive-credential',
+            credential_keys=[],
             metadata=update['metadata'],
             enabled=update['enabled'],
+            revision=revision,
+            cipher_version=2,
             modified_by=authnz.get_logged_in_user()
         )
+        # Set credential_pairs and data_key
+        cred.encrypt_and_set_pairs(credential_pairs, {'id': id})
+        # Save archive
+        cred.save(id__null=True)
+        # Update the id and save as current
+        cred.id = id
+        cred.save(id__null=True)
     except PutError as e:
         return jsonify({'error': e}), 500
     if services:
