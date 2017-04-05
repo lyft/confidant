@@ -220,8 +220,6 @@ SAML_RAW_JSON_SETTINGS = json.loads(str_env('SAML_RAW_JSON_SETTINGS', 'null'))
 
 # Google authentication
 
-# The Google OAuth2 redirect URI endpoint URL.
-REDIRECT_URI = str_env('REDIRECT_URI')
 # The client ID provided by Google's developer console.
 # This setting can be loaded from the SECRETS_BOOTSTRAP.
 GOOGLE_OAUTH_CLIENT_ID = _secrets_bootstrap.get(
