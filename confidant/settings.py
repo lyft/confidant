@@ -82,8 +82,6 @@ STATIC_FOLDER = str_env('STATIC_FOLDER', 'public')
 # If SECRETS_BOOTSTRAP starts with file://, then it will load the blob from a
 # file, rather than reading the blob from the environment.
 SECRETS_BOOTSTRAP = str_env('SECRETS_BOOTSTRAP')
-
-# _secrets_bootstrap = _bootstrap(SECRETS_BOOTSTRAP)
 encrypted_settings = EncryptedSettings(SECRETS_BOOTSTRAP)
 
 # User authentication method switcher.
