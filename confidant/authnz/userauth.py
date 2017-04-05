@@ -84,7 +84,6 @@ class AbstractUserAuthenticator(object):
 
     def set_csrf_token(self, resp):
         cookie_name = app.config['XSRF_COOKIE_NAME']
-        logging.error('Cookie name is "{}"'.format(cookie_name))
         if cookie_name not in session:
             session[cookie_name] = '{0:x}'.format(
                 random.SystemRandom().getrandbits(160)
