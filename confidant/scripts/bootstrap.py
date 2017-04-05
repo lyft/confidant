@@ -54,7 +54,7 @@ class DecryptSecretsBootstrap(Command):
     ]
 
     def run(self, _out):
-        data = settings._secrets_bootstrap
+        data = settings.encrypted_settings.get_all_secrets()
         data = yaml.safe_dump(data, default_flow_style=False, indent=2)
         if _out == '-':
             print data
