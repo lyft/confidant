@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Confidant: Using the Confidant client</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Source+Code+Pro">
+    <link href="../../stylesheets/site-820e35f9.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+      <header id="header">
+    <nav class="global-nav" role="navigation">
+  <section class="wrap-container">
+    <header class="global-nav-item logo-text">
+      <a class="global-nav-logo" href="../../">Confidant</a>
+    </header>
+
+    <ul class="global-nav-list">
+      <li class="global-nav-item">
+        <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      </li>
+      <li class="global-nav-item">
+        <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+      </li>
+      <li class="global-nav-item">
+        <a class="cta-link-nav-filled" href="../install/">Docs</a>
+      </li>
+    </ul>
+  </section>
+</nav>
+
+  </header>
+
+  <div class="body-content-container wrap-container" role="main">
+    <nav id="toc" class="sidebar" data-waypoint="sidebar">
+      <div id="search" role="search">
+  <form>
+    <input class="st-default-search-input" id="st-default-search-input" type="search" placeholder="Search the docs">
+  </form>
+  <div id="st-results-container"></div>
+  <script type="text/javascript">
+    (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+    })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+    _st('install','pzDJ5qvukhA8YuSHzVGN','2.0.0');
+  </script>
+</div>
+
+<div class="toc-block-container">
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Basics</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../install/">Install</a> </li>
+      <li class="doc-item">
+        <a href="../configuration/">Configure</a>
+        </li>
+      <li class="doc-item">
+        <a href="../using_confidant/">Managing Secrets and Mappings</a>
+        </li>
+      <li class="doc-item">
+        <a href="./">Using the Client</a>
+        </li>
+    </ul>
+  </div>
+
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Advanced</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../advanced/blind_secrets/">Server-blinded Secrets</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../advanced/kms_auth/">KMS Authentication</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../advanced/threat_model/">Threat Model</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../advanced/contributing/">Contributing</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../advanced/data_schema/">Data Schema</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../advanced/changelog/">Changelog</a>
+        </li>
+    </ul>
+  </div>
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Communication</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../communication/support/">Support</a>
+	</li>
+      <li class="doc-item">
+        <a href="../../communication/security_reporting/">Security Reporting</a>
+	</li>
+    </ul>
+  </div>
+</div>
+
+    </nav>
+
+    <main class="main" role="main" data-waypoint="main">
+      <h1 id="using-the-confidant-client">Using the Confidant client</h1>
+
+<h2 id="installation">Installation</h2>
+
+<p>Make a virtualenv and install pip requirements:</p>
+
+<pre><code class="bash">virtualenv venv
+source venv/bin/activate
+pip install confidant-client
+</code></pre>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>The client will automatically look in ~/.confidant and /etc/confidant/config,
+in order for its configuration. The client does not merge the config. If
+~/.confidant is found, it will use that and ignore the file in /etc. Config can
+be specified in either YAML or JSON format. The following configuration is
+supported, with the listed defaults:</p>
+
+<pre><code class="yaml">default:
+  url: None
+  auth_key: None
+  auth_context: {}
+  token_lifetime: 10
+  token_version: 2
+  token_cache_file: &#39;/run/confidant/confidant_token&#39;
+  assume_role: None
+  region: None
+  retries: 0
+  backoff: 1
+</code></pre>
+
+<p>The configuration file supports profiles, which let you specify multiple
+environments in the same file. For instance:</p>
+
+<pre><code class="yaml">default:
+  url: https://confidant-production.example.com
+  auth_key: authnz-production
+  auth_context:
+    from: rlane
+    to: confidant-production
+    user_type: user
+  token_cache_file: &#39;/run/confidant/default_confidant_token&#39;
+  region: us-east-1
+staging:
+  url: https://confidant-staging.example.com
+  auth_key: authnz-staging
+  auth_context:
+    from: rlane
+    to: confidant-staging
+    user_type: user
+  token_cache_file: &#39;/run/confidant/staging_confidant_token&#39;
+  region: us-east-1
+development:
+  url: https://confidant-development.example.com
+  auth_key: authnz-development
+  auth_context:
+    from: rlane
+    to: confidant-development
+    user_type: user
+  token_cache_file: &#39;/run/confidant/staging_confidant_token&#39;
+  region: us-east-1
+</code></pre>
+
+<p>Here&#39;s an example for a client configuration for a service:</p>
+
+<pre><code class="yaml">default:
+  url: https://confidant-production.example.com
+  auth_key: authnz-production
+  auth_context:
+    from: serviceA-production
+    to: confidant-production
+    user_type: service
+  token_cache_file: &#39;/run/confidant/default_confidant_token&#39;
+  region: us-east-1
+</code></pre>
+
+<h2 id="usage">Usage</h2>
+
+<p>The confidant client is a collection of subcommands. You can get a full listing
+of subcommands and client arguments via the help documentation:</p>
+
+<pre><code class="bash">confidant --help
+</code></pre>
+
+<p>You can also get help that&#39;s specific to a particular subcommand:</p>
+
+<pre><code class="bash">confidant get_service --help
+</code></pre>
+
+<p>There&#39;s both global arguments and subcommand specific arguments that can be
+set. For the most part all global arguments can be set in configuration, rather
+than being passed in. However, if you&#39;d like to override particular
+configuration settings from the configuration file, you can override them
+directly on the CLI. Note that the arguments must be properly ordered: global
+arguments must be specific before subcommands and subcommand arguments must be
+specified after the subcommand.</p>
+
+<h2 id="reformatting-get_service-output">Reformatting get_service output</h2>
+
+<p>The confidant client also comes with a reformatter for get_service output, to
+make the credential pairs easier to directly use. It&#39;s a separate CLI command
+that can be chained together with the confidant client. For example:</p>
+
+<pre><code class="bash">confidant get_service --service serviceA-production | confidant-format --out-format env_export --out /run/confidant/env
+</code></pre>
+
+<p>By default the formatter&#39;s input and output is stdin and stdout, but it&#39;s
+possible for the formatter to read in from files and write out to files. For
+example:</p>
+
+<pre><code class="bash">confidant get_service --service serviceA-production &gt; /run/confidant/raw
+confidant-format --in /run/confidant/raw --out /run/confidant/env --out-format env_export
+</code></pre>
+
+    </main>
+  </div>
+
+    <footer class="footer" data-waypoint="footer" role="contentinfo">
+  <div class="wrap-container">
+    <div class="footer-column">
+      <article class="footer-site-information">
+        <p>
+          &copy; 2014&ndash;2017 Lyft, Inc
+        </p>
+      </article>
+      <article class="footer-contact">
+        <ul class="footer-contact-list">
+          <li class="footer-contact-list-item twitter-link">
+            <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+          </li>
+          <li class="footer-contact-list-item github-link">
+            <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+          </li>
+          <li class="footer-contact-list-item">
+            <a href="//www.lyft.com/app">Download the Lyft app</a>
+          </li>
+        </ul>
+      </article>
+    </div>
+    <div class="footer-column footer-right">
+      <p class="footer-credit">
+        From the developers at
+      </p>
+      <a href="//lyft.com" target="_blank">
+        <span class="footer-logo"></span>
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../../javascripts/site-c8d66733.js" type="text/javascript"></script>
+    <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1446928-11']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+
+  </body>
+</html>

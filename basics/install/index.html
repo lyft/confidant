@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Confidant: Installation</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Source+Code+Pro">
+    <link href="../../stylesheets/site-820e35f9.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+      <header id="header">
+    <nav class="global-nav" role="navigation">
+  <section class="wrap-container">
+    <header class="global-nav-item logo-text">
+      <a class="global-nav-logo" href="../../">Confidant</a>
+    </header>
+
+    <ul class="global-nav-list">
+      <li class="global-nav-item">
+        <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      </li>
+      <li class="global-nav-item">
+        <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+      </li>
+      <li class="global-nav-item">
+        <a class="cta-link-nav-filled" href="./">Docs</a>
+      </li>
+    </ul>
+  </section>
+</nav>
+
+  </header>
+
+  <div class="body-content-container wrap-container" role="main">
+    <nav id="toc" class="sidebar" data-waypoint="sidebar">
+      <div id="search" role="search">
+  <form>
+    <input class="st-default-search-input" id="st-default-search-input" type="search" placeholder="Search the docs">
+  </form>
+  <div id="st-results-container"></div>
+  <script type="text/javascript">
+    (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+    })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+    _st('install','pzDJ5qvukhA8YuSHzVGN','2.0.0');
+  </script>
+</div>
+
+<div class="toc-block-container">
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Basics</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="./">Install</a> </li>
+      <li class="doc-item">
+        <a href="../configuration/">Configure</a>
+        </li>
+      <li class="doc-item">
+        <a href="../using_confidant/">Managing Secrets and Mappings</a>
+        </li>
+      <li class="doc-item">
+        <a href="../client/">Using the Client</a>
+        </li>
+    </ul>
+  </div>
+
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Advanced</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../advanced/blind_secrets/">Server-blinded Secrets</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../advanced/kms_auth/">KMS Authentication</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../advanced/threat_model/">Threat Model</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../advanced/contributing/">Contributing</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../advanced/data_schema/">Data Schema</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../advanced/changelog/">Changelog</a>
+        </li>
+    </ul>
+  </div>
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Communication</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../communication/support/">Support</a>
+	</li>
+      <li class="doc-item">
+        <a href="../../communication/security_reporting/">Security Reporting</a>
+	</li>
+    </ul>
+  </div>
+</div>
+
+    </nav>
+
+    <main class="main" role="main" data-waypoint="main">
+      <h1 id="quickstart-for-testing">Quickstart for testing</h1>
+
+<p>If you just want to checkout Confidant and aren&#39;t looking to deploy it into
+production, it&#39;s possible to get started without any external dependencies.
+Check out the <a href="../../advanced/contributing/#quickstart-for-testing-or-development">test and development quickstart</a>
+for this.</p>
+
+<p>Note that you should <em>never</em> run with this quickstart configuration in production.</p>
+
+<h1 id="docker-installation">Docker installation</h1>
+
+<h2 id="to-run-confidant-in-docker">To run confidant in Docker</h2>
+
+<p>It&#39;s necessary to export your configuration variables before running confidant.
+You can either specify them as multiple -e options, or you can put them into an
+an environment file and use --env-file.</p>
+
+<pre><code class="bash">docker pull lyft/confidant
+docker run --env-file my_config -t lyft/confidant
+</code></pre>
+
+<h2 id="to-build-the-image">To build the image</h2>
+
+<p>If you want to build the image and store it in your private registry, you can
+do the following:</p>
+
+<pre><code class="bash">git clone https://github.com/lyft/confidant
+cd confidant
+docker build -t lyft/confidant .
+</code></pre>
+
+<h1 id="pip-installation">pip installation</h1>
+
+<p>Warning: this is still a work in progress and it may not be working right now.
+We&#39;ll remove this warning when we have pip installation fully working.</p>
+
+<ol>
+<li>Using Ubuntu or Debian (please help with non-Ubuntu/Debian install
+instructions!)</li>
+<li>Using gunicorn as the wsgi server</li>
+<li>venv location: /srv/confidant/venv</li>
+</ol>
+
+<h2 id="make-a-virtualenv-and-install-pip-requirements">Make a virtualenv and install pip requirements</h2>
+
+<pre><code class="bash">sudo apt-get install -y python python-pip python-virtualenv python-dev build-essential libffi-dev libxml2-dev libxmlsec1-dev
+cd /srv/confidant
+virtualenv venv
+source venv/bin/activate
+pip install -U pip
+pip install confidant
+deactivate
+</code></pre>
+
+<p>Note that the pip package includes the minified, generated frontend artifacts,
+in the dist directory. This can be configured via the STATIC_FOLDER setting.</p>
+
+<h1 id="manual-installation">Manual installation</h1>
+
+<p>Assumptions:</p>
+
+<ol>
+<li>Using Ubuntu or Debian (please help with non-Ubuntu/Debian install
+instructions!)</li>
+<li>Using gunicorn as the wsgi server</li>
+<li>Installation location: /srv/confidant/venv</li>
+<li>venv location: /srv/confidant/venv</li>
+<li>node_modules location: /srv/confidant/node_modules</li>
+</ol>
+
+<h2 id="clone-confidant">Clone Confidant</h2>
+
+<pre><code class="bash">cd /srv
+git clone https://github.com/lyft/confidant
+</code></pre>
+
+<h2 id="make-a-virtualenv-and-install-pip-requirements">Make a virtualenv and install pip requirements</h2>
+
+<pre><code class="bash">sudo apt-get install -y python python-pip python-virtualenv python-dev build-essential libffi-dev libxml2-dev libxmlsec1-dev
+cd /srv/confidant
+virtualenv venv
+source venv/bin/activate
+pip install -U pip
+pip install -r requirements.txt
+deactivate
+</code></pre>
+
+<h2 id="build-the-frontend">Build the frontend</h2>
+
+<pre><code class="bash">cd /srv/confidant
+sudo apt-get install -y ruby-full npm nodejs nodejs-legacy git git-core
+gem install compass
+npm install grunt-cli
+npm install
+node_modules/grunt-cli/bin/grunt build
+</code></pre>
+
+<h2 id="run-confidant">Run confidant</h2>
+
+<p>It&#39;s necessary to export your configuration variables before running confidant.
+The easiest method is to source a file that exports your environment before
+running confidant.</p>
+
+<pre><code class="bash">source my_config
+cd /srv/confidant
+source venv/bin/activate
+gunicorn confidant.wsgi:app --workers=2 -k gevent
+</code></pre>
+
+<p>That&#39;s it. See the configuration documentation about how to configure and run.</p>
+
+    </main>
+  </div>
+
+    <footer class="footer" data-waypoint="footer" role="contentinfo">
+  <div class="wrap-container">
+    <div class="footer-column">
+      <article class="footer-site-information">
+        <p>
+          &copy; 2014&ndash;2017 Lyft, Inc
+        </p>
+      </article>
+      <article class="footer-contact">
+        <ul class="footer-contact-list">
+          <li class="footer-contact-list-item twitter-link">
+            <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+          </li>
+          <li class="footer-contact-list-item github-link">
+            <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+          </li>
+          <li class="footer-contact-list-item">
+            <a href="//www.lyft.com/app">Download the Lyft app</a>
+          </li>
+        </ul>
+      </article>
+    </div>
+    <div class="footer-column footer-right">
+      <p class="footer-credit">
+        From the developers at
+      </p>
+      <a href="//lyft.com" target="_blank">
+        <span class="footer-logo"></span>
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../../javascripts/site-c8d66733.js" type="text/javascript"></script>
+    <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1446928-11']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+
+  </body>
+</html>

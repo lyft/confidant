@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Confidant: Contributing</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Source+Code+Pro">
+    <link href="../../stylesheets/site-820e35f9.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+      <header id="header">
+    <nav class="global-nav" role="navigation">
+  <section class="wrap-container">
+    <header class="global-nav-item logo-text">
+      <a class="global-nav-logo" href="../../">Confidant</a>
+    </header>
+
+    <ul class="global-nav-list">
+      <li class="global-nav-item">
+        <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      </li>
+      <li class="global-nav-item">
+        <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+      </li>
+      <li class="global-nav-item">
+        <a class="cta-link-nav-filled" href="../../basics/install/">Docs</a>
+      </li>
+    </ul>
+  </section>
+</nav>
+
+  </header>
+
+  <div class="body-content-container wrap-container" role="main">
+    <nav id="toc" class="sidebar" data-waypoint="sidebar">
+      <div id="search" role="search">
+  <form>
+    <input class="st-default-search-input" id="st-default-search-input" type="search" placeholder="Search the docs">
+  </form>
+  <div id="st-results-container"></div>
+  <script type="text/javascript">
+    (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+    })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+    _st('install','pzDJ5qvukhA8YuSHzVGN','2.0.0');
+  </script>
+</div>
+
+<div class="toc-block-container">
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Basics</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../basics/install/">Install</a> </li>
+      <li class="doc-item">
+        <a href="../../basics/configuration/">Configure</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../basics/using_confidant/">Managing Secrets and Mappings</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../basics/client/">Using the Client</a>
+        </li>
+    </ul>
+  </div>
+
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Advanced</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../blind_secrets/">Server-blinded Secrets</a>
+        </li>
+      <li class="doc-item">
+        <a href="../kms_auth/">KMS Authentication</a>
+        </li>
+      <li class="doc-item">
+        <a href="../threat_model/">Threat Model</a>
+        </li>
+      <li class="doc-item">
+        <a href="./">Contributing</a>
+        </li>
+      <li class="doc-item">
+        <a href="../data_schema/">Data Schema</a>
+        </li>
+      <li class="doc-item">
+        <a href="../changelog/">Changelog</a>
+        </li>
+    </ul>
+  </div>
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Communication</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../communication/support/">Support</a>
+	</li>
+      <li class="doc-item">
+        <a href="../../communication/security_reporting/">Security Reporting</a>
+	</li>
+    </ul>
+  </div>
+</div>
+
+    </nav>
+
+    <main class="main" role="main" data-waypoint="main">
+      <h1 id="contributing">Contributing</h1>
+
+<h2 id="code-of-conduct">Code of conduct</h2>
+
+<p>This project is governed by <a href="https://github.com/lyft/code-of-conduct">Lyft&#39;s code of conduct</a>.
+All contributors and participants agree to abide by its terms.</p>
+
+<h2 id="contributing-code">Contributing code</h2>
+
+<h3 id="sign-the-contributor-license-agreement-cla">Sign the Contributor License Agreement (CLA)</h3>
+
+<p>We require a CLA for code contributions, so before we can accept a pull request
+we need to have a signed CLA. Please <a href="https://oss.lyft.com/cla">visit our CLA service</a>
+follow the instructions to sign the CLA.</p>
+
+<h3 id="file-issues-in-github">File issues in Github</h3>
+
+<p>In general all enhancements or bugs should be tracked via github issues before
+PRs are submitted. We don&#39;t require them, but it&#39;ll help us plan and track.</p>
+
+<p>When submitting bugs through issues, please try to be as descriptive as
+possible. It&#39;ll make it easier and quicker for everyone if the developers can
+easily reproduce your bug.</p>
+
+<h3 id="submit-pull-requests">Submit pull requests</h3>
+
+<p>Our only method of accepting code changes is through github pull requests.</p>
+
+<h2 id="development-guide">Development guide</h2>
+
+<h3 id="development-using-docker">Development using docker</h3>
+
+<p>Confidant comes with Dockerfile and docker-compose.yml files. You can use these
+to run a local development environment. This environment will launch a local
+dynamo (accessible through <a href="http://dynamo:7777">http://dynamo:7777</a>) a local redis (accessible
+through redis://redis:6379) and a local confidant container.</p>
+
+<h3 id="quickstart-for-testing-or-development">Quickstart for testing or development</h3>
+
+<p>It&#39;s possible to start Confidant with authentication and encryption disabled,
+to make it easier to test or to do development on portions of confidant that
+don&#39;t require these features. It&#39;s very important to never use this
+configuration outside of a testing or development environment, as it disables
+everything that makes Confidant safe!</p>
+
+<p>Here&#39;s a basic configuration that can be used for test/development:</p>
+
+<p><strong>service.env</strong>:</p>
+
+<pre><code class="bash"># Use fake AWS credentials
+AWS_ACCESS_KEY_ID=1
+AWS_SECRET_ACCESS_KEY=1
+# Disable all forms of authentication.
+# NEVER USE THIS IN PRODUCTION!
+USE_AUTH=false
+# Disable any use of at-rest encryption.
+# NEVER USE THIS IN PRODUCTION!
+USE_ENCRYPTION=false
+# The region our service is running in.
+AWS_DEFAULT_REGION=us-east-1
+# The DynamoDB table name for storage.
+DYNAMODB_TABLE=confidant-development
+# A local dynamodb service.
+DYNAMODB_URL=http://dynamo:7777
+# Auto-generate the dynamodb table.
+DYNAMODB_CREATE_TABLE=true
+# Set the gevent resolver to ares; see:
+#   https://github.com/surfly/gevent/issues/468
+GEVENT_RESOLVER=ares
+# Enable debug mode, which will also disable SSLify.
+# NEVER USE THIS IN PRODUCTION!
+DEBUG=true
+# Add a sessions secret, for CSRF protection
+SESSION_SECRET=lo8TouG7Bee1ahx7caeyoa6Aic6ku1johjoiyiey
+# For ease of development, use frontend code that does not always require
+# a grunt build.
+STATIC_FOLDER=public
+</code></pre>
+
+<p>Place that configuration into a file called <strong>service.env</strong> in the root of
+Confidant&#39;s repo and run:</p>
+
+<pre><code class="bash">docker-compose up
+</code></pre>
+
+<p>Confidant will be available for testing at <a href="http://localhost">http://localhost</a>.</p>
+
+<p>By default the docker-compose.yml file has a couple arguments commented that
+can be used to make development quicker (<strong>build</strong> and <strong>volumes</strong>). If you
+uncomment <strong>volumes</strong> the confidant repo will be volume mounted into the
+container, which will let you make live modifications to the code without doing
+a full docker build. If you uncomment build, and comment out image,
+docker-compose up will build the confidant image before starting the
+containers.</p>
+
+<p>A reasonable development process is as follows:</p>
+
+<ol>
+<li>Uncomment build, comment out image and uncomment volume.</li>
+<li>Run: docker-compose build</li>
+<li>Comment out build and uncomment image.</li>
+<li>Run: docker-compose up</li>
+<li>Test.</li>
+<li>Run: docker-compose stop</li>
+<li>Make changes.</li>
+<li>Run: docker-compose up</li>
+</ol>
+
+<p>Note that in the above, for most changes you should be able to stop/start the
+containers and your changes will apply; however, some changes require a
+build. In that case, you can repeat the entire above process.</p>
+
+    </main>
+  </div>
+
+    <footer class="footer" data-waypoint="footer" role="contentinfo">
+  <div class="wrap-container">
+    <div class="footer-column">
+      <article class="footer-site-information">
+        <p>
+          &copy; 2014&ndash;2017 Lyft, Inc
+        </p>
+      </article>
+      <article class="footer-contact">
+        <ul class="footer-contact-list">
+          <li class="footer-contact-list-item twitter-link">
+            <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+          </li>
+          <li class="footer-contact-list-item github-link">
+            <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+          </li>
+          <li class="footer-contact-list-item">
+            <a href="//www.lyft.com/app">Download the Lyft app</a>
+          </li>
+        </ul>
+      </article>
+    </div>
+    <div class="footer-column footer-right">
+      <p class="footer-credit">
+        From the developers at
+      </p>
+      <a href="//lyft.com" target="_blank">
+        <span class="footer-logo"></span>
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../../javascripts/site-c8d66733.js" type="text/javascript"></script>
+    <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1446928-11']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Confidant: KMS authentication</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Source+Code+Pro">
+    <link href="../../stylesheets/site-820e35f9.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+      <header id="header">
+    <nav class="global-nav" role="navigation">
+  <section class="wrap-container">
+    <header class="global-nav-item logo-text">
+      <a class="global-nav-logo" href="../../">Confidant</a>
+    </header>
+
+    <ul class="global-nav-list">
+      <li class="global-nav-item">
+        <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      </li>
+      <li class="global-nav-item">
+        <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+      </li>
+      <li class="global-nav-item">
+        <a class="cta-link-nav-filled" href="../../basics/install/">Docs</a>
+      </li>
+    </ul>
+  </section>
+</nav>
+
+  </header>
+
+  <div class="body-content-container wrap-container" role="main">
+    <nav id="toc" class="sidebar" data-waypoint="sidebar">
+      <div id="search" role="search">
+  <form>
+    <input class="st-default-search-input" id="st-default-search-input" type="search" placeholder="Search the docs">
+  </form>
+  <div id="st-results-container"></div>
+  <script type="text/javascript">
+    (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+    })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+    _st('install','pzDJ5qvukhA8YuSHzVGN','2.0.0');
+  </script>
+</div>
+
+<div class="toc-block-container">
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Basics</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../basics/install/">Install</a> </li>
+      <li class="doc-item">
+        <a href="../../basics/configuration/">Configure</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../basics/using_confidant/">Managing Secrets and Mappings</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../basics/client/">Using the Client</a>
+        </li>
+    </ul>
+  </div>
+
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Advanced</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../blind_secrets/">Server-blinded Secrets</a>
+        </li>
+      <li class="doc-item">
+        <a href="./">KMS Authentication</a>
+        </li>
+      <li class="doc-item">
+        <a href="../threat_model/">Threat Model</a>
+        </li>
+      <li class="doc-item">
+        <a href="../contributing/">Contributing</a>
+        </li>
+      <li class="doc-item">
+        <a href="../data_schema/">Data Schema</a>
+        </li>
+      <li class="doc-item">
+        <a href="../changelog/">Changelog</a>
+        </li>
+    </ul>
+  </div>
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Communication</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../communication/support/">Support</a>
+	</li>
+      <li class="doc-item">
+        <a href="../../communication/security_reporting/">Security Reporting</a>
+	</li>
+    </ul>
+  </div>
+</div>
+
+    </nav>
+
+    <main class="main" role="main" data-waypoint="main">
+      <h1 id="kms-authentication">KMS authentication</h1>
+
+<h2 id="service-to-service-authentication">Service-to-service authentication</h2>
+
+<p>When a service is created in Confidant, Confidant, by default, will generate a
+couple of grants on the AUTH_KEY KMS key. One grant allows the service to do
+encryptions or decryptions using the key, as long as the &#39;from&#39; encryption context
+is the name of the service and the &#39;user_type&#39; is &#39;service&#39;; the other grant allows
+the service to do decryptions using the key, as long as the &#39;to&#39; encryption context
+is the name of the service. This is what enables the services to get their secrets
+from Confidant.</p>
+
+<p>This guide is mostly going to be a crash-course on how KMS works, since we&#39;re
+just leveraging it for authentication. If you&#39;re not very familiar with KMS,
+you may want to take a look at the following docs:</p>
+
+<ul>
+<li><a href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html">http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html</a></li>
+<li><a href="http://docs.aws.amazon.com/kms/latest/developerguide/crypto-intro.html">http://docs.aws.amazon.com/kms/latest/developerguide/crypto-intro.html</a></li>
+<li><a href="http://docs.aws.amazon.com/kms/latest/developerguide/crypto_authen.html">http://docs.aws.amazon.com/kms/latest/developerguide/crypto_authen.html</a></li>
+<li><a href="http://docs.aws.amazon.com/kms/latest/developerguide/encrypt-context.html">http://docs.aws.amazon.com/kms/latest/developerguide/encrypt-context.html</a></li>
+<li><a href="http://docs.aws.amazon.com/kms/latest/developerguide/crypto-terminology.html">http://docs.aws.amazon.com/kms/latest/developerguide/crypto-terminology.html</a></li>
+<li><a href="http://docs.aws.amazon.com/kms/latest/developerguide/grants.html">http://docs.aws.amazon.com/kms/latest/developerguide/grants.html</a></li>
+</ul>
+
+<p>Let&#39;s take a quick look at a basic example using boto3:</p>
+
+<pre><code class="python">&gt;&gt;&gt; import boto3
+&gt;&gt;&gt; import datetime
+&gt;&gt;&gt;
+&gt;&gt;&gt; now = datetime.datetime.now()
+&gt;&gt;&gt; not_after = now + datetime.timedelta(minutes=60)
+&gt;&gt;&gt; not_before = now.strftime(&quot;%Y%m%dT%H%M%SZ&quot;)
+&gt;&gt;&gt; not_after = not_after.strftime(&quot;%Y%m%dT%H%M%SZ&quot;)
+&gt;&gt;&gt;
+&gt;&gt;&gt; kms = boto3.client(&#39;kms&#39;)
+&gt;&gt;&gt; plaintext = &#39;{&quot;not_before&quot;: &quot;{0}&quot;, &quot;not_after&quot;: &quot;{1}&quot;}&#39;.format(not_before, not_after)
+&gt;&gt;&gt; token = kms.encrypt(
+&gt;&gt;&gt;     KeyId=&#39;alias/authnz-testing&#39;, Plaintext=plaintext,
+&gt;&gt;&gt;     EncryptionContext={
+&gt;&gt;&gt;         &#39;from&#39;: &#39;myservice-production&#39;,
+&gt;&gt;&gt;         &#39;to&#39;: &#39;confidant-production&#39;,
+&gt;&gt;&gt;         &#39;user_type&#39;: &#39;service&#39;
+&gt;&gt;&gt;     }
+&gt;&gt;&gt; )
+&gt;&gt;&gt;
+&gt;&gt;&gt; token
+{u&#39;KeyId&#39;: u&#39;arn:aws:kms:us-east-1:12345:key/abcdefgh-1234-5678-9abcd-ee72ac95ae8c&#39;,
+&#39;ResponseMetadata&#39;: {&#39;HTTPStatusCode&#39;: 200, &#39;RequestId&#39;:
+&#39;3a48f2ad-072d-11e5-88fb-17df9ce1a01a&#39;}, u&#39;CiphertextBlob&#39;: &#39;\n
+\x999\x9e$yO\x92\x1dg\xbbZ^S\x84\xdaI\xbf\x14@\x81\x8a\x1c\xf2\xf8Z\x05\xed\xed\xb2\x8d)T\x12\x8f\x01\x01\x01\x02\x00x\x999\x9e$yO\x92\x1dg\xbbZ^S\x84\xdaI\xbf\x14@\x81\x8a\x1c\xf2\xf8Z\x05\xed\xed\xb2\x8d)T\x00\x00\x00f0d\x06\t*\x86H\x86\xf7\r\x01\x07\x06\xa0W0U\x02\x01\x000P\x06\t*\x86H\x86\xf7\r\x01\x07\x010\x1e\x06\t`\x86H\x01e\x03\x04\x01.0\x11\x04\x0c\xd3\x96\x0c\x91\x83\xd2l!\xfb\xa6\xc2\x90\x02\x01\x10\x80#\x97Z\xd1\xbb\xb4_\x12\xea\x1a\xed\x85\x0e\x9b1\xfa0j\xca1(\xc7\xc3\x8czT\xd4\x8fk\x08\x00\xa8\xcd\xe5\x82\xb3&#39;}
+&gt;&gt;&gt;
+&gt;&gt;&gt; kms.decrypt(
+&gt;&gt;&gt;     CiphertextBlob=token[&#39;CiphertextBlob&#39;],
+&gt;&gt;&gt;     EncryptionContext={
+&gt;&gt;&gt;         &#39;from&#39;: &#39;myservice-production&#39;,
+&gt;&gt;&gt;         &#39;to&#39;: &#39;confidant-production&#39;,
+&gt;&gt;&gt;         &#39;user_type&#39;: &#39;service&#39;
+&gt;&gt;&gt;     }
+&gt;&gt;&gt; )
+{u&#39;Plaintext&#39;: &#39;{&quot;not_before&quot;: &quot;20150914T172347Z&quot;, &quot;not_after&quot;: &quot;20150914T182347Z&quot;}&#39;, u&#39;KeyId&#39;:
+u&#39;arn:aws:kms:us-east-1:12345:key/abcdefgh-1234-5678-9abcd-ee72ac95ae8c&#39;,
+&#39;ResponseMetadata&#39;: {&#39;HTTPStatusCode&#39;: 200, &#39;RequestId&#39;:
+&#39;6450392b-072d-11e5-87df-5345698b39e1&#39;}}
+</code></pre>
+
+<p>Notice that we could encrypt something and then decrypt it, as long as we
+passed in the same context.</p>
+
+<p>Now let&#39;s change the encryption context slightly:</p>
+
+<pre><code class="python">&gt;&gt;&gt; kms.decrypt(
+&gt;&gt;&gt;     CiphertextBlob=token[&#39;CiphertextBlob&#39;],
+&gt;&gt;&gt;     EncryptionContext={
+&gt;&gt;&gt;         &#39;from&#39;: &#39;notmyservice-production&#39;,
+&gt;&gt;&gt;         &#39;to&#39;: &#39;confidant-production&#39;,
+&gt;&gt;&gt;         &#39;user_type&#39;: &#39;service&#39;
+&gt;&gt;&gt;     }
+&gt;&gt;&gt; )
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;/home/rlane/Envs/boto3/lib/python2.7/site-packages/botocore/client.py&quot;,
+line 249, in _api_call
+    raise ClientError(parsed_response, operation_name)
+botocore.exceptions.ClientError: An error occurred (InvalidCiphertextException)
+when calling the Decrypt operation: None
+</code></pre>
+
+<p>Note that there&#39;s a couple reasons this would fail:</p>
+
+<ol>
+<li>The &#39;from&#39; context passed into this decryption action doesn&#39;t match the &#39;from&#39;
+context that was used during the encryption action.</li>
+<li>This service isn&#39;t allowed to do a decryption action with the provided
+&#39;from&#39; context, since the grant is limiting the &#39;from&#39; context to
+&#39;myservice-production&#39;.</li>
+</ol>
+
+<p>Let&#39;s take a look at how to implement an authentication flow using this on the
+server and the client. Here&#39;s the server side (using flask):</p>
+
+<pre><code class="python">def get_key_arn():
+    # You should cache this.
+    key = kms.describe_key(
+        KeyId=&#39;alias/{0}&#39;.format(app.config[&#39;MASTER_KEY_ID&#39;])
+    )
+    return key[&#39;KeyMetadata&#39;][&#39;Arn&#39;]
+
+def _parse_username(username):
+    username_arr = username.split(&#39;/&#39;)
+    if len(username_arr) == 3:
+        # V2 token format: version/service/myservice or version/user/myuser
+        version = int(username_arr[0])
+        user_type = username_arr[1]
+        username = username_arr[2]
+    elif len(username_arr) == 1:
+        # Old format, specific to services: myservice
+        version = 1
+        username = username_arr[0]
+        user_type = &#39;service&#39;
+    else:
+        raise TokenVersionError(&#39;Unsupported username format.&#39;)
+    return version, user_type, username
+
+def decrypt_token(token, username):
+    version, user_type, _username = _parse_username(username)
+    try:
+        token = base64.b64decode(token)
+        data = kms.decrypt(
+            CiphertextBlob=token,
+            EncryptionContext={
+                # This token is sent to us.
+                &#39;to&#39;: app.config[&#39;IAM_ROLE&#39;],
+                # From another service.
+                &#39;from&#39;: _username,
+                &#39;user_type&#39;: user_type
+            }
+        )
+        # Decrypt doesn&#39;t take KeyId as an argument. We need to verify the
+        # correct key was used to do the decryption.
+        # Annoyingly, the KeyId from the data is actually an arn.
+        key_arn = data[&#39;KeyId&#39;]
+        if key_arn != get_key_arn():
+            raise TokenDecryptError(&#39;Authentication error.&#39;)
+        payload = json.loads(data[&#39;Plaintext&#39;])
+    # We don&#39;t care which exception is thrown. If anything fails, we fail.
+    except Exception:
+        raise TokenDecryptError(&#39;Authentication error.&#39;)
+    time_format = &quot;%Y%m%dT%H%M%SZ&quot;
+    now = datetime.datetime.utcnow()
+    try:
+        not_before = datetime.datetime.strptime(payload.get(&#39;not_before&#39;), time_format)
+        not_after = datetime.datetime.strptime(payload.get(&#39;not_after&#39;), time_format)
+    except Exception:
+        raise TokenDecryptError(&#39;Authentication error.&#39;)
+    # Ensure the token is within the validity window.
+    if (now &lt; not_before) or (now &gt; not_after):
+        raise TokenDecryptError(&#39;Authentication error.&#39;)
+    return payload
+
+
+def require_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        try:
+            payload = keymanager.decrypt_token(
+                request.headers[&#39;X-Auth-Token&#39;],
+                request.headers[&#39;X-Auth-From&#39;]
+            )
+            # We could do additional checks here, based on the payload
+            # contents, like check for scope passed in.
+            return f(*args, **kwargs)
+        except TokenDecryptError:
+            return abort(401)
+        # Paranoia
+        return abort(401)
+    return decorated
+</code></pre>
+
+<p>And here&#39;s the client side (using requests):</p>
+
+<pre><code class="python">import datetime
+import boto3
+import base64
+import requests
+
+now = datetime.datetime.utcnow()
+not_after = now + datetime.timedelta(minutes=60)
+not_before = now.strftime(&quot;%Y%m%dT%H%M%SZ&quot;)
+not_after = not_after.strftime(&quot;%Y%m%dT%H%M%SZ&quot;)
+auth_context = {
+    &#39;from&#39;: &#39;servicea-development&#39;,
+    &#39;to&#39;: &#39;serviceb-development&#39;,
+    &#39;user_type&#39;: &#39;service&#39;
+}
+plaintext = &#39;{&quot;not_before&quot;: &quot;{0}&quot;, &quot;not_after&quot;: &quot;{1}&quot;}&#39;.format(not_before, not_after)
+kms = boto3.client(&#39;kms&#39;)
+token = kms.encrypt(
+    KeyId=&#39;alias/authnz-testing&#39;,
+    Plaintext=plaintext,
+    EncryptionContext=auth_context
+)[&#39;CiphertextBlob&#39;]
+token = base64.b64encode(token)
+headers = {
+    &#39;X-Auth-Token&#39;: token,
+    # version: 2, user_type: service, username (2/service/username)
+    &#39;X-Auth-From&#39;: &#39;2/service/{1}&#39;.format(auth_context[&#39;from&#39;])
+}
+response = requests.get(&#39;/v1/services/servicea-development&#39;, headers=headers)
+</code></pre>
+
+<p>This is almost exactly the server and client auth flow used in Confidant. This
+same pattern can be applied for doing your own service-to-service
+authentication as well.</p>
+
+<p>Something to notice here is that we&#39;re doing extra work based on the payload
+contents of the token. We&#39;re adding <code>not_before</code> and <code>not_after</code> data so that we can
+give this token a lifetime. The client is specifying the lifetime of the token
+itself. You could put additional information into the payload, such as token
+scope, additional contraints, etc.. In Confidant, on the server side we also
+limit the maximum lifetime of a token, to ensure clients are occasionally
+rotating their authentication tokens.</p>
+
+<h3 id="iam-policy-configuration-for-service-to-service-auth">IAM policy configuration for service-to-service auth</h3>
+
+<p>If you wish to disable grant management for KMS auth, it&#39;s possible to manage
+IAM policy for service-to-service authentication. An assumption of this example
+is that a confidant service (serviceA-production) maps directly to an IAM role
+(serviceA-production) and your confidant service is confidant-production. Let&#39;s
+add a policy to the service, to allow authentication:</p>
+
+<pre><code class="json">{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [
+        {
+            &quot;Action&quot;: [
+                &quot;kms:GenerateRandom&quot;
+            ],
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Resource&quot;: &quot;*&quot;
+        },
+        {
+            &quot;Action&quot;: [
+                &quot;kms:Encrypt&quot;
+            ],
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Resource&quot;: [
+                &quot;arn:aws:kms:us-east-1:12345:key/your-authnz-key-id&quot;
+            ],
+            &quot;Condition&quot;: {
+                &quot;StringEquals&quot;: {
+                    &quot;kms:EncryptionContext:to&quot;: &quot;confidant-production&quot;,
+                    &quot;kms:EncryptionContext:user_type&quot;: &quot;service&quot;,
+                    &quot;kms:EncryptionContext:from&quot;: &quot;serviceA-production&quot;
+                }
+            }
+        }
+    ]
+}
+</code></pre>
+
+<h2 id="passing-encrypted-data-between-services">Passing encrypted data between services</h2>
+
+<p>In the service-to-service section we actually passed encrypted
+content between two services; however, we used KMS&#39;s Encrypt action
+directly, which is limited to 4 KB of data. If all you need to do is pass
+messages smaller than 4KB, this will work perfectly for you. If you need to
+pass more than 4KB, you&#39;ll need to generate data keys, and do a bit of
+encryption yourself, using the data key.</p>
+
+<p>Confidant does this using the cryptography.io Python library and its Fernet
+implementation. It doesn&#39;t matter which language or library you use, the steps
+are basically the same:</p>
+
+<ol>
+<li>Generate a data key, with context: {&#39;from&#39;: &#39;servicea-production&#39;, &#39;to&#39;:
+&#39;serviceb-production&#39;, &#39;user_type&#39;: &#39;service&#39;}</li>
+<li>Use the Plaintext portion the data key to encrypt your data.</li>
+<li>Pass the CiphertextBlob portion of the data key along with the data to the
+other service.</li>
+<li>The other service should decrypt the CiphertextBlob portion of the data key,
+giving it the Plaintext portion.</li>
+<li>The other service will use the Plaintext portion of the data key to decrypt
+the data.</li>
+</ol>
+
+<h2 id="user-to-service-authentication">User-to-service authentication</h2>
+
+<p>Confidant does not setup grants for user authentication. To enable user to service
+KMS authentication, it&#39;s necessary to setup IAM policy for your KMS keys. Thankfully,
+the IAM policy for this is pretty straightforward:</p>
+
+<pre><code class="json">{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [
+        {
+            &quot;Action&quot;: [
+                &quot;kms:GenerateRandom&quot;
+            ],
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Resource&quot;: &quot;*&quot;
+        },
+        {
+            &quot;Action&quot;: [
+                &quot;kms:Encrypt&quot;
+            ],
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Resource&quot;: [
+                &quot;arn:aws:kms:us-east-1:12345:key/your-authnz-key-id&quot;
+            ],
+            &quot;Condition&quot;: {
+                &quot;StringEquals&quot;: {
+                    &quot;kms:EncryptionContext:to&quot;: &quot;confidant-production&quot;,
+                    &quot;kms:EncryptionContext:user_type&quot;: &quot;user&quot;,
+                    &quot;kms:EncryptionContext:from&quot;: &quot;${aws:username}&quot;
+                },
+                &quot;Bool&quot;: {
+                    &quot;aws:MultiFactorAuthPresent&quot;: &quot;true&quot;
+                }
+            }
+        }
+    ]
+}
+</code></pre>
+
+<p>This policy allows a user to generate KMS authentication tokens, as long as the
+&#39;from&#39; context matches their IAM user name, the &#39;to&#39; context is to &#39;confidant-production&#39;
+and the &#39;user_type&#39; is &#39;user&#39;. Note that if you wanted to allow authentication from users
+to any service, you can change the second statement slightly:</p>
+
+<pre><code class="json">        {
+            &quot;Action&quot;: [
+                &quot;kms:Encrypt&quot;
+            ],
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Resource&quot;: [
+                &quot;arn:aws:kms:us-east-1:12345:key/your-authnz-key-id&quot;
+            ],
+            &quot;Condition&quot;: {
+                &quot;StringLike&quot;: {
+                    &quot;kms:EncryptionContext:to&quot;: &quot;*&quot;,
+                },
+                &quot;StringEquals&quot;: {
+                    &quot;kms:EncryptionContext:user_type&quot;: &quot;user&quot;,
+                    &quot;kms:EncryptionContext:from&quot;: &quot;${aws:username}&quot;
+                },
+                &quot;Bool&quot;: {
+                    &quot;aws:MultiFactorAuthPresent&quot;: &quot;true&quot;
+                }
+            }
+        }
+</code></pre>
+
+<p>When the user authenticates, they&#39;ll use a header like: <code>&#39;X-Auth-From&#39;: &#39;2/user/rlane&#39;</code>.
+From the server side, you&#39;ll be able to verify the token, then you can mark the user
+by user_type, so that you can do access control based on their type (service or user).</p>
+
+<h2 id="multi-account-kms-authentication">Multi-account KMS authentication</h2>
+
+<p>Without much change it&#39;s possible to do KMS authentication across accounts. In
+the simplest approach, you can simply allow multiple accounts to use the KMS
+authnz key. The downside to this is that when you allow another account to use
+the KMS key, you&#39;re trusting that account with the IAM policy of whichever
+actions you&#39;re allowing. So, if you have two accounts: sandbox and production,
+and you allow sandbox to use the KMS authnz key in production, sandbox can
+write IAM policies that allow it to generate tokens for any service in
+confidant, which may not be what you intend.</p>
+
+<p>Starting in version 1.1, Confidant added support for using scoped KMS
+authentication keys. Rather than using a single KMS authentication key for all
+accounts, you&#39;ll create a KMS key for each account. The key policy for each key
+will allow its specific account to use the key. Note that it&#39;s important that
+all of these keys live in the same AWS account as the confidant service.</p>
+
+<p>After creating and configuring the keys, you can use the SCOPED<em>AUTH</em>KEYS
+setting in confidant to map key aliases to friendly account names. Once this is
+configured, users can scope services to accounts.</p>
+
+<p>If you&#39;re implementing KMS auth outside of confidant: we map keys to account
+names. When a token is decrypted, part of what KMS returns is the key ARN used
+for the decryption. We take that ARN and lookup the alias that&#39;s associated with
+it. We take the alias and look it up in the SCOPED<em>AUTH</em>KEYS mapping to find its
+associated account. If the scoped service matches the key used, we accept the
+request.</p>
+
+    </main>
+  </div>
+
+    <footer class="footer" data-waypoint="footer" role="contentinfo">
+  <div class="wrap-container">
+    <div class="footer-column">
+      <article class="footer-site-information">
+        <p>
+          &copy; 2014&ndash;2017 Lyft, Inc
+        </p>
+      </article>
+      <article class="footer-contact">
+        <ul class="footer-contact-list">
+          <li class="footer-contact-list-item twitter-link">
+            <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+          </li>
+          <li class="footer-contact-list-item github-link">
+            <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+          </li>
+          <li class="footer-contact-list-item">
+            <a href="//www.lyft.com/app">Download the Lyft app</a>
+          </li>
+        </ul>
+      </article>
+    </div>
+    <div class="footer-column footer-right">
+      <p class="footer-credit">
+        From the developers at
+      </p>
+      <a href="//lyft.com" target="_blank">
+        <span class="footer-logo"></span>
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../../javascripts/site-c8d66733.js" type="text/javascript"></script>
+    <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1446928-11']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+
+  </body>
+</html>

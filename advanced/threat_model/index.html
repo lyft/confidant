@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Confidant: Threat model</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Source+Code+Pro">
+    <link href="../../stylesheets/site-820e35f9.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+      <header id="header">
+    <nav class="global-nav" role="navigation">
+  <section class="wrap-container">
+    <header class="global-nav-item logo-text">
+      <a class="global-nav-logo" href="../../">Confidant</a>
+    </header>
+
+    <ul class="global-nav-list">
+      <li class="global-nav-item">
+        <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      </li>
+      <li class="global-nav-item">
+        <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+      </li>
+      <li class="global-nav-item">
+        <a class="cta-link-nav-filled" href="../../basics/install/">Docs</a>
+      </li>
+    </ul>
+  </section>
+</nav>
+
+  </header>
+
+  <div class="body-content-container wrap-container" role="main">
+    <nav id="toc" class="sidebar" data-waypoint="sidebar">
+      <div id="search" role="search">
+  <form>
+    <input class="st-default-search-input" id="st-default-search-input" type="search" placeholder="Search the docs">
+  </form>
+  <div id="st-results-container"></div>
+  <script type="text/javascript">
+    (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+    })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+    _st('install','pzDJ5qvukhA8YuSHzVGN','2.0.0');
+  </script>
+</div>
+
+<div class="toc-block-container">
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Basics</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../basics/install/">Install</a> </li>
+      <li class="doc-item">
+        <a href="../../basics/configuration/">Configure</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../basics/using_confidant/">Managing Secrets and Mappings</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../basics/client/">Using the Client</a>
+        </li>
+    </ul>
+  </div>
+
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Advanced</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../blind_secrets/">Server-blinded Secrets</a>
+        </li>
+      <li class="doc-item">
+        <a href="../kms_auth/">KMS Authentication</a>
+        </li>
+      <li class="doc-item">
+        <a href="./">Threat Model</a>
+        </li>
+      <li class="doc-item">
+        <a href="../contributing/">Contributing</a>
+        </li>
+      <li class="doc-item">
+        <a href="../data_schema/">Data Schema</a>
+        </li>
+      <li class="doc-item">
+        <a href="../changelog/">Changelog</a>
+        </li>
+    </ul>
+  </div>
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Communication</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../communication/support/">Support</a>
+	</li>
+      <li class="doc-item">
+        <a href="../../communication/security_reporting/">Security Reporting</a>
+	</li>
+    </ul>
+  </div>
+</div>
+
+    </nav>
+
+    <main class="main" role="main" data-waypoint="main">
+      <h1 id="threat-model">Threat model</h1>
+
+<p>The threat model is written in terms of what an attacker can accomplish from
+various perspectives. It&#39;s meant to be exhaustive, and anything missing should
+be reported as an issue in the github project.</p>
+
+<h2 id="web-client-threat-model">Web client threat model</h2>
+
+<h3 id="assumptions">Assumptions</h3>
+
+<ol>
+<li>Valid authenticated and authorized users act in good faith.</li>
+<li>Users&#39; computers are not infected by malware.</li>
+<li>TLS is being used for http connections and is configured in a secure manner.</li>
+</ol>
+
+<h3 id="what-an-authenticated-user-can-achieve">What an authenticated user can achieve</h3>
+
+<ol>
+<li>A user can view all secrets, but can not view the credential pairs of blind
+secrets.</li>
+<li>A user can view all secret to service mappings.</li>
+<li>A user can create new revisions of a secret or blind secret.</li>
+<li>A user can create new revisions of a service mapping.</li>
+</ol>
+
+<h3 id="what-compromise-of-an-authenticated-users-computer-can-achieve">What compromise of an authenticated user&#39;s computer can achieve</h3>
+
+<ol>
+<li>Compromise of a user&#39;s computer can give the attacker access to all actions
+achievable by the authenticated user.</li>
+</ol>
+
+<h3 id="what-an-unauthenticated-local-network-attacker-who-can-observe-network-traffic-can-achieve">What an unauthenticated local network attacker who can observe network traffic can achieve</h3>
+
+<ol>
+<li>The passive attacker can learn which client IP addresses are using Confidant.</li>
+<li>The passive attacker can block access to Confidant.</li>
+<li>The passive attacker can observe the approximate size of secrets.</li>
+</ol>
+
+<h3 id="what-an-unauthenticated-attacker-from-the-internet-can-achieve">What an unauthenticated attacker from the Internet can achieve</h3>
+
+<p>Note: It&#39;s highly suggested to run Confidant on a private network or VPN,
+rather than directly accessible on the internet.</p>
+
+<ol>
+<li>An attacker from the internet can DoS the Confidant server.</li>
+</ol>
+
+<h2 id="web-server-threat-model">Web server threat model</h2>
+
+<h3 id="assumptions">Assumptions</h3>
+
+<ol>
+<li>The web service is given the least amount of AWS IAM privilege allowed to
+run properly, as defined in the configuration guide.</li>
+<li>The web service is given only the network access necessary to run properly.</li>
+</ol>
+
+<h3 id="what-an-attacker-can-achieve-through-compromise-of-the-confidant-web-server">What an attacker can achieve through compromise of the Confidant web server</h3>
+
+<ol>
+<li>An attacker who successfully compromises the Confidant flask server has full
+control of the service&#39;s IAM credentials and can read secrets, corrupt or
+delete secrets, remap secrets to other services, manipulate web server logs,
+and modify KMS AUTH_KEY grants. The attacker can not read blind secrets
+that confidant&#39;s IAM credentials do not allow access to.</li>
+</ol>
+
+<h2 id="service-client-threat-model">Service client threat model</h2>
+
+<h3 id="assumptions">Assumptions</h3>
+
+<ol>
+<li>IAM policy is properly configured for the KMS AUTH_KEY, if using KMS auth.</li>
+<li>IAM policy is properly configured for the S3 locations, if S3 auth is used.</li>
+<li>TLS with a valid trust is being used for http connections.</li>
+<li>IAM policy is properly configured for DynamoDB</li>
+</ol>
+
+<h3 id="what-the-service-can-achieve">What the service can achieve</h3>
+
+<ol>
+<li>A service can retrieve the unencrypted secrets mapped to it.</li>
+<li>A service can read blind secrets mapped to it, assuming the service&#39;s IAM
+policy allows it to decrypt the blind secrets.</li>
+</ol>
+
+<h3 id="what-an-attacker-can-achieve-with-a-filesystem-read-vulnerability">What an attacker can achieve with a filesystem read vulnerability</h3>
+
+<p>Client management and storage of secrets is an implementation detail outside of
+the scope of the Confidant service itself, but the following threat models
+could apply.</p>
+
+<ol>
+<li>If a service is storing the authentication token on the filesystem, an
+attacker would be able to steal the token, which would give them the access
+level of the service for the lifetime of the token.</li>
+<li>If a service is storing the secrets on the filesystem unencrypted, an
+attacker would be able to steal the service secrets.</li>
+</ol>
+
+<h2 id="storage-threat-model">Storage threat model</h2>
+
+<h3 id="assumptions">Assumptions</h3>
+
+<ol>
+<li>cryptography.io&#39;s Fernet implementation is secure.</li>
+<li>KMS&#39;s AES implementation is secure.</li>
+<li>Attackers don&#39;t have access to the KMS master key.</li>
+</ol>
+
+<h3 id="what-an-attacker-with-dynamodb-access-can-achieve">What an attacker with DynamoDB access can achieve</h3>
+
+<ol>
+<li>An attacker with full DynamoDB access can delete or corrupt all service and
+secrets.</li>
+<li>An attacker with full DynamoDB access could map secrets to other services.</li>
+<li>An attacker with read DynamoDB access can read service mapping data and
+the metadata (friendly name, modified date, modified by, etc.) of secrets.</li>
+</ol>
+
+    </main>
+  </div>
+
+    <footer class="footer" data-waypoint="footer" role="contentinfo">
+  <div class="wrap-container">
+    <div class="footer-column">
+      <article class="footer-site-information">
+        <p>
+          &copy; 2014&ndash;2017 Lyft, Inc
+        </p>
+      </article>
+      <article class="footer-contact">
+        <ul class="footer-contact-list">
+          <li class="footer-contact-list-item twitter-link">
+            <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+          </li>
+          <li class="footer-contact-list-item github-link">
+            <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+          </li>
+          <li class="footer-contact-list-item">
+            <a href="//www.lyft.com/app">Download the Lyft app</a>
+          </li>
+        </ul>
+      </article>
+    </div>
+    <div class="footer-column footer-right">
+      <p class="footer-credit">
+        From the developers at
+      </p>
+      <a href="//lyft.com" target="_blank">
+        <span class="footer-logo"></span>
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../../javascripts/site-c8d66733.js" type="text/javascript"></script>
+    <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1446928-11']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+
+  </body>
+</html>

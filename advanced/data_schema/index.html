@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Confidant: Data Schema</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Source+Code+Pro">
+    <link href="../../stylesheets/site-820e35f9.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+      <header id="header">
+    <nav class="global-nav" role="navigation">
+  <section class="wrap-container">
+    <header class="global-nav-item logo-text">
+      <a class="global-nav-logo" href="../../">Confidant</a>
+    </header>
+
+    <ul class="global-nav-list">
+      <li class="global-nav-item">
+        <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      </li>
+      <li class="global-nav-item">
+        <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+      </li>
+      <li class="global-nav-item">
+        <a class="cta-link-nav-filled" href="../../basics/install/">Docs</a>
+      </li>
+    </ul>
+  </section>
+</nav>
+
+  </header>
+
+  <div class="body-content-container wrap-container" role="main">
+    <nav id="toc" class="sidebar" data-waypoint="sidebar">
+      <div id="search" role="search">
+  <form>
+    <input class="st-default-search-input" id="st-default-search-input" type="search" placeholder="Search the docs">
+  </form>
+  <div id="st-results-container"></div>
+  <script type="text/javascript">
+    (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+    })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+    _st('install','pzDJ5qvukhA8YuSHzVGN','2.0.0');
+  </script>
+</div>
+
+<div class="toc-block-container">
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Basics</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../basics/install/">Install</a> </li>
+      <li class="doc-item">
+        <a href="../../basics/configuration/">Configure</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../basics/using_confidant/">Managing Secrets and Mappings</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../basics/client/">Using the Client</a>
+        </li>
+    </ul>
+  </div>
+
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Advanced</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../blind_secrets/">Server-blinded Secrets</a>
+        </li>
+      <li class="doc-item">
+        <a href="../kms_auth/">KMS Authentication</a>
+        </li>
+      <li class="doc-item">
+        <a href="../threat_model/">Threat Model</a>
+        </li>
+      <li class="doc-item">
+        <a href="../contributing/">Contributing</a>
+        </li>
+      <li class="doc-item">
+        <a href="./">Data Schema</a>
+        </li>
+      <li class="doc-item">
+        <a href="../changelog/">Changelog</a>
+        </li>
+    </ul>
+  </div>
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Communication</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../communication/support/">Support</a>
+	</li>
+      <li class="doc-item">
+        <a href="../../communication/security_reporting/">Security Reporting</a>
+	</li>
+    </ul>
+  </div>
+</div>
+
+    </nav>
+
+    <main class="main" role="main" data-waypoint="main">
+      <h1 id="dynamodb-data-schema">DynamoDB Data Schema</h1>
+
+<p>We define <strong>credential</strong>, <strong>archive-credential</strong>, <strong>service</strong>, and
+<strong>archive_service</strong>. <strong>credential</strong> and <strong>service</strong> are the current revision of
+a credential, or a service. <strong>archive-credential</strong> and <strong>archive_service</strong> are
+archived revisions of passwords and services and are append-only.</p>
+
+<p>When a credential or a service is updated, it is added to the archive and the
+current revision is modified to reflect the newest revision. If the item isn&#39;t
+saved to the archive, the request will fail and the state of the system stays
+the same.</p>
+
+<p><strong>credential</strong></p>
+
+<ul>
+<li>id: uuid4 (string)</li>
+<li>data-type: &#39;credential&#39; (string)</li>
+<li>revision: incrementing integer (integer)</li>
+<li>name: user-defined friendly name (string)</li>
+<li>credential_pairs: dict with key/val pairs (string)</li>
+<li>enabled: (boolean)</li>
+<li>data_key: encrypted data key used to encrypt the credential_pairs (binary)</li>
+<li>modified_date: auto-generated date (datetime)</li>
+</ul>
+
+<p><strong>archive-credential</strong></p>
+
+<ul>
+<li>id: uuid4-revision (string)</li>
+<li>data-type: &#39;archive-credential&#39; (string)</li>
+<li>revision: incrementing integer (current revision + 1) (integer)</li>
+<li>name: user-defined friendly name (string)</li>
+<li>credential_pairs: dict with key/val pairs (string)</li>
+<li>enabled: (boolean)</li>
+<li>data_key: encrypted data key used to encrypt the credential_pairs (binary)</li>
+<li>modified_date: auto-generated date (datetime)</li>
+</ul>
+
+<p><strong>service</strong></p>
+
+<ul>
+<li>id: user-defined name (should match IAM role) (string)</li>
+<li>data-type: &#39;service&#39; (string)</li>
+<li>revision: incrementing integer (integer)</li>
+<li>credentials: list of credential ids (string set)</li>
+<li>modified_date: auto-generated date (datetime)</li>
+</ul>
+
+<p><strong>archive-service</strong></p>
+
+<ul>
+<li>id: user-defined name (should match IAM role) (string)</li>
+<li>data-type: &#39;service&#39; (string)</li>
+<li>revision: incrementing integer (current revision + 1) (integer)</li>
+<li>credentials: list of credential ids (string set)</li>
+<li>modified_date: auto-generated date (datetime)</li>
+</ul>
+
+<h2 id="at-rest-encryption-model">At-rest encryption model</h2>
+
+<p>All metadata in Confidant is stored in clear text, but credential pairs in
+credentials are stored encrypted at-rest.</p>
+
+<p>Confidant uses a configured KMS master key to generate data keys. The
+encrypted data keys are stored in DynamoDB along with the credential.
+The decrypted data keys are kept in memory in the confidant web service
+for caching purposes.</p>
+
+<p>When credentials are created or updated, their credential pair information is
+encrypted and the data key used to encrypt the pair is recorded with
+the credential, in its encrypted form. When credentials are fetched, their
+credential pair is decrypted using the data key associated with the credential.
+For each credential decryption we make a call to KMS, if the plaintext data key
+isn&#39;t available in memory.</p>
+
+    </main>
+  </div>
+
+    <footer class="footer" data-waypoint="footer" role="contentinfo">
+  <div class="wrap-container">
+    <div class="footer-column">
+      <article class="footer-site-information">
+        <p>
+          &copy; 2014&ndash;2017 Lyft, Inc
+        </p>
+      </article>
+      <article class="footer-contact">
+        <ul class="footer-contact-list">
+          <li class="footer-contact-list-item twitter-link">
+            <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+          </li>
+          <li class="footer-contact-list-item github-link">
+            <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+          </li>
+          <li class="footer-contact-list-item">
+            <a href="//www.lyft.com/app">Download the Lyft app</a>
+          </li>
+        </ul>
+      </article>
+    </div>
+    <div class="footer-column footer-right">
+      <p class="footer-credit">
+        From the developers at
+      </p>
+      <a href="//lyft.com" target="_blank">
+        <span class="footer-logo"></span>
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../../javascripts/site-c8d66733.js" type="text/javascript"></script>
+    <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1446928-11']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Confidant: Server-blinded credentials</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Source+Code+Pro">
+    <link href="../../stylesheets/site-820e35f9.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+      <header id="header">
+    <nav class="global-nav" role="navigation">
+  <section class="wrap-container">
+    <header class="global-nav-item logo-text">
+      <a class="global-nav-logo" href="../../">Confidant</a>
+    </header>
+
+    <ul class="global-nav-list">
+      <li class="global-nav-item">
+        <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      </li>
+      <li class="global-nav-item">
+        <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+      </li>
+      <li class="global-nav-item">
+        <a class="cta-link-nav-filled" href="../../basics/install/">Docs</a>
+      </li>
+    </ul>
+  </section>
+</nav>
+
+  </header>
+
+  <div class="body-content-container wrap-container" role="main">
+    <nav id="toc" class="sidebar" data-waypoint="sidebar">
+      <div id="search" role="search">
+  <form>
+    <input class="st-default-search-input" id="st-default-search-input" type="search" placeholder="Search the docs">
+  </form>
+  <div id="st-results-container"></div>
+  <script type="text/javascript">
+    (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+    })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+    _st('install','pzDJ5qvukhA8YuSHzVGN','2.0.0');
+  </script>
+</div>
+
+<div class="toc-block-container">
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Basics</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../basics/install/">Install</a> </li>
+      <li class="doc-item">
+        <a href="../../basics/configuration/">Configure</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../basics/using_confidant/">Managing Secrets and Mappings</a>
+        </li>
+      <li class="doc-item">
+        <a href="../../basics/client/">Using the Client</a>
+        </li>
+    </ul>
+  </div>
+
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Advanced</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="./">Server-blinded Secrets</a>
+        </li>
+      <li class="doc-item">
+        <a href="../kms_auth/">KMS Authentication</a>
+        </li>
+      <li class="doc-item">
+        <a href="../threat_model/">Threat Model</a>
+        </li>
+      <li class="doc-item">
+        <a href="../contributing/">Contributing</a>
+        </li>
+      <li class="doc-item">
+        <a href="../data_schema/">Data Schema</a>
+        </li>
+      <li class="doc-item">
+        <a href="../changelog/">Changelog</a>
+        </li>
+    </ul>
+  </div>
+  <div class="toc-block">
+    <h3 class="docs-section-heading">Communication</h3>
+    <ul>
+      <li class="doc-item">
+        <a href="../../communication/support/">Support</a>
+	</li>
+      <li class="doc-item">
+        <a href="../../communication/security_reporting/">Security Reporting</a>
+	</li>
+    </ul>
+  </div>
+</div>
+
+    </nav>
+
+    <main class="main" role="main" data-waypoint="main">
+      <h1 id="server-blinded-secrets">Server-blinded secrets</h1>
+
+<h2 id="what-are-server-blinded-secrets">What are server-blinded secrets?</h2>
+
+<p>Some secrets are so sensitive that even if your confidant server is breached,
+it shouldn&#39;t give the attacker access to the secret. With confidant&#39;s plain
+secrets, confidant stores the secrets encrypted at rest, and encrypts and
+decrypts secrets on behalf of services. Starting in confidant version 1.1, it&#39;s
+possible to use another type of secret: server-blinded secrets. Server-blinded
+secrets are more difficult to use, and there&#39;s a lot more thought that needs to
+go into multi-region and multi-account planning when using server-blinded
+secrets, so it&#39;s important to have a good plan in place before using them.</p>
+
+<p>The basic idea behind server-blinded secrets is that rather than having
+confidant handle the enryption and decryption of the secrets, end-users will
+encrypt the secrets prior to them being sent to confidant, and your services
+will decrypt the secrets when they receive them.</p>
+
+<p>The new confidant client in version 1.1 has support for server-blinded secrets.
+Like secrets in confidant are referred to as credentials, blinded secrets are
+referred to as blind credentials.</p>
+
+<h2 id="kms-keys-and-iam-policy-examples-for-server-blinded-secrets">KMS keys and IAM policy examples for server-blinded secrets</h2>
+
+<p>It&#39;s necessary to create a new KMS key in each region you wish to support. As
+an example, we&#39;ll name our new KMS keys confidant-production-useast1-blind and
+confidant-production-uswest2-blind. Though it&#39;s possible to use KMS key policy
+or key grants to manage access to this key, it&#39;s much easier to manage access
+to the key through IAM user and role policies. A reason why this is easier is
+because it gives you fine-grained access controls at the level of your service,
+rather than in a centralized location. First let&#39;s allow users to use the blind
+keys to encrypt data:</p>
+
+<pre><code class="json">{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [
+        {
+            &quot;Action&quot;: [
+                &quot;kms:GenerateRandom&quot;
+            ],
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Resource&quot;: &quot;*&quot;
+        },
+        {
+            &quot;Action&quot;: [
+                &quot;kms:Encrypt&quot;
+            ],
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Resource&quot;: [
+                &quot;arn:aws:kms:us-east-1:12345:key/your-east-blind-key-id&quot;,
+                &quot;arn:aws:kms:us-west-2:12345:key/your-west-blind-key-id&#39;
+            ],
+            &quot;Condition&quot;: {
+                &quot;Bool&quot;: {
+                    &quot;aws:MultiFactorAuthPresent&quot;: &quot;true&quot;
+                }
+            }
+        }
+    ]
+}
+</code></pre>
+
+<p>The above policy allows users to encrypt data using the key. It doesn&#39;t have
+any restrictions to the encryption context, so that users can set custom
+contexts that can be used to restrict access on the service side.</p>
+
+<p>Next let&#39;s create an IAM policy for an IAM role &#39;serviceA-production&#39; that&#39;s
+attached to our serviceA-production-useast1 and serviceA-production-uswest2
+autoscale groups:</p>
+
+<pre><code class="json">{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [
+        {
+            &quot;Action&quot;: [
+                &quot;kms:Decrypt&quot;
+            ],
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Resource&quot;: [
+                &quot;arn:aws:kms:us-east-1:12345:key/your-east-blind-key-id&quot;,
+                &quot;arn:aws:kms:us-west-2:12345:key/your-west-blind-key-id&#39;
+            ],
+            &quot;Condition&quot;: {
+                &quot;StringEquals&quot;: {
+                    &quot;kms:EncryptionContext:group&quot;: &quot;serviceA-production&quot;
+                }
+            }
+        }
+    ]
+}
+</code></pre>
+
+<p>This policy allows the IAM role to decrypt anything using the blind keys in
+us-east-1 or us-west-2, if the encryption context has a &#39;group&#39; key with a
+&#39;serviceA-production&#39; value. The confidant client has an option for using group
+as the context, which makes it a bit easier to use; so, though you&#39;re not
+required to use &#39;group&#39; for the context, you may want to.</p>
+
+<h3 id="creating-and-updating-server-blinded-secrets-using-the-confidant-client">Creating and updating server-blinded secrets using the confidant client</h3>
+
+<p>Before we get started, you should read the documentation about installing and
+configuring the confidant client, if you haven&#39;t yet.</p>
+
+<p>To create a blind secret, we&#39;ll call confidant with the &#39;create<em>blind</em>credential&#39;
+argument. Like normal secrets, you&#39;re required to give the secret a name and to
+give it a dict of credential pairs, but you must also provide the group
+context, and a set of blind keys that it can use. Here&#39;s an example:</p>
+
+<pre><code class="bash">confidant create_blind_credential --mfa --name &quot;test blind secret&quot; \
+    --credential-pairs &#39;{&quot;api_public_key&quot;:&quot;12345&quot;,&quot;api_private_key&quot;:&quot;abcde&quot;}&#39; \
+    --group-context &#39;{&quot;group&quot;:&quot;serviceA-production&quot;}&#39; --blind-keys \
+    &#39;{&quot;us-east-1&quot;:&quot;alias/confidant-production-useast1-blind&quot;,&quot;us-west-2&quot;:&quot;alias/confidant-production-uswest2-blind&quot;}&#39;
+</code></pre>
+
+<p>Note in the above that the context we&#39;re using a group context that matches the
+IAM policy we&#39;ve added to the service&#39;s IAM role. Also, for the blind keys,
+we&#39;re telling the confidant client which keys it should use in each region.</p>
+
+<p>When the blind secret is created, it&#39;ll output a json document describing the
+new secret. An attribute returned is id, which you&#39;ll need to update secrets.
+You can also view blind secrets through the web interface to find the secret&#39;s
+ID. The web interface will show the encrypted contents of the credential pairs,
+but it can&#39;t show the unencrypted contexts.</p>
+
+<p>To update secrets, you pass in the id of the secret and the attributes you&#39;d like
+to change; If you&#39;re updating the credential pairs, it&#39;s necessary to also pass
+in the group context and the blind keys. Here&#39;s an example:</p>
+
+<pre><code class="bash">confidant update_blind_credential --mfa --id dd329c9174924a0a9bf8bf3e7fbdaef9 \
+    --credential-pairs &#39;{&quot;api_public_key&quot;:&quot;67890&quot;,&quot;api_private_key&quot;:&quot;fghij&quot;}&#39; \
+    --group-context &#39;{&quot;group&quot;:&quot;serviceA-production&quot;}&#39; --blind-keys \
+    &#39;{&quot;us-east-1&quot;:&quot;alias/confidant-production-useast1-blind&quot;,&quot;us-west-2&quot;:&quot;alias/confidant-production-uswest2-blind&quot;}&#39;
+</code></pre>
+
+<p>Like the creation subcommand, update<em>blind</em>credential will output a json
+document describing the updated secret.</p>
+
+<p>If you&#39;ve given users IAM privileges to decrypt blind secrets, they can also
+view the decrypted versions of blind secrets using the get<em>blind</em>credential
+subcommand. Notice that by default this subcommand will return the encrypted
+version of the credential pairs, unless --decrypt-blind is used:</p>
+
+<pre><code class="bash">confidant get_blind_credential --mfa --id dd329c9174924a0a9bf8bf3e7fbdaef9 \
+    --decrypt-blind
+</code></pre>
+
+    </main>
+  </div>
+
+    <footer class="footer" data-waypoint="footer" role="contentinfo">
+  <div class="wrap-container">
+    <div class="footer-column">
+      <article class="footer-site-information">
+        <p>
+          &copy; 2014&ndash;2017 Lyft, Inc
+        </p>
+      </article>
+      <article class="footer-contact">
+        <ul class="footer-contact-list">
+          <li class="footer-contact-list-item twitter-link">
+            <a href="//twitter.com/share" class="twitter-share-button" data-text="Confidant, your secret keeper" data-via="lyft" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+          </li>
+          <li class="footer-contact-list-item github-link">
+            <iframe src="//ghbtns.com/github-btn.html?user=lyft&repo=confidant&type=watch" height="30" width="70" frameborder="0" scrolling="0" style="width:70px; height: 30px;" class="github-btn" allowTransparency="true"></iframe>
+
+          </li>
+          <li class="footer-contact-list-item">
+            <a href="//www.lyft.com/app">Download the Lyft app</a>
+          </li>
+        </ul>
+      </article>
+    </div>
+    <div class="footer-column footer-right">
+      <p class="footer-credit">
+        From the developers at
+      </p>
+      <a href="//lyft.com" target="_blank">
+        <span class="footer-logo"></span>
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../../javascripts/site-c8d66733.js" type="text/javascript"></script>
+    <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1446928-11']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+
+  </body>
+</html>
