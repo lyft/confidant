@@ -61,6 +61,29 @@ export SESSION_SECRET='aBVmJA3zv6zWGjrYto135hkdox6mW2kOu7UaXIHK8ztJvT8w5O'
 export HOST='0.0.0.0'
 # The port to listen on.
 export PORT='80'
+# Trust X-Forwarded-Proto from any SSL termination server
+export FORWARDED_ALLOW_IPS='*'
+```
+
+## gunicorn configuration for SSL termination support
+
+We assume confidant is always run behind a trusted SSL termination load
+balancer. As such, confidant will run as http:// and gunicorn will need to trust
+X-Forwarded-Proto to know that it's running behind a terminator.
+
+To configure this via an environment variable:
+
+```bash
+# Environment for gunicorn
+export FORWARDED_ALLOW_IPS='*'
+```
+
+If the environment variable doesn't work, you can configure this through a CLI
+argument to gunicorn:
+
+```bash
+# CLI flag for gunicorn
+gunicorn confidant.wsgi:app -k gevent --forwarded-allow-ips=*
 ```
 
 ### Google authentication configuration
@@ -74,7 +97,7 @@ create OAuth client ID credentials. The application type is 'Web application'.
 The Authorized JavaScript origins is '<url>/'. The Authorized redirect URI is 
 `<url>/v1/login`. Take the generated client id and consumer secret, and set
 them in the settings. You'll also need to generate a long random string and set
-the AUTHOMATIC_SALT setting, for CSRF protection.
+the AUTHOMATIC\_SALT setting, for CSRF protection.
 
 ```bash
 # The authentication type we'll be using for user authentication (google is the
