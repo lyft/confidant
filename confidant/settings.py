@@ -60,10 +60,6 @@ def str_env(var_name, default=''):
     return getenv(var_name, default)
 
 
-def _bootstrap(secrets):
-    return EncryptedSettings(secrets)
-
-
 # Basic setup
 
 # Whether or not Confidant is run in debug mode. Never run confidant in debug
