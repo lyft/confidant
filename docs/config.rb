@@ -9,6 +9,7 @@ activate :autoprefixer
 
 activate :deploy do |deploy|
   deploy.deploy_method = :git
+  deploy.remote = 'git@github.com:lyft/confidant.git'
 end
 
 set :markdown, :tables => true, :autolink => true, :gh_blockcode => true, :fenced_code_blocks => true, :with_toc_data => true
