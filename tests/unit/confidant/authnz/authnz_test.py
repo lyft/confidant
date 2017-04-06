@@ -3,6 +3,11 @@ from mock import patch
 from mock import Mock
 from werkzeug.exceptions import Unauthorized
 
+# Prevent call to KMS when app is imported
+from confidant import settings
+settings.encrypted_settings.secret_string = {}
+settings.encrypted_settings.decrypted_secrets = {'SESSION_SECRET': 'TEST_KEY'}
+
 import confidant.routes
 from confidant.app import app
 from confidant import authnz

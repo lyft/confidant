@@ -16,6 +16,7 @@ static_folder = settings.get('STATIC_FOLDER')
 
 app = Flask(__name__, static_folder=static_folder)
 app.config.from_object(settings)
+app.config.update(settings.encrypted_settings.get_all_secrets())
 app.debug = app.config['DEBUG']
 
 if app.config['SSLIFY']:
