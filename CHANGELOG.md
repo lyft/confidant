@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.9
+
+## 1.9.0
+
+* piptools upgrade of transitive dependencies. Most notably this was run to
+  upgrade gunicorn to 19.7.1, which allows for using FORWARDED\_ALLOW\_IPS in
+  the environment, as well as any other newer gunicorn settings.
+
 ## 1.8
 
 ### 1.8.0
