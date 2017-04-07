@@ -640,7 +640,13 @@ def create_credential():
             modified_by=authnz.get_logged_in_user()
         )
         # Set credential_pairs and data_key
-        cred.encrypt_and_set_pairs(credential_pairs, {'id': id})
+        try:
+            cred.encrypt_and_set_pairs(credential_pairs, {'id': id})
+        except confidant.models.credential.EncryptError as e:
+            logging.error(e)
+            return jsonify(
+                {'error': 'Failed to add credential to archive.'}
+            ), 500
         # Save archive
         cred.save(id__null=True)
     except PutError as e:
@@ -746,7 +752,13 @@ def update_credential(id):
             modified_by=authnz.get_logged_in_user()
         )
         # Set credential_pairs and data_key
-        cred.encrypt_and_set_pairs(credential_pairs, {'id': id})
+        try:
+            cred.encrypt_and_set_pairs(credential_pairs, {'id': id})
+        except confidant.models.credential.EncryptError as e:
+            logging.error(e)
+            return jsonify(
+                {'error': 'Failed to add credential to archive.'}
+            ), 500
         # Save archive
         cred.save(id__null=True)
     except PutError as e:

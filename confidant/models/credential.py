@@ -22,6 +22,10 @@ from confidant.models.session_cls import DDBSession
 from confidant.models.connection_cls import DDBConnection
 
 
+class EncryptError(Exception):
+    pass
+
+
 class DataTypeDateIndex(GlobalSecondaryIndex):
     class Meta:
         projection = AllProjection()
@@ -98,10 +102,9 @@ class Credential(Model):
     def encrypt_and_set_pairs(self, credential_pairs, encryption_context):
         # We only support this for blind credentials
         if self.blind:
-            logging.warning(
+            raise EncryptError(
                 'Calling encrypt_and_set_pairs on a blind credential.'
             )
-            return
         # We explicitly use the newest cipher_version when saving new
         # credentials
         self.cipher_version = 2
