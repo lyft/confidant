@@ -126,7 +126,7 @@ nose-pathmunge==0.1.2
 # Mocking and Patching Library for Testing
 # License: BSD
 # Upstream url: http://www.voidspace.org.uk/python/mock
-mock==1.0.1
+mock==2.0.0
 
 # License: MIT
 # Upstream url: http://pyyaml.org/wiki/PyYAML
