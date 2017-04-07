@@ -630,6 +630,7 @@ def create_credential():
         cred = Credential(
             id='{0}-{1}'.format(id, 1),
             revision=1,
+            schema_version=2,
             name=data['name'],
             blind=False,
             data_type='archive-credential',
@@ -740,6 +741,7 @@ def update_credential(id):
             metadata=update['metadata'],
             enabled=update['enabled'],
             revision=revision,
+            schema_version=2,
             cipher_version=2,
             modified_by=authnz.get_logged_in_user()
         )
@@ -946,12 +948,15 @@ def create_blind_credential():
             credential_keys=data.get('credential_keys'),
             metadata=data.get('metadata'),
             revision=revision,
+            schema_version=2,
             enabled=data.get('enabled'),
             data_key=data['data_key'],
             cipher_type=data['cipher_type'],
             cipher_version=data['cipher_version'],
             modified_by=authnz.get_logged_in_user()
         )
+        # This is a blind credential so we don't need to encrypt here, only
+        # save.
         cred.save(id__null=True)
     except PutError as e:
         logging.error(e)
@@ -1066,12 +1071,15 @@ def update_blind_credential(id):
             credential_keys=update['credential_keys'],
             metadata=update['metadata'],
             revision=revision,
+            schema_version=2,
             enabled=update['enabled'],
             data_key=update['data_key'],
             cipher_type=update['cipher_type'],
             cipher_version=update['cipher_version'],
             modified_by=authnz.get_logged_in_user()
         )
+        # This is a blind credential so we don't need to encrypt here, only
+        # save.
         cred.save(id__null=True)
     except PutError as e:
         logging.error(e)

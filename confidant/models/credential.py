@@ -45,10 +45,10 @@ class Credential(Model):
     data_type = UnicodeAttribute()
     data_type_date_index = DataTypeDateIndex()
     name = UnicodeAttribute()
-    blind = BooleanAttribute(default=True)
+    blind = BooleanAttribute(null=True)
     credential_pairs = UnicodeAttribute()
     credential_keys = UnicodeSetAttribute(default=set([]), null=True)
-    schema_version = NumberAttribute(default=2, null=True)
+    schema_version = NumberAttribute(null=True)
     enabled = BooleanAttribute(default=True)
     data_key = BinaryAttribute()
     cipher_type = UnicodeAttribute()
@@ -62,9 +62,10 @@ class Credential(Model):
         if self.blind:
             return None
         if self.schema_version and self.schema_version >= 2:
-            _data_key = json.loads(
-                self.data_key
-            )[app.config['AWS_DEFAULT_REGION']]
+            _data_key = base64.b64decode(
+                json.loads(self.data_key)[app.config['AWS_DEFAULT_REGION']]
+            )
+            logging.error('!!!DATA_KEY {0}'.format(_data_key))
         else:
             _data_key = self.data_key
         if self.data_type == 'credential':
@@ -72,18 +73,23 @@ class Credential(Model):
         else:
             id_context = self.id.split('-')[0]
         return keymanager.decrypt_datakey(
-            base64.b64decode(_data_key),
+            _data_key,
             encryption_context={'id': id_context}
         )
 
     @property
     def decrypted_credential_pairs(self):
-        if self.blind:
+        if self.blind is True:
+            logging.warning(
+                'Calling decrypted_credential_pairs on a blind credential.'
+            )
             return None
         if self.schema_version and self.schema_version >= 2:
             encrypted_credential_pairs = json.loads(
                 self.credential_pairs
             )[app.config['AWS_DEFAULT_REGION']]
+        else:
+            encrypted_credential_pairs = self.credential_pairs
         cipher = CipherManager(self.decrypted_data_key, self.cipher_version)
         return json.loads(
             cipher.decrypt(encrypted_credential_pairs)
