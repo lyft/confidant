@@ -3,7 +3,6 @@ import time
 from pynamodb.exceptions import TableError
 
 from confidant.models.credential import Credential
-from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
 
 
@@ -14,12 +13,6 @@ def create_dynamodb_tables():
         try:
             if not Credential.exists():
                 Credential.create_table(
-                    read_capacity_units=10,
-                    write_capacity_units=10,
-                    wait=True
-                )
-            if not BlindCredential.exists():
-                BlindCredential.create_table(
                     read_capacity_units=10,
                     write_capacity_units=10,
                     wait=True
