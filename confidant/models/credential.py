@@ -64,12 +64,14 @@ class Credential(Model):
     @property
     def decrypted_data_key(self):
         if self.blind:
+            logging.warning(
+                'Calling decrypted_data_key on a blind credential.'
+            )
             return None
         if self.schema_version and self.schema_version >= 2:
             _data_key = base64.b64decode(
                 json.loads(self.data_key)[app.config['AWS_DEFAULT_REGION']]
             )
-            logging.error('!!!DATA_KEY {0}'.format(_data_key))
         else:
             _data_key = self.data_key
         if self.data_type == 'credential':
