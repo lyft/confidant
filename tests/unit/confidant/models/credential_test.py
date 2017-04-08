@@ -5,15 +5,23 @@ import unittest
 from mock import patch
 from mock import MagicMock
 
+from confidant.app import app
 from confidant.models.credential import Credential
 from confidant.models.credential import EncryptError
 
 
 class CredentialTest(unittest.TestCase):
+    def setUp(self):
+        self.default_region = app.config['AWS_DEFAULT_REGION']
+
+    def tearDown(self):
+        app.config['AWS_DEFAULT_REGION'] = self.default_region
+
     @patch(
         'confidant.keymanager.decrypt_datakey',
     )
     def test_decrypted_data_key(self, decrypt_mock):
+        app.config['AWS_DEFAULT_REGION'] = 'us-east-1'
         decrypt_mock.return_value = 'decrypted-data-key'
         data_key = (
             '{"us-east-1": "' +
@@ -64,6 +72,7 @@ class CredentialTest(unittest.TestCase):
         'confidant.keymanager.decrypt_datakey',
     )
     def test_decrypted_credential_pairs(self, decrypt_mock):
+        app.config['AWS_DEFAULT_REGION'] = 'us-east-1'
         decrypt_mock.return_value = 'decrypted-data-key'
         data_key = (
             '{"us-east-1": "' +
