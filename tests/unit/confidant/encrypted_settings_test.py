@@ -23,13 +23,13 @@ class EncprytedSettingsTest(unittest.TestCase):
         assert enc_set.secret_names == ['Foo']
 
     def test_get_registered(self):
-        enc_set = EncryptedSettings('encryptedblob')
+        enc_set = EncryptedSettings(None)
         enc_set.register('Foo', 'Bar')
         enc_set.decrypted_secrets = {'Foo': 'DecryptedBar'}
         assert enc_set.get_secret('Foo') == 'DecryptedBar'
 
     def test_get_registered_default(self):
-        enc_set = EncryptedSettings({})
+        enc_set = EncryptedSettings(None)
         enc_set.register('Foo', 'Bar')
         enc_set.register('Bar', 'Baz')
         enc_set.decrypted_secrets = {'Foo': 'DecryptedFoo'}
