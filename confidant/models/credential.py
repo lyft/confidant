@@ -49,7 +49,6 @@ class Credential(Model):
     data_type = UnicodeAttribute()
     data_type_date_index = DataTypeDateIndex()
     name = UnicodeAttribute()
-    blind = BooleanAttribute(null=True)
     credential_pairs = UnicodeAttribute()
     credential_keys = UnicodeSetAttribute(default=set([]), null=True)
     schema_version = NumberAttribute(null=True)
@@ -60,6 +59,13 @@ class Credential(Model):
     metadata = JSONAttribute(default={}, null=True)
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
+
+    @property
+    def blind(self):
+        if self.data_type.startswith('blind-'):
+            return True
+        else:
+            return False
 
     @property
     def decrypted_data_key(self):
