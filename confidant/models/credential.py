@@ -22,10 +22,6 @@ from confidant.models.session_cls import DDBSession
 from confidant.models.connection_cls import DDBConnection
 
 
-class EncryptError(Exception):
-    pass
-
-
 class DataTypeDateIndex(GlobalSecondaryIndex):
     class Meta:
         projection = AllProjection()
@@ -107,12 +103,12 @@ class Credential(Model):
             cipher.decrypt(encrypted_credential_pairs)
         )
 
-    def encrypt_and_set_pairs(self, credential_pairs, encryption_context):
+    def _encrypt_and_set_pairs(self):
         # We only support this for blind credentials
-        if self.blind:
-            raise EncryptError(
-                'Calling encrypt_and_set_pairs on a blind credential.'
-            )
+        if not self.blind:
+            return
+        if self.data_key:
+            return
         # We explicitly use the newest cipher_version when saving new
         # credentials
         self.cipher_version = 2
@@ -123,10 +119,10 @@ class Credential(Model):
         regions = keymanager.get_datakey_regions()
         encrypted_credential_pairs = {}
         encrypted_data_keys = {}
-        _credential_pairs = json.dumps(credential_pairs)
+        _credential_pairs = json.dumps(self.credential_pairs)
         for region in regions:
             data_key = keymanager.create_datakey(
-                encryption_context=encryption_context,
+                encryption_context={'id': self.id},
                 region=region
             )
             encrypted_data_keys[region] = base64.b64encode(
@@ -141,3 +137,7 @@ class Credential(Model):
             )
         self.data_key = json.dumps(encrypted_data_keys)
         self.credential_pairs = json.dumps(encrypted_credential_pairs)
+
+    def save(self, *args, **kwargs):
+        self._encrypt_and_set_pairs()
+        super(Credential, self).save(*args, **kwargs)

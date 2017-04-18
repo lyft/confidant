@@ -7,7 +7,6 @@ from mock import MagicMock
 
 from confidant.app import app
 from confidant.models.credential import Credential
-from confidant.models.credential import EncryptError
 
 
 class CredentialTest(unittest.TestCase):
@@ -128,7 +127,7 @@ class CredentialTest(unittest.TestCase):
             'plaintext': 'data-key-test-data'
         })
     )
-    def test_encrypt_and_set_pairs(self):
+    def test__encrypt_and_set_pairs(self):
         cred = Credential(
             id='abcd1234-1',
             revision=1,
@@ -137,15 +136,23 @@ class CredentialTest(unittest.TestCase):
             blind=True,
             data_type='archive-credential',
             credential_keys=[],
+            credential_pairs={'key': 'val'},
             metadata={},
             enabled=True,
             modified_by='tester'
         )
 
-        with self.assertRaisesRegexp(
-                EncryptError,
-                'Calling encrypt_and_set_pairs on a blind credential.'):
-            cred.encrypt_and_set_pairs({'key': 'val'}, {'id': 'abcd1234'})
+        # This should return and not set cipher_version, since
+        # encrypt_and_set_pairs isn't used for blind credentials.
+        cred._encrypt_and_set_pairs()
+        self.assertIsNone(cred.cipher_version)
+
+        # This should return and not set cipher_version, since
+        # encrypt_and_set_pairs returns if data_key is already set
+        cred.data_key = {'some': 'value'}
+        cred._encrypt_and_set_pairs()
+        self.assertIsNone(cred.cipher_version)
+        cred.data_key = None
 
         cred.blind = False
 
@@ -155,7 +162,7 @@ class CredentialTest(unittest.TestCase):
                 return_value='encrypted_data'
             )
             cipher_mock.return_value = encrypt_mock
-            cred.encrypt_and_set_pairs({'key': 'val'}, {'id': 'abcd1234'})
+            cred._encrypt_and_set_pairs()
 
             # These should be set.
             self.assertEqual(
