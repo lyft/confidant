@@ -26,11 +26,19 @@ class EncprytedSettingsTest(unittest.TestCase):
         enc_set.decrypted_secrets = {'Foo': 'DecryptedFoo'}
         assert enc_set.get_secret('Bar') == 'Baz'
 
-    @patch('confidant.encrypted_settings.cryptolib.decrypt_datakey', return_value='1cVUbJT58SbMt4Wk4xmEZoNhZGdWO_vg1IJiXwc6HGs=')
-    @patch('confidant.encrypted_settings.Fernet.decrypt', return_value='{secret: value, secret2: value2}\n')
+    @patch(
+        'confidant.encrypted_settings.cryptolib.decrypt_datakey',
+        return_value='1cVUbJT58SbMt4Wk4xmEZoNhZGdWO_vg1IJiXwc6HGs='
+    )
+    @patch(
+        'confidant.encrypted_settings.Fernet.decrypt',
+        return_value='{secret: value, secret2: value2}\n'
+    )
     def test_bootstrap(self, mockdecryptkey, mockdecrypt):
         enc_set = EncryptedSettings(None)
-        decrypted = enc_set._bootstrap('{"secrets": "encryptedstring", "data_key": "dGhla2V5"}')
+        decrypted = enc_set._bootstrap(
+            '{"secrets": "encryptedstring", "data_key": "dGhla2V5"}'
+        )
         assert decrypted['secret2'] == 'value2'
 
     def test_bootstrap_filefail(self):
