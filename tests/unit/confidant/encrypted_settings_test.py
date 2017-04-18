@@ -11,20 +11,20 @@ class EncprytedSettingsTest(unittest.TestCase):
     def test_register(self):
         enc_set = EncryptedSettings(None)
         enc_set.register('Foo', 'Bar')
-        assert enc_set.secret_names == ['Foo']
+        self.assertEqual(enc_set.secret_names, ['Foo'])
 
     def test_get_registered(self):
         enc_set = EncryptedSettings(None)
         enc_set.register('Foo', 'Bar')
         enc_set.decrypted_secrets = {'Foo': 'DecryptedBar'}
-        assert enc_set.get_secret('Foo') == 'DecryptedBar'
+        self.assertEqual(enc_set.get_secret('Foo'), 'DecryptedBar')
 
     def test_get_registered_default(self):
         enc_set = EncryptedSettings(None)
         enc_set.register('Foo', 'Bar')
         enc_set.register('Bar', 'Baz')
         enc_set.decrypted_secrets = {'Foo': 'DecryptedFoo'}
-        assert enc_set.get_secret('Bar') == 'Baz'
+        self.assertEqual(enc_set.get_secret('Bar'), 'Baz')
 
     @patch(
         'confidant.encrypted_settings.cryptolib.decrypt_datakey',
@@ -39,9 +39,9 @@ class EncprytedSettingsTest(unittest.TestCase):
         decrypted = enc_set._bootstrap(
             '{"secrets": "encryptedstring", "data_key": "dGhla2V5"}'
         )
-        assert decrypted['secret2'] == 'value2'
+        self.assertEqual(decrypted['secret2'], 'value2')
 
     def test_bootstrap_filefail(self):
         enc_set = EncryptedSettings(None)
         decrypted = enc_set._bootstrap('file://FILE/DOES/NOT/EXIST')
-        assert decrypted == {}
+        self.assertEqual(decrypted, {})
