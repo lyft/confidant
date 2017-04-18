@@ -2,20 +2,11 @@ import unittest
 from mock import patch
 from mock import Mock
 
-# Prevent call to KMS when app is imported
 from confidant import settings
-settings.encrypted_settings.secret_string = {}
-settings.encrypted_settings.decrypted_secrets = {'SESSION_SECRET': 'TEST_KEY'}
-
-from confidant.app import app
 from confidant.encrypted_settings import EncryptedSettings
 
 
 class EncprytedSettingsTest(unittest.TestCase):
-
-    def test_app_config(self):
-        # This is really an integration test
-        assert app.config.get('SESSION_SECRET') == 'TEST_KEY'
 
     def test_register(self):
         enc_set = EncryptedSettings(None)
