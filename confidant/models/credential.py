@@ -91,7 +91,7 @@ class Credential(Model):
 
     @property
     def decrypted_credential_pairs(self):
-        if self.blind is True:
+        if self.blind:
             logging.warning(
                 'Calling decrypted_credential_pairs on a blind credential.'
             )
