@@ -640,8 +640,7 @@ def create_credential():
             enabled=data.get('enabled'),
             modified_by=authnz.get_logged_in_user()
         )
-        # Save archive
-        cred.save(id__null=True)
+        cred.save()
     except PutError as e:
         logging.error(e)
         return jsonify(
@@ -737,8 +736,7 @@ def update_credential(id):
             cipher_version=2,
             modified_by=authnz.get_logged_in_user()
         )
-        # Save archive
-        cred.save(id__null=True)
+        cred.save()
     except PutError as e:
         logging.error(e)
         return jsonify(
@@ -937,9 +935,7 @@ def create_blind_credential():
             cipher_version=data['cipher_version'],
             modified_by=authnz.get_logged_in_user()
         )
-        # This is a blind credential so we don't need to encrypt here, only
-        # save.
-        cred.save(id__null=True)
+        cred.save()
     except PutError as e:
         logging.error(e)
         return jsonify(
@@ -1051,9 +1047,7 @@ def update_blind_credential(id):
             cipher_version=update['cipher_version'],
             modified_by=authnz.get_logged_in_user()
         )
-        # This is a blind credential so we don't need to encrypt here, only
-        # save.
-        cred.save(id__null=True)
+        cred.save()
     except PutError as e:
         logging.error(e)
         return jsonify(

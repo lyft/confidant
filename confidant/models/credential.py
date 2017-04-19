@@ -77,14 +77,17 @@ class Credential(Model):
             )
         else:
             _data_key = self.data_key
-        if self.data_type == 'credential':
-            id_context = self.id
-        else:
-            id_context = self.id.split('-')[0]
         return keymanager.decrypt_datakey(
             _data_key,
-            encryption_context={'id': id_context}
+            encryption_context={'id': self.context}
         )
+
+    @property
+    def context(self):
+        if self.data_type.startswith('archive-'):
+            return self.id.split('-')[0]
+        else:
+            return self.id
 
     @property
     def decrypted_credential_pairs(self):
@@ -105,11 +108,6 @@ class Credential(Model):
         )
 
     def _encrypt_and_set_pairs(self):
-        # We only support this for blind credentials
-        if not self.blind:
-            return
-        if self.data_key:
-            return
         # We explicitly use the newest cipher_version when saving new
         # credentials
         self.cipher_version = 2
@@ -123,7 +121,7 @@ class Credential(Model):
         _credential_pairs = json.dumps(self.credential_pairs)
         for region in regions:
             data_key = keymanager.create_datakey(
-                encryption_context={'id': self.id},
+                encryption_context={'id': self.context},
                 region=region
             )
             encrypted_data_keys[region] = base64.b64encode(
@@ -140,8 +138,14 @@ class Credential(Model):
         self.credential_pairs = json.dumps(encrypted_credential_pairs)
 
     def save(self, *args, **kwargs):
-        self._encrypt_and_set_pairs()
-        super(Credential, self).save(*args, **kwargs)
+        if not self.blind:
+            self._encrypt_and_set_pairs()
+        # Save the archive first, passing in id__null, to ensure we aren't
+        # saving over an existing revision
+        super(Credential, self).save(*args, id__null=True, **kwargs)
+        # Reset the id and the data_type, making this a current revision to be
+        # saved. We don't use id__null here because we want to overwrite the
+        # entry.
         self.id = self.id.split('-')[0]
-        self.cred.data_type = self.cred.data_type.replace('archive-', '')
+        self.data_type = self.data_type.replace('archive-', '')
         super(Credential, self).save(*args, **kwargs)
