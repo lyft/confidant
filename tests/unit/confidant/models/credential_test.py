@@ -32,8 +32,7 @@ class CredentialTest(unittest.TestCase):
             revision=1,
             schema_version=2,
             name='test credential',
-            blind=True,
-            data_type='archive-credential',
+            data_type='archive-blind-credential',
             data_key=data_key,
             credential_keys=[],
             metadata={},
@@ -44,7 +43,8 @@ class CredentialTest(unittest.TestCase):
         # Can't decrypt a blind credential
         self.assertIsNone(cred.decrypted_data_key)
 
-        cred.blind = False
+        cred.data_type = 'archive-credential'
+
         self.assertEqual(cred.decrypted_data_key, 'decrypted-data-key')
         decrypt_mock.assert_called_with(
             'encrypted-data-key',
@@ -84,8 +84,7 @@ class CredentialTest(unittest.TestCase):
             schema_version=2,
             cipher_version=2,
             name='test credential',
-            blind=True,
-            data_type='archive-credential',
+            data_type='archive-blind-credential',
             data_key=data_key,
             credential_keys=[],
             metadata={},
@@ -96,7 +95,7 @@ class CredentialTest(unittest.TestCase):
         # Can't decrypt a blind credential
         self.assertIsNone(cred.decrypted_credential_pairs)
 
-        cred.blind = False
+        cred.data_type = 'archive-credential'
         cred.credential_pairs = '{"us-east-1": "encrypted-cred-pairs"}'
         with patch('confidant.models.credential.CipherManager') as cipher_mock:
             decrypt_mock = MagicMock()
@@ -133,7 +132,6 @@ class CredentialTest(unittest.TestCase):
             revision=1,
             schema_version=2,
             name='test credential',
-            blind=True,
             data_type='archive-credential',
             credential_keys=[],
             credential_pairs={'key': 'val'},
@@ -141,20 +139,6 @@ class CredentialTest(unittest.TestCase):
             enabled=True,
             modified_by='tester'
         )
-
-        # This should return and not set cipher_version, since
-        # encrypt_and_set_pairs isn't used for blind credentials.
-        cred._encrypt_and_set_pairs()
-        self.assertIsNone(cred.cipher_version)
-
-        # This should return and not set cipher_version, since
-        # encrypt_and_set_pairs returns if data_key is already set
-        cred.data_key = {'some': 'value'}
-        cred._encrypt_and_set_pairs()
-        self.assertIsNone(cred.cipher_version)
-        cred.data_key = None
-
-        cred.blind = False
 
         with patch('confidant.models.credential.CipherManager') as cipher_mock:
             encrypt_mock = MagicMock()
