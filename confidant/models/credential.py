@@ -58,7 +58,8 @@ class Credential(Model):
 
     @property
     def blind(self):
-        if self.data_type.startswith('blind-'):
+        if (self.data_type.startswith('blind-') or
+                self.data_type.startswith('archive-blind-')):
             return True
         else:
             return False
@@ -140,4 +141,7 @@ class Credential(Model):
 
     def save(self, *args, **kwargs):
         self._encrypt_and_set_pairs()
+        super(Credential, self).save(*args, **kwargs)
+        self.id = self.id.split('-')[0]
+        self.cred.data_type = self.cred.data_type.replace('archive-', '')
         super(Credential, self).save(*args, **kwargs)

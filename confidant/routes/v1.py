@@ -645,16 +645,8 @@ def create_credential():
     except PutError as e:
         logging.error(e)
         return jsonify(
-            {'error': 'Failed to add credential to archive.'}
+            {'error': 'Failed to save credential.'}
         ), 500
-    try:
-        # Update the id and save as current
-        cred.id = id
-        cred.data_type = 'credential'
-        cred.save()
-    except PutError as e:
-        logging.error(e)
-        return jsonify({'error': 'Failed to update active credential.'}), 500
     return jsonify({
         'id': cred.id,
         'name': cred.name,
@@ -750,16 +742,8 @@ def update_credential(id):
     except PutError as e:
         logging.error(e)
         return jsonify(
-            {'error': 'Failed to add credential to archive.'}
+            {'error': 'Failed to save credential.'}
         ), 500
-    try:
-        # Update the id and save as current
-        cred.id = id
-        cred.data_type = 'credential'
-        cred.save()
-    except PutError as e:
-        logging.error(e)
-        return jsonify({'error': 'Failed to update active credential.'}), 500
     if services:
         service_names = [x.id for x in services]
         msg = 'Updated credential "{0}" ({1}); Revision {2}'
@@ -959,16 +943,7 @@ def create_blind_credential():
     except PutError as e:
         logging.error(e)
         return jsonify(
-            {'error': 'Failed to add blind-credential to archive.'}
-        ), 500
-    try:
-        cred.id = id
-        cred.data_type = 'blind-credential'
-        cred.save()
-    except PutError as e:
-        logging.error(e)
-        return jsonify(
-            {'error': 'Failed to save blind-credential to current revision.'}
+            {'error': 'Failed to save blind-credential.'}
         ), 500
     return jsonify({
         'id': cred.id,
@@ -1082,16 +1057,7 @@ def update_blind_credential(id):
     except PutError as e:
         logging.error(e)
         return jsonify(
-            {'error': 'Failed to add blind-credential to archive.'}
-        ), 500
-    try:
-        cred.id = id
-        cred.data_type = 'blind-credential'
-        cred.save()
-    except PutError as e:
-        logging.error(e)
-        return jsonify(
-            {'error': 'Failed to update active blind-credential.'}
+            {'error': 'Failed to save blind-credential.'}
         ), 500
     if services:
         service_names = [x.id for x in services]
