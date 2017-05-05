@@ -1,18 +1,19 @@
 import json
 import base64
 import logging
+import six
 from datetime import datetime
 
 from pynamodb.models import Model
 from pynamodb.attributes import (
+    LegacyBooleanAttribute,
     UnicodeSetAttribute,
     UnicodeAttribute,
     NumberAttribute,
-    BooleanAttribute,
     UTCDateTimeAttribute,
-    BinaryAttribute,
     JSONAttribute
 )
+from pynamodb.constants import DEFAULT_ENCODING, BINARY_SHORT
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
 from confidant.app import app
@@ -20,6 +21,46 @@ from confidant import keymanager
 from confidant.ciphermanager import CipherManager
 from confidant.models.session_cls import DDBSession
 from confidant.models.connection_cls import DDBConnection
+
+
+class CompatDataKeyAttribute(JSONAttribute):
+    """
+    Backwards compat attribute for data key
+    """
+
+    def get_value(self, value):
+        # previously, data_key was serialized as binary
+        value_to_deserialize = super(JSONAttribute, self).get_value(value)
+        if value_to_deserialize is None:
+            value_to_deserialize = json.dumps(value.get(BINARY_SHORT))
+        return value_to_deserialize
+
+    def deserialize(self, value):
+        try:
+            # Old format was BinaryAttribute
+            return base64.b64decode(value.decode(DEFAULT_ENCODING))
+        except TypeError:
+            return super(CompatDataKeyAttribute, self).deserialize(value)
+
+
+class CompatCredentialPairsAttribute(JSONAttribute):
+    """
+    Backwards compat attribute for credential_pairs
+    """
+
+    def deserialize(self, value):
+        try:
+            return super(CompatCredentialPairsAttribute, self).deserialize(
+                value
+            )
+        except (ValueError, TypeError):
+            # Old format was UnicodeAttribute
+            if value is None or not len(value):
+                return None
+            elif isinstance(value, six.text_type):
+                return value
+            else:
+                return six.u(value)
 
 
 class DataTypeDateIndex(GlobalSecondaryIndex):
@@ -45,11 +86,11 @@ class Credential(Model):
     data_type = UnicodeAttribute()
     data_type_date_index = DataTypeDateIndex()
     name = UnicodeAttribute()
-    credential_pairs = UnicodeAttribute()
+    credential_pairs = CompatCredentialPairsAttribute()
     credential_keys = UnicodeSetAttribute(default=set([]), null=True)
     schema_version = NumberAttribute(null=True)
-    enabled = BooleanAttribute(default=True)
-    data_key = BinaryAttribute()
+    enabled = LegacyBooleanAttribute(default=True)
+    data_key = CompatDataKeyAttribute()
     cipher_type = UnicodeAttribute()
     cipher_version = NumberAttribute(null=True)
     metadata = JSONAttribute(default={}, null=True)

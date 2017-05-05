@@ -50,8 +50,9 @@ pep8==1.5.7
 pyasn1==0.1.9
 pycparser==2.17
 pyflakes==1.5.0           # via flake8
-pynamodb==1.5.3
-pyopenssl==16.2.0         # via ndg-httpsclient
+pynamodb==3.2.1
+pyopenssl==16.2.0
+pyparsing==2.1.10
 python-dateutil==2.6.0    # via botocore, delorean
 python-saml==2.2.1
 pytz==2017.2              # via babel, delorean, tzlocal

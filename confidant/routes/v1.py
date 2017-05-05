@@ -1,4 +1,3 @@
-import json
 import uuid
 import copy
 import logging
@@ -17,7 +16,6 @@ from confidant import graphite
 from confidant import webhook
 from confidant.app import app
 from confidant.utils import stats
-from confidant.ciphermanager import CipherManager
 from confidant.models.credential import Credential
 from confidant.models.service import Service
 
@@ -432,21 +430,13 @@ def _get_credentials(credential_ids):
     credentials = []
     with stats.timer('service_batch_get_credentials'):
         for cred in Credential.batch_get(copy.deepcopy(credential_ids)):
-            data_key = keymanager.decrypt_datakey(
-                cred.data_key,
-                encryption_context={'id': cred.id}
-            )
-            cipher_version = cred.cipher_version
-            cipher = CipherManager(data_key, cipher_version)
-            _credential_pairs = cipher.decrypt(cred.credential_pairs)
-            _credential_pairs = json.loads(_credential_pairs)
             credentials.append({
                 'id': cred.id,
                 'data_type': 'credential',
                 'name': cred.name,
                 'enabled': cred.enabled,
                 'revision': cred.revision,
-                'credential_pairs': _credential_pairs,
+                'credential_pairs': cred.decrypted_credential_pairs,
                 'metadata': cred.metadata
             })
     return credentials
@@ -632,7 +622,6 @@ def create_credential():
             revision=1,
             schema_version=2,
             name=data['name'],
-            blind=False,
             data_type='archive-credential',
             credential_keys=[],
             credential_pairs=credential_pairs,
@@ -725,7 +714,6 @@ def update_credential(id):
         cred = Credential(
             id='{0}-{1}'.format(id, revision),
             name=update['name'],
-            blind=False,
             data_type='archive-credential',
             credential_keys=[],
             credential_pairs=credential_pairs,
