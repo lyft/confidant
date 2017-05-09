@@ -22,8 +22,8 @@ flask-sslify==0.1.5
 flask==0.10.1
 funcsigs==1.0.2           # via mock
 futures==3.0.5            # via s3transfer
-gevent==1.0.2
-greenlet==0.4.9
+gevent==1.2.1
+greenlet==0.4.12
 guard==1.0.1
 gunicorn==19.7.1
 humanize==0.5.1           # via delorean
