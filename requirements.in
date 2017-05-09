@@ -141,12 +141,12 @@ gunicorn>=19.1.1,<20.0.0
 # License: MIT
 # Upstream url: http://www.gevent.org/
 # Use: For concurrency
-gevent==1.0.2
+gevent==1.2.1
 
 # License: MIT
 # Upstream url: https://github.com/python-greenlet/greenlet
 # Use: For concurrency
-greenlet==0.4.9
+greenlet==0.4.12
 
 # License: MIT
 # Upstream url: https://github.com/jsocol/pystatsd

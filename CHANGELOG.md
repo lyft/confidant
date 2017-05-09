@@ -1,6 +1,10 @@
 # Changelog
 
-## 1.9
+# 1
+
+## 1.10.0
+
+* Upgrade gevent and greenlet for CVE-2016-5180 and gevent/gevent#477
 
 ## 1.9.0
 
@@ -8,26 +12,18 @@
   upgrade gunicorn to 19.7.1, which allows for using FORWARDED\_ALLOW\_IPS in
   the environment, as well as any other newer gunicorn settings.
 
-## 1.8
-
 ### 1.8.0
 
 * Switch LRU for in-memory cache from an inefficient python implementation to
   lru-dict.
 
-## 1.7
-
 ### 1.7.0
 
 * Update appdirs requirement
 
-## 1.6
-
 ### 1.6.0
 
 * Update python-saml for CVE-2016-1000252.
-
-## 1.5
 
 ### 1.5.1
 
@@ -38,20 +34,14 @@
 * Added a feature to disable the credential conflict checks; see configuration
   docs for IGNORE\_CONFLICTS
 
-## 1.4
-
 ### 1.4.0
 
 * Added support for sending basic webhooks; see configuration docs for
   WEBHOOK\_URL
 
-## 1.3
-
 ### 1.3.0
 
 * Update statsd depencency from 3.1 to 3.2.1
-
-## 1.2
 
 ### 1.2.0
 
@@ -63,8 +53,6 @@
   dependency update to determine the semver release
 * Made the XSRF cookie name configurable. See the configuration docs for how to
   changet he XSRF cookie name.
-
-## 1.1
 
 ### 1.1.21
 
