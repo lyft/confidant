@@ -40,4 +40,4 @@ appdirs==1.4.2
 # pin lxml in stage 1 as dm.xmlsec.binding depends on it.
 # xmlsec will pull master if lxml doesn't already exist.
 # can be removed when wheels are used for xmlsec.
-lxml==3.8.0
+lxml==3.7.3

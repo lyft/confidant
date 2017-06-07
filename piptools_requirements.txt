@@ -11,7 +11,7 @@ cryptography==1.7.1
 enum34==1.1.6             # via cryptography
 idna==2.2
 ipaddress==1.0.17         # via cryptography
-lxml==3.8.0
+lxml==3.7.3
 ndg-httpsclient==0.4.2
 pyasn1==0.1.9
 pycparser==2.17           # via cffi
