@@ -33,3 +33,11 @@ six==1.10.0
 # License: MIT
 # Upstream url: http://github.com/ActiveState/appdirs
 appdirs==1.4.2
+
+# Licence: MIT
+# Upstream url: http://http://lxml.de/index.html
+# Use: lxml is a dependency of python-saml, and the current version is broken.
+# pin lxml in stage 1 as dm.xmlsec.binding depends on it.
+# xmlsec will pull master if lxml doesn't already exist.
+# can be removed when wheels are used for xmlsec.
+lxml==3.8.0
