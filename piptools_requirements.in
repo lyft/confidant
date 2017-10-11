@@ -3,7 +3,7 @@
 # License: BSD
 # Upstream url: https://github.com/pyca/cryptography
 # Use: For encryption
-cryptography==1.7.1
+cryptography==2.1
 
 # Provides enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
 # License: BSD

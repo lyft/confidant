@@ -35,7 +35,7 @@ pynamodb==1.5.3
 # License: BSD
 # Upstream url: https://github.com/pyca/cryptography
 # Use: For encryption
-cryptography==1.7.1
+cryptography==2.1
 
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
