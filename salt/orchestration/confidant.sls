@@ -14,8 +14,8 @@
 Ensure DynamoDB table exists:
   boto_dynamodb.present:
     - name: {{ grains.cluster_name }}
-    - read_capacity_units: 10
-    - write_capacity_units: 10
+    - read_capacity_units: 2500
+    - write_capacity_units: 30
     - hash_key: id
     - hash_key_data_type: S
     - global_indexes:
