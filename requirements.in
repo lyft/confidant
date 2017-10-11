@@ -37,6 +37,11 @@ pynamodb==1.5.3
 # Use: For encryption
 cryptography==2.0
 
+# C Foreign Function Interface for Python.
+# License: MIT
+# Upstream url: https://bitbucket.org/cffi/cffi
+# Use: Required by cryptography package to be installed. This should be removed
+# once crytography updates their depenencies to require cffi>=1.10.0.
 cffi==1.10.0
 
 # License: BSD
