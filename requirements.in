@@ -37,6 +37,8 @@ pynamodb==1.5.3
 # Use: For encryption
 cryptography==2.0
 
+cffi==1.10.0
+
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
 # Use: For shared sessions
