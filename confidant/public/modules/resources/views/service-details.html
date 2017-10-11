@@ -31,7 +31,7 @@
 <form editable-form name="editableForm" onaftersave="saveService()" oncancel="cancel()" shown="{{ shown }}" class="well">
   <div class="form-group">
     <label for="serviceId">Service ID</label>
-    <span ng-hide="service.id" e-ng-hide="service.id" editable-text="service.id" e-typeahead="role for role in roles | filter:$viewValue" id="serviceIdInput">{{ service.id || "Not set." }}</span>
+    <span ng-hide="service.id" e-ng-hide="service.id" editable-text="service.id" onbeforesave="checkNewServiceSave($data)" e-typeahead="role for role in roles | filter:$viewValue" id="serviceIdInput">{{ service.id || "Not set." }}</span>
     <span ng-show="service.id" id="serviceIdInput">{{ service.id || "Not set." }}</span>
   </div>
   <div class="form-group">

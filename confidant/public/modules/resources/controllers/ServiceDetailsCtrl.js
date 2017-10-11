@@ -175,6 +175,29 @@
                 return deferred.promise;
             };
 
+            $scope.checkNewServiceSave = function(serviceId) {
+                var deferred = $q.defer();
+                if ($scope.newService) {
+                    Service.get({'id': serviceId}).$promise.then(function() {
+                        $scope.saveError = 'Service with id ' + serviceId +
+                                           ' already exists. Cannot create new service.';
+                    }, function(res) {
+                        if (res.status !== 404) {
+                            $scope.saveError = 'Failed to check if service already exists.';
+                        }
+                    }).finally(function() {
+                        if ($scope.saveError !== '') {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve();
+                        }
+                    });
+                } else {
+                    deferred.resolve();
+                }
+                return deferred.promise;
+            }
+
             $scope.saveService = function() {
                 var _service = {},
                     deferred = $q.defer();
