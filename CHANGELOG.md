@@ -2,6 +2,10 @@
 
 # 1
 
+## 1.10.1
+
+* Fix an issue in the angularjs frontend where credential values were having whitespace trimmed.
+
 ## 1.10.0
 
 * Upgrade gevent and greenlet for CVE-2016-5180 and gevent/gevent#477
