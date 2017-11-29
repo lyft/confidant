@@ -4,7 +4,7 @@ import logging
 import base64
 import re
 
-from pynamodb.exceptions import PutError
+from pynamodb.exceptions import PutError, DoesNotExist
 from flask import request
 from flask import jsonify
 from botocore.exceptions import ClientError
@@ -110,7 +110,7 @@ def get_service(id):
             )
             msg = 'Authenticated user is not authorized.'
             return jsonify({'error': msg}), 401
-    except Service.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
@@ -138,7 +138,7 @@ def get_service(id):
 def get_archive_service_revisions(id):
     try:
         service = Service.get(id)
-    except Service.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
@@ -195,7 +195,7 @@ def ensure_grants(id):
         if _service.data_type != 'service':
             msg = 'id provided is not a service.'
             return jsonify({'error': msg}), 400
-    except Service.DoesNotExist:
+    except DoesNotExist:
         msg = 'id provided does not exist.'
         return jsonify({'error': msg}), 400
     try:
@@ -223,7 +223,7 @@ def get_grants(id):
         if _service.data_type != 'service':
             msg = 'id provided is not a service.'
             return jsonify({'error': msg}), 400
-    except Service.DoesNotExist:
+    except DoesNotExist:
         msg = 'id provided does not exist.'
         return jsonify({'error': msg}), 400
     try:
@@ -249,7 +249,7 @@ def map_service_credentials(id):
             return jsonify({'error': msg}), 400
         revision = _service.revision + 1
         _service_credential_ids = _service.credentials
-    except Service.DoesNotExist:
+    except DoesNotExist:
         revision = 1
         _service_credential_ids = []
 
@@ -355,7 +355,7 @@ def get_credential_list():
 def get_credential(id):
     try:
         cred = Credential.get(id)
-    except Credential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
@@ -381,7 +381,7 @@ def get_credential(id):
 def get_archive_credential_revisions(id):
     try:
         cred = Credential.get(id)
-    except Credential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
@@ -663,7 +663,7 @@ def get_credential_dependencies(id):
 def update_credential(id):
     try:
         _cred = Credential.get(id)
-    except Credential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({'error': 'Credential not found.'}), 404
     if _cred.data_type != 'credential':
         msg = 'id provided is not a credential.'
@@ -769,7 +769,7 @@ def get_blind_credential_list():
 def get_blind_credential(id):
     try:
         cred = Credential.get(id)
-    except Credential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
@@ -796,7 +796,7 @@ def _get_latest_credential_revision(id, revision):
         _id = '{0}-{1}'.format(id, i)
         try:
             Credential.get(_id)
-        except Credential.DoesNotExist:
+        except DoesNotExist:
             return i
         i = i + 1
 
@@ -807,7 +807,7 @@ def _get_latest_blind_credential_revision(id, revision):
         _id = '{0}-{1}'.format(id, i)
         try:
             Credential.get(_id)
-        except Credential.DoesNotExist:
+        except DoesNotExist:
             return i
         i = i + 1
 
@@ -817,7 +817,7 @@ def _get_latest_blind_credential_revision(id, revision):
 def get_archive_blind_credential_revisions(id):
     try:
         cred = Credential.get(id)
-    except Credential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
@@ -961,7 +961,7 @@ def get_blind_credential_dependencies(id):
 def update_blind_credential(id):
     try:
         _cred = Credential.get(id)
-    except Credential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({'error': 'Blind credential not found.'}), 404
     if _cred.data_type != 'blind-credential':
         msg = 'id provided is not a blind-credential.'
