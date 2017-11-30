@@ -5,7 +5,7 @@ import logging
 import base64
 import re
 
-from pynamodb.exceptions import PutError
+from pynamodb.exceptions import PutError, DoesNotExist
 from flask import request
 from flask import jsonify
 from botocore.exceptions import ClientError
@@ -17,6 +17,7 @@ from confidant import graphite
 from confidant import webhook
 from confidant.app import app
 from confidant.utils import stats
+from confidant.utils import maintenance
 from confidant.ciphermanager import CipherManager
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
@@ -61,7 +62,8 @@ def get_client_config():
         'generated': {
             'kms_auth_manage_grants': app.config['KMS_AUTH_MANAGE_GRANTS'],
             'aws_accounts': app.config['SCOPED_AUTH_KEYS'].values(),
-            'xsrf_cookie_name': app.config['XSRF_COOKIE_NAME']
+            'xsrf_cookie_name': app.config['XSRF_COOKIE_NAME'],
+            'maintenance_mode': app.config['MAINTENANCE_MODE']
         }
     })
     return response
@@ -113,7 +115,7 @@ def get_service(id):
             )
             msg = 'Authenticated user is not authorized.'
             return jsonify({'error': msg}), 401
-    except Service.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
@@ -141,7 +143,7 @@ def get_service(id):
 def get_archive_service_revisions(id):
     try:
         service = Service.get(id)
-    except Service.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
@@ -192,13 +194,14 @@ def get_archive_service_list():
 @app.route('/v1/grants/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def ensure_grants(id):
     try:
         _service = Service.get(id)
         if _service.data_type != 'service':
             msg = 'id provided is not a service.'
             return jsonify({'error': msg}), 400
-    except Service.DoesNotExist:
+    except DoesNotExist:
         msg = 'id provided does not exist.'
         return jsonify({'error': msg}), 400
     try:
@@ -226,7 +229,7 @@ def get_grants(id):
         if _service.data_type != 'service':
             msg = 'id provided is not a service.'
             return jsonify({'error': msg}), 400
-    except Service.DoesNotExist:
+    except DoesNotExist:
         msg = 'id provided does not exist.'
         return jsonify({'error': msg}), 400
     try:
@@ -243,6 +246,7 @@ def get_grants(id):
 @app.route('/v1/services/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def map_service_credentials(id):
     data = request.get_json()
     try:
@@ -252,7 +256,7 @@ def map_service_credentials(id):
             return jsonify({'error': msg}), 400
         revision = _service.revision + 1
         _service_credential_ids = _service.credentials
-    except Service.DoesNotExist:
+    except DoesNotExist:
         revision = 1
         _service_credential_ids = []
 
@@ -358,7 +362,7 @@ def get_credential_list():
 def get_credential(id):
     try:
         cred = Credential.get(id)
-    except Credential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
@@ -396,7 +400,7 @@ def get_credential(id):
 def get_archive_credential_revisions(id):
     try:
         cred = Credential.get(id)
-    except Credential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
@@ -620,6 +624,7 @@ def _lowercase_credential_pairs(credential_pairs):
 @app.route('/v1/credentials', methods=['POST'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def create_credential():
     data = request.get_json()
     if not data.get('credential_pairs'):
@@ -695,10 +700,11 @@ def get_credential_dependencies(id):
 @app.route('/v1/credentials/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def update_credential(id):
     try:
         _cred = Credential.get(id)
-    except Credential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({'error': 'Credential not found.'}), 404
     if _cred.data_type != 'credential':
         msg = 'id provided is not a credential.'
@@ -823,7 +829,7 @@ def get_blind_credential_list():
 def get_blind_credential(id):
     try:
         cred = BlindCredential.get(id)
-    except BlindCredential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
@@ -850,7 +856,7 @@ def _get_latest_credential_revision(id, revision):
         _id = '{0}-{1}'.format(id, i)
         try:
             Credential.get(_id)
-        except Credential.DoesNotExist:
+        except DoesNotExist:
             return i
         i = i + 1
 
@@ -861,7 +867,7 @@ def _get_latest_blind_credential_revision(id, revision):
         _id = '{0}-{1}'.format(id, i)
         try:
             BlindCredential.get(_id)
-        except BlindCredential.DoesNotExist:
+        except DoesNotExist:
             return i
         i = i + 1
 
@@ -871,7 +877,7 @@ def _get_latest_blind_credential_revision(id, revision):
 def get_archive_blind_credential_revisions(id):
     try:
         cred = BlindCredential.get(id)
-    except BlindCredential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
@@ -931,6 +937,7 @@ def get_archive_blind_credential_list():
 @app.route('/v1/blind_credentials', methods=['POST'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def create_blind_credential():
     data = request.get_json()
     missing = []
@@ -1020,10 +1027,11 @@ def get_blind_credential_dependencies(id):
 @app.route('/v1/blind_credentials/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def update_blind_credential(id):
     try:
         _cred = BlindCredential.get(id)
-    except Credential.DoesNotExist:
+    except DoesNotExist:
         return jsonify({'error': 'Blind credential not found.'}), 404
     if _cred.data_type != 'blind-credential':
         msg = 'id provided is not a blind-credential.'

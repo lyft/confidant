@@ -5,7 +5,7 @@ from pynamodb.attributes import (
     UnicodeAttribute,
     UnicodeSetAttribute,
     NumberAttribute,
-    BooleanAttribute,
+    LegacyBooleanAttribute,
     UTCDateTimeAttribute,
     JSONAttribute
 )
@@ -41,7 +41,7 @@ class BlindCredential(Model):
     name = UnicodeAttribute()
     credential_pairs = JSONAttribute()
     credential_keys = UnicodeSetAttribute(default=set([]), null=True)
-    enabled = BooleanAttribute(default=True)
+    enabled = LegacyBooleanAttribute(default=True)
     data_key = JSONAttribute()
     cipher_version = NumberAttribute()
     cipher_type = UnicodeAttribute()
