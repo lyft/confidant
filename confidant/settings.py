@@ -1,5 +1,6 @@
 import json
 import logging
+import os.path
 from os import getenv
 
 from confidant.encrypted_settings import EncryptedSettings
@@ -217,7 +218,6 @@ HEADER_AUTH_FIRST_NAME_HEADER = str_env('HEADER_AUTH_FIRST_NAME_HEADER')
 # The name of the header that will contain the user's last name.  Optional.
 HEADER_AUTH_LAST_NAME_HEADER = str_env('HEADER_AUTH_LAST_NAME_HEADER')
 
-
 # KMS service authentication
 
 # The 'to' context used in KMS auth. This should be set to the name of the IAM
@@ -386,7 +386,6 @@ WEBHOOK_PASSWORD = encrypted_settings.register(
 # in different credentials associated with a service.
 IGNORE_CONFLICTS = bool_env('IGNORE_CONFLICTS', False)
 
-
 # Customization
 
 # Directory for customization of AngularJS frontend.
@@ -407,6 +406,19 @@ CUSTOM_FRONTEND_DIRECTORY = str_env('CUSTOM_FRONTEND_DIRECTORY')
 #    "blind_store_credential_keys": true
 # }
 CLIENT_CONFIG = json.loads(str_env('CLIENT_CONFIG', '{}'))
+
+# Maintenance mode
+
+# Maintenance mode allows you to disable writes from the API, making it
+# possible to do migrations or other maintenance actions without worrying
+# about writes interfering with your actions. Maintenance mode can be enabled
+# either through the MAINTENANCE_MODE_ENABLED configuration option, or through
+# a touch file specified via the MAINTENANCE_MODE_TOUCH_FILE configuration
+# option.
+MAINTENANCE_MODE = bool_env('MAINTENANCE_MODE', False)
+_maintenance_touch_file = str_env('MAINTENANCE_MODE_TOUCH_FILE')
+if _maintenance_touch_file and os.path.exists(_maintenance_touch_file):
+    MAINTENANCE_MODE = True
 
 # Test/Development
 
