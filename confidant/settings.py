@@ -1,6 +1,5 @@
 import json
 import logging
-import os.path
 from os import getenv
 
 from confidant.encrypted_settings import EncryptedSettings
@@ -416,9 +415,7 @@ CLIENT_CONFIG = json.loads(str_env('CLIENT_CONFIG', '{}'))
 # a touch file specified via the MAINTENANCE_MODE_TOUCH_FILE configuration
 # option.
 MAINTENANCE_MODE = bool_env('MAINTENANCE_MODE', False)
-_maintenance_touch_file = str_env('MAINTENANCE_MODE_TOUCH_FILE')
-if _maintenance_touch_file and os.path.exists(_maintenance_touch_file):
-    MAINTENANCE_MODE = True
+MAINTENANCE_MODE_TOUCH_FILE = str_env('MAINTENANCE_MODE_TOUCH_FILE')
 
 # Test/Development
 
