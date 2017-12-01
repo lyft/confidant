@@ -28,7 +28,7 @@ boto3==1.4.0
 # License: MIT
 # Upstream url: http://jlafon.io/pynamodb.html
 # Use: For DynamoDB storage
-pynamodb==1.5.3
+pynamodb==3.2.1
 
 # cryptography is a package which provides cryptographic recipes and
 # primitives to Python developers.
