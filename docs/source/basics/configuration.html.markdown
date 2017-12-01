@@ -94,7 +94,7 @@ new project (or add credentials to an existing project, if you prefer). After
 creating the project, you'll need to enable the Google+ API. After enabling the
 Google+ API, you'll need to add credentials to this project. You'll want to
 create OAuth client ID credentials. The application type is 'Web application'.
-The Authorized JavaScript origins is '<url>/'. The Authorized redirect URI is 
+The Authorized JavaScript origins is '<url>/'. The Authorized redirect URI is
 `<url>/v1/login`. Take the generated client id and consumer secret, and set
 them in the settings. You'll also need to generate a long random string and set
 the AUTHOMATIC\_SALT setting, for CSRF protection.
@@ -481,6 +481,37 @@ export CLIENT_CONFIG='{"blind_keys":{"us-east-1":"alias/blindkey-useast1","us-we
 
 The native client, or custom clients can use this data to help configure
 themselves.
+
+### Maintenance mode settings
+
+If you need to disable all writes via the API, for maintenance actions, or
+any other reason, Confidant has a maintenance mode that can be enabled.
+There's a couple ways to put Confidant into maintenance mode. An explicit
+setting is available:
+
+```bash
+export MAINTENANCE_MODE='True'
+```
+
+There's also a runtime setting, that allows you to enable/disable maintenance
+mode by using a touch file. You'll need to configure the location of this
+touch file via settings:
+
+```bash
+export MAINTENANCE_MODE_TOUCH_FILE='/run/confidant/maintenance'
+```
+
+To enable maintenance mode, create the file:
+
+```bash
+touch /run/confidant/maintenance
+```
+
+To disable maintenance mode, remove the file:
+
+```bash
+rm /run/confidant/maintenance
+```
 
 ### Confidant performance settings
 
