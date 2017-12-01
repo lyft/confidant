@@ -10,13 +10,10 @@ app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.INFO)
 
 
-def get_save_kwargs(item):
-    return {}
-
-
 class MigrateSetAttribute(Command):
 
     def run(self):
         app.logger.info('Migrating UnicodeSetAttribute in BlindCredential')
-        BlindCredential.fix_unicode_set_attributes(get_save_kwargs)
-        app.logger.info(BlindCredential.needs_unicode_set_fix())
+        for cred in BlindCredential.data_type_date_index.query(
+                'blind-credential'):
+            cred.save()
