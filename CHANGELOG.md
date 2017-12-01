@@ -1,5 +1,16 @@
 # Changelog
 
+# 2
+
+## 2.0.0
+
+* This is a breaking release, if you're using blind credentials. This change
+  upgrades to using pynamodb 3.2.1. If you're using blind credentials, it's
+  necessary to first upgrade to confidant 1.12.0, run the
+  migrate\_set\_attribute maintenance script, then upgrade to this version.
+  This is due to a breaking change in pynamodb itself, which requires using
+  specific versions of pynamodb to migrate the underlying data.
+
 # 1
 
 ## 1.10.1
