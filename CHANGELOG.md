@@ -2,6 +2,10 @@
 
 # 1
 
+## 1.11.0
+
+* Upgrade PynamoDB requirement to 1.5.4
+
 ## 1.10.1
 
 * Fix an issue in the angularjs frontend where credential values were having whitespace trimmed.
