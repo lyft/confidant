@@ -1,8 +1,12 @@
 # Changelog
 
-# 1
+# 2
 
-## 1.12.0
+## 2.0.0
+
+WARNING: If you upgrade to this version, any new writes to blind credentials
+will be in a format that is only compatible in 1.11.0 forward. If you've
+upgraded and need to downgrade, you should downgrade to 1.11.0.
 
 * Added support for a maintenance mode, which will disable all writes to
   confidant via the API. This allows you to put confidant into a maintenance
