@@ -9,6 +9,7 @@ en:
       title: Basics
       quickstart: Quickstart
       install: Install
+      upgrade: Upgrading
       configuration: Configure
       using_confidant: Managing Secrets and Mappings
       client: Using the Client
