@@ -8,7 +8,7 @@ WARNING: If you upgrade to this version, any new writes to blind credentials
 will be in a format that is only compatible in 1.11.0 forward. If you've
 upgraded and need to downgrade, you should downgrade to 1.11.0. This is only
 a concern if you're using blind credentials. If you're using blind credentials,
-see the [upgrade instructions](https://lyft.github.io/confidant/basics/install/)
+see the [upgrade instructions](https://lyft.github.io/confidant/basics/upgrade/)
 for more detailed information about this breaking change.
 
 * Added support for a maintenance mode, which will disable all writes to
