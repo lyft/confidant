@@ -1,3 +1,7 @@
+import json
+from confidant import keymanager
+from confidant.ciphermanager import CipherManager
+from confidant.models.service import Service
 
 
 def get_credential_context_id(cred):
@@ -10,6 +14,7 @@ def get_credential_context_id(cred):
         raise ValueError(
             'Expected credential or archive-credential data type'
         )
+    return context
 
 
 def get_services_for_credential(_id):

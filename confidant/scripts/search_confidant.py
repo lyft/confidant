@@ -51,7 +51,7 @@ class SearchConfidantForCredentials(Command):
 
     def run(self, input_bucket, input_key, output_bucket, output_key):
         # Get a dict of secrets to list of Credentials they are mapped in.
-        secret_to_credentials = self._get_secret_to_credential_mapping()
+        secret_to_credential_map = self._get_secret_to_credential_mapping()
 
         # Load file from S3, read one secret per line and search for matching
         # credential
@@ -61,9 +61,9 @@ class SearchConfidantForCredentials(Command):
         for secret in secrets:
             in_confidant = False
             credentials = []
-            if secret in secret_to_credential:
+            if secret in secret_to_credential_map:
                 in_confidant = True
-                for cred in secret_to_credentials[secret]:
+                for cred in secret_to_credential_map[secret]:
                     if cred.data_type == 'credential':
                         services = get_services_for_credential(cred.id)
                         services = [service.id for service in services]
