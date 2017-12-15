@@ -18,6 +18,10 @@ from confidant import webhook
 from confidant.app import app
 from confidant.utils import stats
 from confidant.ciphermanager import CipherManager
+from confidant.helper import (
+    get_services_for_credential,
+    get_credential_pairs
+)
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
@@ -366,18 +370,7 @@ def get_credential(id):
     services = []
     for service in Service.data_type_date_index.query('service'):
         services.append(service.id)
-    if cred.data_type == 'credential':
-        context = id
-    else:
-        context = id.split('-')[0]
-    data_key = keymanager.decrypt_datakey(
-        cred.data_key,
-        encryption_context={'id': context}
-    )
-    cipher_version = cred.cipher_version
-    cipher = CipherManager(data_key, cipher_version)
-    _credential_pairs = cipher.decrypt(cred.credential_pairs)
-    _credential_pairs = json.loads(_credential_pairs)
+    _credential_pairs = get_credential_pairs(cred)
     return jsonify({
         'id': id,
         'name': cred.name,
@@ -445,14 +438,7 @@ def _get_credentials(credential_ids):
     credentials = []
     with stats.timer('service_batch_get_credentials'):
         for cred in Credential.batch_get(copy.deepcopy(credential_ids)):
-            data_key = keymanager.decrypt_datakey(
-                cred.data_key,
-                encryption_context={'id': cred.id}
-            )
-            cipher_version = cred.cipher_version
-            cipher = CipherManager(data_key, cipher_version)
-            _credential_pairs = cipher.decrypt(cred.credential_pairs)
-            _credential_pairs = json.loads(_credential_pairs)
+            _credential_pairs = get_credential_pairs(cred)
             credentials.append({
                 'id': cred.id,
                 'data_type': 'credential',
@@ -521,14 +507,6 @@ def _pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
                 'blind_credentials': blind_ids
             }
     return conflicts
-
-
-def _get_services_for_credential(_id):
-    services = []
-    for service in Service.data_type_date_index.query('service'):
-        if _id in service.credentials:
-            services.append(service)
-    return services
 
 
 def _get_services_for_blind_credential(_id):
@@ -685,7 +663,7 @@ def create_credential():
 @app.route('/v1/credentials/<id>/services', methods=['GET'])
 @authnz.require_auth
 def get_credential_dependencies(id):
-    services = _get_services_for_credential(id)
+    services = get_services_for_credential(id)
     _services = [{'id': x.id, 'enabled': x.enabled} for x in services]
     return jsonify({
         'services': _services
@@ -715,7 +693,7 @@ def update_credential(id):
         update['enabled'] = _cred.enabled
     if not isinstance(data.get('metadata', {}), dict):
         return jsonify({'error': 'metadata must be a dict'}), 400
-    services = _get_services_for_credential(id)
+    services = get_services_for_credential(id)
     if 'credential_pairs' in data:
         # Ensure credential pair keys are lowercase
         credential_pairs = _lowercase_credential_pairs(
