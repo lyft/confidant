@@ -3,7 +3,7 @@
 def get_credential_context_id(cred):
     if cred.data_type == 'credential':
         context = cred.id
-    elif cred.data_type = 'archive-credential':
+    elif cred.data_type == 'archive-credential':
         context = cred.id.split('-')[0]
     else:
         # Cannot decrypt blind credential or anything other data type

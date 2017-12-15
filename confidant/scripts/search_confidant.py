@@ -1,3 +1,7 @@
+import boto3
+from collections import defaultdict
+import json
+
 from flask.ext.script import Command, Option
 
 from confidant.helper import (
@@ -5,6 +9,7 @@ from confidant.helper import (
     get_services_for_credential,
     get_credential_pairs
 )
+from confidant.models.credential import Credential
 
 
 class SearchConfidantForCredentials(Command):
@@ -46,7 +51,7 @@ class SearchConfidantForCredentials(Command):
 
     def run(self, input_bucket, input_key, output_bucket, output_key):
         # Get a dict of secrets to list of Credentials they are mapped in.
-        secret_to_credential = self._get_secret_to_credential_mapping()
+        secret_to_credentials = self._get_secret_to_credential_mapping()
 
         # Load file from S3, read one secret per line and search for matching
         # credential
