@@ -763,6 +763,8 @@ def update_credential(id):
     credential_pairs = cipher.encrypt(update['credential_pairs'])
     update['metadata'] = data.get('metadata', _cred.metadata)
     update['documentation'] = data.get('documentation', _cred.documentation)
+    if not update['documentation'] and settings.get('ENFORCE_DOCUMENTATION'):
+        return jsonify({'error': 'documentation is a required field'}), 400
     # Try to save to the archive
     try:
         Credential(
@@ -1105,6 +1107,8 @@ def update_blind_credential(id):
         update['cipher_version'] = _cred.cipher_version
     update['metadata'] = data.get('metadata', _cred.metadata)
     update['documentation'] = data.get('documentation', _cred.documentation)
+    if not update['documentation'] and settings.get('ENFORCE_DOCUMENTATION'):
+        return jsonify({'error': 'documentation is a required field'}), 400
     # Try to save to the archive
     try:
         BlindCredential(
