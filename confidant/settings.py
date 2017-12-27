@@ -408,6 +408,10 @@ CUSTOM_FRONTEND_DIRECTORY = str_env('CUSTOM_FRONTEND_DIRECTORY')
 # }
 CLIENT_CONFIG = json.loads(str_env('CLIENT_CONFIG', '{}'))
 
+# Enforce users to add documentation to their credentials on how to rotate
+# them, for easier rotation in the case a credential is expired or compromised.
+ENFORCE_DOCUMENTATION = bool_env('ENFORCE_DOCUMENTATION', False)
+
 # Test/Development
 
 # Whether or not authentication is required. Unless doing testing or
