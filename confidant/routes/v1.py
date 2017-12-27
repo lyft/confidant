@@ -14,6 +14,7 @@ import confidant.services
 from confidant import keymanager
 from confidant import authnz
 from confidant import graphite
+from confidant import settings
 from confidant import webhook
 from confidant.app import app
 from confidant.utils import stats
