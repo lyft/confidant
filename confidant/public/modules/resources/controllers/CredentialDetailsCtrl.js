@@ -153,6 +153,7 @@
                 $scope.credentialPairConflicts = null;
                 _credential.name = $scope.credential.name;
                 _credential.enabled = $scope.credential.enabled;
+                _credential.documentation = $scope.credential.documentation;
                 _credential.credential_pairs = {};
                 _credential.metadata = {};
                 $scope.saveError = '';
