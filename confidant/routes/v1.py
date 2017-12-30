@@ -1000,7 +1000,7 @@ def create_blind_credential():
         cipher_type=data['cipher_type'],
         cipher_version=data['cipher_version'],
         modified_by=authnz.get_logged_in_user(),
-        documentation=data['documentation']
+        documentation=data.get('documentation')
     ).save(id__null=True)
     # Make this the current revision
     cred = BlindCredential(
@@ -1016,7 +1016,7 @@ def create_blind_credential():
         cipher_type=data['cipher_type'],
         cipher_version=data['cipher_version'],
         modified_by=authnz.get_logged_in_user(),
-        documentation=data['documentation']
+        documentation=data.get('documentation')
     )
     cred.save()
     return jsonify({
