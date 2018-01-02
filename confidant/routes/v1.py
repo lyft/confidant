@@ -834,7 +834,8 @@ def get_blind_credential_list():
             'revision': cred.revision,
             'enabled': cred.enabled,
             'modified_date': cred.modified_date,
-            'modified_by': cred.modified_by
+            'modified_by': cred.modified_by,
+            'documentation': cred.documentation
         })
     return jsonify({'blind_credentials': blind_credentials})
 
@@ -861,7 +862,8 @@ def get_blind_credential(id):
         'enabled': cred.enabled,
         'data_key': cred.data_key,
         'modified_date': cred.modified_date,
-        'modified_by': cred.modified_by
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
     })
 
 
