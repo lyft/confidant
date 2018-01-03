@@ -48,3 +48,4 @@ class BlindCredential(Model):
     metadata = JSONAttribute(default={}, null=True)
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
+    documentation = UnicodeAttribute(null=True)
