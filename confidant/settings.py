@@ -417,6 +417,10 @@ CLIENT_CONFIG = json.loads(str_env('CLIENT_CONFIG', '{}'))
 MAINTENANCE_MODE = bool_env('MAINTENANCE_MODE', False)
 MAINTENANCE_MODE_TOUCH_FILE = str_env('MAINTENANCE_MODE_TOUCH_FILE')
 
+# Enforce users to add documentation to their credentials on how to rotate
+# them, for easier rotation in the case a credential is expired or compromised.
+ENFORCE_DOCUMENTATION = bool_env('ENFORCE_DOCUMENTATION', False)
+
 # Test/Development
 
 # Whether or not authentication is required. Unless doing testing or
