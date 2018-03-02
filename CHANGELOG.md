@@ -1,6 +1,29 @@
 # Changelog
 
-# 1
+# 2
+
+## 2.0.0
+
+WARNING: If you upgrade to this version, any new writes to blind credentials
+will be in a format that is only compatible in 1.11.0 forward. If you've
+upgraded and need to downgrade, you should downgrade to 1.11.0. This is only
+a concern if you're using blind credentials. If you're using blind credentials,
+see the [upgrade instructions](https://lyft.github.io/confidant/basics/upgrade/)
+for more detailed information about this breaking change.
+
+* Added support for a maintenance mode, which will disable all writes to
+  confidant via the API. This allows you to put confidant into a maintenance
+  mode which will let you do maintenance actions via scripts, but will disallow
+  all write actions via the API while you're performing the maintenance.
+  This is useful for data migrations, or during periods where you want to
+  ensure no confidant changes are being made. See the docs for
+  MAINTENANCE\_MODE and MAINTENANCE\_MODE\_TOUCH\_FILE settings.
+* Upgraded pynamodb to 2.2.0, to support migration of UnicodeSetAttribute for
+  blind credentials in DynamoDB.
+* Changed dynamo models to use LegacyBooleanAttribute, to allow for backwards
+  compatibility for the data models. In a future version we'll require a
+  migration for dynamo data to the new BooleanAttribute format used in
+  PynamoDB.
 
 ## 1.11.0
 
