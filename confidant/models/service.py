@@ -6,7 +6,7 @@ from pynamodb.attributes import (
     UnicodeSetAttribute,
     NumberAttribute,
     UTCDateTimeAttribute,
-    BooleanAttribute
+    LegacyBooleanAttribute
 )
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
@@ -55,7 +55,7 @@ class Service(Model):
     data_type = UnicodeAttribute()
     data_type_date_index = DataTypeDateIndex()
     revision = NumberAttribute()
-    enabled = BooleanAttribute(default=True)
+    enabled = LegacyBooleanAttribute(default=True)
     credentials = NonNullUnicodeSetAttribute(default=set())
     blind_credentials = NonNullUnicodeSetAttribute(default=set())
     account = UnicodeAttribute(null=True)
