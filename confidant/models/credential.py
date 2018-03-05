@@ -4,7 +4,7 @@ from pynamodb.models import Model
 from pynamodb.attributes import (
     UnicodeAttribute,
     NumberAttribute,
-    BooleanAttribute,
+    LegacyBooleanAttribute,
     UTCDateTimeAttribute,
     BinaryAttribute,
     JSONAttribute
@@ -40,10 +40,11 @@ class Credential(Model):
     data_type_date_index = DataTypeDateIndex()
     name = UnicodeAttribute()
     credential_pairs = UnicodeAttribute()
-    enabled = BooleanAttribute(default=True)
+    enabled = LegacyBooleanAttribute(default=True)
     data_key = BinaryAttribute()
     # TODO: add cipher_type
     cipher_version = NumberAttribute(null=True)
     metadata = JSONAttribute(default={}, null=True)
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
+    documentation = UnicodeAttribute(null=True)
