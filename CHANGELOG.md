@@ -2,13 +2,21 @@
 
 # 2
 
-## 2.0.0
+## 3.0.0
 
+* This is a breaking release, if you're using blind credentials. This change
+  upgrades to using pynamodb 3.2.1. If you're using blind credentials, it's
+  necessary to first upgrade to confidant 2.0.0, run the
+  migrate\_set\_attribute maintenance script, then upgrade to this version.
+  This is due to a breaking change in pynamodb itself, which requires using
+  specific versions of pynamodb to migrate the underlying data.
+
+## 2.0.0
 WARNING: If you upgrade to this version, any new writes to blind credentials
 will be in a format that is only compatible in 1.11.0 forward. If you've
 upgraded and need to downgrade, you should downgrade to 1.11.0. This is only
 a concern if you're using blind credentials. If you're using blind credentials,
-see the [upgrade instructions](https://lyft.github.io/confidant/basics/upgrade/)
+see the [upgrade instructions](https://github.com/lyft/confidant/blob/master/docs/source/basics/upgrade.html.markdown)
 for more detailed information about this breaking change.
 
 * Added support for a maintenance mode, which will disable all writes to
@@ -153,7 +161,7 @@ even in unreleased branches.
 * Feature (and new default): Added support for secure cookies for session
   management. This removes the dependency on redis. New settings were added to
   control the lifetime of secure cookie sessions.
-* Feature: Extensible metadata for secrets and blind secrets. 
+* Feature: Extensible metadata for secrets and blind secrets.
 * Feature: AWS account scoping for services. If you're using multiple AWS
   accounts, it's possible to limit access to services from specific accounts by
   using multiple KMS keys for KMS authentication.
