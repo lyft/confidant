@@ -3,7 +3,6 @@ from datetime import datetime
 from pynamodb.models import Model
 from pynamodb.attributes import (
     UnicodeAttribute,
-    UnicodeSetAttribute,
     NumberAttribute,
     LegacyBooleanAttribute,
     UTCDateTimeAttribute,
@@ -14,7 +13,10 @@ from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from confidant.app import app
 from confidant.models.session_cls import DDBSession
 from confidant.models.connection_cls import DDBConnection
-from confidant.models.non_null_unicode_set_attribiute import NonNullUnicodeSetAttribute
+from confidant.models.non_null_unicode_set_attribiute import (
+    NonNullUnicodeSetAttribute
+)
+
 
 class DataTypeDateIndex(GlobalSecondaryIndex):
     class Meta:

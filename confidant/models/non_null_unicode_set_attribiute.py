@@ -1,5 +1,6 @@
 from pynamodb.attributes import UnicodeSetAttribute
 
+
 class NonNullUnicodeSetAttribute(UnicodeSetAttribute):
     def __get__(self, instance, value):
         '''
@@ -16,4 +17,3 @@ class NonNullUnicodeSetAttribute(UnicodeSetAttribute):
             return _value
         else:
             return self
-
