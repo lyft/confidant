@@ -3,7 +3,6 @@ from datetime import datetime
 from pynamodb.models import Model
 from pynamodb.attributes import (
     UnicodeAttribute,
-    UnicodeSetAttribute,
     NumberAttribute,
     LegacyBooleanAttribute,
     UTCDateTimeAttribute,
@@ -14,6 +13,9 @@ from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from confidant.app import app
 from confidant.models.session_cls import DDBSession
 from confidant.models.connection_cls import DDBConnection
+from confidant.models.non_null_unicode_set_attribiute import (
+    NonNullUnicodeSetAttribute
+)
 
 
 class DataTypeDateIndex(GlobalSecondaryIndex):
@@ -40,7 +42,7 @@ class BlindCredential(Model):
     data_type_date_index = DataTypeDateIndex()
     name = UnicodeAttribute()
     credential_pairs = JSONAttribute()
-    credential_keys = UnicodeSetAttribute(default=set([]), null=True)
+    credential_keys = NonNullUnicodeSetAttribute(default=set([]), null=True)
     enabled = LegacyBooleanAttribute(default=True)
     data_key = JSONAttribute()
     cipher_version = NumberAttribute()
