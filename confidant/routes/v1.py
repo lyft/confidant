@@ -125,6 +125,7 @@ def get_service(id):
     try:
         credentials = _get_credentials(service.credentials)
     except KeyError:
+        logging.exception('KeyError occurred in getting credentials')
         return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = _get_blind_credentials(service.blind_credentials)
     return jsonify({
