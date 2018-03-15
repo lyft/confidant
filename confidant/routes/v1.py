@@ -117,6 +117,9 @@ def get_service(id):
             msg = 'Authenticated user is not authorized.'
             return jsonify({'error': msg}), 401
     except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
@@ -146,6 +149,9 @@ def get_archive_service_revisions(id):
     try:
         service = Service.get(id)
     except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
@@ -366,6 +372,9 @@ def get_credential(id):
     try:
         cred = Credential.get(id)
     except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
@@ -405,6 +414,9 @@ def get_archive_credential_revisions(id):
     try:
         cred = Credential.get(id)
     except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
@@ -853,6 +865,9 @@ def get_blind_credential(id):
     try:
         cred = BlindCredential.get(id)
     except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
@@ -905,6 +920,9 @@ def get_archive_blind_credential_revisions(id):
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     revisions = []
     _range = range(1, cred.revision + 1)
