@@ -29,6 +29,7 @@ boto3==1.4.0
 # Upstream url: http://jlafon.io/pynamodb.html
 # Use: For DynamoDB storage
 -e git+https://github.com/pynamodb/PynamoDB/@3.3.0rc2#egg=pynamodb
+pynamodb==3.2.1
 
 # cryptography is a package which provides cryptographic recipes and
 # primitives to Python developers.
