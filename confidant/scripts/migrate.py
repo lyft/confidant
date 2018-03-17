@@ -7,7 +7,7 @@ from confidant.models.blind_credential import BlindCredential
 
 import json
 import six
-from pynamodb.attributes import Attribute, UnicodeAttribute, UnicodeSetAttribute
+from pynamodb.attributes import Attribute, UnicodeAttribute
 from pynamodb.constants import STRING_SET
 from pynamodb.models import Model
 
@@ -42,6 +42,7 @@ class SetMixin(object):
         """
         if value and len(value):
             return set([json.loads(val) for val in value])
+
 
 class NewUnicodeSetAttribute(SetMixin, Attribute):
     """
@@ -103,7 +104,8 @@ class MigrateSetAttribute(Command):
         for cred in BlindCredential.data_type_date_index.query(
                 'blind-credential'):
             cred.save()
-            if self.is_old_unicode_set(GeneralCredentialModel.get(cred.id).credential_keys):
+            new_cred = GeneralCredentialModel.get(cred.id)
+            if self.is_old_unicode_set(new_cred.credential_keys):
                 fail += 1
             total += 1
         print("Fail: {}, Total: {}".format(fail, total))
