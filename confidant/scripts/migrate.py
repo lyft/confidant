@@ -92,6 +92,8 @@ class GeneralCredentialModel(Model):
 class MigrateSetAttribute(Command):
 
     def is_old_unicode_set(self, values):
+        if not values:
+            return False
         return sum([x.startswith('"') for x in values]) > 0
 
     def run(self):
@@ -101,7 +103,7 @@ class MigrateSetAttribute(Command):
         for cred in BlindCredential.data_type_date_index.query(
                 'blind-credential'):
             cred.save()
-            if self.is_old_unicode_set(GeneralCredentialModel.get(cred.id)):
+            if self.is_old_unicode_set(GeneralCredentialModel.get(cred.id).credential_keys):
                 fail += 1
             total += 1
         print("Fail: {}, Total: {}".format(fail, total))
