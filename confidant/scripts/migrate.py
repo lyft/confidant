@@ -15,6 +15,11 @@ from pynamodb.models import Model
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.INFO)
 
+def is_old_unicode_set(values):
+    if not values:
+        return False
+    return sum([x.startswith('"') for x in values]) > 0
+
 
 class SetMixin(object):
     """
@@ -86,16 +91,18 @@ class GeneralCredentialModel(Model):
 
     id = UnicodeAttribute(hash_key=True)
     credential_keys = NewUnicodeSetAttribute(default=set([]), null=True)
+
+
+class GeneralServiceModel(Model):
+    class Meta(Service.Meta):
+        pass
+
+    id = UnicodeAttribute(hash_key=True)
     credentials = NewUnicodeSetAttribute(default=set(), null=True)
     blind_credentials = NewUnicodeSetAttribute(default=set(), null=True)
 
 
-class MigrateSetAttribute(Command):
-
-    def is_old_unicode_set(self, values):
-        if not values:
-            return False
-        return sum([x.startswith('"') for x in values]) > 0
+class MigrateBlindCredentialSetAttribute(Command):
 
     def run(self):
         total = 0
@@ -105,7 +112,24 @@ class MigrateSetAttribute(Command):
                 'blind-credential'):
             cred.save()
             new_cred = GeneralCredentialModel.get(cred.id)
-            if self.is_old_unicode_set(new_cred.credential_keys):
+            if is_old_unicode_set(new_cred.credential_keys):
+                fail += 1
+            total += 1
+        print("Fail: {}, Total: {}".format(fail, total))
+
+
+class MigrateServiceSetAttribute(Command):
+
+    def run(self):
+        total = 0
+        fail = 0
+        app.logger.info('Migrating UnicodeSetAttribute in Service')
+        for service in Service.data_type_date_index.query(
+                'service'):
+            service.save()
+            new_service = GeneralServiceModel.get(service.id)
+            if (is_old_unicode_set(new_service.credentials) or
+                    is_old_unicode_set(new_service.blind_credentials)):
                 fail += 1
             total += 1
         print("Fail: {}, Total: {}".format(fail, total))
