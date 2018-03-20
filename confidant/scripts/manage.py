@@ -6,7 +6,10 @@ from confidant.scripts.utils import RevokeGrants
 from confidant.scripts.utils import CreateDynamoTables
 from confidant.scripts.bootstrap import GenerateSecretsBootstrap
 from confidant.scripts.bootstrap import DecryptSecretsBootstrap
-from confidant.scripts.migrate import MigrateSetAttribute
+from confidant.scripts.migrate import (
+    MigrateBlindCredentialSetAttribute,
+    MigrateServiceSetAttribute,
+)
 
 manager = Manager(app.app)
 
@@ -26,7 +29,10 @@ manager.add_command("decrypt_secrets_bootstrap", DecryptSecretsBootstrap)
 manager.add_command("create_dynamodb_tables", CreateDynamoTables)
 
 # Migration scripts
-manager.add_command("migrate_set_attribute", MigrateSetAttribute)
+manager.add_command("migrate_blind_cred_set_attribute",
+                    MigrateBlindCredentialSetAttribute)
+manager.add_command("migrate_service_set_attribute",
+                    MigrateServiceSetAttribute)
 
 
 def main():
