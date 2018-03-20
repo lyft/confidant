@@ -4,6 +4,7 @@ from flask.ext.script import Command
 
 from confidant.app import app
 from confidant.models.blind_credential import BlindCredential
+from confidant.models.service import Service
 
 import json
 import six
@@ -14,6 +15,7 @@ from pynamodb.models import Model
 
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.INFO)
+
 
 def is_old_unicode_set(values):
     if not values:

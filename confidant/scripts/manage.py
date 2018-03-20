@@ -6,7 +6,10 @@ from confidant.scripts.utils import RevokeGrants
 from confidant.scripts.utils import CreateDynamoTables
 from confidant.scripts.bootstrap import GenerateSecretsBootstrap
 from confidant.scripts.bootstrap import DecryptSecretsBootstrap
-from confidant.scripts.migrate import MigrateSetAttribute
+from confidant.scripts.migrate import (
+    MigrateBlindCredentialSetAttribute,
+    MigrateServiceSetAttribute,
+)
 
 manager = Manager(app.app)
 
