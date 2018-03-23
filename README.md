@@ -1,4 +1,4 @@
-Confidant
+Confidant 
 =========
 
 Your secret keeper. Stores secrets in DynamoDB, encrypted at rest.
