@@ -55,5 +55,5 @@ statsd==3.2.1
 werkzeug==0.12.1          # via flask
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==9.0.1
-setuptools==38.2.3
+# pip
+# setuptools
