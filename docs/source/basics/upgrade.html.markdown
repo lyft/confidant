@@ -12,9 +12,7 @@ document breaking changes and how to upgrade when they occur.
 ## Upgrading to 2.0.0 or 3.0.0
 
 Due to breaking changes in PynamoDB, to upgrade to 2.0.0 or 3.0.0 may require
-some data migration. It's only necessary to perform a data migration if you're
-using blind credentials. If you're not using blind credentials, this change
-isn't breaking and you can upgrade without migration.
+some data migration.
 
 PynamoDB changed its data model over a series of releases, which requires
 the upgrade path for Confidant to follow the same model. To upgrade to 3.0.0,
@@ -25,15 +23,19 @@ versions of Confidant.
 
 ### Performing the data migration
 
-Confidant 2.0.0 ships with a maintenance script for the data migration:
+Confidant 2.0.1 ships with two maintenance scripts for the data migration:
 
 ```bash
 cd /srv/confidant
 source venv/bin/activate
 
 # Encrypt the data
-python manage.py migrate_set_attribute
+python manage.py migrate_blind_cred_set_attribute
+python manage.py migrate_service_set_attribute
 ```
+
+These scripts may fail intermittently. If any failures are occur, retry the
+script until all objects are fully migrated.
 
 2.0.0 ships with the ability to enable a maintenance mode, which you may want
 to enable when upgrading to 2.0.0. Putting Confidant into maintenance mode
