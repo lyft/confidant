@@ -1,6 +1,10 @@
 # Changelog
 
-# 2
+## 2.0.1
+
+* Added additional logging in the v1 routes.
+* Updated the migration script to include both Service and BlindCredential
+  migrations, as well as checks to ensure the migration was successful.
 
 ## 2.0.0
 
