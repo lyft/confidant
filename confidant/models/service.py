@@ -3,7 +3,6 @@ from datetime import datetime
 from pynamodb.models import Model
 from pynamodb.attributes import (
     UnicodeAttribute,
-    UnicodeSetAttribute,
     NumberAttribute,
     UTCDateTimeAttribute,
     LegacyBooleanAttribute
@@ -13,24 +12,9 @@ from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from confidant.app import app
 from confidant.models.session_cls import DDBSession
 from confidant.models.connection_cls import DDBConnection
-
-
-class NonNullUnicodeSetAttribute(UnicodeSetAttribute):
-    def __get__(self, instance, value):
-        '''
-        Override UnicodeSetAttribute's __get__ method to return a set, rather
-        than None if the attribute isn't set.
-        '''
-        if instance:
-            # Get the attribute. If the object doesn't have the attribute,
-            # ensure we return a set.
-            _value = instance.attribute_values.get(self.attr_name, set())
-            # Attribute is assigned to None, return a set instead.
-            if _value is None:
-                _value = set()
-            return _value
-        else:
-            return self
+from confidant.models.non_null_unicode_set_attribute import (
+    NonNullUnicodeSetAttribute
+)
 
 
 class DataTypeDateIndex(GlobalSecondaryIndex):
