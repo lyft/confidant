@@ -1,7 +1,5 @@
 # Changelog
 
-# 2
-
 ## 3.0.0
 
 * This is a breaking release, if you're using blind credentials. This change
@@ -10,6 +8,12 @@
   migrate\_set\_attribute maintenance script, then upgrade to this version.
   This is due to a breaking change in pynamodb itself, which requires using
   specific versions of pynamodb to migrate the underlying data.
+
+## 2.0.1
+
+* Added additional logging in the v1 routes.
+* Updated the migration script to include both Service and BlindCredential
+  migrations, as well as checks to ensure the migration was successful.
 
 ## 2.0.0
 WARNING: If you upgrade to this version, any new writes to blind credentials
