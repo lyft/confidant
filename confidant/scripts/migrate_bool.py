@@ -62,7 +62,7 @@ def _handleUpdateException(e, item):
         return True
     if code == 'ProvisionedThroughputExceededException':
         app.logger.warn('provisioned write capacity exceeded at object:',
-                 ' backing off (you will need to re-run migration)')
+                        ' backing off (you will need to re-run migration)')
         return True
     raise e
 
