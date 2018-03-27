@@ -9,6 +9,38 @@ import time
 from botocore.exceptions import ClientError
 from pynamodb.exceptions import UpdateError
 from pynamodb.expressions.operand import Path
+from pynamodb.attributes import (
+    UnicodeAttribute,
+    BooleanAttribute,
+)
+
+
+class GenericCredential(Model):
+    class Meta:
+        table_name = app.config.get('DYNAMODB_TABLE')
+        if app.config.get('DYNAMODB_URL'):
+            host = app.config.get('DYNAMODB_URL')
+        region = app.config.get('AWS_DEFAULT_REGION')
+        connection_cls = DDBConnection
+        session_cls = DDBSession
+    id = UnicodeAttribute(hash_key=True)
+    enabled = BooleanAttribute(default=True)
+
+
+def _build_lba_filter_condition(attribute_names):
+    """
+    Build a filter condition suitable for passing to scan/rate_limited_scan,
+	which will filter out any items for which none of the given attributes have
+	native DynamoDB type of 'N'.
+    """
+    int_filter_condition = None
+    for attr_name in attribute_names:
+        if int_filter_condition is None:
+            int_filter_condition = Path(attr_name).is_type('N')
+        else:
+            int_filter_condition |= Path(attr_name).is_type('N')
+
+    return int_filter_condition
 
 
 def _build_actions(model_class, item, attribute_names):
@@ -63,9 +95,11 @@ def _handle_update_exception(e, item):
 
 
 def migrate_boolean_attributes(model_class,
-                               model_name,
                                attribute_names,
+                               read_capacity_to_consume_per_second=10,
+                               allow_scan_without_rcu=False,
                                mock_conditional_update_failure=False,
+                               page_size=None,
                                limit=None,
                                number_of_secs_to_back_off=1,
                                max_items_updated_per_second=1.0):
@@ -74,11 +108,13 @@ def migrate_boolean_attributes(model_class,
     `issue 404 <https://github.com/pynamodb/PynamoDB/issues/404>`_.
     Will scan through all objects and perform a conditional update
     against any items that store any of the given attribute names as
-    integers.
+    integers. Rate limiting is performed by passing an appropriate
+    value as ``read_capacity_to_consume_per_second`` (which defaults to
+    something extremely conservative and slow).
     Note that updates require provisioned write capacity as
     well. Please see `the DynamoDB docs
-    <http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks
-    .ProvisionedThroughput.html>`_
+    <http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/
+    HowItWorks.ProvisionedThroughput.html>`_
     for more information. Keep in mind that there is not a simple 1:1
     mapping between provisioned read capacity and write capacity. Make
     sure they are balanced. A conservative calculation would assume
@@ -96,12 +132,18 @@ def migrate_boolean_attributes(model_class,
     :param model_class: The Model class for which you are migrating. This
                         should be the up-to-date Model class using a
                         BooleanAttribute for the relevant attributes.
-    :param model_name: The name of the model. It must correspond to the
-                       model_class, e.g. BlindCredential = blind_credential,
-                       Credential = credential, Service = service.
     :param attribute_names: List of strings that signifiy the names of
                             attributes which are potentially in need of
                             migration.
+    :param read_capacity_to_consume_per_second: Passed along to the underlying
+                                                `rate_limited_scan` and
+                                                intended as the mechanism to
+                                                rate limit progress. Please
+                                                see notes below around write
+                                                capacity.
+    :param allow_scan_without_rcu: Passed along to `rate_limited_scan`;
+                                   intended to allow unit tests to pass against
+                                   DynamoDB Local.
     :param mock_conditional_update_failure: Only used for unit testing. When
                                             True, the conditional update
                                             expression used internally is
@@ -113,6 +155,8 @@ def migrate_boolean_attributes(model_class,
                                             the resulting failure and
                                             distinguishing it from other
                                             failures.
+    :param page_size: Passed along to the underlying 'page_size'.
+                      Page size of the scan to DynamoDB.
     :param limit: Passed along to the underlying 'limit'. Used to limit the
                   number of results returned.
     :param number_of_secs_to_back_off: Number of seconds to sleep when
@@ -133,7 +177,16 @@ def migrate_boolean_attributes(model_class,
             'max_items_updated_per_second must be greater than zero'
         )
 
-    for item in model_class.data_type_date_index.query(model_name):
+    for item in model_class.rate_limited_scan(
+            _build_lba_filter_condition(attribute_names),
+            read_capacity_to_consume_per_second=(
+                read_capacity_to_consume_per_second
+            ),
+            page_size=page_size,
+            limit=limit,
+            allow_rate_limited_scan_without_consumed_capacity=(
+                allow_scan_without_rcu
+            )):
         items_processed += 1
         if items_processed % 1000 == 0:
             app.logger.info(
@@ -181,15 +234,11 @@ def migrate_boolean_attributes(model_class,
 class MigrateBooleanAttribute(Command):
 
     option_list = (
-        Option(
-            '--model',
-            action="store",
-            dest="model_name",
-            type=str,
-            required=True,
-            help='The model that should be migrated. Choose from service, '
-                 'blind_credential or credential'
-        ),
+        Option('--RCU', action="store", dest="RCU", type=int,
+               default=10,
+			   help='Read Capacity Units to be used for scan method.'),
+        Option('--page-size', action="store", dest="page_size", type=int,
+               default=None, help='Page size used in the scan.'),
         Option(
             '--limit',
             action="store",
@@ -218,26 +267,20 @@ class MigrateBooleanAttribute(Command):
 
     def run(self, model_name, limit, back_off, update_rate):
         attributes = ['enabled']
-        app.logger.info('Model: {}, Limit: {}, Back off: {}, '
+        app.logger.info('RCU: {}, Page Size: {}, Limit: {}, Back off: {}, '
                         'Max update rate: {}, Attributes: {}'.format(
-                            model_name, limit, back_off, update_rate,
+                            RCU, page_size, limit, back_off, update_rate,
                             attributes
                         ))
-        app.logger.info('Working on model: {}'.format(model_name))
-        if model_name == 'service':
-            model = Service
-        elif model_name == 'credential':
-            model = Credential
-        elif model_name == 'blind_credential':
-            model = BlindCredential
-        else:
-            raise Exception('Invalid model: {}'.format(model_name))
+		model = GenericCredential
         res = migrate_boolean_attributes(
             model,
-            model_name,
             attributes,
+            read_capacity_to_consume_per_second=RCU,
+            page_size=page_size,
             limit=limit,
             number_of_secs_to_back_off=back_off,
-            max_items_updated_per_second=update_rate
+            max_items_updated_per_second=update_rate,
+            allow_scan_without_rcu=False
         )
         app.logger.info(res)
