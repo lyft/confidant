@@ -223,9 +223,10 @@ class MigrateBooleanAttribute(Command):
 
     def run(self, model_name, limit, back_off, update_rate):
         attributes = ['enabled']
-        app.logger.info('Page Size: {}, Limit: {}, Back off: {}, '
+        app.logger.info('Model: {}, Limit: {}, Back off: {}, '
                         'Max update rate: {}, Attributes: {}'.format(
-                            limit, back_off, update_rate, attributes
+                            model_name, limit, back_off, update_rate,
+                            attributes
                         ))
         app.logger.info('Working on model: {}'.format(model_name))
         if model_name == 'service':
