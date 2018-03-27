@@ -44,3 +44,29 @@ new data format aren't written until you've run the maintenance script. This
 is useful to allow you to downgrade to an older version, if necessary. See the
 [maintenance mode settings docs](https://lyft.github.io/confidant/basics/configuration/#maintenance-mode-settings)
 for how to enable maintenance mode.
+
+## Upgrading to 4.0.0
+
+Due to breaking changes in PynamoDB, to upgrade to 4.0.0 will require a data
+migration. Before migrating to 4.0.0, ensure that you are at least on 3.0.0.
+
+PynamoDB changed its data model over a series of releases, which requires the
+the upgrade path for Confidant to follow the same model. After performing this
+data migration, the data is still compatible with 3.0.0, but not below this.
+
+### Peforming the data migration for 4.0.0
+
+Confidant 4.0.0 ships with a maintenance script for the data migration:
+
+```bash
+cd /srv/confidant
+source venv/bin/activate
+
+# Encrypt the data
+python manage.py migrate_boolean_attribute --model=service
+python manage.py migrate_boolean_attribute --model=credential
+python manage.py migrate_boolean_attribute --model=blind_credential
+```
+
+These scripts may fail intermittently. If any failures are occur, retry the
+script until all objects are fully migrated.
