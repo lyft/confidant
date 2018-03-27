@@ -53,12 +53,12 @@ def _handleUpdateException(e, item):
     code = e.cause.response['Error'].get('Code')
     if code == 'ConditionalCheckFailedException':
         app.logger.warn(
-            'conditional update failed (concurrent writes?) for object:',
+            'conditional update failed (concurrent writes?) for object:'
             ' (you will need to re-run migration)'
         )
         return True
     if code == 'ProvisionedThroughputExceededException':
-        app.logger.warn('provisioned write capacity exceeded at object:',
+        app.logger.warn('provisioned write capacity exceeded at object:'
                         ' backing off (you will need to re-run migration)')
         return True
     raise e
@@ -139,7 +139,7 @@ def migrate_boolean_attributes(model_class,
         items_processed += 1
         if items_processed % 1000 == 0:
             app.logger.info(
-                'processed items: %s Thousand', items_processed/1000
+                'processed items: {} Thousand'.format(items_processed/1000)
             )
 
         actions, condition = _build_actions(model_class, item, attribute_names)
@@ -169,13 +169,13 @@ def migrate_boolean_attributes(model_class,
                 time.sleep(number_of_secs_to_back_off)
 
     app.logger.info(
-        'finished migrating; %s items required updates',
-        num_items_with_actions
+        'finished migrating; {} items required updates'.format(
+            num_items_with_actions
+        )
     )
     app.logger.info(
-        '%s items failed due to racing writes and/or exceeding capacity and '
-        'require re-running migration',
-        num_update_failures
+        '{} items failed due to racing writes and/or exceeding capacity and '
+        'require re-running migration'.format(num_update_failures)
     )
     return num_items_with_actions, num_update_failures
 
