@@ -13,6 +13,9 @@ from pynamodb.attributes import (
     UnicodeAttribute,
     BooleanAttribute,
 )
+from pynamodb.models import Model
+from confidant.models.session_cls import DDBSession
+from confidant.models.connection_cls import DDBConnection
 
 
 class GenericCredential(Model):
