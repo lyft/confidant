@@ -272,7 +272,7 @@ class MigrateBooleanAttribute(Command):
                             RCU, page_size, limit, back_off, update_rate,
                             attributes
                         ))
-		model = GenericCredential
+        model = GenericCredential
         res = migrate_boolean_attributes(
             model,
             attributes,
