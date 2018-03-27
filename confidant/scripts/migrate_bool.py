@@ -4,8 +4,6 @@ from confidant.models.credential import Credential
 from confidant.models.service import Service
 
 from flask.ext.script import Command, Option
-import logging
-import sys
 import time
 
 from botocore.exceptions import ClientError
@@ -44,7 +42,7 @@ def _build_actions(model_class, item, attribute_names):
     return actions, condition
 
 
-def _handleUpdateException(e, item):
+def _handle_update_exception(e, item):
     """
     Handle exceptions of type update.
     """
@@ -162,7 +160,7 @@ def migrate_boolean_attributes(model_class,
             time_of_last_update = time.time()
             item.update(actions=actions, condition=condition)
         except UpdateError as e:
-            if _handleUpdateException(e, item):
+            if _handle_update_exception(e, item):
                 num_update_failures += 1
                 # In case of throttling, back off amount of seconds before
                 # continuing
