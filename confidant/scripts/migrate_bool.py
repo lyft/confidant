@@ -268,7 +268,7 @@ class MigrateBooleanAttribute(Command):
         )
     )
 
-    def run(self, model_name, limit, back_off, update_rate):
+    def run(self, RCU, page_size, limit, back_off, update_rate):
         attributes = ['enabled']
         app.logger.info('RCU: {}, Page Size: {}, Limit: {}, Back off: {}, '
                         'Max update rate: {}, Attributes: {}'.format(
