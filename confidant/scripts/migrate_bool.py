@@ -12,9 +12,6 @@ from botocore.exceptions import ClientError
 from pynamodb.exceptions import UpdateError
 from pynamodb.expressions.operand import Path
 
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.logger.setLevel(logging.INFO)
-
 
 def _build_actions(model_class, item, attribute_names):
     """
