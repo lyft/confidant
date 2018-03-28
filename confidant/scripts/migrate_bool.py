@@ -266,9 +266,19 @@ class MigrateBooleanAttribute(Command):
             default=1.0,
             help='An upper limit on the rate of items update per second.'
         )
+        Option(
+            '--scan-without-rcu'
+            action="store_true",
+            dest="scan_without_rcu",
+            type=bool,
+            default=False,
+            help='For development purposes, allow scanning without read '
+                 'capacity units'
+        )
     )
 
-    def run(self, RCU, page_size, limit, back_off, update_rate):
+    def run(self, RCU, page_size, limit, back_off, update_rate,
+            scan_without_rcu):
         attributes = ['enabled']
         app.logger.info('RCU: {}, Page Size: {}, Limit: {}, Back off: {}, '
                         'Max update rate: {}, Attributes: {}'.format(
@@ -284,6 +294,6 @@ class MigrateBooleanAttribute(Command):
             limit=limit,
             number_of_secs_to_back_off=back_off,
             max_items_updated_per_second=update_rate,
-            allow_scan_without_rcu=False
+            allow_scan_without_rcu=scan_without_rcu
         )
         app.logger.info(res)
