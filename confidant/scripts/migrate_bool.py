@@ -267,7 +267,7 @@ class MigrateBooleanAttribute(Command):
             help='An upper limit on the rate of items update per second.'
         ),
         Option(
-            '--scan-without-rcu'
+            '--scan-without-rcu',
             action="store_true",
             dest="scan_without_rcu",
             type=bool,
