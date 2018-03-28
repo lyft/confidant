@@ -237,11 +237,22 @@ def migrate_boolean_attributes(model_class,
 class MigrateBooleanAttribute(Command):
 
     option_list = (
-        Option('--RCU', action="store", dest="RCU", type=int,
-               default=10,
-			   help='Read Capacity Units to be used for scan method.'),
-        Option('--page-size', action="store", dest="page_size", type=int,
-               default=None, help='Page size used in the scan.'),
+        Option(
+            '--RCU',
+            action="store",
+            dest="RCU",
+            type=int,
+            default=10,
+			help='Read Capacity Units to be used for scan method.'
+        ),
+        Option(
+            '--page-size',
+            action="store",
+            dest="page_size",
+            type=int,
+            default=None,
+            help='Page size used in the scan.'
+        ),
         Option(
             '--limit',
             action="store",
