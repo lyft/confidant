@@ -1,7 +1,4 @@
 from confidant.app import app
-from confidant.models.blind_credential import BlindCredential
-from confidant.models.credential import Credential
-from confidant.models.service import Service
 
 from flask.ext.script import Command, Option
 import time
@@ -33,8 +30,8 @@ class GenericCredential(Model):
 def _build_lba_filter_condition(attribute_names):
     """
     Build a filter condition suitable for passing to scan/rate_limited_scan,
-	which will filter out any items for which none of the given attributes have
-	native DynamoDB type of 'N'.
+    which will filter out any items for which none of the given attributes have
+    native DynamoDB type of 'N'.
     """
     int_filter_condition = None
     for attr_name in attribute_names:
@@ -239,7 +236,7 @@ class MigrateBooleanAttribute(Command):
             dest="RCU",
             type=int,
             default=10,
-			help='Read Capacity Units to be used for scan method.'
+            help='Read Capacity Units to be used for scan method.'
         ),
         Option(
             '--page-size',
