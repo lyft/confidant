@@ -63,10 +63,8 @@ cd /srv/confidant
 source venv/bin/activate
 
 # Encrypt the data
-python manage.py migrate_boolean_attribute --model=service
-python manage.py migrate_boolean_attribute --model=credential
-python manage.py migrate_boolean_attribute --model=blind_credential
+python manage.py migrate_boolean_attribute
 ```
 
-These scripts may fail intermittently. If any failures are occur, retry the
+This script may fail intermittently. If any failures are occur, retry the
 script until all objects are fully migrated.
