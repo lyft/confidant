@@ -270,7 +270,6 @@ class MigrateBooleanAttribute(Command):
             '--scan-without-rcu',
             action="store_true",
             dest="scan_without_rcu",
-            type=bool,
             default=False,
             help='For development purposes, allow scanning without read '
                  'capacity units'
