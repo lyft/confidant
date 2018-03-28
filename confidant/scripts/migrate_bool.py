@@ -132,40 +132,36 @@ def migrate_boolean_attributes(model_class,
     Suggesting that 9 were updated successfully.
     It is suggested that the migration step be re-ran until the return
     value is ``(0, 0)``.
-    :param model_class: The Model class for which you are migrating. This
-                        should be the up-to-date Model class using a
-                        BooleanAttribute for the relevant attributes.
-    :param attribute_names: List of strings that signifiy the names of
-                            attributes which are potentially in need of
-                            migration.
-    :param read_capacity_to_consume_per_second: Passed along to the underlying
-                                                `rate_limited_scan` and
-                                                intended as the mechanism to
-                                                rate limit progress. Please
-                                                see notes below around write
-                                                capacity.
-    :param allow_scan_without_rcu: Passed along to `rate_limited_scan`;
-                                   intended to allow unit tests to pass against
-                                   DynamoDB Local.
-    :param mock_conditional_update_failure: Only used for unit testing. When
-                                            True, the conditional update
-                                            expression used internally is
-                                            updated such that it is guaranteed
-                                            to fail. This is meant to trigger
-                                            the code path in boto, to allow us
-                                            to unit test that we are jumping
-                                            through appropriate hoops handling
-                                            the resulting failure and
-                                            distinguishing it from other
-                                            failures.
-    :param page_size: Passed along to the underlying 'page_size'.
-                      Page size of the scan to DynamoDB.
-    :param limit: Passed along to the underlying 'limit'. Used to limit the
-                  number of results returned.
-    :param number_of_secs_to_back_off: Number of seconds to sleep when
-                                       exceeding capacity.
-    :param max_items_updated_per_second: An upper limit on the rate of items
-                                         update per second.
+    :param model_class:
+        The Model class for which you are migrating. This should be the
+        up-to-date Model class using a BooleanAttribute for the relevant
+        attributes.
+    :param attribute_names:
+        List of strings that signifiy the names of attributes which are
+        potentially in need of migration.
+    :param read_capacity_to_consume_per_second:
+        Passed along to the underlying `rate_limited_scan` and intended as the
+        mechanism to rate limit progress. Please see notes below around write
+        capacity.
+    :param allow_scan_without_rcu:
+        Passed along to `rate_limited_scan`; intended to allow unit tests to
+        pass against DynamoDB Local.
+    :param mock_conditional_update_failure:
+        Only used for unit testing. When True, the conditional update
+        expression used internally is updated such that it is guaranteed to
+        fail. This is meant to trigger the code path in boto, to allow us to
+        unit test that we are jumping through appropriate hoops handling the
+        resulting failure and distinguishing it from other failures.
+    :param page_size:
+        Passed along to the underlying 'page_size'. Page size of the scan to
+        DynamoDB.
+    :param limit:
+        Passed along to the underlying 'limit'. Used to limit the number of
+        results returned.
+    :param number_of_secs_to_back_off:
+        Number of seconds to sleep when exceeding capacity.
+    :param max_items_updated_per_second:
+        An upper limit on the rate of items update per second.
     :return: (number_of_items_in_need_of_update,
               number_of_them_that_failed_due_to_conditional_update)
     """
