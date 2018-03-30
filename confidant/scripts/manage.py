@@ -10,6 +10,7 @@ from confidant.scripts.migrate import (
     MigrateBlindCredentialSetAttribute,
     MigrateServiceSetAttribute,
 )
+from confidant.scripts.migrate_bool import MigrateBooleanAttribute
 
 manager = Manager(app.app)
 
@@ -33,6 +34,8 @@ manager.add_command("migrate_blind_cred_set_attribute",
                     MigrateBlindCredentialSetAttribute)
 manager.add_command("migrate_service_set_attribute",
                     MigrateServiceSetAttribute)
+manager.add_command("migrate_boolean_attribute",
+                    MigrateBooleanAttribute)
 
 
 def main():
