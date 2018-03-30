@@ -2,7 +2,7 @@ FROM ubuntu:trusty
 MAINTAINER Ryan Lane <rlane@lyft.com>
 
 RUN apt-get update && \
-    apt-get install curl && \
+    apt-get install -y curl && \
     curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 RUN apt-get update && \
     # For frontend
