@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.0.0
+
+* This is a breaking release. This change upgrades the `LegacyBooleanAttributes`
+  to `BooleanAttributes`, which saves data in a new format. Once you upgrade
+  to this version, you must run the migrate\_bool\_attribute maintenance
+  script immediately after upgrading, which will convert all old data into
+  the new format and prevent further issues with Pynamo upgrades.
+
 ## 3.0.0
 
 * This is a breaking release, if you're using blind credentials. This change
