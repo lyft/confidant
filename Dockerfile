@@ -1,7 +1,9 @@
 FROM ubuntu:trusty
 MAINTAINER Ryan Lane <rlane@lyft.com>
 
-RUN curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+RUN apt-get update && \
+    apt-get install curl && \
+    curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 RUN apt-get update && \
     # For frontend
     apt-get install -y ruby-full nodejs nodejs-legacy git git-core && \
