@@ -8,10 +8,7 @@ RUN apt-get update && \
     apt-get install -y python python-pip python-dev build-essential libffi-dev \
                        libxml2-dev libxmlsec1-dev
 
-RUN cd $(npm root -g)/npm && \
-    npm install fs-extra && \
-    sed -i -e s/graceful-fs/fs-extra/ -e s/fs\.rename/fs\.move/ ./lib/utils/rename.js
-RUN npm install -g npm@3.x
+RUN npm install -g npm@latest
 
 COPY ./piptools_requirements.txt /srv/confidant/piptools_requirements.txt
 COPY ./requirements.txt /srv/confidant/requirements.txt
