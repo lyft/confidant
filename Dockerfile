@@ -6,7 +6,7 @@ RUN apt-get update && \
     curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 RUN apt-get update && \
     # For frontend
-    apt-get install -y ruby-full nodejs nodejs-legacy git git-core && \
+    apt-get install -y ruby-full nodejs git git-core && \
     # For backend
     apt-get install -y python python-pip python-dev build-essential libffi-dev \
                        libxml2-dev libxmlsec1-dev
