@@ -1,14 +1,15 @@
 FROM ubuntu:trusty
 MAINTAINER Ryan Lane <rlane@lyft.com>
 
+RUN curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 RUN apt-get update && \
     # For frontend
-    apt-get install -y ruby-full npm nodejs nodejs-legacy git git-core && \
+    apt-get install -y ruby-full nodejs nodejs-legacy git git-core && \
     # For backend
     apt-get install -y python python-pip python-dev build-essential libffi-dev \
                        libxml2-dev libxmlsec1-dev
 
-RUN npm install -g npm@latest
+# RUN npm install -g npm@latest
 
 COPY ./piptools_requirements.txt /srv/confidant/piptools_requirements.txt
 COPY ./requirements.txt /srv/confidant/requirements.txt
