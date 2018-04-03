@@ -3,7 +3,7 @@ MAINTAINER Ryan Lane <rlane@lyft.com>
 
 RUN apt-get update && \
     apt-get install -y curl && \
-    curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+    curl -sL https://deb.nodesource.com/setup_7.x | bash -
 RUN apt-get update && \
     # For frontend
     apt-get install -y ruby-full nodejs git git-core && \
