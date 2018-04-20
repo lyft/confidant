@@ -5,11 +5,14 @@ RUN apt-get update && \
     apt-get install -y curl && \
     curl -sL https://deb.nodesource.com/setup_7.x | bash -
 RUN apt-get update && \
-    # For frontend
-    apt-get install -y ruby-full nodejs git git-core && \
-    # For backend
-    apt-get install -y python python-pip python-dev build-essential libffi-dev \
-                       libxml2-dev libxmlsec1-dev
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        # For frontend
+        make ruby-dev nodejs git-core \
+        # For backend
+        gcc pkg-config \
+        python-dev python-virtualenv \
+        libffi-dev libxml2-dev libxmlsec1-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY ./piptools_requirements.txt /srv/confidant/piptools_requirements.txt
 COPY ./requirements.txt /srv/confidant/requirements.txt
@@ -18,7 +21,11 @@ COPY ./bower.json /srv/confidant/bower.json
 
 WORKDIR /srv/confidant
 
-RUN pip install -U pip && pip install -r piptools_requirements.txt && pip install -r requirements.txt
+ENV PATH=/venv/bin:$PATH
+RUN virtualenv /venv && \
+    pip install --upgrade pip && \
+    pip install -r piptools_requirements.txt && \
+    pip install -r requirements.txt
 
 RUN gem install compass && \
     npm install grunt-cli && \
