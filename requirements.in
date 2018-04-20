@@ -72,9 +72,9 @@ Flask-SSLify==0.1.5
 Authomatic==0.1.0.post1
 
 # License: MIT
-# Upstream url: https://github.com/onelogin/python-saml
+# Upstream url: https://github.com/onelogin/python3-saml
 # Use: For user authentication via SAML
-python-saml==2.2.1
+python3-saml==1.4.0
 
 # Python HTTP for Humans.
 # License: Apache2
