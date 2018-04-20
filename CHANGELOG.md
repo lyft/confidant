@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.1.0
+
+* Switch from python-saml to python3-saml.
+
+
 ## 4.0.0
 
 * This is a breaking release. This change upgrades the `LegacyBooleanAttributes`
