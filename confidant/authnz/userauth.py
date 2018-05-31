@@ -183,8 +183,8 @@ class AbstractUserAuthenticator(object):
         A whitelist of authorized email addresses or None.
         Loaded from config['USERS_FILE'] as YAML.
         """
-        # TODO: cache the _email_whitelist in memory for some configurable
-        # amount of time.
+        # TODO: cache the _email_whitelist in memory, and check the file mtime
+        # to determine if the cache needs to be refreshed.
         _email_whitelist = None
         if app.config['USERS_FILE']:
             with open(app.config['USERS_FILE'], 'r') as f:
