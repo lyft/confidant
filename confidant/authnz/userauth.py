@@ -183,13 +183,14 @@ class AbstractUserAuthenticator(object):
         A whitelist of authorized email addresses or None.
         Loaded from config['USERS_FILE'] as YAML.
         """
-        if not hasattr(self, '_email_whitelist'):
-            self._email_whitelist = None
-            if app.config['USERS_FILE']:
-                with open(app.config['USERS_FILE'], 'r') as f:
-                    self._email_whitelist = yaml.safe_load(f.read())
+        # TODO: cache the _email_whitelist in memory, and check the file mtime
+        # to determine if the cache needs to be refreshed.
+        _email_whitelist = None
+        if app.config['USERS_FILE']:
+            with open(app.config['USERS_FILE'], 'r') as f:
+                _email_whitelist = yaml.safe_load(f.read())
 
-        return self._email_whitelist
+        return _email_whitelist
 
     @property
     def allowed_email_suffix(self):
