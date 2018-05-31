@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.0
+
+* Don't in-memory cache the USERS\_FILE, but re-read it every time, so that
+  the confidant process doesn't need to restarted whenever this file changes.
+
 ## 4.1.0
 
 * Switch from python-saml to python3-saml.
