@@ -1,11 +1,12 @@
 FROM ubuntu:trusty
-MAINTAINER Ryan Lane <rlane@lyft.com>
+LABEL maintainer="rlane@lyft.com"
 
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -sL https://deb.nodesource.com/setup_7.x | bash -
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        curl ca-certificates \
+    && /usr/bin/curl -sL --fail https://deb.nodesource.com/setup_8.x | bash -
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         # For frontend
         make ruby-dev nodejs git-core \
         # For backend
@@ -37,4 +38,4 @@ RUN node_modules/grunt-cli/bin/grunt build
 
 EXPOSE 80
 
-CMD ["gunicorn","confidant.wsgi:app","--workers=2","-k","gevent","--access-logfile=-","--error-logfile=-"]
+CMD ["gunicorn", "confidant.wsgi:app", "--workers=2", "-k", "gevent", "--access-logfile=-", "--error-logfile=-"]
