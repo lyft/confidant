@@ -48,3 +48,4 @@ class Credential(Model):
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
+    group = UnicodeAttribute(null=True)
