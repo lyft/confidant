@@ -92,7 +92,7 @@ ndg-httpsclient==0.4.2
 # License: BSD
 # Upstream url: http://sourceforge.net/projects/pyasn1/
 # Use: Securing requests for python < 2.7.9.
-pyasn1==0.1.9
+pyasn1==0.4.4
 
 # Python wrapper module around the OpenSSL library
 # License: APL2
