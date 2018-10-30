@@ -32,6 +32,16 @@ def get_logged_in_user():
     raise UserUnknownError()
 
 
+def get_user_groups():
+    if user_mod.is_authenticated():
+        return user_mod.current_groups()
+    raise UserUnknownError()
+
+
+def user_is_member(groupname):
+    return groupname in get_user_groups()
+
+
 def user_is_user_type(user_type):
     if not app.config.get('USE_AUTH'):
         return True

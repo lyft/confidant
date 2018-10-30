@@ -154,6 +154,7 @@
                 _credential.name = $scope.credential.name;
                 _credential.enabled = $scope.credential.enabled;
                 _credential.documentation = $scope.credential.documentation;
+                _credential.group = $scope.credential.group;
                 _credential.credential_pairs = {};
                 _credential.metadata = {};
                 $scope.saveError = '';

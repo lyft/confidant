@@ -103,6 +103,12 @@ USER_EMAIL_SUFFIX = (str_env('USER_EMAIL_SUFFIX', None) or
 # google/saml authentication access will be able to access/modify secrets.
 USERS_FILE = str_env('USERS_FILE')
 
+# Use local groups for restricting access to credentials.
+# If this is set, an authenticated user must be a member of the group
+# associated wiht a credential to perform any interactions with it.
+# A credential with no group is accessible to all authenticated users.
+USE_GROUPS = bool_env('USE_GROUPS', False)
+
 # SAML authentication
 # SP: Service Provider (i.e. Confidant)
 # IdP: Identity Provider

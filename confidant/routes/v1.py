@@ -377,7 +377,12 @@ def get_credential(id):
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
         return jsonify({}), 404
-    #TODO: add check for group membership here
+    if app.config.get('USE_GROUPS'):
+        if cred.group and not authnz.user_is_member(cred.group):
+            logging.warning('User not a member of group for cred {0}.'.format(id))
+            msg = 'Authenticated user is not authorized.'
+            return jsonify({'error': msg}), 403
+
     services = []
     for service in Service.data_type_date_index.query('service'):
         services.append(service.id)
@@ -651,9 +656,9 @@ def _lowercase_credential_pairs(credential_pairs):
 @maintenance.check_maintenance_mode
 def create_credential():
     #TODO: add in
-    # * collecting the group from the data
+    # X collecting the group from the data
     # * checking that the user is a member of the group
-    # * adding the group to the cred
+    # X adding the group to the cred
     data = request.get_json()
     if not data.get('documentation') and settings.get('ENFORCE_DOCUMENTATION'):
         return jsonify({'error': 'documentation is a required field'}), 400
@@ -690,7 +695,8 @@ def create_credential():
         data_key=data_key['ciphertext'],
         cipher_version=2,
         modified_by=authnz.get_logged_in_user(),
-        documentation=data.get('documentation')
+        documentation=data.get('documentation'),
+        group=data.get('group')
     ).save(id__null=True)
     # Make this the current revision
     cred = Credential(
@@ -704,7 +710,8 @@ def create_credential():
         data_key=data_key['ciphertext'],
         cipher_version=2,
         modified_by=authnz.get_logged_in_user(),
-        documentation=data.get('documentation')
+        documentation=data.get('documentation'),
+        group=data.get('group')
     )
     cred.save()
     return jsonify({
@@ -716,7 +723,8 @@ def create_credential():
         'enabled': cred.enabled,
         'modified_date': cred.modified_date,
         'modified_by': cred.modified_by,
-        'documentation': cred.documentation
+        'documentation': cred.documentation,
+        'group': cred.group
     })
 
 
@@ -735,10 +743,6 @@ def get_credential_dependencies(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def update_credential(id):
-    #TODO: add in
-    # * collecting the group from the data
-    # * checking that the user is a member of the group
-    # * adding the group to the cred
     try:
         _cred = Credential.get(id)
     except DoesNotExist:
@@ -746,6 +750,10 @@ def update_credential(id):
     if _cred.data_type != 'credential':
         msg = 'id provided is not a credential.'
         return jsonify({'error': msg}), 400
+    if app.config.get('USE_GROUPS'):
+        logging.warning('DEBUG: checking group membership for id {0}: group is {1}'.format(id, _cred.group))
+        if _cred.group and not authnz.user_in_group(_cred.group):
+            return jsonify({'error': 'User not authorized to view cred'}), 403
     data = request.get_json()
     update = {}
     revision = _get_latest_credential_revision(id, _cred.revision)
@@ -793,6 +801,12 @@ def update_credential(id):
     cipher = CipherManager(data_key['plaintext'], version=2)
     credential_pairs = cipher.encrypt(update['credential_pairs'])
     update['metadata'] = data.get('metadata', _cred.metadata)
+    update['group'] = data.get('group', _cred.group)
+    # if using groups for access control, check that the user is a member
+    # of the new group. Setting the group to empty is always permitted
+    if app.config.get('USE_GROUPS'):
+        if update['group'] and not authnz.user_in_group(update['group']):
+            return jsonify({'error': 'Must be a member of the destination group'}), 400
     update['documentation'] = data.get('documentation', _cred.documentation)
     # Enforce documentation, EXCEPT if we are restoring an old revision
     if (not update['documentation'] and
@@ -812,7 +826,8 @@ def update_credential(id):
             data_key=data_key['ciphertext'],
             cipher_version=2,
             modified_by=authnz.get_logged_in_user(),
-            documentation=update['documentation']
+            documentation=update['documentation'],
+            group=update['group']
         ).save(id__null=True)
     except PutError as e:
         logging.error(e)
@@ -829,7 +844,8 @@ def update_credential(id):
             data_key=data_key['ciphertext'],
             cipher_version=2,
             modified_by=authnz.get_logged_in_user(),
-            documentation=update['documentation']
+            documentation=update['documentation'],
+            group=update['group']
         )
         cred.save()
     except PutError as e:
@@ -850,7 +866,8 @@ def update_credential(id):
         'enabled': cred.enabled,
         'modified_date': cred.modified_date,
         'modified_by': cred.modified_by,
-        'documentation': cred.documentation
+        'documentation': cred.documentation,
+        'group': cred.group
     })
 
 

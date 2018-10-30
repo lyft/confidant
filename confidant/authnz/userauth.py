@@ -3,6 +3,7 @@ import logging
 import urlparse
 import datetime
 import random
+import grp
 
 import yaml
 
@@ -120,6 +121,11 @@ class AbstractUserAuthenticator(object):
             'last_name': last_name,
         }
 
+        if app.config.get('USE_GROUPS'):
+            all_groups = grp.getgrall()
+            session['user']['groups'] = [g.gr_name for g in all_groups if username in g.gr_mem]
+
+
     def current_email(self):
         return self.current_user()['email'].lower()
 
@@ -128,6 +134,9 @@ class AbstractUserAuthenticator(object):
 
     def current_last_name(self):
         return self.current_user()['last_name']
+
+    def current_groups(self):
+        return self.current_user().get('groups')
 
     def redirect_to_index(self):
         return redirect(flask.url_for('index'))
@@ -249,6 +258,7 @@ class NullUserAuthenticator(object):
             'email': 'unauthenticated user',
             'first_name': 'unauthenticated',
             'last_name': 'user',
+            'groups': ['test_group']
         }
 
     def current_email(self):
@@ -259,6 +269,9 @@ class NullUserAuthenticator(object):
 
     def current_last_name(self):
         return self.current_user()['last_name']
+
+    def current_groups(self):
+        return self.current_user().get('groups')
 
     def is_authenticated(self):
         """Null users are always authenticated"""
