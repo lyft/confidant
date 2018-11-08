@@ -666,6 +666,9 @@ def create_credential():
         return jsonify({'error': 'credential_pairs is a required field'}), 400
     if not isinstance(data.get('metadata', {}), dict):
         return jsonify({'error': 'metadata must be a dict'}), 400
+    if app.config.get('USE_GROUPS'):
+        if data.get('group') and not authnz.user_is_member(data.get('group')):
+            return jsonify({'error': 'Must be a member of the destination group'}), 400
     # Ensure credential pair keys are lowercase
     credential_pairs = _lowercase_credential_pairs(data['credential_pairs'])
     _check, ret = _check_credential_pair_values(credential_pairs)
@@ -801,7 +804,7 @@ def update_credential(id):
     cipher = CipherManager(data_key['plaintext'], version=2)
     credential_pairs = cipher.encrypt(update['credential_pairs'])
     update['metadata'] = data.get('metadata', _cred.metadata)
-    update['group'] = data.get('group', _cred.group)
+    update['group'] = data.get('group')
     # if using groups for access control, check that the user is a member
     # of the new group. Setting the group to empty is always permitted
     if app.config.get('USE_GROUPS'):
