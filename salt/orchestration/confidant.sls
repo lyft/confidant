@@ -1,3 +1,6 @@
+#솔트 스테이트 시스템의 핵심은 SLS 또는 SaLt State 파일입니다. 
+#SLS는 시스템이 있어야하며 간단한 형식으로 이 데이터를 포함하도록 설정되는 상태를 나타냅니다. 
+#이를 종종 구성 관리라고합니다.
 # Fail if required environment variables aren't passed in.
 {% for var in ['service_name', 'service_instance', 'region'] %}
 {% if not grains.get(var, None) %}
