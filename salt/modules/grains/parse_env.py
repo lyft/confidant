@@ -3,7 +3,7 @@ Set service_*, and region grains based on environment variables.
 '''
 import os
 
-
+#설정된 환경값을 리턴해주는 용도인 것 같다.
 def parse_env():
     service_name = os.environ.get('SERVICE_NAME')
     service_instance = os.environ.get('SERVICE_INSTANCE')
