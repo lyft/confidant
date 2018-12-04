@@ -377,11 +377,6 @@ def get_credential(id):
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
         return jsonify({}), 404
-    if app.config.get('USE_GROUPS'):
-        if cred.group and not authnz.user_is_member(cred.group):
-            logging.warning('User not a member of group for cred {0}.'.format(id))
-            msg = 'Authenticated user is not authorized.'
-            return jsonify({'error': msg}), 403
 
     services = []
     for service in Service.data_type_date_index.query('service'):
@@ -390,14 +385,18 @@ def get_credential(id):
         context = id
     else:
         context = id.split('-')[0]
-    data_key = keymanager.decrypt_datakey(
-        cred.data_key,
-        encryption_context={'id': context}
-    )
-    cipher_version = cred.cipher_version
-    cipher = CipherManager(data_key, cipher_version)
-    _credential_pairs = cipher.decrypt(cred.credential_pairs)
-    _credential_pairs = json.loads(_credential_pairs)
+
+    _credential_pairs = None
+    if app.config.get('USE_GROUPS'):
+        if cred.group and authnz.user_is_member(cred.group):
+            data_key = keymanager.decrypt_datakey(
+                cred.data_key,
+                encryption_context={'id': context}
+            )
+            cipher_version = cred.cipher_version
+            cipher = CipherManager(data_key, cipher_version)
+            _credential_pairs = cipher.decrypt(cred.credential_pairs)
+            _credential_pairs = json.loads(_credential_pairs)
     return jsonify({
         'id': id,
         'name': cred.name,

@@ -119,6 +119,7 @@ class AbstractUserAuthenticator(object):
             'email': email,
             'first_name': first_name,
             'last_name': last_name,
+            'groups': []
         }
 
         if app.config.get('USE_GROUPS'):
@@ -258,7 +259,7 @@ class NullUserAuthenticator(object):
             'email': 'unauthenticated user',
             'first_name': 'unauthenticated',
             'last_name': 'user',
-            'groups': ['test_group']
+            'groups': []
         }
 
     def current_email(self):
