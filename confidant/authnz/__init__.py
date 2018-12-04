@@ -185,7 +185,7 @@ def require_auth(f):
                 logging.debug(msg)
                 if user_type_has_privilege(
                         kms_auth_data['user_type'],
-                        f.func_name):
+                        f.__name__):
                     g.user_type = kms_auth_data['user_type']
                     g.auth_type = 'kms'
                     g.account = account_for_key_alias(token_data['key_alias'])
@@ -193,7 +193,7 @@ def require_auth(f):
                     return f(*args, **kwargs)
                 else:
                     msg = '{0} is not authorized to access {1}.'
-                    msg = msg.format(kms_auth_data['from'], f.func_name)
+                    msg = msg.format(kms_auth_data['from'], f.__name__)
                     logging.warning(msg)
                     return abort(403)
             except keymanager.TokenDecryptionError:
@@ -206,7 +206,7 @@ def require_auth(f):
         # If not using kms auth, require auth using the user_mod authn module.
         else:
             user_type = 'user'
-            if not user_type_has_privilege(user_type, f.func_name):
+            if not user_type_has_privilege(user_type, f.__name__):
                 return abort(403)
 
             if user_mod.is_expired():
