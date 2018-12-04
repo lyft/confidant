@@ -45,9 +45,9 @@ def get_user_info():
     Get the email address of the currently logged-in user.
     '''
     try:
-        response = jsonify({'email': authnz.get_logged_in_user()})
+        response = jsonify({'email': authnz.get_logged_in_user(), 'groups': authnz.get_user_groups()})
     except authnz.UserUnknownError:
-        response = jsonify({'email': None})
+        response = jsonify({'email': None, 'groups': None})
     return response
 
 
@@ -755,7 +755,7 @@ def update_credential(id):
         return jsonify({'error': msg}), 400
     if app.config.get('USE_GROUPS'):
         logging.warning('DEBUG: checking group membership for id {0}: group is {1}'.format(id, _cred.group))
-        if _cred.group and not authnz.user_in_group(_cred.group):
+        if _cred.group and not authnz.user_is_member(_cred.group):
             return jsonify({'error': 'User not authorized to view cred'}), 403
     data = request.get_json()
     update = {}
@@ -808,7 +808,7 @@ def update_credential(id):
     # if using groups for access control, check that the user is a member
     # of the new group. Setting the group to empty is always permitted
     if app.config.get('USE_GROUPS'):
-        if update['group'] and not authnz.user_in_group(update['group']):
+        if update['group'] and not authnz.user_is_member(update['group']):
             return jsonify({'error': 'Must be a member of the destination group'}), 400
     update['documentation'] = data.get('documentation', _cred.documentation)
     # Enforce documentation, EXCEPT if we are restoring an old revision
