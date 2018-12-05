@@ -386,8 +386,8 @@ def get_credential(id):
     else:
         context = id.split('-')[0]
 
-    _authorized_user = not app.config.get('USE_GROUPS') or (
-            cred.group and authnz.user_is_member(cred.group))
+    _authorized_user = (not app.config.get('USE_GROUPS') or not cred.group
+            or authnz.user_is_member(cred.group))
 
     _credential_pairs = None
     if _authorized_user:
