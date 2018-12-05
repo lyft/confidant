@@ -386,17 +386,19 @@ def get_credential(id):
     else:
         context = id.split('-')[0]
 
+    _authorized_user = not app.config.get('USE_GROUPS') or (
+            cred.group and authnz.user_is_member(cred.group))
+
     _credential_pairs = None
-    if app.config.get('USE_GROUPS'):
-        if cred.group and authnz.user_is_member(cred.group):
-            data_key = keymanager.decrypt_datakey(
-                cred.data_key,
-                encryption_context={'id': context}
-            )
-            cipher_version = cred.cipher_version
-            cipher = CipherManager(data_key, cipher_version)
-            _credential_pairs = cipher.decrypt(cred.credential_pairs)
-            _credential_pairs = json.loads(_credential_pairs)
+    if _authorized_user:
+        data_key = keymanager.decrypt_datakey(
+            cred.data_key,
+            encryption_context={'id': context}
+        )
+        cipher_version = cred.cipher_version
+        cipher = CipherManager(data_key, cipher_version)
+        _credential_pairs = cipher.decrypt(cred.credential_pairs)
+        _credential_pairs = json.loads(_credential_pairs)
     return jsonify({
         'id': id,
         'name': cred.name,
@@ -408,7 +410,8 @@ def get_credential(id):
         'modified_date': cred.modified_date,
         'modified_by': cred.modified_by,
         'documentation': cred.documentation,
-        'group': cred.group
+        'group': cred.group,
+        'authorized': _authorized_user
     })
 
 
@@ -726,7 +729,8 @@ def create_credential():
         'modified_date': cred.modified_date,
         'modified_by': cred.modified_by,
         'documentation': cred.documentation,
-        'group': cred.group
+        'group': cred.group,
+        'authorized': True
     })
 
 
@@ -869,7 +873,8 @@ def update_credential(id):
         'modified_date': cred.modified_date,
         'modified_by': cred.modified_by,
         'documentation': cred.documentation,
-        'group': cred.group
+        'group': cred.group,
+        'authorized': True
     })
 
 
