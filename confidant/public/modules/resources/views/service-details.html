@@ -47,7 +47,7 @@
   <div class="form-group">
     <label for="credentialInputs">Credentials</label>
     <div class="well">
-      <div ng-repeat="credential in service.credentials | filter:filterCredentials" class="row">
+      <div ng-repeat="credential in service.credentials | filter:filterCredentials | orderBy:'name':false:localeSensitiveComparator" class="row">
         <div class="col-md-8">
           <span editable-select="credential.id" e-ng-selected="credential.id == c.id" e-name="{{ credential.id }}SelectMenu" e-ng-options="c.id as c.name for c in $parent.credentialList | filter:filterCredentialOptions">
             <a href="#/resources/credential/{{ credential.id }}">{{ credential.name }} <span ng-hide="credential.enabled">(disabled)</span></a>
