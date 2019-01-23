@@ -83,6 +83,7 @@ def get_service_list():
             'modified_date': service.modified_date,
             'modified_by': service.modified_by
         })
+    services = sorted(services, key=lambda k: k['id'].lower())
     return jsonify({'services': services})
 
 
@@ -359,7 +360,7 @@ def get_credential_list():
             'documentation': cred.documentation
         })
 
-    credentials = sorted(credentials, key=lambda k: k['name'])
+    credentials = sorted(credentials, key=lambda k: k['name'].lower())
     return jsonify({'credentials': credentials})
 
 

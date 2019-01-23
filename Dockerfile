@@ -28,7 +28,8 @@ RUN virtualenv /venv && \
     pip install -r piptools_requirements.txt && \
     pip install -r requirements.txt
 
-RUN gem install compass && \
+RUN gem install rb-inotify -v 0.9.10 && \
+    gem install compass -v 1.0.3 && \
     npm install grunt-cli && \
     npm install
 
