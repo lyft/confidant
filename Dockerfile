@@ -28,9 +28,7 @@ RUN virtualenv /venv && \
     pip install -r piptools_requirements.txt && \
     pip install -r requirements.txt
 
-RUN gem install rubygems-update && \
-    update_rubygems && \
-    gem install compass && \
+RUN gem install compass -v 1.0.3 && \
     npm install grunt-cli && \
     npm install
 
