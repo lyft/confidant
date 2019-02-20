@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.3.0
+
+* Use ``dict`` and ``set`` in pynamo models rather than ``{}`` and ``set()``,
+  to avoid potential corrupted data in model saves. Based on how confidant
+  currently uses the pynamo models, the default arguments can't lead to data
+  corruption, but to avoid potential future issues, we're fixing the default
+  args to not be mutable.
+
 ## 4.2.0
 
 * Don't in-memory cache the USERS\_FILE, but re-read it every time, so that
