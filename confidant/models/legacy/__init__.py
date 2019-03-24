@@ -1,3 +1,4 @@
 """
-schema version 1 models for testing schema migrations.
+Module for storing older schema models, for testing backwards incompat schema
+migrations.
 """
