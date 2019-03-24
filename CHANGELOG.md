@@ -1,6 +1,79 @@
 # Changelog
 
-# 1
+## 4.4.0
+
+* Use ``dict`` and ``set`` in pynamo models rather than ``{}`` and ``set()``,
+  to avoid potential corrupted data in model saves. Based on how confidant
+  currently uses the pynamo models, the default arguments can't lead to data
+  corruption, but to avoid potential future issues, we're fixing the default
+  args to not be mutable.
+
+## 4.3.1
+
+* Packaging fix
+
+## 4.3.0
+
+* Case insentive sort for service and credential list API responses
+
+## 4.2.0
+
+* Don't in-memory cache the USERS\_FILE, but re-read it every time, so that
+  the confidant process doesn't need to restarted whenever this file changes.
+
+## 4.1.0
+
+* Switch from python-saml to python3-saml.
+
+
+## 4.0.0
+
+* This is a breaking release. This change upgrades the `LegacyBooleanAttributes`
+  to `BooleanAttributes`, which saves data in a new format. Once you upgrade
+  to this version, you must run the migrate\_bool\_attribute maintenance
+  script immediately after upgrading, which will convert all old data into
+  the new format and prevent further issues with Pynamo upgrades.
+
+## 3.0.0
+
+* This is a breaking release, if you're using blind credentials. This change
+  upgrades to using pynamodb 3.2.1. If you're using blind credentials, it's
+  necessary to first upgrade to confidant 2.0.0, run the
+  migrate\_set\_attribute maintenance script, then upgrade to this version.
+  This is due to a breaking change in pynamodb itself, which requires using
+  specific versions of pynamodb to migrate the underlying data.
+
+## 2.0.1
+
+* Added additional logging in the v1 routes.
+* Updated the migration script to include both Service and BlindCredential
+  migrations, as well as checks to ensure the migration was successful.
+
+## 2.0.0
+WARNING: If you upgrade to this version, any new writes to blind credentials
+will be in a format that is only compatible in 1.11.0 forward. If you've
+upgraded and need to downgrade, you should downgrade to 1.11.0. This is only
+a concern if you're using blind credentials. If you're using blind credentials,
+see the [upgrade instructions](https://github.com/lyft/confidant/blob/master/docs/source/basics/upgrade.html.markdown)
+for more detailed information about this breaking change.
+
+* Added support for a maintenance mode, which will disable all writes to
+  confidant via the API. This allows you to put confidant into a maintenance
+  mode which will let you do maintenance actions via scripts, but will disallow
+  all write actions via the API while you're performing the maintenance.
+  This is useful for data migrations, or during periods where you want to
+  ensure no confidant changes are being made. See the docs for
+  MAINTENANCE\_MODE and MAINTENANCE\_MODE\_TOUCH\_FILE settings.
+* Upgraded pynamodb to 2.2.0, to support migration of UnicodeSetAttribute for
+  blind credentials in DynamoDB.
+* Changed dynamo models to use LegacyBooleanAttribute, to allow for backwards
+  compatibility for the data models. In a future version we'll require a
+  migration for dynamo data to the new BooleanAttribute format used in
+  PynamoDB.
+
+## 1.11.0
+
+* Upgrade PynamoDB requirement to 1.5.4
 
 ## 1.10.1
 
@@ -126,7 +199,7 @@ even in unreleased branches.
 * Feature (and new default): Added support for secure cookies for session
   management. This removes the dependency on redis. New settings were added to
   control the lifetime of secure cookie sessions.
-* Feature: Extensible metadata for secrets and blind secrets. 
+* Feature: Extensible metadata for secrets and blind secrets.
 * Feature: AWS account scoping for services. If you're using multiple AWS
   accounts, it's possible to limit access to services from specific accounts by
   using multiple KMS keys for KMS authentication.

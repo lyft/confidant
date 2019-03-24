@@ -13,9 +13,11 @@ import confidant.services
 from confidant import keymanager
 from confidant import authnz
 from confidant import graphite
+from confidant import settings
 from confidant import webhook
 from confidant.app import app
 from confidant.utils import stats
+from confidant.utils import maintenance
 from confidant.models.credential import Credential
 from confidant.models.service import Service
 
@@ -58,7 +60,8 @@ def get_client_config():
         'generated': {
             'kms_auth_manage_grants': app.config['KMS_AUTH_MANAGE_GRANTS'],
             'aws_accounts': app.config['SCOPED_AUTH_KEYS'].values(),
-            'xsrf_cookie_name': app.config['XSRF_COOKIE_NAME']
+            'xsrf_cookie_name': app.config['XSRF_COOKIE_NAME'],
+            'maintenance_mode': app.config['MAINTENANCE_MODE']
         }
     })
     return response
@@ -77,6 +80,7 @@ def get_service_list():
             'modified_date': service.modified_date,
             'modified_by': service.modified_by
         })
+    services = sorted(services, key=lambda k: k['id'].lower())
     return jsonify({'services': services})
 
 
@@ -119,6 +123,7 @@ def get_service(id):
     try:
         credentials = _get_credentials(service.credentials)
     except KeyError:
+        logging.exception('KeyError occurred in getting credentials')
         return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = _get_blind_credentials(service.blind_credentials)
     return jsonify({
@@ -139,6 +144,9 @@ def get_archive_service_revisions(id):
     try:
         service = Service.get(id)
     except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
@@ -189,6 +197,7 @@ def get_archive_service_list():
 @app.route('/v1/grants/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def ensure_grants(id):
     try:
         _service = Service.get(id)
@@ -240,6 +249,7 @@ def get_grants(id):
 @app.route('/v1/services/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def map_service_credentials(id):
     data = request.get_json()
     try:
@@ -343,10 +353,11 @@ def get_credential_list():
             'revision': cred.revision,
             'enabled': cred.enabled,
             'modified_date': cred.modified_date,
-            'modified_by': cred.modified_by
+            'modified_by': cred.modified_by,
+            'documentation': cred.documentation
         })
 
-    credentials = sorted(credentials, key=lambda k: k['name'])
+    credentials = sorted(credentials, key=lambda k: k['name'].lower())
     return jsonify({'credentials': credentials})
 
 
@@ -356,6 +367,9 @@ def get_credential(id):
     try:
         cred = Credential.get(id)
     except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
@@ -372,7 +386,8 @@ def get_credential(id):
         'revision': cred.revision,
         'enabled': cred.enabled,
         'modified_date': cred.modified_date,
-        'modified_by': cred.modified_by
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
     })
 
 
@@ -382,6 +397,9 @@ def get_archive_credential_revisions(id):
     try:
         cred = Credential.get(id)
     except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
@@ -398,7 +416,8 @@ def get_archive_credential_revisions(id):
             'revision': revision.revision,
             'enabled': revision.enabled,
             'modified_date': revision.modified_date,
-            'modified_by': revision.modified_by
+            'modified_by': revision.modified_by,
+            'documentation': revision.documentation
         })
     return jsonify({
         'revisions': sorted(
@@ -421,7 +440,8 @@ def get_archive_credential_list():
             'revision': cred.revision,
             'enabled': cred.enabled,
             'modified_date': cred.modified_date,
-            'modified_by': cred.modified_by
+            'modified_by': cred.modified_by,
+            'documentation': cred.documentation
         })
     return jsonify({'credentials': credentials})
 
@@ -438,6 +458,7 @@ def _get_credentials(credential_ids):
                 'revision': cred.revision,
                 'credential_pairs': cred.decrypted_credential_pairs,
                 'metadata': cred.metadata
+                'documentation': cred.documentation
             })
     return credentials
 
@@ -457,7 +478,8 @@ def _get_blind_credentials(credential_ids):
                 'metadata': cred.metadata,
                 'data_key': cred.data_key,
                 'cipher_version': cred.cipher_version,
-                'cipher_type': cred.cipher_type
+                'cipher_type': cred.cipher_type,
+                'documentation': cred.documentation
             })
     return credentials
 
@@ -597,8 +619,11 @@ def _lowercase_credential_pairs(credential_pairs):
 @app.route('/v1/credentials', methods=['POST'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def create_credential():
     data = request.get_json()
+    if not data.get('documentation') and settings.get('ENFORCE_DOCUMENTATION'):
+        return jsonify({'error': 'documentation is a required field'}), 400
     if not data.get('credential_pairs'):
         return jsonify({'error': 'credential_pairs is a required field'}), 400
     if not isinstance(data.get('metadata', {}), dict):
@@ -627,7 +652,8 @@ def create_credential():
             credential_pairs=credential_pairs,
             metadata=data.get('metadata'),
             enabled=data.get('enabled'),
-            modified_by=authnz.get_logged_in_user()
+            modified_by=authnz.get_logged_in_user(),
+            documentation=data.get('documentation')
         )
         cred.save()
     except PutError as e:
@@ -643,7 +669,8 @@ def create_credential():
         'revision': cred.revision,
         'enabled': cred.enabled,
         'modified_date': cred.modified_date,
-        'modified_by': cred.modified_by
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
     })
 
 
@@ -660,6 +687,7 @@ def get_credential_dependencies(id):
 @app.route('/v1/credentials/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def update_credential(id):
     try:
         _cred = Credential.get(id)
@@ -710,6 +738,13 @@ def update_credential(id):
     else:
         update['credential_pairs'] = _cred.decrypted_credential_pairs()
     update['metadata'] = data.get('metadata', _cred.metadata)
+    update['documentation'] = data.get('documentation', _cred.documentation)
+    # Enforce documentation, EXCEPT if we are restoring an old revision
+    if (not update['documentation'] and
+            settings.get('ENFORCE_DOCUMENTATION') and
+            not data.get('revision')):
+        return jsonify({'error': 'documentation is a required field'}), 400
+    # Try to save to the archive
     try:
         cred = Credential(
             id='{0}-{1}'.format(id, revision),
@@ -722,7 +757,8 @@ def update_credential(id):
             revision=revision,
             schema_version=2,
             cipher_version=2,
-            modified_by=authnz.get_logged_in_user()
+            modified_by=authnz.get_logged_in_user(),
+            documentation=update['documentation']
         )
         cred.save()
     except PutError as e:
@@ -744,7 +780,8 @@ def update_credential(id):
         'revision': cred.revision,
         'enabled': cred.enabled,
         'modified_date': cred.modified_date,
-        'modified_by': cred.modified_by
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
     })
 
 
@@ -759,7 +796,8 @@ def get_blind_credential_list():
             'revision': cred.revision,
             'enabled': cred.enabled,
             'modified_date': cred.modified_date,
-            'modified_by': cred.modified_by
+            'modified_by': cred.modified_by,
+            'documentation': cred.documentation
         })
     return jsonify({'blind_credentials': blind_credentials})
 
@@ -770,6 +808,9 @@ def get_blind_credential(id):
     try:
         cred = Credential.get(id)
     except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
@@ -786,7 +827,8 @@ def get_blind_credential(id):
         'enabled': cred.enabled,
         'data_key': cred.data_key,
         'modified_date': cred.modified_date,
-        'modified_by': cred.modified_by
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
     })
 
 
@@ -821,6 +863,9 @@ def get_archive_blind_credential_revisions(id):
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
         return jsonify({}), 404
     revisions = []
     _range = range(1, cred.revision + 1)
@@ -840,7 +885,8 @@ def get_archive_blind_credential_revisions(id):
             'enabled': cred.enabled,
             'data_key': cred.data_key,
             'modified_date': cred.modified_date,
-            'modified_by': cred.modified_by
+            'modified_by': cred.modified_by,
+            'documentation': cred.documentation
         })
     return jsonify({
         'revisions': sorted(
@@ -869,7 +915,8 @@ def get_archive_blind_credential_list():
             'enabled': cred.enabled,
             'data_key': cred.data_key,
             'modified_date': cred.modified_date,
-            'modified_by': cred.modified_by
+            'modified_by': cred.modified_by,
+            'documentation': cred.documentation
         })
     return jsonify({'blind_credentials': blind_credentials})
 
@@ -877,11 +924,15 @@ def get_archive_blind_credential_list():
 @app.route('/v1/blind_credentials', methods=['POST'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def create_blind_credential():
     data = request.get_json()
     missing = []
-    for arg in ['cipher_version', 'cipher_type', 'credential_pairs',
-                'data_key']:
+    required_args = ['cipher_version', 'cipher_type', 'credential_pairs',
+                     'data_key']
+    if settings.get('ENFORCE_DOCUMENTATION'):
+        required_args.append('documentation')
+    for arg in required_args:
         if not data.get(arg):
             missing.append(arg)
     if missing:
@@ -921,7 +972,8 @@ def create_blind_credential():
             data_key=data['data_key'],
             cipher_type=data['cipher_type'],
             cipher_version=data['cipher_version'],
-            modified_by=authnz.get_logged_in_user()
+            modified_by=authnz.get_logged_in_user(),
+            documentation=data.get('documentation')
         )
         cred.save()
     except PutError as e:
@@ -941,7 +993,8 @@ def create_blind_credential():
         'enabled': cred.enabled,
         'data_key': cred.data_key,
         'modified_date': cred.modified_date,
-        'modified_by': cred.modified_by
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
     })
 
 
@@ -958,6 +1011,7 @@ def get_blind_credential_dependencies(id):
 @app.route('/v1/blind_credentials/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
+@maintenance.check_maintenance_mode
 def update_blind_credential(id):
     try:
         _cred = Credential.get(id)
@@ -1018,6 +1072,12 @@ def update_blind_credential(id):
         update['cipher_type'] = _cred.cipher_type
         update['cipher_version'] = _cred.cipher_version
     update['metadata'] = data.get('metadata', _cred.metadata)
+    update['documentation'] = data.get('documentation', _cred.documentation)
+    # Enforce documentation, EXCEPT if we are restoring an old revision
+    if (not update['documentation'] and
+            settings.get('ENFORCE_DOCUMENTATION') and
+            not data.get('revision')):
+        return jsonify({'error': 'documentation is a required field'}), 400
     # Try to save to the archive
     try:
         cred = Credential(
@@ -1033,7 +1093,8 @@ def update_blind_credential(id):
             data_key=update['data_key'],
             cipher_type=update['cipher_type'],
             cipher_version=update['cipher_version'],
-            modified_by=authnz.get_logged_in_user()
+            modified_by=authnz.get_logged_in_user(),
+            documentation=update['documentation']
         )
         cred.save()
     except PutError as e:
@@ -1059,7 +1120,8 @@ def update_blind_credential(id):
         'enabled': cred.enabled,
         'data_key': cred.data_key,
         'modified_date': cred.modified_date,
-        'modified_by': cred.modified_by
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
     })
 
 

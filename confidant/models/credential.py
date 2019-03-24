@@ -7,7 +7,6 @@ from datetime import datetime
 from pynamodb.models import Model
 from pynamodb.attributes import (
     LegacyBooleanAttribute,
-    UnicodeSetAttribute,
     UnicodeAttribute,
     NumberAttribute,
     UTCDateTimeAttribute,
@@ -19,8 +18,11 @@ from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from confidant.app import app
 from confidant import keymanager
 from confidant.ciphermanager import CipherManager
-from confidant.models.session_cls import DDBSession
 from confidant.models.connection_cls import DDBConnection
+from confidant.models.non_null_unicode_set_attribute import (
+    NonNullUnicodeSetAttribute
+)
+from confidant.models.session_cls import DDBSession
 
 
 class CompatDataKeyAttribute(JSONAttribute):
@@ -87,15 +89,16 @@ class Credential(Model):
     data_type_date_index = DataTypeDateIndex()
     name = UnicodeAttribute()
     credential_pairs = CompatCredentialPairsAttribute()
-    credential_keys = UnicodeSetAttribute(default=set([]), null=True)
+    credential_keys = NonNullUnicodeSetAttribute(default=set, null=True)
     schema_version = NumberAttribute(null=True)
     enabled = LegacyBooleanAttribute(default=True)
     data_key = CompatDataKeyAttribute()
     cipher_type = UnicodeAttribute()
     cipher_version = NumberAttribute(null=True)
-    metadata = JSONAttribute(default={}, null=True)
+    metadata = JSONAttribute(default=dict, null=True)
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
+    documentation = UnicodeAttribute(null=True)
 
     @property
     def blind(self):

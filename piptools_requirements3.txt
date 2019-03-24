@@ -5,12 +5,9 @@
 #    control run piptools.compile confidant
 #
 asn1crypto==0.24.0        # via cryptography
-certifi==2018.4.16
 cffi==1.10.0
 cryptography==2.3
-enum34==1.1.6             # via cryptography
-idna==2.6
-ipaddress==1.0.22         # via cryptography
+idna==2.6                 # via cryptography
 ndg-httpsclient==0.4.2
 pyasn1==0.4.4
 pycparser==2.18           # via cffi

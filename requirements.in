@@ -1,3 +1,4 @@
+# piptools: python3
 # Flask
 # License: BSD
 # Upstream url: http://github.com/mitsuhiko/flask/
@@ -28,14 +29,14 @@ boto3==1.4.0
 # License: MIT
 # Upstream url: http://jlafon.io/pynamodb.html
 # Use: For DynamoDB storage
-pynamodb==2.1.5
+pynamodb==3.2.1
 
 # cryptography is a package which provides cryptographic recipes and
 # primitives to Python developers.
 # License: BSD
 # Upstream url: https://github.com/pyca/cryptography
 # Use: For encryption
-cryptography==2.0
+cryptography==2.3.0
 
 # C Foreign Function Interface for Python.
 # License: MIT
@@ -72,9 +73,9 @@ Flask-SSLify==0.1.5
 Authomatic==0.1.0.post1
 
 # License: MIT
-# Upstream url: https://github.com/onelogin/python-saml
+# Upstream url: https://github.com/onelogin/python3-saml
 # Use: For user authentication via SAML
-python-saml==2.2.1
+python3-saml==1.4.0
 
 # Python HTTP for Humans.
 # License: Apache2
@@ -92,7 +93,7 @@ ndg-httpsclient==0.4.2
 # License: BSD
 # Upstream url: http://sourceforge.net/projects/pyasn1/
 # Use: Securing requests for python < 2.7.9.
-pyasn1==0.1.9
+pyasn1==0.4.4
 
 # Python wrapper module around the OpenSSL library
 # License: APL2

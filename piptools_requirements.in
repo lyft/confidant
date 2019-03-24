@@ -3,7 +3,7 @@
 # License: BSD
 # Upstream url: https://github.com/pyca/cryptography
 # Use: For encryption
-cryptography==2.0
+cryptography==2.3.0
 
 # C Foreign Function Interface for Python.
 # License: MIT
@@ -22,7 +22,7 @@ ndg-httpsclient==0.4.2
 # License: BSD
 # Upstream url: http://sourceforge.net/projects/pyasn1/
 # Use: Securing requests for python < 2.7.9.
-pyasn1==0.1.9
+pyasn1==0.4.4
 
 # Python wrapper module around the OpenSSL library
 # License: APL2
@@ -34,17 +34,3 @@ pyOpenSSL==16.2.0
 # License: MIT
 # Upstream url: http://pypi.python.org/pypi/six/
 six==1.10.0
-
-# A small Python module for determining appropriate platform-specific dirs,
-# e.g. a "user data dir".
-# License: MIT
-# Upstream url: http://github.com/ActiveState/appdirs
-appdirs==1.4.2
-
-# Licence: MIT
-# Upstream url: http://http://lxml.de/index.html
-# Use: lxml is a dependency of python-saml, and the current version is broken.
-# pin lxml in stage 1 as dm.xmlsec.binding depends on it.
-# xmlsec will pull master if lxml doesn't already exist.
-# can be removed when wheels are used for xmlsec.
-lxml==3.7.3
