@@ -457,7 +457,7 @@ def _get_credentials(credential_ids):
                 'enabled': cred.enabled,
                 'revision': cred.revision,
                 'credential_pairs': cred.decrypted_credential_pairs,
-                'metadata': cred.metadata
+                'metadata': cred.metadata,
                 'documentation': cred.documentation
             })
     return credentials
