@@ -379,6 +379,22 @@ WEBHOOK_PASSWORD = encrypted_settings.register(
     'WEBHOOK_PASSWORD',
     str_env('WEBHOOK_PASSWORD')
 )
+# Webhook Array File configuration
+# Example:
+# cat webhook_file.json
+# [
+#   {
+#     "WEBHOOK_URL": "https://webhook_dev.example.com"
+#   },
+#   {
+#     "WEBHOOK_URL": "https://webhook_test.example.com",
+#     "WEBHOOK_USERNAME": "myhookuser",
+#     "WEBHOOK_PASSWORD": "mylongandsupersecurehookpassword"
+#   }
+# ]
+# Extends the above standard webhook configuration to allow for more
+# integrations
+WEBHOOK_ARRAY_FILE = str_env('WEBHOOK_ARRAY_FILE')
 
 # Ignore conflicts of credential names in a service
 # This is used if you don't mind having more than one of the same key name
