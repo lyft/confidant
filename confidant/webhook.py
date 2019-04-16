@@ -49,6 +49,7 @@ def send_event(event_type, services, credential_ids):
     except EnvironmentError:
         logging.warning('Failed to open file: {0}'.format(webhook_file))
 
+
 def post_webhook(endpoint, event_type, services, credential_ids):
     try:
         logging.debug('Endpoint: ' + endpoint['WEBHOOK_URL'])
@@ -64,7 +65,7 @@ def post_webhook(endpoint, event_type, services, credential_ids):
         if 'WEBHOOK_USERNAME' in endpoint:
             logging.debug('Username: ' + endpoint['WEBHOOK_USERNAME'])
             username = endpoint['WEBHOOK_USERNAME']
-            password = endpoint['WEBHOOK_PASSWORD'] # Assumed if above
+            password = endpoint['WEBHOOK_PASSWORD']  # Assumed if above
             response = requests.post(
                 webhook_url,
                 auth=(username, password),
