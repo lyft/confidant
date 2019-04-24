@@ -1,3 +1,40 @@
+# FAIRFAX MEDIA ONLY (DEVELOPMENT ENV)
+
+N.B: Do not merge anything into this branch used for development environment setup only
+
+## Setup
+
+Git Config:
+
+---
+
+```bash
+git clone git@bitbucket.org:ffxblue/confidant-fork.git
+git remote add sync git@github.com:jrosco/confidant.git
+```
+
+Local build/setup:
+
+---
+
+Follow this [guide](https://lyft.github.io/confidant/advanced/contributing/#quickstart-for-testing-or-development) and create a service.env file
+
+```bash
+mkdir dynamo
+docker-compose up
+```
+
+Checkout Branch:
+
+This is the branch where code changes should be made.
+
+---
+
+```bash
+git fetch && git checkout feature/PE-5760_add_group_support_to_confidant
+```
+
+
 Confidant
 =========
 

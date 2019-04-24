@@ -1,4 +1,5 @@
 *.swp
+dynamo/
 
 *.py[cod]
 
