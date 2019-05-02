@@ -29,10 +29,6 @@ kms_client = confidant.services.get_boto_client('kms')
 
 VALUE_LENGTH = 50
 
-# TODO Dev Work: SAML Group (global vars for now)
-saml_group_id = 'admin'
-group_members_list = []
-
 @app.route('/v1/login', methods=['GET', 'POST'])
 def login():
     '''
@@ -132,6 +128,11 @@ def get_service(id):
         logging.exception('KeyError occurred in getting credentials')
         return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = _get_blind_credentials(service.blind_credentials)
+    
+    #TODO Dev Work: Allow/Deny veiwing Sevices
+    if not authnz.user_group_permissions(credentials[0]['metadata']):
+        return jsonify({}), 404
+    
     return jsonify({
         'id': service.id,
         'account': service.account,
@@ -311,20 +312,10 @@ def map_service_credentials(id):
         return jsonify({'error': 'Failed to add service to archive.'}), 500
 
     try:
-        # TODO Dev Work: Deny/Allow Service Attaching Access
-        credentials = _get_credentials(data.get('credentials'))
-
-        metadata = credentials[0]['metadata']
-        
-        # saml_group_id = 'admin'
-        # group_members_list = []
-
-        if saml_group_id is not 'admin':
-          if 'groups' in metadata:
-            group_list = metadata.get('groups')
-            group_members_list = group_list.split(',')
-
-        if not saml_group_id in group_members_list:
+        # # TODO Dev Work: Deny/Allow Service Attaching Access
+        credentials = _get_credentials(data.get('credentials').credentials[0]['metadata'])
+        check_permissions = authnz.user_group_permissions(credentials)
+        if not check_permissions:
           return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
 
         service = Service(
@@ -393,6 +384,11 @@ def get_credential(id):
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
+    
+    #TODO Dev Work: Allow/Deny veiwing Cred
+    if not authnz.user_group_permissions(cred.metadata):
+        return jsonify({}), 404
+
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
         return jsonify({}), 404
@@ -801,17 +797,10 @@ def update_credential(id): #TODO: How creds are edited?
     update['metadata'] = data.get('metadata', _cred.metadata)
     update['documentation'] = data.get('documentation', _cred.documentation)
     
-    # TODO: Dev Work: Deny/Allow Cred Access
-    # saml_group_id = 'admin'
-    # group_members_list = []
-
-    if saml_group_id is not 'admin':
-      if 'groups' in _cred.metadata:
-        group_list = _cred.metadata.get('groups')
-        group_members_list = group_list.split(',')
-
-      if not saml_group_id in group_members_list:
-        return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
+    # TODO: Dev Work: Deny/Allow Cred Access    
+    check_permissions = authnz.user_group_permissions(_cred.metadata)
+    if not check_permissions:
+      return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
 
     # Enforce documentation, EXCEPT if we are restoring an old revision
     if (not update['documentation'] and
