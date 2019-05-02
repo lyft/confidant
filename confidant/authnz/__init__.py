@@ -18,7 +18,38 @@ PRIVILEGES = {
     'service': ['get_service']
 }
 
+# TODO Dev Work: Set permissions
+PERMISSIONS = [
+    'read',
+    'write',
+    'deny'
+]
+
 user_mod = userauth.init_user_auth_class()
+
+# TODO Dev Work: Check if user permissions
+
+# def dummy_saml_users_group():
+#     saml_group_id = 'user2'
+#     return saml_group_id
+
+def user_group_permissions(metadata): 
+
+    if app.config['SAML_GROUPS']:
+      user_group = app.config['SAML_TEST_GROUP'] # TODO Dev Work: Get this from SAML Creds
+      group_members_list = []
+
+      if user_group == app.config['SAML_ADMIN_GROUP']:
+        return True
+      else:
+        if 'groups' in metadata:
+          group_list = metadata.get('groups')
+          group_members_list = group_list.split(',')
+        if user_group in group_members_list:
+          return True
+    else:
+      return True
+    return False
 
 
 def get_logged_in_user():
