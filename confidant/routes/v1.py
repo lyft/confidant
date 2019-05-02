@@ -29,6 +29,9 @@ kms_client = confidant.services.get_boto_client('kms')
 
 VALUE_LENGTH = 50
 
+# TODO Dev Work: SAML Group (global vars for now)
+saml_group_id = 'admin'
+group_members_list = []
 
 @app.route('/v1/login', methods=['GET', 'POST'])
 def login():
@@ -57,7 +60,7 @@ def get_client_config():
     '''
     Get configuration to help clients bootstrap themselves.
     '''
-    # TODO: add more config in here.
+    # TODO Dev Work: add more config in here.
     response = jsonify({
         'defined': app.config['CLIENT_CONFIG'],
         'generated': {
@@ -308,6 +311,22 @@ def map_service_credentials(id):
         return jsonify({'error': 'Failed to add service to archive.'}), 500
 
     try:
+        # TODO Dev Work: Deny/Allow Service Attaching Access
+        credentials = _get_credentials(data.get('credentials'))
+
+        metadata = credentials[0]['metadata']
+        
+        # saml_group_id = 'admin'
+        # group_members_list = []
+
+        if saml_group_id is not 'admin':
+          if 'groups' in metadata:
+            group_list = metadata.get('groups')
+            group_members_list = group_list.split(',')
+
+        if not saml_group_id in group_members_list:
+          return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
+
         service = Service(
             id=id,
             data_type='service',
@@ -643,8 +662,9 @@ def _lowercase_credential_pairs(credential_pairs):
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
-def create_credential():
+def create_credential(): #TODO: How creds are added? 
     data = request.get_json()
+    
     if not data.get('documentation') and settings.get('ENFORCE_DOCUMENTATION'):
         return jsonify({'error': 'documentation is a required field'}), 400
     if not data.get('credential_pairs'):
@@ -724,7 +744,7 @@ def get_credential_dependencies(id):
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
-def update_credential(id):
+def update_credential(id): #TODO: How creds are edited? 
     try:
         _cred = Credential.get(id)
     except DoesNotExist:
@@ -735,7 +755,7 @@ def update_credential(id):
     data = request.get_json()
     update = {}
     revision = _get_latest_credential_revision(id, _cred.revision)
-    update['name'] = data.get('name', _cred.name)
+    update['name'] = data.get('name', _cred.name)  
     if 'enabled' in data:
         if not isinstance(data['enabled'], bool):
             return jsonify({'error': 'Enabled must be a boolean.'}), 400
@@ -780,6 +800,19 @@ def update_credential(id):
     credential_pairs = cipher.encrypt(update['credential_pairs'])
     update['metadata'] = data.get('metadata', _cred.metadata)
     update['documentation'] = data.get('documentation', _cred.documentation)
+    
+    # TODO: Dev Work: Deny/Allow Cred Access
+    # saml_group_id = 'admin'
+    # group_members_list = []
+
+    if saml_group_id is not 'admin':
+      if 'groups' in _cred.metadata:
+        group_list = _cred.metadata.get('groups')
+        group_members_list = group_list.split(',')
+
+      if not saml_group_id in group_members_list:
+        return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
+
     # Enforce documentation, EXCEPT if we are restoring an old revision
     if (not update['documentation'] and
             settings.get('ENFORCE_DOCUMENTATION') and
