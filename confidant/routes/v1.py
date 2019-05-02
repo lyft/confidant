@@ -56,7 +56,7 @@ def get_client_config():
     '''
     Get configuration to help clients bootstrap themselves.
     '''
-    # TODO Dev Work: add more config in here.
+    # TODO Dev Work: SAML Add more config in here.
     response = jsonify({
         'defined': app.config['CLIENT_CONFIG'],
         'generated': {
@@ -129,9 +129,17 @@ def get_service(id):
         return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = _get_blind_credentials(service.blind_credentials)
     
-    #TODO Dev Work: Allow/Deny veiwing Sevices
-    if not authnz.user_group_permissions(credentials[0]['metadata']):
+    #TODO Dev Work: Allow/Deny viewing Services
+    try:
+      print('called -> /v1/services/<id> [GET]')
+      metadata = credentials[0]['metadata']
+      if not authnz.saml_user_group_permissions(metadata):
         return jsonify({}), 404
+    except (AttributeError,IndexError) as e:
+      logging.error(e)  
+      
+    # except (AttributeError,IndexError,KeyError) as e:
+    #     logging.error(e)
     
     return jsonify({
         'id': service.id,
@@ -311,13 +319,17 @@ def map_service_credentials(id):
         logging.error(e)
         return jsonify({'error': 'Failed to add service to archive.'}), 500
 
+    # TODO Dev Work: Allow/Deny Mapping Services
     try:
-        # # TODO Dev Work: Deny/Allow Service Attaching Access
-        credentials = _get_credentials(data.get('credentials').credentials[0]['metadata'])
-        check_permissions = authnz.user_group_permissions(credentials)
-        if not check_permissions:
-          return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
+      print('called -> /v1/services/<id> [MAP]')
+      credential = _get_credentials(data.get('credentials'))
+      if not authnz.saml_user_group_permissions(credential[0]['metadata']):
+        return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
+    except (AttributeError,IndexError) as e:
+      logging.error(e)
+      return jsonify({'info': 'No Credential Metadata found'}), 200
 
+    try:
         service = Service(
             id=id,
             data_type='service',
@@ -386,7 +398,8 @@ def get_credential(id):
         return jsonify({}), 404
     
     #TODO Dev Work: Allow/Deny veiwing Cred
-    if not authnz.user_group_permissions(cred.metadata):
+    print('called -> /v1/credentials/<id> [GET]')
+    if not authnz.saml_user_group_permissions(cred.metadata):
         return jsonify({}), 404
 
     if (cred.data_type != 'credential' and
@@ -797,8 +810,9 @@ def update_credential(id): #TODO: How creds are edited?
     update['metadata'] = data.get('metadata', _cred.metadata)
     update['documentation'] = data.get('documentation', _cred.documentation)
     
-    # TODO: Dev Work: Deny/Allow Cred Access    
-    check_permissions = authnz.user_group_permissions(_cred.metadata)
+    # TODO: Dev Work: Deny/Allow updating Creds
+    print('called -> v1/credentials/<id> [PUT]')
+    check_permissions = authnz.saml_user_group_permissions(_cred.metadata)
     if not check_permissions:
       return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
 
