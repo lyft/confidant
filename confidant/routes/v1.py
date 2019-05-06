@@ -131,7 +131,7 @@ def get_service(id):
     
     #TODO Dev Work: Allow/Deny viewing Services
     try:
-      print('called -> /v1/services/<id> [GET]')
+      logging.warn('called -> /v1/services/<id> [GET]')
       metadata = credentials[0]['metadata']
       if not authnz.saml_user_group_permissions(metadata):
         return jsonify({}), 404
@@ -321,7 +321,7 @@ def map_service_credentials(id):
 
     # TODO Dev Work: Allow/Deny Mapping Services
     try:
-      print('called -> /v1/services/<id> [MAP]')
+      logging.warn('called -> /v1/services/<id> [MAP]')
       credential = _get_credentials(data.get('credentials'))
       if not authnz.saml_user_group_permissions(credential[0]['metadata']):
         return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
@@ -398,7 +398,7 @@ def get_credential(id):
         return jsonify({}), 404
     
     #TODO Dev Work: Allow/Deny veiwing Cred
-    print('called -> /v1/credentials/<id> [GET]')
+    logging.warn('called -> /v1/credentials/<id> [GET]')
     if not authnz.saml_user_group_permissions(cred.metadata):
         return jsonify({}), 404
 
@@ -811,9 +811,8 @@ def update_credential(id): #TODO: How creds are edited?
     update['documentation'] = data.get('documentation', _cred.documentation)
     
     # TODO: Dev Work: Deny/Allow updating Creds
-    print('called -> v1/credentials/<id> [PUT]')
-    check_permissions = authnz.saml_user_group_permissions(_cred.metadata)
-    if not check_permissions:
+    logging.warn('called -> v1/credentials/<id> [PUT]')
+    if not authnz.saml_user_group_permissions(_cred.metadata):
       return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
 
     # Enforce documentation, EXCEPT if we are restoring an old revision
