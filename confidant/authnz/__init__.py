@@ -27,26 +27,27 @@ PERMISSIONS = [
 
 user_mod = userauth.init_user_auth_class()
 
-# TODO Dev Work: Check if user permissions
+#TODO Dev Work saml_user_group_permissions 
 def saml_user_group_permissions(credential): 
     '''
     Use SAML groups and meatdata to cehck of user group has permissions to Read/Edit Resources
     '''
-    print('called -> user_group_permissions()')
-    print('called -> SAML is %r' % app.config['USE_SAML_GROUPS'])
+    logging.warn('called -> user_group_permissions()')
+    logging.warn('called -> SAML is %r' % app.config['USE_SAML_GROUPS'])
+
     if app.config['USE_SAML_GROUPS']:
       try:        
-          # metadata = credential[0]['credentials']
-          print('user_group_permissions -> credential: %s' % credential)
-
+          logging.warn('user_group_permissions -> credential: %s' % credential)
+          logging.warn('Logged in user ' + get_logged_in_user())
           user_group = app.config['SAML_TEST_GROUP'] # TODO Dev Work: Get this from SAML Creds
           group_members_list = []
+          groups_name = app.config['SAML_GROUP_NAME']
 
           if user_group == app.config['SAML_ADMIN_GROUP']:
-            print('user_group_permissions -> user is admin')
+            logging.warn('user_group_permissions -> user is admin')
             return True
-          elif 'groups' in credential:
-            group_list = credential.get('groups')
+          elif groups_name in credential:
+            group_list = credential.get(groups_name)
             group_members_list = group_list.split(',')
           
             if user_group in group_members_list:
@@ -56,10 +57,10 @@ def saml_user_group_permissions(credential):
       except (AttributeError,IndexError,KeyError) as e:
         logging.error(e)
     else:
-        print('user_group_permissions -> SAML groups not enabled')
+        logging.warn('user_group_permissions -> SAML groups not enabled')
         return True
     
-    print('user_group_permissions -> return false')
+    logging.warn('user_group_permissions -> return false')
     return False
 
 
