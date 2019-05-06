@@ -122,8 +122,9 @@ SAML_DEBUG = bool_env('SAML_DEBUG', None)
 
 # TODO Dev Work: SAML Group Support - PE-5759
 SAML_ADMIN_GROUP = str_env('SAML_ADMIN_GROUP', 'admin')
+SAML_GROUP_NAME = str_env('SAML_GROUP_NAME', 'groups')
 USE_SAML_GROUPS = bool_env('USE_SAML_GROUPS', False)
-SAML_TEST_GROUP = str_env('SAML_TEST_GROUP', 'user') #TODO Dev Work: testing only
+SAML_TEST_GROUP = str_env('SAML_TEST_GROUP', 'users') #TODO Dev Work: testing only
 
 # Pretend that all requests are HTTPS for purposes of SAML validation. This is
 # useful if your app is behind a weird load balancer and flask isn't respecting
