@@ -49,9 +49,9 @@ def saml_user_group_permissions(credential):
             group_list = credential.get('groups')
             group_members_list = group_list.split(',')
           
-          if user_group in group_members_list:
-            print('user_group_permissions -> user is in groups')
-            return True
+            if user_group in group_members_list:
+              logging.warn('user_group_permissions -> user is in groups')
+              return True
 
       except (AttributeError,IndexError,KeyError) as e:
         logging.error(e)
