@@ -18,50 +18,83 @@ PRIVILEGES = {
     'service': ['get_service']
 }
 
-# TODO Dev Work: Set permissions
-PERMISSIONS = [
-    'read',
-    'write',
-    'deny'
-]
-
 user_mod = userauth.init_user_auth_class()
 
 #TODO Dev Work saml_user_group_permissions 
 def saml_user_group_permissions(credential): 
     '''
-    Use SAML groups and meatdata to cehck of user group has permissions to Read/Edit Resources
+    Use SAML groups and credential meatdata to check if user group has permissions to read/write resources
     '''
     logging.warn('called -> user_group_permissions()')
     logging.warn('called -> SAML is %r' % app.config['USE_SAML_GROUPS'])
 
+    permissions = {
+      'read_write': False,
+      'read_only': True
+    }
+
     if app.config['USE_SAML_GROUPS']:
       try:        
           logging.warn('user_group_permissions -> credential: %s' % credential)
-          logging.warn('Logged in user ' + get_logged_in_user())
+          logging.warn('user_group_permissions -> logged in user ' + get_logged_in_user())
           user_group = app.config['SAML_TEST_GROUP'] # TODO Dev Work: Get this from SAML Creds
-          group_members_list = []
-          groups_name = app.config['SAML_GROUP_NAME']
+          group_name_rw = app.config['SAML_GROUP_RW_NAME']
+          group_name_r = app.config['SAML_GROUP_R_NAME']
 
           if user_group == app.config['SAML_ADMIN_GROUP']:
-            logging.warn('user_group_permissions -> user is admin')
-            return True
-          elif groups_name in credential:
-            group_list = credential.get(groups_name)
-            group_members_list = group_list.split(',')
+            """
+            Admin Group
+            Read/Write : True
+            Read Only : True
+            """
+            logging.info('user_group_permissions -> user is admin')
+            permissions['read_write'] = True
           
-            if user_group in group_members_list:
-              logging.warn('user_group_permissions -> user is in groups')
-              return True
+          else:
+            logging.warn('user_group_permissions -> user is NOT admin')
+            if group_name_rw or group_name_r in credential:
+              groups_rw = credential.get(group_name_rw)
+              groups_r = credential.get(group_name_r)
+              
+              if groups_rw is not None and user_group in groups_rw.split(','):
+                """
+                Read/Write Group
+                Read/Write : True
+                Read Only : True
+                """
+                logging.warn('user_group_permissions -> user is in read/write group')
+                permissions['read_write'] = True
+      
+              elif groups_r is not None and user_group in groups_r.split(','):
+                """
+                ReadOnly Group
+                Read/Write : False
+                Read Only : True
+                """
+                logging.warn('user_group_permissions -> user is in readonly group')
+                permissions['read_only'] = True
+              else:
+                """
+                No Group
+                Read/Write : False
+                Read Only : False
+                """
+                logging.warn('user_group_permissions -> user not found in any groups')
+                permissions['read_only'] = False
 
       except (AttributeError,IndexError,KeyError) as e:
         logging.error(e)
     else:
+        """
+        Group Support Not Enabled
+        Read/Write : True
+        Read Only : True
+        """
         logging.warn('user_group_permissions -> SAML groups not enabled')
-        return True
+        permissions['read_write'] = True
     
-    logging.warn('user_group_permissions -> return false')
-    return False
+    logging.warn('user_group_permissions -> return %r' % permissions)
+    return permissions
 
 
 def get_logged_in_user():
