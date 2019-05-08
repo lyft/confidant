@@ -49,6 +49,17 @@ def get_user_info():
         response = jsonify({'email': None})
     return response
 
+@app.route('/v1/user/role', methods=['GET', 'POST'])
+@authnz.require_auth
+def get_role_info():
+    '''
+    Get the role of the currently logged-in user.
+    '''
+    try:
+        response = jsonify({'role': authnz.get_logged_in_user_role()})
+    except authnz.UserUnknownError:
+        response = jsonify({'role': None})
+    return response
 
 @app.route('/v1/client_config', methods=['GET'])
 @authnz.require_auth
@@ -128,7 +139,7 @@ def get_service(id):
         logging.exception('KeyError occurred in getting credentials')
         return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = _get_blind_credentials(service.blind_credentials)
-    
+
     #TODO Dev Work: Allow/Deny viewing Services
     try:
       logging.warn('called -> /v1/services/<id> [GET]')
@@ -136,8 +147,12 @@ def get_service(id):
       if not authnz.saml_user_group_permissions(metadata)['read_only']:
         return jsonify({}), 404
     except (AttributeError,IndexError) as e:
-      logging.error(e)  
-    
+
+      logging.error(e)
+
+    # except (AttributeError,IndexError,KeyError) as e:
+    #     logging.error(e)
+
     return jsonify({
         'id': service.id,
         'account': service.account,
@@ -393,7 +408,7 @@ def get_credential(id):
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
-    
+
     #TODO Dev Work: Allow/Deny veiwing Cred
     logging.warn('called -> /v1/credentials/<id> [GET]')
     if not authnz.saml_user_group_permissions(cred.metadata)['read_only']:
@@ -668,9 +683,9 @@ def _lowercase_credential_pairs(credential_pairs):
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
-def create_credential(): #TODO: How creds are added? 
+def create_credential(): #TODO: How creds are added?
     data = request.get_json()
-    
+
     if not data.get('documentation') and settings.get('ENFORCE_DOCUMENTATION'):
         return jsonify({'error': 'documentation is a required field'}), 400
     if not data.get('credential_pairs'):
@@ -750,7 +765,7 @@ def get_credential_dependencies(id):
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
-def update_credential(id): #TODO: How creds are edited? 
+def update_credential(id): #TODO: How creds are edited?
     try:
         _cred = Credential.get(id)
     except DoesNotExist:
@@ -761,7 +776,7 @@ def update_credential(id): #TODO: How creds are edited?
     data = request.get_json()
     update = {}
     revision = _get_latest_credential_revision(id, _cred.revision)
-    update['name'] = data.get('name', _cred.name)  
+    update['name'] = data.get('name', _cred.name)
     if 'enabled' in data:
         if not isinstance(data['enabled'], bool):
             return jsonify({'error': 'Enabled must be a boolean.'}), 400
@@ -806,7 +821,7 @@ def update_credential(id): #TODO: How creds are edited?
     credential_pairs = cipher.encrypt(update['credential_pairs'])
     update['metadata'] = data.get('metadata', _cred.metadata)
     update['documentation'] = data.get('documentation', _cred.documentation)
-    
+
     # TODO: Dev Work: Deny/Allow updating Creds
     logging.warn('called -> v1/credentials/<id> [PUT]')
     if not authnz.saml_user_group_permissions(_cred.metadata)['read_write']:
