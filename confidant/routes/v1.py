@@ -133,13 +133,10 @@ def get_service(id):
     try:
       logging.warn('called -> /v1/services/<id> [GET]')
       metadata = credentials[0]['metadata']
-      if not authnz.saml_user_group_permissions(metadata):
+      if not authnz.saml_user_group_permissions(metadata)['read_only']:
         return jsonify({}), 404
     except (AttributeError,IndexError) as e:
       logging.error(e)  
-      
-    # except (AttributeError,IndexError,KeyError) as e:
-    #     logging.error(e)
     
     return jsonify({
         'id': service.id,
@@ -290,6 +287,16 @@ def map_service_credentials(id):
             }
             return jsonify(ret), 400
 
+    # TODO Dev Work: Allow/Deny Mapping Services
+    try:
+      logging.warn('called -> /v1/services/<id> [MAP]')
+      credential = _get_credentials(data.get('credentials'))
+      if not authnz.saml_user_group_permissions(credential[0]['metadata'])['read_write']:
+        return jsonify({'error': 'Credential Metadata found GroupId does not have write permissions'}), 400
+    except (AttributeError,IndexError) as e:
+      logging.error(e)
+      return jsonify({'info': 'No Credential Metadata found'}), 200
+
     accounts = app.config['SCOPED_AUTH_KEYS'].values()
     if data.get('account') and data['account'] not in accounts:
         ret = {'error': '{0} is not a valid account.'}
@@ -318,16 +325,6 @@ def map_service_credentials(id):
     except PutError as e:
         logging.error(e)
         return jsonify({'error': 'Failed to add service to archive.'}), 500
-
-    # TODO Dev Work: Allow/Deny Mapping Services
-    try:
-      logging.warn('called -> /v1/services/<id> [MAP]')
-      credential = _get_credentials(data.get('credentials'))
-      if not authnz.saml_user_group_permissions(credential[0]['metadata']):
-        return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
-    except (AttributeError,IndexError) as e:
-      logging.error(e)
-      return jsonify({'info': 'No Credential Metadata found'}), 200
 
     try:
         service = Service(
@@ -399,7 +396,7 @@ def get_credential(id):
     
     #TODO Dev Work: Allow/Deny veiwing Cred
     logging.warn('called -> /v1/credentials/<id> [GET]')
-    if not authnz.saml_user_group_permissions(cred.metadata):
+    if not authnz.saml_user_group_permissions(cred.metadata)['read_only']:
         return jsonify({}), 404
 
     if (cred.data_type != 'credential' and
@@ -812,8 +809,8 @@ def update_credential(id): #TODO: How creds are edited?
     
     # TODO: Dev Work: Deny/Allow updating Creds
     logging.warn('called -> v1/credentials/<id> [PUT]')
-    if not authnz.saml_user_group_permissions(_cred.metadata):
-      return jsonify({'error': 'Credential Metadata found GroupId does not have permissions'}), 400
+    if not authnz.saml_user_group_permissions(_cred.metadata)['read_write']:
+      return jsonify({'error': 'Credential Metadata found GroupId does not have write permissions'}), 400
 
     # Enforce documentation, EXCEPT if we are restoring an old revision
     if (not update['documentation'] and
