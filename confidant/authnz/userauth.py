@@ -113,11 +113,12 @@ class AbstractUserAuthenticator(object):
                 max_expiration = now + datetime.timedelta(seconds=max_lifetime)
                 session['max_expiration'] = max_expiration
 
-    def set_current_user(self, email, first_name=None, last_name=None):
+    def set_current_user(self, email, first_name=None, last_name=None, role=None):
         session['user'] = {
             'email': email,
             'first_name': first_name,
             'last_name': last_name,
+            'role': role
         }
 
     def current_email(self):
@@ -128,6 +129,9 @@ class AbstractUserAuthenticator(object):
 
     def current_last_name(self):
         return self.current_user()['last_name']
+
+    def current_role(self):
+        return self.current_user()['role']
 
     def redirect_to_index(self):
         return redirect(flask.url_for('index'))
@@ -625,6 +629,8 @@ class SamlAuthenticator(AbstractUserAuthenticator):
                 kwargs['first_name'] = val
             if key.lower() in ['lastname', 'last_name']:
                 kwargs['last_name'] = val
+            if key.lower() in ['role', 'Role']:
+                kwargs['role'] = val
 
         self.set_expiration()
         self.set_current_user(**kwargs)
