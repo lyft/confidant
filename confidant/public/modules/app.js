@@ -22,10 +22,11 @@
      * Main controller
      */
     .controller('ConfidantMainCtrl', [
-        '$scope', '$http', 'common.userinfo', 'common.clientconfig',
-        function ConfidantMainCtrl($scope, $http, userinfo, clientconfig) {
+        '$scope', '$http', 'common.userinfo', 'common.userrole', 'common.clientconfig',
+        function ConfidantMainCtrl($scope, $http, userinfo, userrole, clientconfig) {
 
         $scope.user = userinfo.get();
+        $scope.role = userrole.get();
         clientconfig.get().$promise.then(function(clientConfig) {
             $scope.clientconfig = clientConfig;
             $http.defaults.xsrfCookieName = clientConfig.generated.xsrf_cookie_name;

@@ -11,6 +11,7 @@
 
     .constant('CONFIDANT_URLS', {
         USEREMAIL: 'v1/user/email',
+        USERROLE: 'v1/user/role',
         DATAKEY: 'v1/datakey',
         SERVICE: 'v1/services/:id',
         SERVICES: 'v1/services',

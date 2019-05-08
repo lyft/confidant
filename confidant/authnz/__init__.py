@@ -20,8 +20,8 @@ PRIVILEGES = {
 
 user_mod = userauth.init_user_auth_class()
 
-#TODO Dev Work saml_user_group_permissions 
-def saml_user_group_permissions(credential): 
+#TODO Dev Work saml_user_group_permissions
+def saml_user_group_permissions(credential):
     '''
     Use SAML groups and credential meatdata to check if user group has permissions to read/write resources
     '''
@@ -34,7 +34,7 @@ def saml_user_group_permissions(credential):
     }
 
     if app.config['USE_SAML_GROUPS']:
-      try:        
+      try:
           logging.warn('user_group_permissions -> credential: %s' % credential)
           logging.warn('user_group_permissions -> logged in user ' + get_logged_in_user())
           user_group = app.config['SAML_TEST_GROUP'] # TODO Dev Work: Get this from SAML Creds
@@ -49,13 +49,13 @@ def saml_user_group_permissions(credential):
             """
             logging.info('user_group_permissions -> user is admin')
             permissions['read_write'] = True
-          
+
           else:
             logging.warn('user_group_permissions -> user is NOT admin')
             if group_name_rw or group_name_r in credential:
               groups_rw = credential.get(group_name_rw)
               groups_r = credential.get(group_name_r)
-              
+
               if groups_rw is not None and user_group in groups_rw.split(','):
                 """
                 Read/Write Group
@@ -64,7 +64,7 @@ def saml_user_group_permissions(credential):
                 """
                 logging.warn('user_group_permissions -> user is in read/write group')
                 permissions['read_write'] = True
-      
+
               elif groups_r is not None and user_group in groups_r.split(','):
                 """
                 ReadOnly Group
@@ -92,7 +92,7 @@ def saml_user_group_permissions(credential):
         """
         logging.warn('user_group_permissions -> SAML groups not enabled')
         permissions['read_write'] = True
-    
+
     logging.warn('user_group_permissions -> return %r' % permissions)
     return permissions
 
@@ -105,6 +105,14 @@ def get_logged_in_user():
         return g.username
     if user_mod.is_authenticated():
         return user_mod.current_email()
+    raise UserUnknownError()
+
+def get_logged_in_user_role():
+    '''
+    Retrieve logged-in user's role that is stored in cache
+    '''
+    if user_mod.is_authenticated():
+        return user_mod.current_role()
     raise UserUnknownError()
 
 
