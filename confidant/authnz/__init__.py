@@ -37,51 +37,69 @@ def saml_user_group_permissions(credential):
       try:
           logging.warn('user_group_permissions -> credential: %s' % credential)
           logging.warn('user_group_permissions -> logged in user ' + get_logged_in_user())
-          user_group = app.config['SAML_TEST_GROUP'] # TODO Dev Work: Get this from SAML Creds
-          group_name_rw = app.config['SAML_GROUP_RW_NAME']
-          group_name_r = app.config['SAML_GROUP_R_NAME']
+          user_group = user_mod.current_role()
+          logging.info('logged in user group is: ' + user_group)
+          ## Must lower() case the values as we cannot store upper case keys in
+          ## Confidant
+          group_name_rw = app.config['SAML_GROUP_RW_NAME'].lower()
+          group_name_r = app.config['SAML_GROUP_R_NAME'].lower()
 
-          if user_group == app.config['SAML_ADMIN_GROUP']:
+          if user_group == app.config['SAML_ADMIN_GROUP'].lower():
             """
             Admin Group
             Read/Write : True
-            Read Only : True
             """
-            logging.info('user_group_permissions -> user is admin')
+            logging.warn('user_group_permissions -> user is admin')
             permissions['read_write'] = True
+            logging.warn('user_group_permissions -> return %r' % permissions)
+            return permissions
+          
+          if not group_name_rw in credential:
+              """
+              No Read/Write Group found (allowing Read/Write by Default)
+              ReadWrite: True
+              """
+              logging.warn('user_group_permissions -> no read/write group found (allow read/write by default)')
+              permissions['read_write'] = True
 
-          else:
-            logging.warn('user_group_permissions -> user is NOT admin')
-            if group_name_rw or group_name_r in credential:
-              groups_rw = credential.get(group_name_rw)
-              groups_r = credential.get(group_name_r)
+          if group_name_rw in credential:
+            logging.warn('user_group_permissions -> group_name_rw exist')
+            groups_rw = credential.get(group_name_rw)
+            if user_group in groups_rw.split(','):
+              """
+              Read/Write Group
+              Read/Write : True
+              """
+              logging.warn('user_group_permissions -> user is in read/write group')
+              permissions['read_write'] = True
+              logging.warn('user_group_permissions -> return %r' % permissions)
+              return permissions
+          
+          if group_name_r in credential:
+            logging.warn('user_group_permissions -> group_name_r exist')
+            groups_r = credential.get(group_name_r)
+            if user_group in groups_r.split(','):
+              """
+              User found in ReadOnly Group set Read/Write to false
+              Read Only : True
+              """
+              logging.warn('user_group_permissions ->  user found in readonly group set read/write to false')
+              permissions['read_write'] = False
+              logging.warn('user_group_permissions -> return %r' % permissions)
+              return permissions
+            else:
+              """
+              User not found in ReadOnly Group set ReadOnly to false
+              Read Only : False
+              Read/Write : False
+              """
+              logging.warn('user_group_permissions ->  user not found in readonly or read/write groups to false')
+              permissions['read_only'] = False
+              permissions['read_write'] = False
+              logging.warn('user_group_permissions -> return %r' % permissions)
+              return permissions
 
-              if groups_rw is not None and user_group in groups_rw.split(','):
-                """
-                Read/Write Group
-                Read/Write : True
-                Read Only : True
-                """
-                logging.warn('user_group_permissions -> user is in read/write group')
-                permissions['read_write'] = True
-
-              elif groups_r is not None and user_group in groups_r.split(','):
-                """
-                ReadOnly Group
-                Read/Write : False
-                Read Only : True
-                """
-                logging.warn('user_group_permissions -> user is in readonly group')
-                permissions['read_only'] = True
-              else:
-                """
-                No Group
-                Read/Write : False
-                Read Only : False
-                """
-                logging.warn('user_group_permissions -> user not found in any groups')
-                permissions['read_only'] = False
-
+            
       except (AttributeError,IndexError,KeyError) as e:
         logging.error(e)
     else:
