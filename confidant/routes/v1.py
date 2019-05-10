@@ -67,7 +67,6 @@ def get_client_config():
     '''
     Get configuration to help clients bootstrap themselves.
     '''
-    # TODO Dev Work: SAML Add more config in here.
     response = jsonify({
         'defined': app.config['CLIENT_CONFIG'],
         'generated': {
@@ -139,20 +138,6 @@ def get_service(id):
         logging.exception('KeyError occurred in getting credentials')
         return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = _get_blind_credentials(service.blind_credentials)
-
-    #TODO Dev Work: Allow/Deny viewing Services
-    try:
-      logging.warn('called -> /v1/services/<id> [GET]')
-      metadata = credentials[0]['metadata']
-      if not authnz.saml_user_group_permissions(metadata)['read_only']:
-        return jsonify({}), 404
-    except (AttributeError,IndexError) as e:
-
-      logging.error(e)
-
-    # except (AttributeError,IndexError,KeyError) as e:
-    #     logging.error(e)
-
     return jsonify({
         'id': service.id,
         'account': service.account,
@@ -302,16 +287,6 @@ def map_service_credentials(id):
             }
             return jsonify(ret), 400
 
-    # TODO Dev Work: Allow/Deny Mapping Services
-    try:
-      logging.warn('called -> /v1/services/<id> [MAP]')
-      credential = _get_credentials(data.get('credentials'))
-      if not authnz.saml_user_group_permissions(credential[0]['metadata'])['read_write']:
-        return jsonify({'error': 'Credential Metadata found GroupId does not have write permissions'}), 400
-    except (AttributeError,IndexError) as e:
-      logging.error(e)
-      return jsonify({'info': 'No Credential Metadata found'}), 200
-
     accounts = app.config['SCOPED_AUTH_KEYS'].values()
     if data.get('account') and data['account'] not in accounts:
         ret = {'error': '{0} is not a valid account.'}
@@ -411,7 +386,8 @@ def get_credential(id):
 
     #TODO Dev Work: Allow/Deny veiwing Cred
     logging.warn('called -> /v1/credentials/<id> [GET]')
-    if not authnz.saml_user_group_permissions(cred.metadata)['read_only']:
+    permission = authnz.saml_user_group_permissions(cred.metadata)
+    if not permission['read_only']:
         return jsonify({}), 404
 
     if (cred.data_type != 'credential' and
@@ -683,7 +659,7 @@ def _lowercase_credential_pairs(credential_pairs):
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
-def create_credential(): #TODO: How creds are added?
+def create_credential():
     data = request.get_json()
 
     if not data.get('documentation') and settings.get('ENFORCE_DOCUMENTATION'):
@@ -765,7 +741,7 @@ def get_credential_dependencies(id):
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
-def update_credential(id): #TODO: How creds are edited?
+def update_credential(id):
     try:
         _cred = Credential.get(id)
     except DoesNotExist:
@@ -824,7 +800,8 @@ def update_credential(id): #TODO: How creds are edited?
 
     # TODO: Dev Work: Deny/Allow updating Creds
     logging.warn('called -> v1/credentials/<id> [PUT]')
-    if not authnz.saml_user_group_permissions(_cred.metadata)['read_write']:
+    permissions = authnz.saml_user_group_permissions(_cred.metadata)
+    if not permissions['read_write']:
       return jsonify({'error': 'Credential Metadata found GroupId does not have write permissions'}), 400
 
     # Enforce documentation, EXCEPT if we are restoring an old revision
