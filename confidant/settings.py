@@ -120,12 +120,11 @@ SAML_CONFIDANT_URL_ROOT = str_env('SAML_CONFIDANT_URL_ROOT')
 # Debug mode for python-saml library. Follows global DEBUG setting if not set.
 SAML_DEBUG = bool_env('SAML_DEBUG', None)
 
-# TODO Dev Work: SAML Group Support - PE-5759
-SAML_ADMIN_GROUP = str_env('SAML_ADMIN_GROUP', 'admin')
-SAML_GROUP_RW_NAME = str_env('SAML_GROUP_RW_NAME', 'groups_rw')
-SAML_GROUP_R_NAME = str_env('SAML_GROUP_R_NAME', 'groups_r')
-SAML_MAPPING_GROUP = str_env('SAML_MAPPING_GROUP', 'Role')
-USE_SAML_GROUPS = bool_env('USE_SAML_GROUPS', False)
+SAML_ADMIN_ROLE = str_env('SAML_ADMIN_ROLE', 'admin')
+SAML_ROLE_RW_NAME = str_env('SAML_ROLE_RW_NAME', 'saml_role_rw')
+SAML_ROLE_R_NAME = str_env('SAML_ROLE_R_NAME', 'saml_role_r')
+SAML_MAPPING_ROLE = str_env('SAML_MAPPING_ROLE', 'Role')
+SAML_USE_ROLE = bool_env('SAML_USE_ROLE', False)
 
 # Pretend that all requests are HTTPS for purposes of SAML validation. This is
 # useful if your app is behind a weird load balancer and flask isn't respecting

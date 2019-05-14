@@ -20,101 +20,6 @@ PRIVILEGES = {
 
 user_mod = userauth.init_user_auth_class()
 
-#TODO Dev Work saml_user_group_permissions
-def saml_user_group_permissions(credential):
-    '''
-    Use SAML groups and credential meatdata to check if user group has permissions to read/write resources
-    '''
-    logging.warn('called -> user_group_permissions()')
-    logging.warn('called -> SAML is %r' % app.config['USE_SAML_GROUPS'])
-
-    permissions = {
-      'read_write': False,
-      'read_only': True
-    }
-
-    if app.config['USE_SAML_GROUPS']:
-      try:
-          logging.warn('user_group_permissions -> credential: %s' % credential)
-          logging.warn('user_group_permissions -> logged in user ' + get_logged_in_user())
-          user_group = user_mod.current_role()
-          logging.info('logged in user group is: ' + user_group)
-          ## Must lower() case the values as we cannot store upper case keys in
-          ## Confidant
-          group_name_rw = app.config['SAML_GROUP_RW_NAME'].lower()
-          group_name_r = app.config['SAML_GROUP_R_NAME'].lower()
-
-          if user_group == app.config['SAML_ADMIN_GROUP'].lower():
-            """
-            Admin Group
-            Read/Write : True
-            """
-            logging.warn('user_group_permissions -> user is admin')
-            permissions['read_write'] = True
-            logging.warn('user_group_permissions -> return %r' % permissions)
-            return permissions
-          
-          if not group_name_rw in credential:
-              """
-              No Read/Write Group found (allowing Read/Write by Default)
-              ReadWrite: True
-              """
-              logging.warn('user_group_permissions -> no read/write group found (allow read/write by default)')
-              permissions['read_write'] = True
-
-          if group_name_rw in credential:
-            logging.warn('user_group_permissions -> group_name_rw exist')
-            groups_rw = credential.get(group_name_rw)
-            if user_group in groups_rw.split(','):
-              """
-              Read/Write Group
-              Read/Write : True
-              """
-              logging.warn('user_group_permissions -> user is in read/write group')
-              permissions['read_write'] = True
-              logging.warn('user_group_permissions -> return %r' % permissions)
-              return permissions
-          
-          if group_name_r in credential:
-            logging.warn('user_group_permissions -> group_name_r exist')
-            groups_r = credential.get(group_name_r)
-            if user_group in groups_r.split(','):
-              """
-              User found in ReadOnly Group set Read/Write to false
-              Read Only : True
-              """
-              logging.warn('user_group_permissions ->  user found in readonly group set read/write to false')
-              permissions['read_write'] = False
-              logging.warn('user_group_permissions -> return %r' % permissions)
-              return permissions
-            else:
-              """
-              User not found in ReadOnly Group set ReadOnly to false
-              Read Only : False
-              Read/Write : False
-              """
-              logging.warn('user_group_permissions ->  user not found in readonly or read/write groups to false')
-              permissions['read_only'] = False
-              permissions['read_write'] = False
-              logging.warn('user_group_permissions -> return %r' % permissions)
-              return permissions
-
-            
-      except (AttributeError,IndexError,KeyError) as e:
-        logging.error(e)
-    else:
-        """
-        Group Support Not Enabled
-        Read/Write : True
-        Read Only : True
-        """
-        logging.warn('user_group_permissions -> SAML groups not enabled')
-        permissions['read_write'] = True
-
-    logging.warn('user_group_permissions -> return %r' % permissions)
-    return permissions
-
-
 def get_logged_in_user():
     '''
     Retrieve logged-in user's email that is stored in cache
@@ -338,6 +243,52 @@ def require_auth(f):
         return abort(403)
 
     return decorated
+
+
+def require_saml_role(credential):
+    '''
+    Use SAML roles with credential meatdata to check if role has permissions to read/write to resources
+    '''
+    permissions = {
+      'read_write': False,
+      'read_only': True
+    }
+
+    if app.config['SAML_USE_ROLE']:
+        try:
+            user_role = user_mod.current_role()
+            ## Must lower() case the values as we cannot store upper case keys in
+            ## Confidant
+            role_name_rw = app.config['SAML_ROLE_RW_NAME'].lower()
+            role_name_r = app.config['SAML_ROLE_R_NAME'].lower()
+            
+            if user_role == app.config['SAML_ADMIN_ROLE'].lower():
+                permissions['read_write'] = True
+                return permissions
+            if not role_name_rw in credential:
+                # No read/write role found allow all by default, don't return yet
+                permissions['read_write'] = True
+            if role_name_rw in credential:
+                groups_rw = credential.get(role_name_rw)
+                if user_role in groups_rw.split(','):
+                    permissions['read_write'] = True
+                    return permissions
+            if role_name_r in credential:
+                  groups_r = credential.get(role_name_r)
+                  if user_role in groups_r.split(','):
+                      permissions['read_write'] = False
+                      return permissions
+                  else:
+                      permissions['read_only'] = False
+                      permissions['read_write'] = False
+                      return permissions    
+        except (NotAuthorized, AuthenticationError) as e:
+            logging.error(e)
+    
+    else:
+        permissions['read_write'] = True
+
+    return permissions
 
 
 def require_logout_for_goodbye(f):
