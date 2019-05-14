@@ -384,10 +384,7 @@ def get_credential(id):
         )
         return jsonify({}), 404
 
-    #TODO Dev Work: Allow/Deny veiwing Cred
-    logging.warn('called -> /v1/credentials/<id> [GET]')
-    permission = authnz.saml_user_group_permissions(cred.metadata)
-    if not permission['read_only']:
+    if not authnz.require_saml_role(cred.metadata)['read_only']:
         return jsonify({}), 404
 
     if (cred.data_type != 'credential' and
@@ -798,11 +795,8 @@ def update_credential(id):
     update['metadata'] = data.get('metadata', _cred.metadata)
     update['documentation'] = data.get('documentation', _cred.documentation)
 
-    # TODO: Dev Work: Deny/Allow updating Creds
-    logging.warn('called -> v1/credentials/<id> [PUT]')
-    permissions = authnz.saml_user_group_permissions(_cred.metadata)
-    if not permissions['read_write']:
-      return jsonify({'error': 'Credential Metadata found GroupId does not have write permissions'}), 400
+    if not authnz.require_saml_role(_cred.metadata)['read_write']:
+        return jsonify({'error': 'Credential Metadata found Role does not have write permissions'}), 400
 
     # Enforce documentation, EXCEPT if we are restoring an old revision
     if (not update['documentation'] and
