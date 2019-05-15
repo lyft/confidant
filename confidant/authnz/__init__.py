@@ -247,7 +247,7 @@ def require_auth(f):
 
 def require_saml_role(credential):
     '''
-    Use SAML roles with credential meatdata to check if role has permissions to read/write to resources
+    Use SAML roles with credential metadata to check if role has permissions to read/write to resources
     '''
     permissions = {
       'read_write': False,
