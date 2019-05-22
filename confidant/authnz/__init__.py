@@ -269,12 +269,12 @@ def require_saml_role(credential):
                 # No read/write role found allow all by default, don't return yet
                 permissions['read_write'] = True
             if role_name_rw in credential:
-                groups_rw = credential.get(role_name_rw)
+                groups_rw = credential.get(role_name_rw).replace(' ', '')
                 if user_role in groups_rw.split(','):
                     permissions['read_write'] = True
                     return permissions
             if role_name_r in credential:
-                  groups_r = credential.get(role_name_r)
+                  groups_r = credential.get(role_name_r).replace(' ', '')
                   if user_role in groups_r.split(','):
                       permissions['read_write'] = False
                       return permissions

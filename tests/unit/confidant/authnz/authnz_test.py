@@ -216,6 +216,33 @@ class AuthnzTest(unittest.TestCase):
             u_mock.redirect_to_goodbye = Mock(return_value='redirect_return')
             self.assertEqual(wrapped(), 'redirect_return')
 
+    def test_require_saml_role(self):
+      session_data = {'user': {}}
+      app.config['SAML_USE_ROLE'] = False
+      # saml roles not enabled (defaults to allow all)
+      self.assertTrue(authnz.require_saml_role({})['read_only'])
+      self.assertTrue(authnz.require_saml_role({})['read_write'])
+      
+      readonly_metadata_credential = {'saml_role_r': 'user_ro,user2_ro'}
+      readwrite_metadata_credential = {'saml_role_rw': 'user_rw, user2_rw'}
+      with app.test_request_context('/v1/credentials/'):
+            with patch('confidant.authnz.userauth.session', session_data):
+                    app.config['SAML_USE_ROLE'] = True
+                    session_data['user'].update({'role': 'user_ro'})
+                    # User defined in metadata readonly role 
+                    self.assertFalse(authnz.require_saml_role(readonly_metadata_credential)['read_write'])
+                    # User2 defined in metadata read / write role 
+                    session_data['user'].update({'role': 'user2_rw'})
+                    self.assertTrue(authnz.require_saml_role(readwrite_metadata_credential)['read_write'])
+                    # User not defined in any role provided in metadata
+                    session_data['user'].update({'role': 'user_no_role'})
+                    self.assertFalse(authnz.require_saml_role(readonly_metadata_credential)['read_write'])
+                    # Admin user (defaults to allow all)
+                    session_data['user'].update({'role': 'admin'})
+                    self.assertTrue(authnz.require_saml_role(readonly_metadata_credential)['read_write'])
+                    # No role provided in metadata (defaults to allow all)
+                    self.assertTrue(authnz.require_saml_role({})['read_write'])
+
 
 class HeaderAuthenticatorTest(unittest.TestCase):
 
