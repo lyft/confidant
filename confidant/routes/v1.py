@@ -385,7 +385,7 @@ def get_credential(id):
         return jsonify({}), 404
 
     if not authnz.require_saml_role(cred.metadata)['read_only']:
-        return jsonify({}), 404
+        return jsonify({}), 403
 
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
@@ -796,7 +796,7 @@ def update_credential(id):
     update['documentation'] = data.get('documentation', _cred.documentation)
 
     if not authnz.require_saml_role(_cred.metadata)['read_write']:
-        return jsonify({'error': 'Credential Metadata found Role does not have write permissions'}), 400
+        return jsonify({'error': 'Credential Metadata found Role does not have write permissions'}), 403
 
     # Enforce documentation, EXCEPT if we are restoring an old revision
     if (not update['documentation'] and
