@@ -251,7 +251,7 @@ def require_saml_role(credential):
     '''
     permissions = {
       'read_write': False,
-      'read_only': True
+      'read_only': False
     }
 
     if app.config['SAML_USE_ROLE']:
@@ -264,29 +264,29 @@ def require_saml_role(credential):
             
             if user_role == app.config['SAML_ADMIN_ROLE'].lower():
                 permissions['read_write'] = True
+                permissions['read_only'] = True
                 return permissions
-            if not role_name_rw in credential:
-                # No read/write role found allow all by default, don't return yet
-                permissions['read_write'] = True
             if role_name_rw in credential:
                 groups_rw = credential.get(role_name_rw).replace(' ', '')
                 if user_role in groups_rw.split(','):
                     permissions['read_write'] = True
+                    permissions['read_only'] = True
                     return permissions
             if role_name_r in credential:
                   groups_r = credential.get(role_name_r).replace(' ', '')
                   if user_role in groups_r.split(','):
-                      permissions['read_write'] = False
+                      permissions['read_only'] = True
                       return permissions
                   else:
                       permissions['read_only'] = False
-                      permissions['read_write'] = False
-                      return permissions    
+
         except (NotAuthorized, AuthenticationError) as e:
             logging.error(e)
     
     else:
+        # SAML roles not enabled, default to allow all
         permissions['read_write'] = True
+        permissions['read_only'] = True
 
     return permissions
 
