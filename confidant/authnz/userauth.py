@@ -132,7 +132,6 @@ class AbstractUserAuthenticator(object):
             all_groups = grp.getgrall()
             session['user']['groups'] = [g.gr_name for g in all_groups if username in g.gr_mem]
 
-
     def current_email(self):
         return self.current_user()['email'].lower()
 
@@ -320,16 +319,23 @@ class HeaderAuthenticator(AbstractUserAuthenticator):
 
         first_name = None
         if self.first_name_header and self.first_name_header in request.headers:
-            info['first_name'] = request.headers[self.first_name_header]
+            first_name = request.headers[self.first_name_header]
 
         last_name = None
         if self.last_name_header and self.last_name_header in request.headers:
-            info['last_name'] = request.headers[self.last_name_header]
+            last_name = request.headers[self.last_name_header]
 
+        username = None
+        if self.username_header and self.username_header in request.headers:
+            username = request.headers[self.username_header]
+
+        # Set current user on every request to ensure that the user's group
+        # list is updated (TODO: caching?)
         self.set_current_user(
             request.headers[self.email_header],
-            first_name=first_name,
-            last_name=last_name
+            first_name = first_name,
+            last_name = last_name,
+            username = username
         )
         return session['user']
 
