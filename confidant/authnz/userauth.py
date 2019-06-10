@@ -114,13 +114,19 @@ class AbstractUserAuthenticator(object):
                 max_expiration = now + datetime.timedelta(seconds=max_lifetime)
                 session['max_expiration'] = max_expiration
 
-    def set_current_user(self, email, first_name=None, last_name=None):
+    def set_current_user(self, email, first_name=None, last_name=None, username=None):
+        if email is None or email == '':
+            raise errors.UserUnknownError('No email provided')
+
         session['user'] = {
             'email': email,
             'first_name': first_name,
             'last_name': last_name,
             'groups': []
         }
+
+        if username is None:
+            username = email.strip().split('@')[0]
 
         if app.config.get('USE_GROUPS'):
             all_groups = grp.getgrall()
