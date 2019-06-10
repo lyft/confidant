@@ -386,11 +386,10 @@ def get_credential(id):
     else:
         context = id.split('-')[0]
 
-    _authorized_user = (not app.config.get('USE_GROUPS') or not cred.group
-            or authnz.user_is_member(cred.group))
-
     _credential_pairs = None
-    if _authorized_user:
+    _is_authorized = False
+    if authnz.user_is_authorized(cred.group):
+        _is_authorized = True
         data_key = keymanager.decrypt_datakey(
             cred.data_key,
             encryption_context={'id': context}
@@ -411,7 +410,7 @@ def get_credential(id):
         'modified_by': cred.modified_by,
         'documentation': cred.documentation,
         'group': cred.group,
-        'authorized': _authorized_user
+        'authorized': _is_authorized
     })
 
 
@@ -476,15 +475,18 @@ def _get_credentials(credential_ids):
     credentials = []
     with stats.timer('service_batch_get_credentials'):
         for cred in Credential.batch_get(copy.deepcopy(credential_ids)):
-            #TODO: add check for group membership here
-            data_key = keymanager.decrypt_datakey(
-                cred.data_key,
-                encryption_context={'id': cred.id}
-            )
-            cipher_version = cred.cipher_version
-            cipher = CipherManager(data_key, cipher_version)
-            _credential_pairs = cipher.decrypt(cred.credential_pairs)
-            _credential_pairs = json.loads(_credential_pairs)
+            _credential_pairs = None
+            _is_authorized = False
+            if authnz.user_is_authorized(cred.group):
+                _is_authorized = True
+                data_key = keymanager.decrypt_datakey(
+                    cred.data_key,
+                    encryption_context={'id': cred.id}
+                )
+                cipher_version = cred.cipher_version
+                cipher = CipherManager(data_key, cipher_version)
+                _credential_pairs = cipher.decrypt(cred.credential_pairs)
+                _credential_pairs = json.loads(_credential_pairs)
             credentials.append({
                 'id': cred.id,
                 'data_type': 'credential',
@@ -494,7 +496,8 @@ def _get_credentials(credential_ids):
                 'credential_pairs': _credential_pairs,
                 'metadata': cred.metadata,
                 'documentation': cred.documentation,
-                'group': cred.group
+                'group': cred.group,
+                'authorized': _is_authorized
             })
     return credentials
 

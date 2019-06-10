@@ -78,6 +78,15 @@ def user_type_has_privilege(user_type, privilege):
     return False
 
 
+def user_is_authorized(groupname):
+    # Fail open if authz checks are disabled or the group is not set
+    return (
+        not app.config.get('USE_GROUPS')
+        or not groupname
+        or user_is_member(groupname)
+    )
+
+
 def require_csrf_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):
