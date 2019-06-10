@@ -312,22 +312,20 @@ class HeaderAuthenticator(AbstractUserAuthenticator):
     def current_user(self):
         self.assert_headers()
 
-        info = {
-            'email': request.headers[self.email_header],
-
-            # TODO: should we use a string like "unknown", fall back to the
-            # email/username, ...?
-            'first_name': '',
-            'last_name': '',
-        }
-
+        first_name = None
         if self.first_name_header and self.first_name_header in request.headers:
             info['first_name'] = request.headers[self.first_name_header]
 
+        last_name = None
         if self.last_name_header and self.last_name_header in request.headers:
             info['last_name'] = request.headers[self.last_name_header]
 
-        return info
+        self.set_current_user(
+            request.headers[self.email_header],
+            first_name=first_name,
+            last_name=last_name
+        )
+        return session['user']
 
     def is_authenticated(self):
         """Any user that is able to make requests is authenticated"""
