@@ -79,9 +79,13 @@ def user_type_has_privilege(user_type, privilege):
 
 
 def user_is_authorized(groupname):
-    # Fail open if authz checks are disabled or the group is not set
+    # Fail open if:
+    # - the principal is not a human user
+    # - authz checks are disabled globally
+    # - OR there is no group specified
     return (
-        not app.config.get('USE_GROUPS')
+        not user_is_user_type('user')
+        or not app.config.get('USE_GROUPS')
         or not groupname
         or user_is_member(groupname)
     )
