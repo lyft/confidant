@@ -250,7 +250,7 @@ class AbstractUserAuthenticator(object):
             return True
 
 
-class NullUserAuthenticator(object):
+class NullUserAuthenticator(AbstractUserAuthenticator):
     """
     Fake user authenticator class that performs no authentication.
     """
