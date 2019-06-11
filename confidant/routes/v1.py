@@ -386,7 +386,7 @@ def get_credential(id):
     else:
         context = id.split('-')[0]
 
-    _credential_pairs = None
+    _credential_pairs = {}
     _is_authorized = False
     if authnz.user_is_authorized(cred.group):
         _is_authorized = True
@@ -475,7 +475,7 @@ def _get_credentials(credential_ids):
     credentials = []
     with stats.timer('service_batch_get_credentials'):
         for cred in Credential.batch_get(copy.deepcopy(credential_ids)):
-            _credential_pairs = None
+            _credential_pairs = {}
             _is_authorized = False
             if authnz.user_is_authorized(cred.group):
                 _is_authorized = True
