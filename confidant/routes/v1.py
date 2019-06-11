@@ -282,6 +282,18 @@ def map_service_credentials(id):
         ret = {'error': '{0} is not a valid account.'}
         return jsonify(ret), 400
 
+    added = list(set(data.get('credentials', [])) - set(_service_credential_ids))
+    removed = list(set(_service_credential_ids) - set(data.get('credentials', [])))
+
+    if added or removed:
+        # Only check the delta so that users can modify assignments for
+        # any credentials they have access to, even if the service has others
+        # assigned that they can't access
+        for cred in _get_credentials(added + removed):
+            if not cred.get('authorized', False):
+                ret = {'error': 'Not authorized to modify credential'}
+                return jsonify(ret), 403
+
     # If this is the first revision, we should attempt to create a grant for
     # this service.
     if revision == 1:
@@ -321,8 +333,6 @@ def map_service_credentials(id):
     except PutError as e:
         logging.error(e)
         return jsonify({'error': 'Failed to update active service.'}), 500
-    added = list(set(service.credentials) - set(_service_credential_ids))
-    removed = list(set(_service_credential_ids) - set(service.credentials))
     msg = 'Added credentials: {0}; Removed credentials {1}; Revision {2}'
     msg = msg.format(added, removed, service.revision)
     graphite.send_event([id], msg)
