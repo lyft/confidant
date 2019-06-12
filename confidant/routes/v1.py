@@ -294,7 +294,7 @@ def map_service_credentials(id):
             if not cred.get('authorized', False):
                 unauthorized_creds.append(cred['name'])
         if len(unauthorized_creds) > 0:
-            msg = 'Not authorized to modify credentials: {0}'
+            msg = 'User not authorized to modify credentials: {0}'
             ret = {'error': msg.format(", ".join(unauthorized_creds))}
             return jsonify(ret), 403
 
@@ -773,10 +773,9 @@ def update_credential(id):
     if _cred.data_type != 'credential':
         msg = 'id provided is not a credential.'
         return jsonify({'error': msg}), 400
-    if app.config.get('USE_GROUPS'):
-        logging.warning('DEBUG: checking group membership for id {0}: group is {1}'.format(id, _cred.group))
-        if _cred.group and not authnz.user_is_member(_cred.group):
-            return jsonify({'error': 'User not authorized to view cred'}), 403
+    if not authnz.user_is_authorized(_cred.group):
+        msg = 'User not authorized to modify credential'
+        return jsonify({'error': msg}), 403
     data = request.get_json()
     update = {}
     revision = _get_latest_credential_revision(id, _cred.revision)
