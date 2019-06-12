@@ -289,10 +289,14 @@ def map_service_credentials(id):
         # Only check the delta so that users can modify assignments for
         # any credentials they have access to, even if the service has others
         # assigned that they can't access
+        unauthorized_creds = []
         for cred in _get_credentials(added + removed):
             if not cred.get('authorized', False):
-                ret = {'error': 'Not authorized to modify credential'}
-                return jsonify(ret), 403
+                unauthorized_creds.append(cred['name'])
+        if len(unauthorized_creds) > 0:
+            msg = 'Not authorized to modify credentials: {0}'
+            ret = {'error': msg.format(", ".join(unauthorized_creds))}
+            return jsonify(ret), 403
 
     # If this is the first revision, we should attempt to create a grant for
     # this service.
