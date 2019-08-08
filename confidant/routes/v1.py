@@ -1213,7 +1213,7 @@ def update_blind_credential(id):
 def generate_value():
     value = kms_client.generate_random(NumberOfBytes=128)['Plaintext']
     value = base64.urlsafe_b64encode(value)
-    value = re.sub('[\W_]+', '', value)
+    value = re.sub(r'[\W_]+', '', value)
     if len(value) > VALUE_LENGTH:
         value = value[:VALUE_LENGTH]
     return jsonify({'value': value})

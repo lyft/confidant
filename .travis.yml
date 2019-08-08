@@ -1,4 +1,6 @@
+dist: xenial
 language: python
+python: 2.7
 env:
   - REPO=lyft/confidant
 sudo: required
