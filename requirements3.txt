@@ -9,11 +9,12 @@ authomatic==0.1.0.post1
 boto3==1.4.0
 botocore==1.4.58
 cffi==1.10.0
-coverage==3.7.1
+coverage==4.5.4
 cryptography==2.3
 defusedxml==0.5.0         # via python3-saml
 docutils==0.13.1          # via botocore
-flake8==2.3.0
+entrypoints==0.3          # via flake8
+flake8==3.7.8
 flask-script==2.0.5
 flask-session==0.2.1
 flask-sslify==0.1.5
@@ -36,11 +37,11 @@ ndg-httpsclient==0.4.2
 nose-pathmunge==0.1.2
 nose==1.3.3
 pbr==2.0.0                # via mock
-pep8==1.5.7
 pkgconfig==1.3.1          # via xmlsec
 pyasn1==0.4.4
+pycodestyle==2.5.0        # via flake8
 pycparser==2.18
-pyflakes==1.5.0           # via flake8
+pyflakes==2.1.1           # via flake8
 pynamodb==3.2.1
 pyopenssl==16.2.0
 python-dateutil==2.6.0    # via botocore, pynamodb

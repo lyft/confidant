@@ -109,17 +109,12 @@ guard==1.0.1
 # The modular source code checker: pep8, pyflakes and co
 # License: MIT
 # Upstream url: http://bitbucket.org/tarek/flake8
-flake8==2.3.0
+flake8>3
 
 # Measures code coverage and emits coverage reports
 # Licence: BSD
 # Upstream url: https://pypi.python.org/pypi/coverage
-coverage==3.7.1
-
-# tool to check your Python code against some of the style conventions
-# License: Expat License
-# Upstream url: https://github.com/jcrocholl/pep8.git
-pep8==1.5.7
+coverage>4
 
 # nose makes testing easier
 # License: GNU Library or Lesser General Public License (LGPL)
