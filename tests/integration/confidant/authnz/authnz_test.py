@@ -130,12 +130,9 @@ class AuthnzTest(unittest.TestCase):
     def test_invalid_kms_auth_token(self):
         app.debug = True
         app.config['USE_AUTH'] = True
-        auth = base64.b64encode(
-            '{0}:{1}'.format('confidant-development', 'faketoken')
-        )
-        ret = self.test_client.open(
+        auth = base64.b64encode(b'confidant-development:faketoken').decode()
+        ret = self.test_client.get(
             '/v1/services/confidant-development',
-            'GET',
             headers={'Authorization': 'Basic {0}'.format(auth)},
             follow_redirects=False
         )
@@ -149,12 +146,9 @@ class AuthnzTest(unittest.TestCase):
             "payload": {"fake": "payload"},
             "key_alias": "authnz-testing"
         }
-        auth = base64.b64encode(
-            '{0}:{1}'.format('confidant-development', 'faketoken')
-        )
-        ret = self.test_client.open(
+        auth = base64.b64encode(b'confidant-development:faketoken').decode()
+        ret = self.test_client.get(
             '/v1/services/confidant-development',
-            'GET',
             headers={'Authorization': 'Basic {0}'.format(auth)},
             follow_redirects=False
         )
@@ -169,11 +163,10 @@ class AuthnzTest(unittest.TestCase):
             "key_alias": "authnz-testing"
         }
         auth = base64.b64encode(
-            '{0}:{1}'.format('confidant-development-baduser', 'faketoken')
-        )
-        ret = self.test_client.open(
+            b'confidant-development-baduser:faketoken',
+        ).decode()
+        ret = self.test_client.get(
             '/v1/services/confidant-development',
-            'GET',
             headers={'Authorization': 'Basic {0}'.format(auth)},
             follow_redirects=False
         )
@@ -198,12 +191,9 @@ class AuthnzTest(unittest.TestCase):
             "payload": {"fake": "payload"},
             "key_alias": "authnz-testing"
         }
-        auth = base64.b64encode(
-            '{0}:{1}'.format('confidant-development', 'faketoken')
-        )
-        ret = self.test_client.open(
+        auth = base64.b64encode(b'confidant-development:faketoken').decode()
+        ret = self.test_client.get(
             '/v1/services/confidant-development',
-            'GET',
             headers={'Authorization': 'Basic {0}'.format(auth)},
             follow_redirects=False
         )
@@ -228,12 +218,9 @@ class AuthnzTest(unittest.TestCase):
             "payload": {"fake": "payload"},
             "key_alias": "authnz-testing"
         }
-        auth = base64.b64encode(
-            '{0}:{1}'.format('confidant-development', 'faketoken')
-        )
-        ret = self.test_client.open(
+        auth = base64.b64encode(b'confidant-development:faketoken').decode()
+        ret = self.test_client.get(
             '/v1/services/confidant-development',
-            'GET',
             headers={'Authorization': 'Basic {0}'.format(auth)},
             follow_redirects=False
         )
@@ -259,12 +246,9 @@ class AuthnzTest(unittest.TestCase):
             "payload": {"fake": "payload"},
             "key_alias": "sandbox-auth-key"
         }
-        auth = base64.b64encode(
-            '{0}:{1}'.format('confidant-development', 'faketoken')
-        )
-        ret = self.test_client.open(
+        auth = base64.b64encode(b'confidant-development:faketoken').decode()
+        ret = self.test_client.get(
             '/v1/services/confidant-development',
-            'GET',
             headers={'Authorization': 'Basic {0}'.format(auth)},
             follow_redirects=False
         )

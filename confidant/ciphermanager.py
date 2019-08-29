@@ -28,7 +28,7 @@ class CipherManager:
             return 'DANGER_NOT_ENCRYPTED_{0}'.format(base64.b64encode(raw))
         if self.version == 2:
             f = Fernet(self.key)
-            return f.encrypt(raw.encode('utf-8'))
+            return f.encrypt(raw.encode('utf-8')).decode('UTF-8')
         else:
             raise CipherManagerError('Bad cipher version')
 

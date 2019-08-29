@@ -1,10 +1,10 @@
 import abc
 import logging
-import urlparse
 import datetime
 import random
 
 import yaml
+from six.moves.urllib.parse import urlparse
 
 import flask
 from flask import request, session
@@ -395,7 +395,7 @@ class GoogleOauthAuthenticator(AbstractUserAuthenticator):
         if result:
             if result.error:
                 msg = 'Google auth failed with error: {0}'
-                logging.error(msg.format(result.error.message))
+                logging.error(msg.format(result.error))
                 return abort(403)
 
             # successful login
@@ -602,7 +602,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         logging.info('SAML attributes: {!r}'.format(attributes))
 
         # normalize attributes by flattening single-item arrays
-        for key, val in attributes.iteritems():
+        for key, val in attributes.items():
             if isinstance(val, list) and len(val) == 1:
                 attributes[key] = val[0]
 
@@ -618,7 +618,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         kwargs['email'] = attributes.get('email', nameid)
 
         # use first_name, last_name if present
-        for key, val in attributes.iteritems():
+        for key, val in attributes.items():
             if not getattr(key, 'lower', None):
                 logging.error('Bad list attr {!r}'.format({key: val}))
             if key.lower() in ['firstname', 'first_name']:
@@ -735,7 +735,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         if flask_request is None:
             flask_request = flask.request
 
-        url_data = urlparse.urlparse(flask_request.url)
+        url_data = urlparse(flask_request.url)
 
         if flask_request.scheme == 'https':
             https = 'on'

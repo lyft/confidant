@@ -16,7 +16,7 @@ class CipherManagerTest(unittest.TestCase):
         self.assertNotEquals(ciphertext, 'testdata')
 
         cipher = CipherManager(key, 2)
-        plaintext = cipher.decrypt(ciphertext)
+        plaintext = cipher.decrypt(ciphertext).decode('UTF-8')
 
         # Assert that decrypting using a new cipher object with the same key
         # and version give back the same plaintext.

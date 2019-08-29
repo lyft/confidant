@@ -460,7 +460,7 @@ AWS_DEFAULT_REGION = str_env('AWS_DEFAULT_REGION', 'us-east-1')
 
 # Configuration validation
 _settings_failures = False
-if len(list(set(SCOPED_AUTH_KEYS.values()))) != len(SCOPED_AUTH_KEYS.values()):
+if len(set(SCOPED_AUTH_KEYS.values())) != len(SCOPED_AUTH_KEYS.values()):
     logging.error('SCOPED_AUTH_KEYS values are not unique.')
     _settings_failures = True
 
