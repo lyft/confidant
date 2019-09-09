@@ -1212,7 +1212,7 @@ def update_blind_credential(id):
 @app.route('/v1/value_generator', methods=['GET'])
 def generate_value():
     value = kms_client.generate_random(NumberOfBytes=128)['Plaintext']
-    value = base64.urlsafe_b64encode(value)
+    value = base64.urlsafe_b64encode(value).decode('UTF-8')
     value = re.sub(r'[\W_]+', '', value)
     if len(value) > VALUE_LENGTH:
         value = value[:VALUE_LENGTH]
