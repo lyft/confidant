@@ -4,7 +4,6 @@ import json
 
 from mock import patch
 from mock import MagicMock
-from lru import LRU
 
 # Prevent call to KMS during tests
 from confidant import settings

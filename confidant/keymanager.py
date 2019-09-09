@@ -3,7 +3,6 @@ import logging
 import botocore
 
 from botocore.exceptions import ClientError
-from lru import LRU
 
 import confidant.services
 from confidant.app import app
