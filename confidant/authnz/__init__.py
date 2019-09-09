@@ -6,7 +6,6 @@ from flask import abort, request, g, make_response
 from flask import url_for
 from functools import wraps
 
-from confidant import keymanager
 from confidant.app import app
 from confidant.utils import stats
 
