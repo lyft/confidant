@@ -205,6 +205,10 @@ class AbstractUserAuthenticator(object):
 
     def check_authorization(self):
         email = self.current_email()
+        # during roll forward 2->3 this will be bytes when retrieved from
+        # session
+        if isinstance(email, bytes):
+            email = email.decode('UTF-8')
 
         if not self.passes_email_suffix(email):
             msg = 'User {!r} does not have email suffix {!r}'.format(
