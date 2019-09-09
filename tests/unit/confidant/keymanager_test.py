@@ -134,7 +134,7 @@ class KeyManagerTest(unittest.TestCase):
         app.config['USE_ENCRYPTION'] = True
         context = {'from': 'confidant-development',
                    'to': 'confidant-development'}
-        keymanager.decrypt_datakey('encrypted', context)
+        keymanager.decrypt_datakey(b'encrypted', context)
 
         # Assert that decrypt_datakey was called and decrypt_mock_datakey was
         # not called.

@@ -62,7 +62,7 @@ def get_client_config():
         'defined': app.config['CLIENT_CONFIG'],
         'generated': {
             'kms_auth_manage_grants': app.config['KMS_AUTH_MANAGE_GRANTS'],
-            'aws_accounts': app.config['SCOPED_AUTH_KEYS'].values(),
+            'aws_accounts': list(app.config['SCOPED_AUTH_KEYS'].values()),
             'xsrf_cookie_name': app.config['XSRF_COOKIE_NAME'],
             'maintenance_mode': app.config['MAINTENANCE_MODE']
         }
@@ -278,7 +278,7 @@ def map_service_credentials(id):
             }
             return jsonify(ret), 400
 
-    accounts = app.config['SCOPED_AUTH_KEYS'].values()
+    accounts = list(app.config['SCOPED_AUTH_KEYS'].values())
     if data.get('account') and data['account'] not in accounts:
         ret = {'error': '{0} is not a valid account.'}
         return jsonify(ret), 400
@@ -533,7 +533,7 @@ def _pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
                 pair_keys[key] = [data]
     # Iterate the credential pair keys, if there's any keys with more than
     # one credential add it to the conflict dict.
-    for key, data in pair_keys.iteritems():
+    for key, data in pair_keys.items():
         if len(data) > 1:
             blind_ids = [k['id'] for k in data
                          if k['data_type'] == 'blind-credential']
@@ -562,7 +562,7 @@ def _get_services_for_blind_credential(_id):
 
 
 def _check_credential_pair_values(credential_pairs):
-    for key, val in credential_pairs.iteritems():
+    for key, val in credential_pairs.items():
         if isinstance(val, dict) or isinstance(val, list):
             ret = {'error': 'credential pairs must be key: value'}
             return (False, ret)
@@ -599,7 +599,7 @@ def _pair_key_conflicts_for_services(_id, credential_keys, services):
     service_map = _get_service_map(services)
     credential_ids = []
     blind_credential_ids = []
-    for credential, data in service_map.iteritems():
+    for credential, data in service_map.items():
         if _id == credential:
             continue
         if data['data_type'] == 'credential':
@@ -636,7 +636,7 @@ def _pair_key_conflicts_for_services(_id, credential_keys, services):
 
 
 def _lowercase_credential_pairs(credential_pairs):
-    return {i.lower(): j for i, j in credential_pairs.iteritems()}
+    return {i.lower(): j for i, j in credential_pairs.items()}
 
 
 @app.route('/v1/credentials', methods=['POST'])
@@ -757,7 +757,7 @@ def update_credential(id):
         # services
         conflicts = _pair_key_conflicts_for_services(
             id,
-            credential_pairs.keys(),
+            list(credential_pairs.keys()),
             services
         )
         if conflicts:
