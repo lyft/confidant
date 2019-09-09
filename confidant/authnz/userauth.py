@@ -121,7 +121,9 @@ class AbstractUserAuthenticator(object):
         }
 
     def current_email(self):
-        return self.current_user()['email'].lower()
+        ret = self.current_user()['email'].lower()
+        # when migrating from 2 -> 3, the session email object may be bytes
+        return ret.decode('UTF-8') if isinstance(ret, bytes) else ret
 
     def current_first_name(self):
         return self.current_user()['first_name']
@@ -205,10 +207,6 @@ class AbstractUserAuthenticator(object):
 
     def check_authorization(self):
         email = self.current_email()
-        # during roll forward 2->3 this will be bytes when retrieved from
-        # session
-        if isinstance(email, bytes):
-            email = email.decode('UTF-8')
 
         if not self.passes_email_suffix(email):
             msg = 'User {!r} does not have email suffix {!r}'.format(
@@ -235,7 +233,7 @@ class AbstractUserAuthenticator(object):
             return True
 
 
-class NullUserAuthenticator(object):
+class NullUserAuthenticator(AbstractUserAuthenticator):
     """
     Fake user authenticator class that performs no authentication.
     """
@@ -254,15 +252,6 @@ class NullUserAuthenticator(object):
             'first_name': 'unauthenticated',
             'last_name': 'user',
         }
-
-    def current_email(self):
-        return self.current_user()['email'].lower()
-
-    def current_first_name(self):
-        return self.current_user()['first_name']
-
-    def current_last_name(self):
-        return self.current_user()['last_name']
 
     def is_authenticated(self):
         """Null users are always authenticated"""
@@ -326,15 +315,6 @@ class HeaderAuthenticator(AbstractUserAuthenticator):
             info['last_name'] = request.headers[self.last_name_header]
 
         return info
-
-    def current_email(self):
-        return self.current_user()['email'].lower()
-
-    def current_first_name(self):
-        return self.current_user()['first_name']
-
-    def current_last_name(self):
-        return self.current_user()['last_name']
 
     def is_authenticated(self):
         """Any user that is able to make requests is authenticated"""
