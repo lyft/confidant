@@ -26,15 +26,6 @@ class KeyManagerTest(unittest.TestCase):
 
     @patch('confidant.keymanager.KEY_METADATA', {})
     @patch('confidant.keymanager.auth_kms_client.describe_key')
-    def test_get_key_arn(self, kms_mock):
-        kms_mock.return_value = {'KeyMetadata': {'Arn': 'mocked:arn'}}
-        self.assertEqual(
-            keymanager.get_key_arn('mockalias'),
-            'mocked:arn'
-        )
-
-    @patch('confidant.keymanager.KEY_METADATA', {})
-    @patch('confidant.keymanager.auth_kms_client.describe_key')
     def test_get_key_id(self, kms_mock):
         kms_mock.return_value = {'KeyMetadata': {'KeyId': 'mockid'}}
         self.assertEqual(
