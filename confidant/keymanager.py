@@ -48,7 +48,7 @@ def create_datakey(encryption_context):
     stats.incr('at_rest_action', 2)
     return cryptolib.create_datakey(
         encryption_context,
-        '{0}'.format(app.config.get('KMS_MASTER_KEY')),
+        app.config.get('KMS_MASTER_KEY'),
         client=at_rest_kms_client
     )
 
