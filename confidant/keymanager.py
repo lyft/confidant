@@ -31,7 +31,7 @@ KEY_METADATA = {}
 def get_key_id(key_alias):
     if key_alias not in KEY_METADATA:
         KEY_METADATA[key_alias] = auth_kms_client.describe_key(
-            KeyId='alias/{0}'.format(key_alias)
+            KeyId='{0}'.format(key_alias)
         )
     return KEY_METADATA[key_alias]['KeyMetadata']['KeyId']
 
@@ -50,7 +50,7 @@ def create_datakey(encryption_context):
     stats.incr('at_rest_action', 2)
     return cryptolib.create_datakey(
         encryption_context,
-        'alias/{0}'.format(app.config.get('KMS_MASTER_KEY')),
+        '{0}'.format(app.config.get('KMS_MASTER_KEY')),
         client=at_rest_kms_client
     )
 
