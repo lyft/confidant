@@ -44,7 +44,7 @@ export AWS_DEFAULT_REGION='us-east-1'
 # The IAM role name of the confidant server.
 export AUTH_CONTEXT='confidant-production'
 # The KMS key used for auth.
-export AUTH_KEY='authnz-production'
+export AUTH_KEY='alias/authnz-production'
 # The DynamoDB table name for storage.
 export DYNAMODB_TABLE='confidant-production'
 # Auto-generate the dynamodb table.
@@ -53,7 +53,7 @@ export DYNAMODB_CREATE_TABLE=true
 #   https://github.com/surfly/gevent/issues/468
 export GEVENT_RESOLVER='ares'
 # The KMS key used for at-rest encryption in DynamoDB.
-export KMS_MASTER_KEY='confidant-production'
+export KMS_MASTER_KEY='alias/confidant-production'
 # A long randomly generated string for CSRF protection.
 # SESSION_SECRET can be loaded via SECRETS_BOOTSTRAP
 export SESSION_SECRET='aBVmJA3zv6zWGjrYto135hkdox6mW2kOu7UaXIHK8ztJvT8w5O'
@@ -444,7 +444,7 @@ will only allow service authentication.
 # for the 'user' role. This should not be the same key as AUTH_KEY if your
 # kms token version is less than 2, as it would allow services to masquerade
 #  as users.
-export USER_AUTH_KEY='user-auth-key'
+export USER_AUTH_KEY='alias/user-auth-key'
 # The maximum version of the authentication token accepted.
 export KMS_MAXIMUM_TOKEN_VERSION='2'
 # The minimum version of the authentication token accepted. You should set this
