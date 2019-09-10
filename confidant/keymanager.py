@@ -1,12 +1,8 @@
-import base64
 import hashlib
-import datetime
-import json
 import logging
 import botocore
 
 from botocore.exceptions import ClientError
-from lru import LRU
 
 import confidant.services
 from confidant.app import app
@@ -29,38 +25,13 @@ at_rest_kms_client = confidant.services.get_boto_client(
 iam_resource = confidant.services.get_boto_resource('iam')
 
 DATAKEYS = {}
-SERVICEKEYS = {}
-TOKENS = LRU(app.config['KMS_AUTH_TOKEN_CACHE_SIZE'])
 KEY_METADATA = {}
-
-
-def get_key_arn(key_alias):
-    if key_alias not in KEY_METADATA:
-        KEY_METADATA[key_alias] = auth_kms_client.describe_key(
-            KeyId='alias/{0}'.format(key_alias)
-        )
-    return KEY_METADATA[key_alias]['KeyMetadata']['Arn']
 
 
 def get_key_id(key_alias):
     if key_alias not in KEY_METADATA:
-        KEY_METADATA[key_alias] = auth_kms_client.describe_key(
-            KeyId='alias/{0}'.format(key_alias)
-        )
+        KEY_METADATA[key_alias] = auth_kms_client.describe_key(KeyId=key_alias)
     return KEY_METADATA[key_alias]['KeyMetadata']['KeyId']
-
-
-def get_key_alias_from_cache(key_arn):
-    '''
-    Find a key's alias by looking up its key_arn in the KEY_METADATA
-    cache. This function will only work after a key has been lookedup by its
-    alias and is meant as a convenience function for turning an ARN that's
-    already been looked up back into its alias.
-    '''
-    for alias in KEY_METADATA:
-        if KEY_METADATA[alias]['KeyMetadata']['Arn'] == key_arn:
-            return alias
-    return None
 
 
 def create_datakey(encryption_context):
@@ -77,7 +48,7 @@ def create_datakey(encryption_context):
     stats.incr('at_rest_action', 2)
     return cryptolib.create_datakey(
         encryption_context,
-        'alias/{0}'.format(app.config.get('KMS_MASTER_KEY')),
+        app.config.get('KMS_MASTER_KEY'),
         client=at_rest_kms_client
     )
 
@@ -103,108 +74,6 @@ def decrypt_datakey(data_key, encryption_context=None):
         )
         DATAKEYS[sha] = plaintext
     return DATAKEYS[sha]
-
-
-def valid_service_auth_key(key_arn):
-    if key_arn == get_key_arn(app.config['AUTH_KEY']):
-        return True
-    for key in app.config['SCOPED_AUTH_KEYS']:
-        if key_arn == get_key_arn(key):
-            return True
-    return False
-
-
-def decrypt_token(version, user_type, _from, token):
-    '''
-    Decrypt a token.
-    '''
-    if (version > app.config['KMS_MAXIMUM_TOKEN_VERSION'] or
-            version < app.config['KMS_MINIMUM_TOKEN_VERSION']):
-        raise TokenDecryptionError('Unacceptable token version.')
-    stats.incr('token_version_{0}'.format(version))
-    try:
-        token_key = '{0}{1}'.format(
-            hashlib.sha256(token.encode()).hexdigest(),
-            _from
-        )
-    except Exception:
-        raise TokenDecryptionError('Authentication error.')
-    if token_key not in TOKENS:
-        try:
-            token = base64.b64decode(token)
-            context = {
-                # This key is sent to us.
-                'to': app.config['AUTH_CONTEXT'],
-                # From a service.
-                'from': _from
-            }
-            if version > 1:
-                context['user_type'] = user_type
-            with stats.timer('kms_decrypt_token'):
-                data = auth_kms_client.decrypt(
-                    CiphertextBlob=token,
-                    EncryptionContext=context
-                )
-            # Decrypt doesn't take KeyId as an argument. We need to verify the
-            # correct key was used to do the decryption.
-            # Annoyingly, the KeyId from the data is actually an arn.
-            key_arn = data['KeyId']
-            if user_type == 'service':
-                if not valid_service_auth_key(key_arn):
-                    raise TokenDecryptionError(
-                        'Authentication error (wrong KMS key).'
-                    )
-            elif user_type == 'user':
-                if key_arn != get_key_arn(app.config['USER_AUTH_KEY']):
-                    raise TokenDecryptionError(
-                        'Authentication error (wrong KMS key).'
-                    )
-            else:
-                raise TokenDecryptionError(
-                    'Authentication error. Unsupported user_type.'
-                )
-            plaintext = data['Plaintext']
-            payload = json.loads(plaintext)
-            key_alias = get_key_alias_from_cache(key_arn)
-            ret = {'payload': payload, 'key_alias': key_alias}
-        except TokenDecryptionError:
-            raise
-        # We don't care what exception is thrown. For paranoia's sake, fail
-        # here.
-        except Exception:
-            logging.exception('Failed to validate token.')
-            raise TokenDecryptionError('Authentication error. General error.')
-    else:
-        ret = TOKENS[token_key]
-    time_format = "%Y%m%dT%H%M%SZ"
-    now = datetime.datetime.utcnow()
-    try:
-        not_before = datetime.datetime.strptime(
-            ret['payload']['not_before'],
-            time_format
-        )
-        not_after = datetime.datetime.strptime(
-            ret['payload']['not_after'],
-            time_format
-        )
-    except Exception:
-        logging.exception(
-            'Failed to get not_before and not_after from token payload.'
-        )
-        raise TokenDecryptionError('Authentication error. Missing validity.')
-    delta = (not_after - not_before).seconds / 60
-    if delta > app.config['AUTH_TOKEN_MAX_LIFETIME']:
-        logging.warning('Token used which exceeds max token lifetime.')
-        raise TokenDecryptionError(
-            'Authentication error. Token lifetime exceeded.'
-        )
-    if (now < not_before) or (now > not_after):
-        logging.warning('Invalid time validity for token.')
-        raise TokenDecryptionError(
-            'Authentication error. Invalid time validity for token.'
-        )
-    TOKENS[token_key] = ret
-    return TOKENS[token_key]
 
 
 def get_grants():
@@ -339,8 +208,4 @@ class ServiceGetGrantError(Exception):
 
 
 class ServiceCreateGrantError(Exception):
-    pass
-
-
-class TokenDecryptionError(Exception):
     pass

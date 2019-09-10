@@ -156,7 +156,7 @@ greenlet==0.4.12
 # Use: For metrics collection
 statsd==3.2.1
 
-# License: MIT
-# Upstream url: https://github.com/amitdev/lru-dict
-# Use: in-memory LRU for caching auth tokens and at-rest keys
-lru-dict==1.1.6
+# License: Apache2
+# Upstream url: https://github.com/lyft/python-kmsauth
+# Use: kmsauth support library
+kmsauth==0.4.0

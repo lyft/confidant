@@ -32,7 +32,7 @@ class GenerateSecretsBootstrap(Command):
                 secrets = f.read()
         data_key = cryptolib.create_datakey(
             {'type': 'bootstrap'},
-            'alias/{0}'.format(app.config['KMS_MASTER_KEY'])
+            app.config['KMS_MASTER_KEY'],
         )
         f = Fernet(data_key['plaintext'])
         data = {

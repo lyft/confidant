@@ -226,7 +226,8 @@ AUTH_CONTEXT = str_env('AUTH_CONTEXT')
 # as KMS_MASTER_KEY, but it's highly recommended to use a different key for
 # authentication and at-rest encryption. This key is specifically for the
 # 'service' role.
-# Example: mykmskey
+# If a key alias is used, rather than an ARN, it must be prefixed with: alias/
+# Example: alias/mykmskey
 AUTH_KEY = str_env('AUTH_KEY')
 # A dict of KMS key to account mappings. These keys are for the 'service' role
 # to support multiple AWS accounts. If services are scoped to accounts,
@@ -238,6 +239,8 @@ SCOPED_AUTH_KEYS = json.loads(str_env('SCOPED_AUTH_KEYS', '{}'))
 # The alias of the KMS key being used for authentication that is specifically
 # for the 'user' role. This should not be the same key as AUTH_KEY if your
 # kms token version is < 2, as it would allow services to masquerade as users.
+# If a key alias is used, rather than an ARN, it must be prefixed with: alias/
+# Example: alias/mykmskey
 USER_AUTH_KEY = str_env('USER_AUTH_KEY')
 # The maximum lifetime of an authentication token in minutes.
 AUTH_TOKEN_MAX_LIFETIME = int_env('AUTH_TOKEN_MAX_LIFETIME', 60)
@@ -332,6 +335,7 @@ PYNAMO_REQUEST_TIMEOUT_SECONDS = int_env('PYNAMO_REQUEST_TIMEOUT_SECONDS', 1)
 # Encryption
 
 # The KMS key to use for at-rest encryption for secrets in DynamoDB.
+# If a key alias is used, rather than an ARN, it must be prefixed with: alias/
 KMS_MASTER_KEY = str_env('KMS_MASTER_KEY')
 
 # Graphite events
