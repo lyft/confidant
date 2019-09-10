@@ -30,9 +30,7 @@ KEY_METADATA = {}
 
 def get_key_id(key_alias):
     if key_alias not in KEY_METADATA:
-        KEY_METADATA[key_alias] = auth_kms_client.describe_key(
-            KeyId='{0}'.format(key_alias)
-        )
+        KEY_METADATA[key_alias] = auth_kms_client.describe_key(KeyId=key_alias)
     return KEY_METADATA[key_alias]['KeyMetadata']['KeyId']
 
 
