@@ -38,6 +38,7 @@ def _get_validator():
             maximum_token_version=app.config['KMS_MAXIMUM_TOKEN_VERSION'],
             scoped_auth_keys=app.config['SCOPED_AUTH_KEYS'],
             token_cache_size=app.config['KMS_AUTH_TOKEN_CACHE_SIZE'],
+            stats=stats,
         )
     return _VALIDATOR
 
