@@ -1,6 +1,6 @@
 from confidant.app import app
 
-from flask.ext.script import Command, Option
+from flask_script import Command, Option
 import time
 
 from botocore.exceptions import ClientError

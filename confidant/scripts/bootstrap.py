@@ -6,8 +6,7 @@ import json
 import yaml
 
 from cryptography.fernet import Fernet
-from flask.ext.script import Command
-from flask.ext.script import Option
+from flask_script import Command, Option
 
 from confidant import settings
 from confidant.app import app

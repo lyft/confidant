@@ -1,6 +1,6 @@
 import sys
 import logging
-from flask.ext.script import Command
+from flask_script import Command
 
 from confidant.app import app
 from confidant.models.blind_credential import BlindCredential
