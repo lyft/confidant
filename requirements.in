@@ -159,4 +159,4 @@ statsd==3.2.1
 # License: Apache2
 # Upstream url: https://github.com/lyft/python-kmsauth
 # Use: kmsauth support library
-kmsauth==0.4.0
+kmsauth==0.5.0
