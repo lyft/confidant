@@ -3,54 +3,57 @@
 #
 asn1crypto==0.24.0        # via cryptography
 authomatic==0.1.0.post1
-boto3==1.9.219
-botocore==1.12.219
+boto3==1.9.227
+botocore==1.12.227
+certifi==2019.6.16        # via requests
 cffi==1.12.3
+chardet==3.0.4            # via requests
+click==7.0                # via flask
 coverage==4.5.4
 cryptography==2.7
-defusedxml==0.5.0         # via python3-saml
-docutils==0.13.1          # via botocore
+defusedxml==0.6.0         # via python3-saml
+docutils==0.15.2          # via botocore
 entrypoints==0.3          # via flake8
 flake8==3.7.8
 flask-script==2.0.5
 flask-session==0.2.1
 flask-sslify==0.1.5
-flask==0.10.1
+flask==1.1.1
 gevent==1.2.1
 greenlet==0.4.12
 guard==1.0.1
-gunicorn==19.7.1
-isodate==0.5.4            # via python3-saml
-itsdangerous==0.24        # via flask
-jinja2==2.9.6             # via flask
-jmespath==0.9.2           # via boto3, botocore
+gunicorn==19.9.0
+idna==2.8                 # via requests
+isodate==0.6.0            # via python3-saml
+itsdangerous==1.1.0       # via flask
+jinja2==2.10.1            # via flask
+jmespath==0.9.4           # via boto3, botocore
 kmsauth==0.5.0
-lru-dict==1.1.6
-lxml==4.2.1               # via xmlsec
-markupsafe==1.0           # via jinja2
+lxml==4.4.1               # via xmlsec
+markupsafe==1.1.1         # via jinja2
 mccabe==0.6.1             # via flake8
 mock==2.0.0
 ndg-httpsclient==0.5.1
 nose-pathmunge==0.1.2
 nose==1.3.3
-pbr==2.0.0                # via mock
-pkgconfig==1.3.1          # via xmlsec
+pbr==5.4.3                # via mock
+pkgconfig==1.5.1          # via xmlsec
 pyasn1==0.4.6
 pycodestyle==2.5.0        # via flake8
-pycparser==2.18           # via cffi
+pycparser==2.19           # via cffi
 pyflakes==2.1.1           # via flake8
 pynamodb==3.4.1
 pyopenssl==19.0.0
-python-dateutil==2.6.0    # via botocore, pynamodb
-python3-saml==1.7.0
-pyyaml==3.11
+python-dateutil==2.8.0    # via botocore, pynamodb
+python3-saml==1.8.0
+pyyaml==5.1.2
 redis==2.10.3
-requests==2.11.1
+requests==2.22.0
 s3transfer==0.2.1         # via boto3
-six==1.10.0               # via cryptography, mock, pynamodb, pyopenssl, python-dateutil
+six==1.12.0               # via cryptography, isodate, mock, pynamodb, pyopenssl, python-dateutil
 statsd==3.2.1
-urllib3==1.25.3           # via botocore
-werkzeug==0.12.1          # via flask
+urllib3==1.25.3           # via botocore, requests
+werkzeug==0.15.6          # via flask
 xmlsec==1.3.3             # via python3-saml
 
 pip==9.0.3
