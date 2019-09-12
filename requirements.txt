@@ -9,7 +9,7 @@ certifi==2019.6.16
 cffi==1.12.3
 chardet==3.0.4            # via requests
 click==7.0                # via flask
-configparser==4.0.1       # via entrypoints, flake8
+configparser==4.0.2       # via entrypoints, flake8
 coverage==4.5.4
 cryptography==2.7
 defusedxml==0.6.0         # via python3-saml
