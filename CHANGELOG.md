@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.1
+
+* Packaging fixes for docker
+
 ## 5.0.0
 
 * This is a breaking release. This release slightly changes the values needed
