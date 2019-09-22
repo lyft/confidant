@@ -123,7 +123,7 @@ SAML_DEBUG = bool_env('SAML_DEBUG', None)
 ADMIN_ROLE = str_env('ADMIN_ROLE', 'admin')
 ROLE_RW_NAME = str_env('ROLE_RW_NAME', 'role_rw')
 ROLE_RO_NAME = str_env('ROLE_RO_NAME', 'role_ro')
-SAML_MAPPING_ROLE = str_env('SAML_MAPPING_ROLE', 'Role')
+MAPPING_ROLE = str_env('MAPPING_ROLE', 'Role')
 USE_ROLES = bool_env('USE_ROLES', False)
 
 # Pretend that all requests are HTTPS for purposes of SAML validation. This is

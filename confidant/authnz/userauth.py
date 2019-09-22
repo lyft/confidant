@@ -625,7 +625,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         kwargs['email'] = attributes.get('email', nameid)
 
         # get SAML group - role mapping (case insensitive)
-        saml_mapping_role = app.config['SAML_MAPPING_ROLE'].lower()
+        mapping_role = app.config['MAPPING_ROLE'].lower()
 
         # use first_name, last_name if present
         for key, val in attributes.iteritems():
@@ -635,7 +635,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
                 kwargs['first_name'] = val
             if key.lower() in ['lastname', 'last_name']:
                 kwargs['last_name'] = val
-            if key.lower() in [saml_mapping_role]:
+            if key.lower() in [mapping_role]:
                 kwargs['role'] = val
 
         self.set_expiration()
