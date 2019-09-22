@@ -10,8 +10,7 @@
     angular.module('confidant.common.constants', [])
 
     .constant('CONFIDANT_URLS', {
-        USEREMAIL: 'v1/user/email',
-        USERROLE: 'v1/user/role',
+        USERINFO: 'v1/user/info',
         DATAKEY: 'v1/datakey',
         SERVICE: 'v1/services/:id',
         SERVICES: 'v1/services',

@@ -10,18 +10,10 @@
     ])
 
     /**
-     * Email address for currently logged-in user.
+     * User info for currently logged-in user.
      */
     .factory('common.userinfo', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
-        return $resource(CONFIDANT_URLS.USEREMAIL);
-    }])
-    /**
-     * Role for currently logged-in user.
-     */
-    .factory('common.userrole', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
-        return $resource(CONFIDANT_URLS.USERROLE);
-    }])
-
-    ;
+        return $resource(CONFIDANT_URLS.USERINFO);
+     }]);
 
 })(window.angular);
