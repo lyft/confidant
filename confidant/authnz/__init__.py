@@ -1,13 +1,14 @@
 import fnmatch
 import logging
 
-from flask import abort, request, g, make_response
+from flask import abort, request, g, make_response, jsonify
 from flask import url_for
 from functools import wraps
 
 from confidant import keymanager
 from confidant.app import app
 from confidant.utils import stats
+from confidant.models.credential import Credential
 
 from confidant.authnz.errors import (UserUnknownError, TokenVersionError,
                                      AuthenticationError, NotAuthorized)
@@ -245,50 +246,48 @@ def require_auth(f):
     return decorated
 
 
-def require_saml_role(credential):
+def require_role(role):
     '''
-    Use SAML roles with credential metadata to check if role has permissions to read/write to resources
+    Use roles with credential metadata to check if role has permissions to read/write to resources
     '''
-    permissions = {
-      'read_write': False,
-      'read_only': False
-    }
+    def decorated(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            cred_id = kwargs['id']
+            cred = Credential.get(cred_id)
 
-    if app.config['SAML_USE_ROLE']:
-        try:
-            user_role = user_mod.current_role()
-            ## Must lower() case the values as we cannot store upper case keys in
-            ## Confidant
-            role_name_rw = app.config['SAML_ROLE_RW_NAME'].lower()
-            role_name_r = app.config['SAML_ROLE_R_NAME'].lower()
-            
-            if user_role == app.config['SAML_ADMIN_ROLE'].lower():
-                permissions['read_write'] = True
-                permissions['read_only'] = True
-                return permissions
-            if role_name_rw in credential:
-                groups_rw = credential.get(role_name_rw).replace(' ', '')
-                if user_role in groups_rw.split(','):
-                    permissions['read_write'] = True
-                    permissions['read_only'] = True
-                    return permissions
-            if role_name_r in credential:
-                  groups_r = credential.get(role_name_r).replace(' ', '')
-                  if user_role in groups_r.split(','):
-                      permissions['read_only'] = True
-                      return permissions
-                  else:
-                      permissions['read_only'] = False
+            if app.config['USE_ROLES']:
+                try:
+                    user_role = user_mod.current_role()
+                    ## Must lower() case the values as we cannot store upper case keys in
+                    ## Confidant
+                    role_name_rw = app.config['ROLE_RW_NAME'].lower()
+                    role_name_r = app.config['ROLE_RO_NAME'].lower()
 
-        except (NotAuthorized, AuthenticationError) as e:
-            logging.error(e)
-    
-    else:
-        # SAML roles not enabled, default to allow all
-        permissions['read_write'] = True
-        permissions['read_only'] = True
+                    if user_role is not None:
+                      if user_role == app.config['ADMIN_ROLE'].lower():
+                          return make_response(f(*args, **kwargs))
+                      if role_name_rw in cred.metadata:
+                          groups_rw = cred.metadata.get(role_name_rw).replace(' ', '')
+                          if user_role in groups_rw.split(','):
+                              return make_response(f(*args, **kwargs))
+                      if role_name_r in cred.metadata:
+                          groups_r = cred.metadata.get(role_name_r).replace(' ', '')
+                          if user_role in groups_r.split(',') and role is 'read_only':
+                              return make_response(f(*args, **kwargs))
+                          else:
+                              return jsonify({'error': 'Credential Metadata found Role does not have write permissions'}), 403
+                    else:
+                      # if no role failsafe fallback and deny access
+                      return jsonify({'error': 'Credential Metadata found Role does not have read permissions'}), 403
+                except (NotAuthorized, AuthenticationError) as e:
+                    logging.error(e)
+                    return abort(403)
+            else:
+                return f(*args, **kwargs)
 
-    return permissions
+        return wrapper
+    return decorated
 
 
 def require_logout_for_goodbye(f):

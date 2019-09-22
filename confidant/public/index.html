@@ -31,7 +31,8 @@
         <nav id="site-navigation">
           <div class="container-fluid">
             <p class="navbar-text pull-right" style="text-align: right">
-              Logged in as {{ user.email }} <b ngIf=role.role as value> with role {{ role.role }}</b>| <a href="loggedout">Log Out <span class="glyphicon glyphicon-log-out"></span></a>
+              Logged in as {{ user.email }} <b ngIf=user.role as value> with role {{ user.role }}</b>| <a
+                  href="loggedout">Log Out <span class="glyphicon glyphicon-log-out"></span></a>
             </p>
             <p class="site-logo visible-sm visible-md visible-lg"></p>
             <h1>Confidant</h1>
