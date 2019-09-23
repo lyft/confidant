@@ -113,11 +113,12 @@ class AbstractUserAuthenticator(object):
                 max_expiration = now + datetime.timedelta(seconds=max_lifetime)
                 session['max_expiration'] = max_expiration
 
-    def set_current_user(self, email, first_name=None, last_name=None):
+    def set_current_user(self, email, first_name=None, last_name=None, role='no_role'):
         session['user'] = {
             'email': email,
             'first_name': first_name,
             'last_name': last_name,
+            'role': role
         }
 
     def current_email(self):
@@ -128,6 +129,12 @@ class AbstractUserAuthenticator(object):
 
     def current_last_name(self):
         return self.current_user()['last_name']
+
+    def current_role(self):
+        if type(self.current_user()['role']) is list:
+            return 'no_role'
+        else:
+            return self.current_user()['role'].lower()
 
     def redirect_to_index(self):
         return redirect(flask.url_for('index'))
@@ -617,6 +624,9 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         # use email from attributes if present, else nameid
         kwargs['email'] = attributes.get('email', nameid)
 
+        # get group role mapping name (case insensitive)
+        role_mapping_name = app.config['ROLE_MAPPING_NAME'].lower()
+
         # use first_name, last_name if present
         for key, val in attributes.iteritems():
             if not getattr(key, 'lower', None):
@@ -625,6 +635,8 @@ class SamlAuthenticator(AbstractUserAuthenticator):
                 kwargs['first_name'] = val
             if key.lower() in ['lastname', 'last_name']:
                 kwargs['last_name'] = val
+            if key.lower() in [role_mapping_name]:
+                kwargs['role'] = val
 
         self.set_expiration()
         self.set_current_user(**kwargs)

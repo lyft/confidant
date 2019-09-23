@@ -1,13 +1,14 @@
 import fnmatch
 import logging
 
-from flask import abort, request, g, make_response
+from flask import abort, request, g, make_response, jsonify
 from flask import url_for
 from functools import wraps
 
 from confidant import keymanager
 from confidant.app import app
 from confidant.utils import stats
+from confidant.models.credential import Credential
 
 from confidant.authnz.errors import (UserUnknownError, TokenVersionError,
                                      AuthenticationError, NotAuthorized)
@@ -29,6 +30,14 @@ def get_logged_in_user():
         return g.username
     if user_mod.is_authenticated():
         return user_mod.current_email()
+    raise UserUnknownError()
+
+def get_logged_in_user_role():
+    '''
+    Retrieve logged-in user's role that is stored in cache
+    '''
+    if user_mod.is_authenticated():
+        return user_mod.current_role()
     raise UserUnknownError()
 
 
@@ -235,6 +244,50 @@ def require_auth(f):
         logging.error('Ran out of authentication methods')
         return abort(403)
 
+    return decorated
+
+
+def require_role(role):
+    '''
+    Use roles with credential metadata to check if role has permissions to read/write to resources
+    '''
+    def decorated(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            cred_id = kwargs['id']
+            cred = Credential.get(cred_id)
+
+            if app.config['USE_ROLES']:
+                try:
+                    user_role = user_mod.current_role()
+                    ## Must lower() case the values as we cannot store upper case keys in
+                    ## Confidant
+                    role_name_rw = app.config['ROLE_RW_NAME'].lower()
+                    role_name_r = app.config['ROLE_RO_NAME'].lower()
+
+                    if user_role is not None:
+                      if user_role == app.config['ADMIN_ROLE'].lower():
+                          return make_response(f(*args, **kwargs))
+                      if role_name_rw in cred.metadata:
+                          groups_rw = cred.metadata.get(role_name_rw).replace(' ', '')
+                          if user_role in groups_rw.split(','):
+                              return make_response(f(*args, **kwargs))
+                      if role_name_r in cred.metadata:
+                          groups_r = cred.metadata.get(role_name_r).replace(' ', '')
+                          if user_role in groups_r.split(',') and role is 'read_only':
+                              return make_response(f(*args, **kwargs))
+                          else:
+                              return jsonify({'error': 'Credential Metadata found Role does not have write permissions'}), 403
+                    else:
+                      # if no role failsafe fallback and deny access
+                      return jsonify({'error': 'Credential Metadata found Role does not have read permissions'}), 403
+                except (NotAuthorized, AuthenticationError) as e:
+                    logging.error(e)
+                    return abort(403)
+            else:
+                return f(*args, **kwargs)
+
+        return wrapper
     return decorated
 
 

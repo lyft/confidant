@@ -120,6 +120,12 @@ SAML_CONFIDANT_URL_ROOT = str_env('SAML_CONFIDANT_URL_ROOT')
 # Debug mode for python-saml library. Follows global DEBUG setting if not set.
 SAML_DEBUG = bool_env('SAML_DEBUG', None)
 
+ADMIN_ROLE = str_env('ADMIN_ROLE', 'admin')
+ROLE_RW_NAME = str_env('ROLE_RW_NAME', 'role_rw')
+ROLE_RO_NAME = str_env('ROLE_RO_NAME', 'role_ro')
+ROLE_MAPPING_NAME = str_env('ROLE_MAPPING_NAME', 'Role')
+USE_ROLES = bool_env('USE_ROLES', False)
+
 # Pretend that all requests are HTTPS for purposes of SAML validation. This is
 # useful if your app is behind a weird load balancer and flask isn't respecting
 # X-Forwarded-Proto. For security, this flag will only be respected in debug

@@ -38,16 +38,18 @@ def login():
     return authnz.log_in()
 
 
-@app.route('/v1/user/email', methods=['GET', 'POST'])
+@app.route('/v1/user/info', methods=['GET', 'POST'])
 @authnz.require_auth
 def get_user_info():
     '''
-    Get the email address of the currently logged-in user.
+    Get the userinfo of the currently logged-in user.
     '''
     try:
-        response = jsonify({'email': authnz.get_logged_in_user()})
+        response = jsonify({'email': authnz.get_logged_in_user(),
+          'role': authnz.get_logged_in_user_role()})
     except authnz.UserUnknownError:
-        response = jsonify({'email': None})
+        response = jsonify({'email': None, 
+          'role': None})
     return response
 
 
@@ -366,6 +368,7 @@ def get_credential_list():
 
 @app.route('/v1/credentials/<id>', methods=['GET'])
 @authnz.require_auth
+@authnz.require_role(role='read_only')
 def get_credential(id):
     try:
         cred = Credential.get(id)
@@ -722,6 +725,7 @@ def get_credential_dependencies(id):
 
 @app.route('/v1/credentials/<id>', methods=['PUT'])
 @authnz.require_auth
+@authnz.require_role(role='read_write')
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def update_credential(id):
