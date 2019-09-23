@@ -25,7 +25,9 @@ class CipherManager:
             logging.warning('Not using encryption in CipherManager.encrypt'
                             ' If you are not running in a development or test'
                             ' environment, this should not be happening!')
-            return 'DANGER_NOT_ENCRYPTED_{0}'.format(base64.b64encode(raw))
+            return 'DANGER_NOT_ENCRYPTED_{0}'.format(
+                base64.b64encode(raw.encode('UTF-8')).decode('UTF-8'),
+            )
         if self.version == 2:
             f = Fernet(self.key)
             return f.encrypt(raw.encode('utf-8')).decode('UTF-8')
