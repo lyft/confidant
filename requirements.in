@@ -3,7 +3,7 @@
 # License: BSD
 # Upstream url: http://github.com/mitsuhiko/flask/
 # Use: For API.
-Flask==0.10.1
+Flask==1.1.1
 
 # Flask Scripting support for Flask
 # License: BSD
@@ -16,34 +16,34 @@ Flask-Script==2.0.5
 # License: Apache2
 # Upstream url: https://github.com/boto/botocore
 # Use: For boto3
-botocore==1.4.58
+botocore>=1.4.58
 
 # Boto3 is the Amazon Web Services (AWS) Software Development Kit (SDK)
 # for Python.
 # License: Apache2
 # Upstream url: https://github.com/boto/boto3
 # Use: For KMS
-boto3==1.4.0
+boto3>1.5.0
 
 # A Pythonic interface for Amazon's DynamoDB that supports Python 2 and 3.
 # License: MIT
 # Upstream url: http://jlafon.io/pynamodb.html
 # Use: For DynamoDB storage
-pynamodb==3.2.1
+pynamodb>=3.2.1,<4
 
 # cryptography is a package which provides cryptographic recipes and
 # primitives to Python developers.
 # License: BSD
 # Upstream url: https://github.com/pyca/cryptography
 # Use: For encryption
-cryptography==2.3.0
+cryptography>2.3.0
 
 # C Foreign Function Interface for Python.
 # License: MIT
 # Upstream url: https://bitbucket.org/cffi/cffi
 # Use: Required by cryptography package to be installed. This should be removed
 # once crytography updates their depenencies to require cffi>=1.10.0.
-cffi==1.10.0
+cffi>1.10.0
 
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
@@ -75,31 +75,31 @@ Authomatic==0.1.0.post1
 # License: MIT
 # Upstream url: https://github.com/onelogin/python3-saml
 # Use: For user authentication via SAML
-python3-saml==1.4.0
+python3-saml>1.4.0
 
 # Python HTTP for Humans.
 # License: Apache2
 # Upstream url: http://python-requests.org
 # Use: REST calls to external services
-requests==2.11.1
+requests>=2.22.0,<3.0.0
 
 # Provides enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
 # License: BSD
 # Upstream url: https://github.com/cedadev/ndg_httpsclient/
 # Use: Securing requests for python < 2.7.9.
-ndg-httpsclient==0.4.2
+ndg-httpsclient>0.4.2
 
 # ASN.1 types and codecs
 # License: BSD
 # Upstream url: http://sourceforge.net/projects/pyasn1/
 # Use: Securing requests for python < 2.7.9.
-pyasn1==0.4.4
+pyasn1>0.4.4
 
 # Python wrapper module around the OpenSSL library
 # License: APL2
 # Upstream url: https://github.com/pyca/pyopenssl
 # Use: Securing requests for python < 2.7.9.
-pyOpenSSL==16.2.0
+pyOpenSSL>16.2.0
 
 # WSGI middleware to add CSP headers
 # License: Apache2
@@ -109,17 +109,12 @@ guard==1.0.1
 # The modular source code checker: pep8, pyflakes and co
 # License: MIT
 # Upstream url: http://bitbucket.org/tarek/flake8
-flake8==2.3.0
+flake8>3
 
 # Measures code coverage and emits coverage reports
 # Licence: BSD
 # Upstream url: https://pypi.python.org/pypi/coverage
-coverage==3.7.1
-
-# tool to check your Python code against some of the style conventions
-# License: Expat License
-# Upstream url: https://github.com/jcrocholl/pep8.git
-pep8==1.5.7
+coverage>4
 
 # nose makes testing easier
 # License: GNU Library or Lesser General Public License (LGPL)
@@ -139,12 +134,12 @@ mock==2.0.0
 # License: MIT
 # Upstream url: http://pyyaml.org/wiki/PyYAML
 # Use: For parsing users.yaml
-PyYAML==3.11
+PyYAML==5.1.2
 
 # License: MIT
 # Upstream url: http://gunicorn.org/
 # Use: For wsgi running
-gunicorn>=19.1.1,<20.0.0
+gunicorn>=19.9.0,<20.0.0
 
 # License: MIT
 # Upstream url: http://www.gevent.org/
@@ -161,7 +156,7 @@ greenlet==0.4.12
 # Use: For metrics collection
 statsd==3.2.1
 
-# License: MIT
-# Upstream url: https://github.com/amitdev/lru-dict
-# Use: in-memory LRU for caching auth tokens and at-rest keys
-lru-dict==1.1.6
+# License: Apache2
+# Upstream url: https://github.com/lyft/python-kmsauth
+# Use: kmsauth support library
+kmsauth==0.5.0
