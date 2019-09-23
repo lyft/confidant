@@ -113,12 +113,12 @@ class AbstractUserAuthenticator(object):
                 max_expiration = now + datetime.timedelta(seconds=max_lifetime)
                 session['max_expiration'] = max_expiration
 
-    def set_current_user(self, email, first_name=None, last_name=None, role='no_role'):
+    def set_current_user(self, **kwargs):
         session['user'] = {
-            'email': email,
-            'first_name': first_name,
-            'last_name': last_name,
-            'role': role
+            'email': kwargs['email'],
+            'first_name': kwargs['first_name'],
+            'last_name': kwargs['last_name'],
+            'role': kwargs['role']
         }
 
     def current_email(self):

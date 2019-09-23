@@ -44,12 +44,14 @@ def get_user_info():
     '''
     Get the userinfo of the currently logged-in user.
     '''
+
+    email = authnz.get_logged_in_user()
+    role = authnz.get_logged_in_user_role()
+
     try:
-        response = jsonify({'email': authnz.get_logged_in_user(),
-          'role': authnz.get_logged_in_user_role()})
+        response = jsonify({'email': email, 'role': role})
     except authnz.UserUnknownError:
-        response = jsonify({'email': None, 
-          'role': None})
+        response = jsonify({'email': None, 'role': None})
     return response
 
 
