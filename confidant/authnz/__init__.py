@@ -254,10 +254,10 @@ def require_role(role):
     def decorated(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            cred_id = kwargs['id']
-            cred = Credential.get(cred_id)
 
             if app.config['USE_ROLES']:
+                cred_id = kwargs['id']
+                cred = Credential.get(cred_id)
                 try:
                     user_role = user_mod.current_role()
                     role_name_rw = app.config['ROLE_RW_NAME'].lower()
@@ -265,16 +265,22 @@ def require_role(role):
                     groups_rw = cred.metadata.get(role_name_rw)
                     groups_r = cred.metadata.get(role_name_r)
 
+                    if groups_r is not None:
+                        groups_r = groups_r.lower()
+                        groups_r = groups_r.replace(' ', '').split(',')
+
+                    if groups_rw is not None:
+                        groups_rw = groups_rw.lower()
+                        groups_rw = groups_rw.replace(' ', '').split(',')
+
                     if user_role is not None:
                         if user_role == app.config['ADMIN_ROLE'].lower():
                             return make_response(f(*args, **kwargs))
-                        if role_name_rw in cred.metadata:
-                            groups_rw = groups_rw.replace(' ', '').split(',')
-                            if user_role in groups_rw:
+                        elif role_name_rw in cred.metadata \
+                                or role_name_r in cred.metadata:
+                            if groups_rw and user_role in groups_rw:
                                 return make_response(f(*args, **kwargs))
-                        if role_name_r in cred.metadata:
-                            groups_r = groups_r.replace(' ', '').split(',')
-                            if user_role in groups_r and role == 'read_only':
+                            elif groups_r and user_role in groups_r:
                                 return make_response(f(*args, **kwargs))
                             else:
                                 return jsonify({'error': 'Access denied'}), 403
