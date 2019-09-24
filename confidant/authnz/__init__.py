@@ -248,33 +248,33 @@ def require_auth(f):
 
 
 def require_role(role):
-    '''
+    """
     Get the users role in credential metadata
-    '''
+    """
     def decorated(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
             cred_id = kwargs['id']
             cred = Credential.get(cred_id)
-            groups_rw = None
-            groups_r = None
 
             if app.config['USE_ROLES']:
                 try:
                     user_role = user_mod.current_role()
                     role_name_rw = app.config['ROLE_RW_NAME'].lower()
                     role_name_r = app.config['ROLE_RO_NAME'].lower()
+                    groups_rw = cred.metadata.get(role_name_rw)
+                    groups_r = cred.metadata.get(role_name_r)
 
                     if user_role is not None:
                         if user_role == app.config['ADMIN_ROLE'].lower():
                             return make_response(f(*args, **kwargs))
                         if role_name_rw in cred.metadata:
-                            groups_rw = cred.metadata.get(role_name_rw).replace(' ', '')
-                            if user_role in groups_rw.split(','):
+                            groups_rw = groups_rw.replace(' ', '').split(',')
+                            if user_role in groups_rw:
                                 return make_response(f(*args, **kwargs))
                         if role_name_r in cred.metadata:
-                            groups_r = cred.metadata.get(role_name_r).replace(' ', '')
-                            if user_role in groups_r.split(',') and role == 'read_only':
+                            groups_r = groups_r.replace(' ', '').split(',')
+                            if user_role in groups_r and role == 'read_only':
                                 return make_response(f(*args, **kwargs))
                             else:
                                 return jsonify({'error': 'Access denied'}), 403
