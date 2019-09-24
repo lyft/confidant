@@ -278,8 +278,10 @@ def require_role(role):
                                 return make_response(f(*args, **kwargs))
                             else:
                                 return jsonify({'error': 'Access denied'}), 403
+                        else:
+                            return jsonify({'error': 'Role not found'}), 403
                     else:
-                        return jsonify({'error': 'Access denied'}), 403
+                        return jsonify({'error': 'Role not set'}), 403
                 except (NotAuthorized, AuthenticationError) as e:
                     logging.error(e)
                     return abort(403)
