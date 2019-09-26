@@ -280,7 +280,8 @@ def require_role(role):
                                 or role_name_r in cred.metadata:
                             if groups_rw and user_role in groups_rw:
                                 return make_response(f(*args, **kwargs))
-                            elif groups_r and user_role in groups_r:
+                            elif groups_r and user_role in groups_r \
+                                    and role == 'read_only':
                                 return make_response(f(*args, **kwargs))
                             else:
                                 return jsonify({'error': 'Access denied'}), 403
