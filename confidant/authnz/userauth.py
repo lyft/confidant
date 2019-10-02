@@ -124,7 +124,7 @@ class AbstractUserAuthenticator(object):
 
         if app.config.get('USE_GROUPS'):
             all_groups = grp.getgrall()
-            session['user']['groups'] = [g.gr_name for g in all_groups if username in g.gr_mem]
+            session['user']['groups'] = [g.gr_name for g in all_groups if email in g.gr_mem]
 
 
     def current_email(self):
