@@ -74,7 +74,7 @@ def load_x509_certificate_pem(path):
     :rtype: cryptography.x509.Certificate
     """
 
-    with open(path, 'r') as f:
+    with open(path, 'rb') as f:
         cert = x509.load_pem_x509_certificate(f.read(), default_backend())
         return cert
 
@@ -107,7 +107,7 @@ def _x509_certificate_bare_base64(certificate):
     :rtype: string
     """
     return base64.b64encode(certificate.public_bytes(
-        serialization.Encoding.DER))
+        serialization.Encoding.DER)).decode()
 
 
 def load_private_key_pem(path, password=None):

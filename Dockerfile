@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ubuntu:bionic
 LABEL maintainer="rlane@lyft.com"
 
 RUN apt-get update \
@@ -11,24 +11,22 @@ RUN apt-get update \
         make ruby-dev nodejs git-core \
         # For backend
         gcc pkg-config \
-        python-dev python-virtualenv \
+        python3-dev virtualenv \
         libffi-dev libxml2-dev libxmlsec1-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY ./piptools_requirements.txt /srv/confidant/piptools_requirements.txt
-COPY ./requirements.txt /srv/confidant/requirements.txt
-COPY ./package.json /srv/confidant/package.json
-COPY ./bower.json /srv/confidant/bower.json
+COPY package.json bower.json piptools_requirements*.txt requirements*.txt /srv/confidant/
 
 WORKDIR /srv/confidant
 
 ENV PATH=/venv/bin:$PATH
-RUN virtualenv /venv && \
-    pip install --upgrade pip && \
-    pip install -r piptools_requirements.txt && \
-    pip install -r requirements.txt
+RUN virtualenv /venv -ppython3 && \
+    pip install --no-cache -r piptools_requirements3.txt && \
+    pip install --no-cache -r requirements3.txt
 
-RUN gem install compass && \
+RUN gem install ffi -v 1.10.0 && \
+    gem install rb-inotify -v 0.9.10 && \
+    gem install compass -v 1.0.3 && \
     npm install grunt-cli && \
     npm install
 

@@ -44,7 +44,7 @@ class Credential(Model):
     data_key = BinaryAttribute()
     # TODO: add cipher_type
     cipher_version = NumberAttribute(null=True)
-    metadata = JSONAttribute(default={}, null=True)
+    metadata = JSONAttribute(default=dict, null=True)
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
