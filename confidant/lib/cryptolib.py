@@ -123,7 +123,7 @@ def load_private_key_pem(path, password=None):
     :returns: An RSA private key object.
     :rtype: cryptography.hazmat.primitives.asymmetric.rsa.RSAPrivateKey
     """
-    with open(path, 'r') as f:
+    with open(path, 'rb') as f:
         return serialization.load_pem_private_key(f.read(), password=password,
                                                   backend=default_backend())
 
