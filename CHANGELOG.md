@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.2.0
+
+* Python3 fix in function ``load_private_key_pem`` in ``confidant.lib.cryptolib``
+
+## 5.1.0
+
+* Python3 fix in class ``CipherManager`` in ``confidant.ciphermanager``
+
 ## 5.0.1
 
 * Packaging fixes for docker
