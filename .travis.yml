@@ -9,7 +9,7 @@ before_install:
   - docker build -f Dockerfile -t $REPO:$TRAVIS_COMMIT .
   - docker run -v $PWD/confidant/dist:/tmp/dist $REPO:$TRAVIS_COMMIT /bin/sh -c "cp -r /srv/confidant/confidant/dist/. /tmp/dist/."
 install:
-  - gem install travis --no-document --no-ri
+  - gem install travis --no-document
 script:
   - travis lint .travis.yml --skip-completion-check
   - docker run $REPO:$TRAVIS_COMMIT /bin/sh -c "make test"
