@@ -1,6 +1,6 @@
 import sys
 import logging
-from flask.ext.script import Command
+from flask_script import Command
 from botocore.exceptions import ClientError
 
 import confidant.services

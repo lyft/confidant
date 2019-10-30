@@ -10,7 +10,7 @@ def dict_deep_update(a, b):
     :param b: Right hand side with values to pull in
     :type b: dict
     """
-    for key, val in b.iteritems():
+    for key, val in b.items():
         if isinstance(a.get(key), dict) and isinstance(val, dict):
             dict_deep_update(a[key], val)
         else:

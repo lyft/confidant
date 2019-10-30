@@ -1,10 +1,10 @@
 import abc
 import logging
-import urlparse
 import datetime
 import random
 
 import yaml
+from six.moves.urllib.parse import urlparse
 
 import flask
 from flask import request, session
@@ -121,7 +121,9 @@ class AbstractUserAuthenticator(object):
         }
 
     def current_email(self):
-        return self.current_user()['email'].lower()
+        ret = self.current_user()['email'].lower()
+        # when migrating from 2 -> 3, the session email object may be bytes
+        return ret.decode('UTF-8') if isinstance(ret, bytes) else ret
 
     def current_first_name(self):
         return self.current_user()['first_name']
@@ -231,7 +233,7 @@ class AbstractUserAuthenticator(object):
             return True
 
 
-class NullUserAuthenticator(object):
+class NullUserAuthenticator(AbstractUserAuthenticator):
     """
     Fake user authenticator class that performs no authentication.
     """
@@ -250,15 +252,6 @@ class NullUserAuthenticator(object):
             'first_name': 'unauthenticated',
             'last_name': 'user',
         }
-
-    def current_email(self):
-        return self.current_user()['email'].lower()
-
-    def current_first_name(self):
-        return self.current_user()['first_name']
-
-    def current_last_name(self):
-        return self.current_user()['last_name']
 
     def is_authenticated(self):
         """Null users are always authenticated"""
@@ -323,15 +316,6 @@ class HeaderAuthenticator(AbstractUserAuthenticator):
 
         return info
 
-    def current_email(self):
-        return self.current_user()['email'].lower()
-
-    def current_first_name(self):
-        return self.current_user()['first_name']
-
-    def current_last_name(self):
-        return self.current_user()['last_name']
-
     def is_authenticated(self):
         """Any user that is able to make requests is authenticated"""
         self.assert_headers()
@@ -395,7 +379,7 @@ class GoogleOauthAuthenticator(AbstractUserAuthenticator):
         if result:
             if result.error:
                 msg = 'Google auth failed with error: {0}'
-                logging.error(msg.format(result.error.message))
+                logging.error(msg.format(result.error))
                 return abort(403)
 
             # successful login
@@ -602,7 +586,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         logging.info('SAML attributes: {!r}'.format(attributes))
 
         # normalize attributes by flattening single-item arrays
-        for key, val in attributes.iteritems():
+        for key, val in attributes.items():
             if isinstance(val, list) and len(val) == 1:
                 attributes[key] = val[0]
 
@@ -618,7 +602,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         kwargs['email'] = attributes.get('email', nameid)
 
         # use first_name, last_name if present
-        for key, val in attributes.iteritems():
+        for key, val in attributes.items():
             if not getattr(key, 'lower', None):
                 logging.error('Bad list attr {!r}'.format({key: val}))
             if key.lower() in ['firstname', 'first_name']:
@@ -735,7 +719,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         if flask_request is None:
             flask_request = flask.request
 
-        url_data = urlparse.urlparse(flask_request.url)
+        url_data = urlparse(flask_request.url)
 
         if flask_request.scheme == 'https':
             https = 'on'

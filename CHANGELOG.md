@@ -1,5 +1,39 @@
 # Changelog
 
+## 5.2.0
+
+* Python3 fix in function ``load_private_key_pem`` in ``confidant.lib.cryptolib``
+
+## 5.1.0
+
+* Python3 fix in class ``CipherManager`` in ``confidant.ciphermanager``
+
+## 5.0.1
+
+* Packaging fixes for docker
+
+## 5.0.0
+
+* This is a breaking release. This release slightly changes the values needed
+  for the ``AUTH_KEY``, ``USER_AUTH_KEY``, and ``KMS_MASTER_KEY`` settings.
+  The previous way these settings were set were to use the alias name, without
+  an ``alias/`` prefix. In this release we switched to using the kmsauth
+  library for kms authentication support, which supports aliases and ARNs for
+  keys, which means that for these three settings, it's necessary to add an
+  ``alias/`` prefix to the value. So, for example, if your setting was
+  ``my-auth-key``, the new value would be ``alias/my-auth-key``. Though this
+  change of behavior was limited to kmsauth, for consistency we also changed
+  ``KMS_MASTER_KEY`` to use the same behavior. For all three settings, it's
+  also now possible to use ARNs as values, instead of just key aliases.
+* confidant now supports python2 and python3.
+* Requirements have been updated to resolve some reported security
+  vulnerabilities in a few of the frozen requirements. A library affecting
+  user sessions was upgraded which will cause users to be logged out after
+  upgrade, which means if you're doing a rolling upgrade, that during the
+  upgrade, you may have users that seemingly randomly get logged out. After
+  a finished upgrade, users should only be logged out once, if they're
+  currently logged in.
+
 ## 4.4.0
 
 * Use ``dict`` and ``set`` in pynamo models rather than ``{}`` and ``set()``,

@@ -6,8 +6,7 @@ import json
 import yaml
 
 from cryptography.fernet import Fernet
-from flask.ext.script import Command
-from flask.ext.script import Option
+from flask_script import Command, Option
 
 from confidant import settings
 from confidant.app import app
@@ -32,7 +31,7 @@ class GenerateSecretsBootstrap(Command):
                 secrets = f.read()
         data_key = cryptolib.create_datakey(
             {'type': 'bootstrap'},
-            'alias/{0}'.format(app.config['KMS_MASTER_KEY'])
+            app.config['KMS_MASTER_KEY'],
         )
         f = Fernet(data_key['plaintext'])
         data = {
@@ -41,7 +40,7 @@ class GenerateSecretsBootstrap(Command):
         }
         data = json.dumps(data)
         if _out == '-':
-            print data
+            print(data)
         else:
             with open(os.path.join(_out), 'w') as f:
                 f.write(data)
@@ -57,7 +56,7 @@ class DecryptSecretsBootstrap(Command):
         data = settings.encrypted_settings.get_all_secrets()
         data = yaml.safe_dump(data, default_flow_style=False, indent=2)
         if _out == '-':
-            print data
+            print(data)
         else:
             with open(os.path.join(_out), 'w') as f:
                 f.write(data)
