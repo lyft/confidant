@@ -1,20 +1,29 @@
 dist: bionic
 language: python
-env:
-  - REPO=lyft/confidant
-sudo: required
-services:
-  - docker
-before_install:
-  - docker build -f Dockerfile -t $REPO:$TRAVIS_COMMIT .
-  - docker run -v $PWD/confidant/dist:/tmp/dist $REPO:$TRAVIS_COMMIT /bin/sh -c "cp -r /srv/confidant/confidant/dist/. /tmp/dist/."
-  - docker pull licensefinder/license_finder
+matrix:
+  include:
+    - env:
+        - 'REPO=lyft/confidant'
+        - 'TEST_SUITE=docker'
+      sudo: required
+      services:
+        - docker
+      before_install:
+        - docker build -f Dockerfile -t $REPO:$TRAVIS_COMMIT .
+        - docker run -v $PWD/confidant/dist:/tmp/dist $REPO:$TRAVIS_COMMIT /bin/sh -c "cp -r /srv/confidant/confidant/dist/. /tmp/dist/."
+    - env:
+        - 'REPO=lyft/confidant'
+        - 'TEST_SUITE=licenses_docker'
+      sudo: required
+      services:
+        - docker
+      before_install:
+        - docker pull licensefinder/license_finder
 install:
   - gem install travis --no-document
 script:
   - travis lint .travis.yml --skip-completion-check
-  - docker run $REPO:$TRAVIS_COMMIT /bin/sh -c "make test"
-  - docker run -v $PWD:/scan -it licensefinder/license_finder /bin/bash -lc "cd /scan && make test_licenses"
+  - docker run $REPO:$TRAVIS_COMMIT /bin/sh -c "make test${TEST_SUITE}"
 after_success:
   - ./docker_push.sh
 deploy:
