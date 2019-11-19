@@ -19,11 +19,8 @@ matrix:
         - docker
       before_install:
         - docker pull licensefinder/license_finder
-install:
-  - gem install travis --no-document
 script:
-  - travis lint .travis.yml --skip-completion-check
-  - docker run $REPO:$TRAVIS_COMMIT /bin/sh -c "make test${TEST_SUITE}"
+  - make test_${TEST_SUITE}
 after_success:
   - ./docker_push.sh
 deploy:
