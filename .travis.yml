@@ -1,5 +1,5 @@
 dist: bionic
-language: python
+language: generic
 matrix:
   include:
     - env:
@@ -12,7 +12,6 @@ matrix:
         - docker build -f Dockerfile -t $REPO:$TRAVIS_COMMIT .
         - docker run -v $PWD/confidant/dist:/tmp/dist $REPO:$TRAVIS_COMMIT /bin/sh -c "cp -r /srv/confidant/confidant/dist/. /tmp/dist/."
     - env:
-        - 'REPO=lyft/confidant'
         - 'TEST_SUITE=licenses_docker'
       sudo: required
       services:
