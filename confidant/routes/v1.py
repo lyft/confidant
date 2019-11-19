@@ -394,9 +394,11 @@ def get_credential(id):
     _credential_pairs = json.loads(_credential_pairs)
 
     if authnz.user_is_user_type('user'):
-        logging.info(
-            "{0} fetching credential {1}".format(authnz.get_logged_in_user(), id)
+        log_line = "{0} fetching credential {1}".format(
+            authnz.get_logged_in_user(),
+            id
         )
+        logging.info(log_line)
     return jsonify({
         'id': id,
         'name': cred.name,
