@@ -393,7 +393,8 @@ def get_credential(id):
     _credential_pairs = cipher.decrypt(cred.credential_pairs)
     _credential_pairs = json.loads(_credential_pairs)
 
-    logging.info(f"{authnz.get_logged_in_user()} fetching credential {id}")
+    if authnz.user_is_user_type('user'):
+        logging.info(f"{authnz.get_logged_in_user()} fetching credential {id}")
     return jsonify({
         'id': id,
         'name': cred.name,
@@ -873,7 +874,6 @@ def get_blind_credential(id):
             cred.data_type != 'archive-blind-credential'):
         return jsonify({}), 404
 
-    logging.info(f"{authnz.get_logged_in_user()} fetching credential {id}")
     return jsonify({
         'id': cred.id,
         'name': cred.name,
