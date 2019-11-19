@@ -1,0 +1,235 @@
+---
+- - :whitelist
+  - MIT
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 01:55:51.429439100 Z
+- - :whitelist
+  - ISC
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:00:10.960824500 Z
+- - :whitelist
+  - BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:00:48.608694400 Z
+- - :whitelist
+  - Python Software Foundation License
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:01:14.298710000 Z
+- - :whitelist
+  - Simplified BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:01:28.972522900 Z
+- - :whitelist
+  - Apache 2.0
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:01:42.801093000 Z
+- - :whitelist
+  - CC0-1.0
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:01:57.707287400 Z
+- - :whitelist
+  - MIT/X11
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:02:08.599410600 Z
+- - :whitelist
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:02:20.566269000 Z
+- - :whitelist
+  - Expat license
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:04:52.898901000 Z
+- - :whitelist
+  - ASL
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:06:33.891629700 Z
+- - :whitelist
+  - Mozilla Public License 2.0
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:06:56.556790400 Z
+- - :whitelist
+  - LGPL
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:15:55.862389300 Z
+- - :whitelist
+  - Apache License v2.0
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:16:05.679307500 Z
+- - :whitelist
+  - Public Domain
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:16:14.403847400 Z
+- - :whitelist
+  - GNU LGPL
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2019-11-19 02:16:20.654080000 Z
+- - :approve
+  - active-x-obfuscator
+  - :who: 
+    :why: Uses MIT
+    :versions: []
+    :when: 2019-11-19 02:17:44.734536300 Z
+- - :approve
+  - amdefine
+  - :who: 
+    :why: Dual licensed, with two approved licenses
+    :versions: []
+    :when: 2019-11-19 02:23:04.653198000 Z
+- - :approve
+  - atob
+  - :who: 
+    :why: Dual licensed, with two approved licenses
+    :versions: []
+    :when: 2019-11-19 02:23:13.345680600 Z
+- - :approve
+  - aws-sign2
+  - :who: 
+    :why: MIT licensed, see js file header
+    :versions: []
+    :when: 2019-11-19 02:23:21.677034600 Z
+- - :approve
+  - base64id
+  - :who: 
+    :why: MIT licensed
+    :versions: []
+    :when: 2019-11-19 02:23:30.465542700 Z
+- - :approve
+  - buffers
+  - :who: 
+    :why: MIT licensed
+    :versions: []
+    :when: 2019-11-19 02:23:39.743678500 Z
+- - :approve
+  - cryptography
+  - :who: 
+    :why: Dual licensed, with two approved licenses
+    :versions: []
+    :when: 2019-11-19 02:23:51.463313600 Z
+- - :approve
+  - dateformat
+  - :who: 
+    :why: MIT license
+    :versions: []
+    :when: 2019-11-19 02:24:34.761542300 Z
+- - :approve
+  - docutils
+  - :who: 
+    :why: used for doc generation, not as library, using PD part
+    :versions: []
+    :when: 2019-11-19 02:28:22.199427300 Z
+- - :approve
+  - domhandler
+  - :who: 
+    :why: BSD2 licensed
+    :versions: []
+    :when: 2019-11-19 02:28:53.758951800 Z
+- - :approve
+  - domutils
+  - :who: 
+    :why: BSD2 licensed
+    :versions: []
+    :when: 2019-11-19 02:29:08.209368400 Z
+- - :approve
+  - entities
+  - :who: 
+    :why: Modified BSD, checked and valid
+    :versions: []
+    :when: 2019-11-19 02:29:32.168686800 Z
+- - :approve
+  - forever-agent
+  - :who: 
+    :why: Apache2 licensed
+    :versions: []
+    :when: 2019-11-19 02:30:07.156268000 Z
+- - :approve
+  - idna
+  - :who: 
+    :why: Modified BSD, checked and valid
+    :versions: []
+    :when: 2019-11-19 02:30:21.115549400 Z
+- - :approve
+  - ndg-httpsclient
+  - :who: 
+    :why: BSD licensed
+    :versions: []
+    :when: 2019-11-19 02:30:38.728308800 Z
+- - :approve
+  - oauth-sign
+  - :who: 
+    :why: Apache2 licensed
+    :versions: []
+    :when: 2019-11-19 02:31:01.569389300 Z
+- - :approve
+  - python-dateutil
+  - :who: 
+    :why: BSD and Apache2 licensed
+    :versions: []
+    :when: 2019-11-19 02:31:30.792815000 Z
+- - :approve
+  - rc
+  - :who: 
+    :why: Multi-licensed under approved licenses
+    :versions: []
+    :when: 2019-11-19 02:32:08.459004400 Z
+- - :approve
+  - shelljs
+  - :who: 
+    :why: BSD licensed
+    :versions: []
+    :when: 2019-11-19 02:32:27.739563800 Z
+- - :approve
+  - spdx-exceptions
+  - :who: 
+    :why: Only data, so CC-BY-3.0 is OK
+    :versions: []
+    :when: 2019-11-19 02:32:47.869039500 Z
+- - :approve
+  - tinycolor
+  - :who: 
+    :why: MIT licensed
+    :versions: []
+    :when: 2019-11-19 02:33:15.853370100 Z
+- - :approve
+  - tweetnacl
+  - :who: 
+    :why: Effectively PD license, sigh
+    :versions: []
+    :when: 2019-11-19 02:33:52.145372300 Z
+- - :approve
+  - uglify-js
+  - :who: 
+    :why: BSD license in README
+    :versions: []
+    :when: 2019-11-19 02:34:38.062177700 Z

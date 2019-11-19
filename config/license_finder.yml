@@ -1,0 +1,4 @@
+---
+decisions_file: './config/license_finder_decisions.yml'
+python_version: '3'
+pip_requirements_path: './requirements3.txt'

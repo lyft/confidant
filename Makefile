@@ -9,3 +9,7 @@ test_lint:
 
 test_unit:
 	nosetests --with-path=confidant tests/unit
+
+test_licenses:
+	apt-get install -y build-essential libffi-dev libxml2-dev libxmlsec1-dev python-dev
+	license_finder -p
