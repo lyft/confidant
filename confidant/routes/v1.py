@@ -873,7 +873,6 @@ def get_blind_credential(id):
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
         return jsonify({}), 404
-
     return jsonify({
         'id': cred.id,
         'name': cred.name,
