@@ -14,7 +14,7 @@ install:
 script:
   - travis lint .travis.yml --skip-completion-check
   - docker run $REPO:$TRAVIS_COMMIT /bin/sh -c "make test"
-  - docker run -v $PWD/confidant:/scan -it licensefinder/license_finder "make test_licenses"
+  - docker run -v $PWD:/scan -it licensefinder/license_finder /bin/bash -lc "cd /scan && make test_licenses"
 after_success:
   - ./docker_push.sh
 deploy:
