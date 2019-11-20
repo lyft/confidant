@@ -18,6 +18,8 @@ matrix:
         - docker
       before_install:
         - docker pull licensefinder/license_finder
+install:
+  - echo "no install step"
 script:
   - make test_${TEST_SUITE}
 after_success:
