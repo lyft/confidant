@@ -24,4 +24,4 @@ test_licenses:
 	license_finder -p
 
 test_licenses_docker:
-	docker run -v $PWD:/scan -it licensefinder/license_finder /bin/bash -lc "cd /scan && make test_licenses"
+	docker run -v ${PWD}:/scan -it licensefinder/license_finder /bin/bash -lc "cd /scan && make test_licenses"
