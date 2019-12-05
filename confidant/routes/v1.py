@@ -369,6 +369,7 @@ def get_credential_list():
 
 
 @app.route('/v1/credentials/<id>', methods=['GET'])
+@authnz.enforce_checks
 @authnz.require_auth
 def get_credential(id):
     try:

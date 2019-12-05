@@ -488,4 +488,4 @@ with open(CONFIG_FILE) as _config_file:
     _config = yaml.load(_config_file)
 
 # authnz checks, permissions and bindings
-AUTHORIZATION = _config['authorization']
+AUTHORIZATION = _config.get('authorization')

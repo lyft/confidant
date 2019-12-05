@@ -15,6 +15,8 @@ from confidant.authnz.errors import (
     NotAuthorized,
 )
 from confidant.authnz import userauth
+from confidant import settings
+import importlib
 
 PRIVILEGES = {
     'user': ['*'],
