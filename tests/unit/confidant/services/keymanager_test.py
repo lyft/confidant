@@ -9,7 +9,7 @@ from mock import MagicMock
 from confidant import settings
 settings.encrypted_settings.secret_string = {}
 
-from confidant import keymanager
+from confidant.services import keymanager
 from confidant.app import app
 
 
@@ -24,8 +24,8 @@ class KeyManagerTest(unittest.TestCase):
         app.config['USE_ENCRYPTION'] = self.use_encryption
         app.config['SCOPED_AUTH_KEYS'] = self.scoped_auth_keys
 
-    @patch('confidant.keymanager.KEY_METADATA', {})
-    @patch('confidant.keymanager.auth_kms_client.describe_key')
+    @patch('confidant.services.keymanager.KEY_METADATA', {})
+    @patch('confidant.services.keymanager.auth_kms_client.describe_key')
     def test_get_key_id(self, kms_mock):
         kms_mock.return_value = {'KeyMetadata': {'KeyId': 'mockid'}}
         self.assertEqual(
@@ -34,10 +34,10 @@ class KeyManagerTest(unittest.TestCase):
         )
 
     @patch(
-        'confidant.keymanager.KEY_METADATA',
+        'confidant.services.keymanager.KEY_METADATA',
         {'mockalias': {'KeyMetadata': {'KeyId': 'mockid'}}}
     )
-    @patch('confidant.keymanager.auth_kms_client.describe_key')
+    @patch('confidant.services.keymanager.auth_kms_client.describe_key')
     def test_get_key_id_cached(self, kms_mock):
         self.assertEqual(
             keymanager.get_key_id('mockalias'),
@@ -68,10 +68,10 @@ class KeyManagerTest(unittest.TestCase):
         self.assertEquals(ret, 'mocked_fernet_key')
 
     @patch(
-        'confidant.keymanager.cryptolib.create_datakey'
+        'confidant.services.keymanager.cryptolib.create_datakey'
     )
     @patch(
-        'confidant.keymanager.cryptolib.create_mock_datakey'
+        'confidant.services.keymanager.cryptolib.create_mock_datakey'
     )
     def test_create_datakey_with_encryption(self, cmd_mock, cd_mock):
         app.config['USE_ENCRYPTION'] = True
@@ -85,10 +85,10 @@ class KeyManagerTest(unittest.TestCase):
         self.assertFalse(cmd_mock.called)
 
     @patch(
-        'confidant.keymanager.cryptolib.decrypt_datakey'
+        'confidant.services.keymanager.cryptolib.decrypt_datakey'
     )
     @patch(
-        'confidant.keymanager.cryptolib.decrypt_mock_datakey'
+        'confidant.services.keymanager.cryptolib.decrypt_mock_datakey'
     )
     def test_decrypt_datakey_with_encryption(self, dmd_mock, dd_mock):
         app.config['USE_ENCRYPTION'] = True

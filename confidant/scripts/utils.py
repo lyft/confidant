@@ -4,8 +4,8 @@ from flask_script import Command
 from botocore.exceptions import ClientError
 
 import confidant.clients
-from confidant import keymanager
 from confidant.app import app
+from confidant.services import keymanager
 from confidant.models.service import Service
 from confidant.utils.dynamodb import create_dynamodb_tables
 
