@@ -2,6 +2,7 @@ import json
 import logging
 import yaml
 from os import getenv
+from os import path
 
 
 from confidant.encrypted_settings import EncryptedSettings
@@ -484,8 +485,9 @@ def get(name, default=None):
 
 
 CONFIG_FILE = str_env('CONFIG_FILE', '/etc/confidant/confidant.conf')
-with open(CONFIG_FILE) as _config_file:
-    _config = yaml.load(_config_file)
+if path.exists(CONFIG_FILE):
+    with open(CONFIG_FILE) as _config_file:
+        _config = yaml.load(_config_file)
 
 # authnz checks, permissions and bindings
 AUTHORIZATION = _config.get('authorization')
