@@ -3,14 +3,14 @@ import logging
 from flask_script import Command
 from botocore.exceptions import ClientError
 
-import confidant.services
+import confidant.clients
 from confidant import keymanager
 from confidant.app import app
 from confidant.models.service import Service
 from confidant.utils.dynamodb import create_dynamodb_tables
 
-iam_resource = confidant.services.get_boto_resource('iam')
-kms_client = confidant.services.get_boto_client('kms')
+iam_resource = confidant.clients.get_boto_resource('iam')
+kms_client = confidant.clients.get_boto_client('kms')
 
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.INFO)

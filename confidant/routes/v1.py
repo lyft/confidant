@@ -10,7 +10,7 @@ from flask import request
 from flask import jsonify
 from botocore.exceptions import ClientError
 
-import confidant.services
+import confidant.clients
 from confidant import keymanager
 from confidant import authnz
 from confidant import graphite
@@ -24,8 +24,8 @@ from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
 
-iam_resource = confidant.services.get_boto_resource('iam')
-kms_client = confidant.services.get_boto_client('kms')
+iam_resource = confidant.clients.get_boto_resource('iam')
+kms_client = confidant.clients.get_boto_client('kms')
 
 VALUE_LENGTH = 50
 

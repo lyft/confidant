@@ -4,7 +4,7 @@ import botocore
 
 from botocore.exceptions import ClientError
 
-import confidant.services
+import confidant.clients
 from confidant.app import app
 from confidant.utils import stats
 from confidant.lib import cryptolib
@@ -14,15 +14,15 @@ config = botocore.config.Config(
     read_timeout=app.config['KMS_READ_TIMEOUT'],
     max_pool_connections=app.config['KMS_MAX_POOL_CONNECTIONS']
 )
-auth_kms_client = confidant.services.get_boto_client(
+auth_kms_client = confidant.clients.get_boto_client(
     'kms',
     config={'name': 'keymanager', 'config': config}
 )
-at_rest_kms_client = confidant.services.get_boto_client(
+at_rest_kms_client = confidant.clients.get_boto_client(
     'kms',
     config={'name': 'keymanager', 'config': config}
 )
-iam_resource = confidant.services.get_boto_resource('iam')
+iam_resource = confidant.clients.get_boto_resource('iam')
 
 DATAKEYS = {}
 KEY_METADATA = {}
