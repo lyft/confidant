@@ -484,6 +484,7 @@ def get(name, default=None):
 
 
 CONFIG_FILE = str_env('CONFIG_FILE', '/etc/confidant/confidant.conf')
+_config = {}
 if path.exists(CONFIG_FILE):
     with open(CONFIG_FILE) as _config_file:
         _config = yaml.load(_config_file)
