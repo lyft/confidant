@@ -4,7 +4,6 @@ import yaml
 from os import getenv
 from os import path
 
-
 from confidant.encrypted_settings import EncryptedSettings
 
 
