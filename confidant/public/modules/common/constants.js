@@ -14,7 +14,6 @@
         DATAKEY: 'v1/datakey',
         SERVICE: 'v1/services/:id',
         SERVICES: 'v1/services',
-        GRANTS: 'v1/grants/:id',
         ARCHIVE_SERVICES: 'v1/archive/services',
         ARCHIVE_SERVICE_REVISIONS: 'v1/archive/services/:id/:revision',
         CREDENTIAL: 'v1/credentials/:id',

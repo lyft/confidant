@@ -20,12 +20,6 @@
         });
     }])
 
-    .factory('services.grants', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
-        return $resource(CONFIDANT_URLS.GRANTS, {id: '@id'}, {
-            update: {method: 'PUT', isArray: false}
-        });
-    }])
-
     .factory('services.archiveServiceRevisions', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
         return $resource(CONFIDANT_URLS.ARCHIVE_SERVICE_REVISIONS, {id: '@id'});
     }])

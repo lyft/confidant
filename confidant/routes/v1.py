@@ -61,7 +61,6 @@ def get_client_config():
     response = jsonify({
         'defined': app.config['CLIENT_CONFIG'],
         'generated': {
-            'kms_auth_manage_grants': app.config['KMS_AUTH_MANAGE_GRANTS'],
             'aws_accounts': list(app.config['SCOPED_AUTH_KEYS'].values()),
             'xsrf_cookie_name': app.config['XSRF_COOKIE_NAME'],
             'maintenance_mode': app.config['MAINTENANCE_MODE']
@@ -199,58 +198,6 @@ def get_archive_service_list():
     return jsonify({'services': services})
 
 
-@app.route('/v1/grants/<id>', methods=['PUT'])
-@authnz.require_auth
-@authnz.require_csrf_token
-@maintenance.check_maintenance_mode
-def ensure_grants(id):
-    try:
-        _service = Service.get(id)
-        if _service.data_type != 'service':
-            msg = 'id provided is not a service.'
-            return jsonify({'error': msg}), 400
-    except DoesNotExist:
-        msg = 'id provided does not exist.'
-        return jsonify({'error': msg}), 400
-    try:
-        keymanager.ensure_grants(id)
-    except keymanager.ServiceCreateGrantError:
-        msg = 'Failed to add grants for service.'
-        logging.error(msg)
-        return jsonify({'error': msg}), 400
-    try:
-        grants = keymanager.grants_exist(id)
-    except keymanager.ServiceGetGrantError:
-        msg = 'Failed to get grants.'
-        return jsonify({'error': msg}), 500
-    return jsonify({
-        'id': id,
-        'grants': grants
-    })
-
-
-@app.route('/v1/grants/<id>', methods=['GET'])
-@authnz.require_auth
-def get_grants(id):
-    try:
-        _service = Service.get(id)
-        if _service.data_type != 'service':
-            msg = 'id provided is not a service.'
-            return jsonify({'error': msg}), 400
-    except DoesNotExist:
-        msg = 'id provided does not exist.'
-        return jsonify({'error': msg}), 400
-    try:
-        grants = keymanager.grants_exist(id)
-    except keymanager.ServiceGetGrantError:
-        msg = 'Failed to get grants.'
-        return jsonify({'error': msg}), 500
-    return jsonify({
-        'id': id,
-        'grants': grants
-    })
-
-
 @app.route('/v1/services/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
@@ -285,14 +232,6 @@ def map_service_credentials(id):
         ret = {'error': '{0} is not a valid account.'}
         return jsonify(ret), 400
 
-    # If this is the first revision, we should attempt to create a grant for
-    # this service.
-    if revision == 1:
-        try:
-            keymanager.ensure_grants(id)
-        except keymanager.ServiceCreateGrantError:
-            msg = 'Failed to add grants for {0}.'.format(id)
-            logging.error(msg)
     # Try to save to the archive
     try:
         Service(

@@ -1,6 +1,3 @@
-<div class="alert alert-warning" ng-show="grantUpdateError">
-<p>{{ grantUpdateError }}</p>
-</div>
 <div class="alert alert-warning" ng-show="saveError">
 <p>{{ saveError }}</p>
 <div ng-show="credentialPairConflicts">
@@ -98,14 +95,6 @@
   <div class="form-group" ng-hide="newService || missingService">
     <label for="serviceRevision">Service Revision</label>
     <span id="serviceRevision">{{ service.revision }}</span>
-  </div>
-  <div class="form-group" ng-hide="newService || missingService || !showGrants">
-    <label for="serviceGrants">Service Grants</label>
-    <button type="button" class="btn btn-xs btn-alternate" ng-show="!editableForm.$visible" ng-click="ensureGrants()">Update Grants <span class="glyphicon glyphicon-refresh"></span></button>
-    <ul id="serviceGrants">
-      <li><strong>decrypt:</strong> {{ grants.decrypt_grant }}</li>
-      <li><strong>encrypt:</strong> {{ grants.encrypt_grant }}</span></li>
-    </ul>
   </div>
   <div class="buttons">
     <button type="button" class="btn btn-default" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">Edit</button>

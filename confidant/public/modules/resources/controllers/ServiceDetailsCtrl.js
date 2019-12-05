@@ -19,10 +19,8 @@
         'services.service',
         'services.services',
         'roles.list',
-        'services.grants',
-        function ($scope, $stateParams, $q, $log, $filter, $location, Service, Services, Roles, Grants) {
+        function ($scope, $stateParams, $q, $log, $filter, $location, Service, Services, Roles) {
             var serviceCopy = null;
-            $scope.showGrants = $scope.clientconfig.generated.kms_auth_manage_grants;
             $scope.$log = $log;
             $scope.saveError = '';
             $scope.newService = false;
@@ -50,13 +48,6 @@
                     }
                     serviceCopy = angular.copy($scope.service);
                 });
-                if ($scope.showGrants) {
-                    Grants.get({'id': $stateParams.serviceId}).$promise.then(function(grants) {
-                        $scope.grants = grants.grants;
-                    });
-                } else {
-                    $scope.grants = null;
-                }
             } else {
                 $scope.shown = true;
                 $scope.service = {
@@ -68,7 +59,6 @@
                 };
                 serviceCopy = angular.copy($scope.service);
                 $scope.newService = true;
-                $scope.grants = null;
             }
 
             $scope.getCredentialByID = function(id) {
@@ -155,24 +145,6 @@
                 $scope.credentialPairConflicts = null;
                 $scope.saveError = '';
                 $scope.service = angular.copy(serviceCopy);
-            };
-
-            $scope.ensureGrants = function() {
-                var deferred = $q.defer();
-                $scope.grantUpdateError = '';
-                Grants.update({'id': $scope.service.id}).$promise.then(function(newGrants) {
-                    $scope.grants = newGrants.grants;
-                    deferred.resolve();
-                }, function(res) {
-                    if (res.status === 500) {
-                        $scope.saveError = 'Unexpected server error.';
-                        $log.error(res);
-                    } else {
-                        $scope.grantUpdateError = res.data.error;
-                    }
-                    deferred.reject();
-                });
-                return deferred.promise;
             };
 
             $scope.checkNewServiceSave = function(serviceId) {

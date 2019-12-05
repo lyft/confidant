@@ -250,8 +250,6 @@ KMS_MAXIMUM_TOKEN_VERSION = int_env('KMS_MAXIMUM_TOKEN_VERSION', 2)
 KMS_MINIMUM_TOKEN_VERSION = int_env('KMS_MINIMUM_TOKEN_VERSION', 1)
 # Comma separated list of user types allowed to auth via KMS.
 KMS_AUTH_USER_TYPES = str_env('KMS_AUTH_USER_TYPES', 'service').split(',')
-# Manage auth key grants for service to service authentication.
-KMS_AUTH_MANAGE_GRANTS = bool_env('KMS_AUTH_MANAGE_GRANTS', True)
 # Number of tokens to cache for authentication. This should be roughly
 # equivalent to the number of tokens you expect to generate within the lifetime
 # of your tokens.
