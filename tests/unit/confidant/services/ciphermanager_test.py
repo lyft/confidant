@@ -2,8 +2,8 @@ import unittest
 from nose.tools import assert_raises
 from cryptography.fernet import Fernet
 
-from confidant.ciphermanager import CipherManager
-from confidant.ciphermanager import CipherManagerError
+from confidant.services.ciphermanager import CipherManager
+from confidant.services.ciphermanager import CipherManagerError
 
 
 class CipherManagerTest(unittest.TestCase):

@@ -4,7 +4,7 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 
-import confidant.services
+import confidant.clients
 
 
 def decrypt_mock_datakey(data_key):
@@ -20,7 +20,7 @@ def decrypt_datakey(data_key, encryption_context=None, client=None):
     Decrypt a datakey.
     '''
     if not client:
-        client = confidant.services.get_boto_client('kms')
+        client = confidant.clients.get_boto_client('kms')
     return client.decrypt(
         CiphertextBlob=data_key,
         EncryptionContext=encryption_context
@@ -45,7 +45,7 @@ def create_datakey(encryption_context, keyid, client=None):
     Create a datakey from KMS.
     '''
     if not client:
-        client = confidant.services.get_boto_client('kms')
+        client = confidant.clients.get_boto_client('kms')
     # Fernet key; from spec and cryptography implementation, but using
     # random from KMS, rather than os.urandom:
     #   https://github.com/fernet/spec/blob/master/Spec.md#key-format
