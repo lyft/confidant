@@ -13,7 +13,6 @@
         USEREMAIL: 'v1/user/email',
         DATAKEY: 'v1/datakey',
         SERVICE: 'v1/services/:id',
-        SERVICE_METADATA: 'v1/services/:id/metadata',
         SERVICE_REVISION: 'v1/services/:id/:revision',
         SERVICES: 'v1/services',
         GRANTS: 'v1/grants/:id',

@@ -104,6 +104,7 @@ def get_service(id):
     Get service metadata and all credentials for this service. This endpoint
     allows basic authentication.
     '''
+    metadata_only = request.args.get('metadata_only', default=False, type=bool)
     if authnz.user_is_user_type('service'):
         if not authnz.user_is_service(id):
             logging.warning('Authz failed for service {0}.'.format(id))
@@ -111,9 +112,10 @@ def get_service(id):
             return jsonify({'error': msg}), 401
     else:
         logging.info(
-            'get_service called on id {} by {}'.format(
+            'get_service called on id={} by user={} metadata_only={}'.format(
                 id,
-                authnz.get_logged_in_user()
+                authnz.get_logged_in_user(),
+                metadata_only,
             )
         )
     try:
@@ -131,45 +133,16 @@ def get_service(id):
         return jsonify({}), 404
     logging.debug('Authz succeeded for service {0}.'.format(id))
     try:
-        credentials = credentialmanager.get_credentials(service.credentials)
+        credentials = credentialmanager.get_credentials(
+            service.credentials,
+            metadata_only=metadata_only,
+        )
     except KeyError:
         logging.exception('KeyError occurred in getting credentials')
         return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = credentialmanager.get_blind_credentials(
-        service.blind_credentials
-    )
-    return jsonify({
-        'id': service.id,
-        'account': service.account,
-        'credentials': credentials,
-        'blind_credentials': blind_credentials,
-        'enabled': service.enabled,
-        'revision': service.revision,
-        'modified_date': service.modified_date,
-        'modified_by': service.modified_by
-    })
-
-
-@app.route('/v1/services/<id>/metadata', methods=['GET'])
-@authnz.require_auth
-def get_service_metadata(id):
-    '''
-    Get service metadata
-    '''
-    try:
-        service = Service.get(id)
-    except DoesNotExist:
-        return jsonify({}), 404
-    if (service.data_type != 'service' and
-            service.data_type != 'archive-service'):
-        return jsonify({}), 404
-    credentials = credentialmanager.get_credentials(
-        service.credentials,
-        metadata_only=True,
-    )
-    blind_credentials = credentialmanager.get_blind_credentials(
         service.blind_credentials,
-        metadata_only=True,
+        metadata_only=metadata_only,
     )
     return jsonify({
         'id': service.id,
