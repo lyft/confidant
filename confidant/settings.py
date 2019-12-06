@@ -1,8 +1,6 @@
 import json
 import logging
-import yaml
 from os import getenv
-from os import path
 
 from confidant.encrypted_settings import EncryptedSettings
 
@@ -482,12 +480,14 @@ def get(name, default=None):
         return encrypted_settings.get_secret(name)
     return globals().get(name, default)
 
+import importlib
+def load_module(module_path):
+    module_name, function_name = module_path.split(':')
+    module = importlib.import_module(module_name)
+    function = getattr(module, function_name)
 
-CONFIG_FILE = str_env('CONFIG_FILE', '/etc/confidant/confidant.conf')
-_config = {}
-if path.exists(CONFIG_FILE):
-    with open(CONFIG_FILE) as _config_file:
-        _config = yaml.load(_config_file)
+    return function
 
 # authnz checks, permissions and bindings
-AUTHORIZATION = _config.get('authorization')
+ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:no_acl')
+

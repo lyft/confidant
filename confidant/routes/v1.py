@@ -369,9 +369,10 @@ def get_credential_list():
 
 
 @app.route('/v1/credentials/<id>', methods=['GET'])
-@authnz.enforce_checks
-@authnz.require_auth
 def get_credential(id):
+    ACL_MODULE_FUNC = settings.load_module(settings.ACL_MODULE)
+    results = ACL_MODULE_FUNC(id)
+
     try:
         cred = Credential.get(id)
     except DoesNotExist:

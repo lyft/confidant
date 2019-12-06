@@ -15,8 +15,7 @@ from confidant.authnz.errors import (
     NotAuthorized,
 )
 from confidant.authnz import userauth
-from confidant import settings
-import importlib
+
 
 PRIVILEGES = {
     'user': ['*'],
@@ -263,37 +262,4 @@ def require_logout_for_goodbye(f):
         else:
             return resp
 
-    return decorated
-
-
-def enforce_checks(f):
-    """
-    Enforce a list of checks, defined in the ``authorization`` configuration.
-
-    For example, the following configuration would enforce two checks, one of
-    which passes a kwarg into a check:
-
-        authorization:
-          checks:
-            - module: "confidant.authnz.rbac:user_has_permission"
-            - module: "confidant.authnz.envoy_checks:envoy_internal_check"
-              kwargs:
-                header: 'x-nginx-internal'
-
-    Checks will be executed in the order defined by the list. All checks must
-    pass for a request to be accepted.
-    """
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        for check in settings.AUTHORIZATION.get('checks', []):
-            module_name, function_name = check['module'].split(':')
-            module = importlib.import_module(module_name)
-            function = getattr(module, function_name)
-            func_kwargs = check.get('kwargs', {})
-            # pass in the function that is being decorated arguments
-            decorated_kwargs = {'_decorated_args': kwargs}
-            response = function(**{**func_kwargs, **decorated_kwargs})
-            if response is not True:
-                return abort(403)
-        return f(*args, **kwargs)
     return decorated
