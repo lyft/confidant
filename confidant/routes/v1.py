@@ -104,11 +104,20 @@ def get_service(id):
     Get service metadata and all credentials for this service. This endpoint
     allows basic authentication.
     '''
+    metadata_only = request.args.get('metadata_only', default=False, type=bool)
     if authnz.user_is_user_type('service'):
         if not authnz.user_is_service(id):
             logging.warning('Authz failed for service {0}.'.format(id))
             msg = 'Authenticated user is not authorized.'
             return jsonify({'error': msg}), 401
+    else:
+        logging.info(
+            'get_service called on id={} by user={} metadata_only={}'.format(
+                id,
+                authnz.get_logged_in_user(),
+                metadata_only,
+            )
+        )
     try:
         service = Service.get(id)
         if not authnz.service_in_account(service.account):
@@ -124,12 +133,16 @@ def get_service(id):
         return jsonify({}), 404
     logging.debug('Authz succeeded for service {0}.'.format(id))
     try:
-        credentials = credentialmanager.get_credentials(service.credentials)
+        credentials = credentialmanager.get_credentials(
+            service.credentials,
+            metadata_only=metadata_only,
+        )
     except KeyError:
         logging.exception('KeyError occurred in getting credentials')
         return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = credentialmanager.get_blind_credentials(
-        service.blind_credentials
+        service.blind_credentials,
+        metadata_only=metadata_only,
     )
     return jsonify({
         'id': service.id,
@@ -262,11 +275,13 @@ def map_service_credentials(id):
         if _service.data_type != 'service':
             msg = 'id provided is not a service.'
             return jsonify({'error': msg}), 400
-        revision = _service.revision + 1
-        _service_credential_ids = _service.credentials
+        revision = servicemanager.get_latest_service_revision(
+            id,
+            _service.revision
+        )
     except DoesNotExist:
         revision = 1
-        _service_credential_ids = []
+        _service = None
 
     if data.get('credentials') or data.get('blind_credentials'):
         conflicts = credentialmanager.pair_key_conflicts_for_credentials(
@@ -324,18 +339,117 @@ def map_service_credentials(id):
     except PutError as e:
         logging.error(e)
         return jsonify({'error': 'Failed to update active service.'}), 500
-    added = list(set(service.credentials) - set(_service_credential_ids))
-    removed = list(set(_service_credential_ids) - set(service.credentials))
-    msg = 'Added credentials: {0}; Removed credentials {1}; Revision {2}'
-    msg = msg.format(added, removed, service.revision)
-    graphite.send_event([id], msg)
+    servicemanager.send_service_mapping_graphite_event(service, _service)
     webhook.send_event('service_update', [service.id], service.credentials)
-    try:
-        credentials = credentialmanager.get_credentials(service.credentials)
-    except KeyError:
-        return jsonify({'error': 'Decryption error.'}), 500
+    credentials = credentialmanager.get_credentials(
+        service.credentials,
+        metadata_only=True,
+    )
     blind_credentials = credentialmanager.get_blind_credentials(
-        service.blind_credentials
+        service.blind_credentials,
+        metadata_only=True,
+    )
+    return jsonify({
+        'id': service.id,
+        'account': service.account,
+        'credentials': credentials,
+        'blind_credentials': blind_credentials,
+        'revision': service.revision,
+        'enabled': service.enabled,
+        'modified_date': service.modified_date,
+        'modified_by': service.modified_by
+    })
+
+
+@app.route('/v1/services/<id>/<revision>', methods=['PUT'])
+@authnz.require_auth
+@authnz.require_csrf_token
+@maintenance.check_maintenance_mode
+def revert_service_to_revision(id, revision):
+    try:
+        current_service = Service.get(id)
+        if current_service.data_type != 'service':
+            msg = 'id provided is not a service.'
+            return jsonify({'error': msg}), 400
+        new_revision = servicemanager.get_latest_service_revision(
+            id,
+            current_service.revision
+        )
+    except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
+        return jsonify({}), 404
+    try:
+        revert_service = Service.get('{}-{}'.format(id, revision))
+        if revert_service.data_type != 'archive-service':
+            msg = 'id provided is not a service.'
+            return jsonify({'error': msg}), 400
+    except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
+        return jsonify({}), 404
+    if revert_service.equals(current_service):
+        ret = {
+            'error': 'No difference between old and new service.'
+        }
+        return jsonify(ret), 400
+    if revert_service.credentials or revert_service.blind_credentials:
+        conflicts = credentialmanager.pair_key_conflicts_for_credentials(
+            revert_service.credentials,
+            revert_service.blind_credentials,
+        )
+        if conflicts:
+            ret = {
+                'error': 'Conflicting key pairs in mapped service.',
+                'conflicts': conflicts
+            }
+            return jsonify(ret), 400
+    # Try to save to the archive
+    try:
+        Service(
+            id='{0}-{1}'.format(id, new_revision),
+            data_type='archive-service',
+            credentials=revert_service.credentials,
+            blind_credentials=revert_service.blind_credentials,
+            account=revert_service.account,
+            enabled=revert_service.enabled,
+            revision=new_revision,
+            modified_by=authnz.get_logged_in_user()
+        ).save(id__null=True)
+    except PutError as e:
+        logging.error(e)
+        return jsonify({'error': 'Failed to add service to archive.'}), 500
+
+    try:
+        service = Service(
+            id=id,
+            data_type='service',
+            credentials=revert_service.credentials,
+            blind_credentials=revert_service.blind_credentials,
+            account=revert_service.account,
+            enabled=revert_service.enabled,
+            revision=new_revision,
+            modified_by=authnz.get_logged_in_user()
+        )
+        service.save()
+    except PutError as e:
+        logging.error(e)
+        return jsonify({'error': 'Failed to update active service.'}), 500
+    servicemanager.send_service_mapping_graphite_event(service, current_service)
+    webhook.send_event(
+        'service_update',
+        [service.id],
+        service.credentials,
+    )
+    credentials = credentialmanager.get_credentials(
+        service.credentials,
+        metadata_only=True,
+    )
+    blind_credentials = credentialmanager.get_blind_credentials(
+        service.blind_credentials,
+        metadata_only=True,
     )
     return jsonify({
         'id': service.id,
