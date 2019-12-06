@@ -7,13 +7,13 @@ import re
 from pynamodb.exceptions import PutError, DoesNotExist
 from flask import request
 from flask import jsonify
-from botocore.exceptions import ClientError
 
 import confidant.clients
 from confidant import authnz
 from confidant import settings
 from confidant.app import app
 from confidant.services import graphite
+from confidant.services import iamrolemanager
 from confidant.services import keymanager
 from confidant.services import webhook
 from confidant.services import credentialmanager
@@ -23,9 +23,6 @@ from confidant.utils import maintenance
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
-
-iam_resource = confidant.clients.get_boto_resource('iam')
-kms_client = confidant.clients.get_boto_client('kms')
 
 VALUE_LENGTH = 50
 
@@ -90,10 +87,7 @@ def get_service_list():
 @app.route('/v1/roles', methods=['GET'])
 @authnz.require_auth
 def get_iam_roles_list():
-    try:
-        roles = [x.name for x in iam_resource.roles.all()]
-    except ClientError:
-        return jsonify({'error': 'Unable to roles.'}), 500
+    roles = iamrolemanager.get_iam_roles()
     return jsonify({'roles': roles})
 
 
@@ -1141,6 +1135,7 @@ def update_blind_credential(id):
 
 @app.route('/v1/value_generator', methods=['GET'])
 def generate_value():
+    kms_client = confidant.clients.get_boto_client('kms')
     value = kms_client.generate_random(NumberOfBytes=128)['Plaintext']
     value = base64.urlsafe_b64encode(value).decode('UTF-8')
     value = re.sub(r'[\W_]+', '', value)
