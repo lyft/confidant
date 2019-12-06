@@ -45,6 +45,14 @@
                 }
             });
 
+            $scope.getCredentialByID = function(id) {
+                return $filter('filter')($scope.$parent.credentialList, {'id': id})[0];
+            };
+
+            $scope.getBlindCredentialByID = function(id) {
+                return $filter('filter')($scope.$parent.blindCredentialList, {'id': id})[0];
+            };
+
             $scope.getServiceByRevision = function(rev) {
                 return $filter('filter')($scope.revisions, {revision: rev})[0];
             };
@@ -72,17 +80,8 @@
             };
 
             $scope.revertToDiffRevision = function() {
-                var diffService = $scope.getServiceByRevision($scope.diffRevision),
-                    currentService = $scope.getServiceByRevision($scope.currentRevision),
-                    deferred = $q.defer();
-                if (angular.equals(diffService.credentials, currentService.credentials) &&
-                    angular.equals(diffService.blind_credentials, currentService.blind_credentials) &&
-                    angular.equals(diffService.enabled, currentService.enabled)) {
-                    $scope.saveError = 'Can not revert to revision ' + diffService.revision + '. No difference between it and current revision.';
-                    deferred.reject();
-                    return deferred.promise;
-                }
-                Service.update({'id': $scope.serviceId}, diffService).$promise.then(function(newService) {
+                var deferred = $q.defer();
+                Service.revert({'id': $scope.serviceId, revision: $scope.diffRevision}).$promise.then(function(newService) {
                     deferred.resolve();
                     ResourceArchiveService.updateResourceArchive();
                     $location.path('/history/service/' + newService.id + '-' + newService.revision);

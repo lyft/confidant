@@ -69,6 +69,14 @@
                 }
             });
 
+            $scope.getCredentialByID = function(id) {
+                return $filter('filter')($scope.$parent.credentialList, {'id': id})[0];
+            };
+
+            $scope.getBlindCredentialByID = function(id) {
+                return $filter('filter')($scope.$parent.blindCredentialList, {'id': id})[0];
+            };
+
             $scope.revertToDiffRevision = function() {
                 var deferred = $q.defer();
                 if (angular.equals($scope.diffCredential.name, $scope.currentCredential.name) &&

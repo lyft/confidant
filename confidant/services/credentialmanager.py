@@ -11,49 +11,53 @@ from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 
 
-def get_credentials(credential_ids):
+def get_credentials(credential_ids, metadata_only=False):
     credentials = []
     with stats.timer('service_batch_get_credentials'):
         for cred in Credential.batch_get(copy.deepcopy(credential_ids)):
-            data_key = keymanager.decrypt_datakey(
-                cred.data_key,
-                encryption_context={'id': cred.id}
-            )
-            cipher_version = cred.cipher_version
-            cipher = CipherManager(data_key, cipher_version)
-            _credential_pairs = cipher.decrypt(cred.credential_pairs)
-            _credential_pairs = json.loads(_credential_pairs)
-            credentials.append({
+            item = {
                 'id': cred.id,
                 'data_type': 'credential',
                 'name': cred.name,
                 'enabled': cred.enabled,
                 'revision': cred.revision,
-                'credential_pairs': _credential_pairs,
                 'metadata': cred.metadata,
                 'documentation': cred.documentation
-            })
+            }
+            if not metadata_only:
+                data_key = keymanager.decrypt_datakey(
+                    cred.data_key,
+                    encryption_context={'id': cred.id}
+                )
+                cipher_version = cred.cipher_version
+                cipher = CipherManager(data_key, cipher_version)
+                _credential_pairs = cipher.decrypt(cred.credential_pairs)
+                _credential_pairs = json.loads(_credential_pairs)
+                item['credential_pairs'] = _credential_pairs
+            credentials.append(item)
     return credentials
 
 
-def get_blind_credentials(credential_ids):
+def get_blind_credentials(credential_ids, metadata_only=False):
     credentials = []
     with stats.timer('service_batch_get_blind_credentials'):
         for cred in BlindCredential.batch_get(copy.deepcopy(credential_ids)):
-            credentials.append({
+            item = {
                 'id': cred.id,
                 'data_type': 'blind-credential',
                 'name': cred.name,
                 'enabled': cred.enabled,
                 'revision': cred.revision,
-                'credential_pairs': cred.credential_pairs,
                 'credential_keys': list(cred.credential_keys),
                 'metadata': cred.metadata,
                 'data_key': cred.data_key,
                 'cipher_version': cred.cipher_version,
                 'cipher_type': cred.cipher_type,
                 'documentation': cred.documentation
-            })
+            }
+            if not metadata_only:
+                item['credential_pairs'] = cred.credential_pairs
+            credentials.append(item)
     return credentials
 
 
