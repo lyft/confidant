@@ -370,8 +370,14 @@ def get_credential_list():
 
 @app.route('/v1/credentials/<id>', methods=['GET'])
 def get_credential(id):
-    ACL_MODULE_FUNC = settings.load_module(settings.ACL_MODULE)
-    results = ACL_MODULE_FUNC(id)
+    ACL_MODULE_CHECK = settings.load_module(settings.ACL_MODULE)
+    if not ACL_MODULE_CHECK(id):
+        msg = "{} does not have access to {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
 
     try:
         cred = Credential.get(id)

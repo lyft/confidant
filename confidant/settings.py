@@ -1,4 +1,5 @@
 import json
+import importlib
 import logging
 from os import getenv
 
@@ -480,7 +481,7 @@ def get(name, default=None):
         return encrypted_settings.get_secret(name)
     return globals().get(name, default)
 
-import importlib
+
 def load_module(module_path):
     module_name, function_name = module_path.split(':')
     module = importlib.import_module(module_name)
@@ -488,6 +489,6 @@ def load_module(module_path):
 
     return function
 
+
 # authnz checks, permissions and bindings
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:no_acl')
-
