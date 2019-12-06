@@ -16,7 +16,6 @@ from confidant.authnz.errors import (
 )
 from confidant.authnz import userauth
 
-
 PRIVILEGES = {
     'user': ['*'],
     'service': ['get_service']
