@@ -26,6 +26,7 @@ from confidant.models.service import Service
 
 iam_resource = confidant.clients.get_boto_resource('iam')
 kms_client = confidant.clients.get_boto_client('kms')
+acl_module_check = settings.load_module(settings.ACL_MODULE)
 
 VALUE_LENGTH = 50
 
@@ -370,8 +371,7 @@ def get_credential_list():
 
 @app.route('/v1/credentials/<id>', methods=['GET'])
 def get_credential(id):
-    ACL_MODULE_CHECK = settings.load_module(settings.ACL_MODULE)
-    if not ACL_MODULE_CHECK(id):
+    if not acl_module_check(id):
         msg = "{} does not have access to {}".format(
             authnz.get_logged_in_user(),
             id

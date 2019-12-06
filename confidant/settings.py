@@ -483,6 +483,12 @@ def get(name, default=None):
 
 
 def load_module(module_path):
+    """ Load's a python module.
+
+    ex: module_path = "confidant.authnz.rbac:no_acl"
+
+    Will load the module confidant.authnz.rbac and return the function no_acl
+    """
     module_name, function_name = module_path.split(':')
     module = importlib.import_module(module_name)
     function = getattr(module, function_name)
@@ -490,5 +496,5 @@ def load_module(module_path):
     return function
 
 
-# authnz checks, permissions and bindings
+# Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:no_acl')
