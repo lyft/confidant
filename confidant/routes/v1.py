@@ -361,35 +361,35 @@ def map_service_credentials(id):
     })
 
 
-@app.route('/v1/services/<id>/<revision>', methods=['PUT'])
+@app.route('/v1/services/<id>/<to_revision>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
-def revert_service_to_revision(id, revision):
+def revert_service_to_revision(id, to_revision):
     try:
         current_service = Service.get(id)
-        if current_service.data_type != 'service':
-            msg = 'id provided is not a service.'
-            return jsonify({'error': msg}), 400
-        new_revision = servicemanager.get_latest_service_revision(
-            id,
-            current_service.revision
-        )
     except DoesNotExist:
         logging.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
+    if current_service.data_type != 'service':
+        msg = 'id provided is not a service.'
+        return jsonify({'error': msg}), 400
+    new_revision = servicemanager.get_latest_service_revision(
+        id,
+        current_service.revision
+    )
     try:
-        revert_service = Service.get('{}-{}'.format(id, revision))
-        if revert_service.data_type != 'archive-service':
-            msg = 'id provided is not a service.'
-            return jsonify({'error': msg}), 400
+        revert_service = Service.get('{}-{}'.format(id, to_revision))
     except DoesNotExist:
         logging.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
+    if revert_service.data_type != 'archive-service':
+        msg = 'id provided is not a service.'
+        return jsonify({'error': msg}), 400
     if revert_service.equals(current_service):
         ret = {
             'error': 'No difference between old and new service.'
@@ -498,22 +498,10 @@ def get_credential(id):
     services = []
     for service in Service.data_type_date_index.query('service'):
         services.append(service.id)
-    if cred.data_type == 'credential':
-        context = id
-    else:
-        context = id.split('-')[0]
-    data_key = keymanager.decrypt_datakey(
-        cred.data_key,
-        encryption_context={'id': context}
-    )
-    cipher_version = cred.cipher_version
-    cipher = CipherManager(data_key, cipher_version)
-    _credential_pairs = cipher.decrypt(cred.credential_pairs)
-    _credential_pairs = json.loads(_credential_pairs)
     return jsonify({
         'id': id,
         'name': cred.name,
-        'credential_pairs': _credential_pairs,
+        'credential_pairs': cred.decrypted_credential_pairs,
         'metadata': cred.metadata,
         'services': services,
         'revision': cred.revision,
@@ -717,13 +705,7 @@ def update_credential(id):
             return jsonify(ret), 400
         update['credential_pairs'] = json.dumps(credential_pairs)
     else:
-        data_key = keymanager.decrypt_datakey(
-            _cred.data_key,
-            encryption_context={'id': id}
-        )
-        cipher_version = _cred.cipher_version
-        cipher = CipherManager(data_key, cipher_version)
-        update['credential_pairs'] = cipher.decrypt(_cred.credential_pairs)
+        update['credential_pairs'] = _cred.decrypted_credential_pairs
     data_key = keymanager.create_datakey(encryption_context={'id': id})
     cipher = CipherManager(data_key['plaintext'], version=2)
     credential_pairs = cipher.encrypt(update['credential_pairs'])
@@ -780,6 +762,113 @@ def update_credential(id):
         'id': cred.id,
         'name': cred.name,
         'credential_pairs': json.loads(cipher.decrypt(cred.credential_pairs)),
+        'metadata': cred.metadata,
+        'revision': cred.revision,
+        'enabled': cred.enabled,
+        'modified_date': cred.modified_date,
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
+    })
+
+
+@app.route('/v1/credentials/<id>/<to_revision>', methods=['PUT'])
+@authnz.require_auth
+@authnz.require_csrf_token
+@maintenance.check_maintenance_mode
+def revert_credential_to_revision(id, to_revision):
+    try:
+        current_credential = Credential.get(id)
+    except DoesNotExist:
+        return jsonify({'error': 'Credential not found.'}), 404
+    if current_credential.data_type != 'credential':
+        msg = 'id provided is not a credential.'
+        return jsonify({'error': msg}), 400
+    new_revision = credentialmanager.get_latest_credential_revision(
+        id,
+        current_credential.revision
+    )
+    try:
+        revert_credential = Credential.get('{}-{}'.format(id, to_revision))
+    except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
+        return jsonify({}), 404
+    if revert_credential.data_type != 'archive-credential':
+        msg = 'id provided is not a credential.'
+        return jsonify({'error': msg}), 400
+    if revert_credential.equals(current_credential):
+        ret = {
+            'error': 'No difference between old and new credential.'
+        }
+        return jsonify(ret), 400
+    services = servicemanager.get_services_for_credential(id)
+    if revert_credential.credential_pairs:
+        _credential_pairs = revert_credential.decrypted_credential_pairs
+        _check, ret = credentialmanager.check_credential_pair_values(
+            _credential_pairs
+        )
+        if not _check:
+            return jsonify(ret), 400
+        # Ensure credential pairs don't conflicts with pairs from other
+        # services
+        conflicts = servicemanager.pair_key_conflicts_for_services(
+            id,
+            list(_credential_pairs.keys()),
+            services
+        )
+        if conflicts:
+            ret = {
+                'error': 'Conflicting key pairs in mapped service.',
+                'conflicts': conflicts
+            }
+            return jsonify(ret), 400
+    # Try to save to the archive
+    try:
+        Credential(
+            id='{0}-{1}'.format(id, new_revision),
+            name=revert_credential.name,
+            data_type='archive-credential',
+            credential_pairs=revert_credential.credential_pairs,
+            metadata=revert_credential.metadata,
+            enabled=revert_credential.enabled,
+            revision=new_revision,
+            data_key=revert_credential.data_key,
+            cipher_version=revert_credential.cipher_version,
+            modified_by=authnz.get_logged_in_user(),
+            documentation=revert_credential.documentation,
+        ).save(id__null=True)
+    except PutError as e:
+        logging.error(e)
+        return jsonify({'error': 'Failed to add credential to archive.'}), 500
+    try:
+        cred = Credential(
+            id=id,
+            name=revert_credential.name,
+            data_type='credential',
+            credential_pairs=revert_credential.credential_pairs,
+            metadata=revert_credential.metadata,
+            enabled=revert_credential.enabled,
+            revision=new_revision,
+            data_key=revert_credential.data_key,
+            cipher_version=revert_credential.cipher_version,
+            modified_by=authnz.get_logged_in_user(),
+            documentation=revert_credential.documentation,
+        )
+        cred.save()
+    except PutError as e:
+        logging.error(e)
+        return jsonify({'error': 'Failed to update active credential.'}), 500
+    if services:
+        service_names = [x.id for x in services]
+        msg = 'Updated credential "{0}" ({1}); Revision {2}'
+        msg = msg.format(cred.name, cred.id, cred.revision)
+        graphite.send_event(service_names, msg)
+        webhook.send_event('credential_update', service_names, [cred.id])
+    return jsonify({
+        'id': cred.id,
+        'name': cred.name,
+        'credential_pairs': cred.decrypted_credential_pairs,
         'metadata': cred.metadata,
         'revision': cred.revision,
         'enabled': cred.enabled,
