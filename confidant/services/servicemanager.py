@@ -1,5 +1,8 @@
+from pynamodb.exceptions import DoesNotExist
+
 from confidant.app import app
 from confidant.services import credentialmanager
+from confidant.services import graphite
 from confidant.models.service import Service
 
 
@@ -85,3 +88,26 @@ def pair_key_conflicts_for_services(_id, credential_keys, services):
                     set(conflicts[key][data_type])
                 )
     return conflicts
+
+
+def send_service_mapping_graphite_event(new_service, old_service):
+    if old_service:
+        old_credential_ids = old_service.credentials
+    else:
+        old_credential_ids = []
+    added = list(set(new_service.credentials) - set(old_credential_ids))
+    removed = list(set(old_credential_ids) - set(new_service.credentials))
+    msg = 'Added credentials: {0}; Removed credentials {1}; Revision {2}'
+    msg = msg.format(added, removed, new_service.revision)
+    graphite.send_event([id], msg)
+
+
+def get_latest_service_revision(id, revision):
+    i = revision + 1
+    while True:
+        _id = '{0}-{1}'.format(id, i)
+        try:
+            Service.get(_id)
+        except DoesNotExist:
+            return i
+        i = i + 1

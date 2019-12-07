@@ -15,8 +15,9 @@
     }])
 
     .factory('services.service', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
-        return $resource(CONFIDANT_URLS.SERVICE, {id: '@id'}, {
-            update: {method: 'PUT', isArray: false}
+        return $resource(CONFIDANT_URLS.SERVICE, {id: '@id', revision: '@revision', metadata_only: true}, {
+            update: {method: 'PUT', isArray: false},
+            revert: {method: 'PUT', isArray: false, url: CONFIDANT_URLS.SERVICE_REVISION}
         });
     }])
 
