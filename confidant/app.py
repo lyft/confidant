@@ -3,7 +3,6 @@ import logging
 import boto3
 from flask import Flask
 from flask_sslify import SSLify
-
 from confidant import settings
 
 

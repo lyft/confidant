@@ -112,6 +112,9 @@ def get_service(id):
             msg = 'Authenticated user is not authorized.'
             return jsonify({'error': msg}), 401
     else:
+        if not acl_module_check('get_service', metadata_only=metadata_only, id=id):
+            pass
+
         logging.info(
             'get_service called on id={} by user={} metadata_only={}'.format(
                 id,
@@ -486,7 +489,7 @@ def get_credential_list():
 @app.route('/v1/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_credential(id):
-    if not acl_module_check(id):
+    if not acl_module_check('get_credential', action='view', resource=id):
         msg = "{} does not have access to {}".format(
             authnz.get_logged_in_user(),
             id
