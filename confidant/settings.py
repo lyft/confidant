@@ -462,6 +462,18 @@ AWS_DEFAULT_REGION = str_env('AWS_DEFAULT_REGION', 'us-east-1')
 #
 # GEVENT_RESOLVER='ares'
 
+# IAM role cache configuration
+# Whether or not we keep a hot in-process cache of IAM roles, refreshed by a
+# gevent thread.
+BACKGROUND_CACHE_IAM_ROLES = bool_env('BACKGROUND_CACHE_IAM_ROLES', True)
+# Number of seconds between calls to refresh the IAM role cache. Calls will be
+# randomized +/- by 20s, to randomize calls across processes. Minimum value for
+# this setting is 60.
+BACKGROUND_CACHE_IAM_ROLE_REFRESH_RATE = int_env(
+    'BACKGROUND_CACHE_IAM_ROLE_REFRESH_RATE',
+    600
+)
+
 # Configuration validation
 _settings_failures = False
 if len(set(SCOPED_AUTH_KEYS.values())) != len(SCOPED_AUTH_KEYS.values()):

@@ -1,6 +1,5 @@
 import json
 import uuid
-import copy
 import logging
 import base64
 import re
@@ -8,24 +7,22 @@ import re
 from pynamodb.exceptions import PutError, DoesNotExist
 from flask import request
 from flask import jsonify
-from botocore.exceptions import ClientError
 
-import confidant.services
-from confidant import keymanager
+import confidant.clients
 from confidant import authnz
-from confidant import graphite
 from confidant import settings
-from confidant import webhook
 from confidant.app import app
-from confidant.utils import stats
+from confidant.services import graphite
+from confidant.services import iamrolemanager
+from confidant.services import keymanager
+from confidant.services import webhook
+from confidant.services import credentialmanager
+from confidant.services import servicemanager
+from confidant.services.ciphermanager import CipherManager
 from confidant.utils import maintenance
-from confidant.ciphermanager import CipherManager
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
-
-iam_resource = confidant.services.get_boto_resource('iam')
-kms_client = confidant.services.get_boto_client('kms')
 
 VALUE_LENGTH = 50
 
@@ -90,10 +87,7 @@ def get_service_list():
 @app.route('/v1/roles', methods=['GET'])
 @authnz.require_auth
 def get_iam_roles_list():
-    try:
-        roles = [x.name for x in iam_resource.roles.all()]
-    except ClientError:
-        return jsonify({'error': 'Unable to roles.'}), 500
+    roles = iamrolemanager.get_iam_roles()
     return jsonify({'roles': roles})
 
 
@@ -104,11 +98,20 @@ def get_service(id):
     Get service metadata and all credentials for this service. This endpoint
     allows basic authentication.
     '''
+    metadata_only = request.args.get('metadata_only', default=False, type=bool)
     if authnz.user_is_user_type('service'):
         if not authnz.user_is_service(id):
             logging.warning('Authz failed for service {0}.'.format(id))
             msg = 'Authenticated user is not authorized.'
             return jsonify({'error': msg}), 401
+    else:
+        logging.info(
+            'get_service called on id={} by user={} metadata_only={}'.format(
+                id,
+                authnz.get_logged_in_user(),
+                metadata_only,
+            )
+        )
     try:
         service = Service.get(id)
         if not authnz.service_in_account(service.account):
@@ -124,11 +127,17 @@ def get_service(id):
         return jsonify({}), 404
     logging.debug('Authz succeeded for service {0}.'.format(id))
     try:
-        credentials = _get_credentials(service.credentials)
+        credentials = credentialmanager.get_credentials(
+            service.credentials,
+            metadata_only=metadata_only,
+        )
     except KeyError:
         logging.exception('KeyError occurred in getting credentials')
         return jsonify({'error': 'Decryption error.'}), 500
-    blind_credentials = _get_blind_credentials(service.blind_credentials)
+    blind_credentials = credentialmanager.get_blind_credentials(
+        service.blind_credentials,
+        metadata_only=metadata_only,
+    )
     return jsonify({
         'id': service.id,
         'account': service.account,
@@ -260,14 +269,16 @@ def map_service_credentials(id):
         if _service.data_type != 'service':
             msg = 'id provided is not a service.'
             return jsonify({'error': msg}), 400
-        revision = _service.revision + 1
-        _service_credential_ids = _service.credentials
+        revision = servicemanager.get_latest_service_revision(
+            id,
+            _service.revision
+        )
     except DoesNotExist:
         revision = 1
-        _service_credential_ids = []
+        _service = None
 
     if data.get('credentials') or data.get('blind_credentials'):
-        conflicts = _pair_key_conflicts_for_credentials(
+        conflicts = credentialmanager.pair_key_conflicts_for_credentials(
             data.get('credentials', []),
             data.get('blind_credentials', []),
         )
@@ -322,17 +333,118 @@ def map_service_credentials(id):
     except PutError as e:
         logging.error(e)
         return jsonify({'error': 'Failed to update active service.'}), 500
-    added = list(set(service.credentials) - set(_service_credential_ids))
-    removed = list(set(_service_credential_ids) - set(service.credentials))
-    msg = 'Added credentials: {0}; Removed credentials {1}; Revision {2}'
-    msg = msg.format(added, removed, service.revision)
-    graphite.send_event([id], msg)
+    servicemanager.send_service_mapping_graphite_event(service, _service)
     webhook.send_event('service_update', [service.id], service.credentials)
+    credentials = credentialmanager.get_credentials(
+        service.credentials,
+        metadata_only=True,
+    )
+    blind_credentials = credentialmanager.get_blind_credentials(
+        service.blind_credentials,
+        metadata_only=True,
+    )
+    return jsonify({
+        'id': service.id,
+        'account': service.account,
+        'credentials': credentials,
+        'blind_credentials': blind_credentials,
+        'revision': service.revision,
+        'enabled': service.enabled,
+        'modified_date': service.modified_date,
+        'modified_by': service.modified_by
+    })
+
+
+@app.route('/v1/services/<id>/<to_revision>', methods=['PUT'])
+@authnz.require_auth
+@authnz.require_csrf_token
+@maintenance.check_maintenance_mode
+def revert_service_to_revision(id, to_revision):
     try:
-        credentials = _get_credentials(service.credentials)
-    except KeyError:
-        return jsonify({'error': 'Decryption error.'}), 500
-    blind_credentials = _get_blind_credentials(service.blind_credentials)
+        current_service = Service.get(id)
+    except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
+        return jsonify({}), 404
+    if current_service.data_type != 'service':
+        msg = 'id provided is not a service.'
+        return jsonify({'error': msg}), 400
+    new_revision = servicemanager.get_latest_service_revision(
+        id,
+        current_service.revision
+    )
+    try:
+        revert_service = Service.get('{}-{}'.format(id, to_revision))
+    except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
+        return jsonify({}), 404
+    if revert_service.data_type != 'archive-service':
+        msg = 'id provided is not a service.'
+        return jsonify({'error': msg}), 400
+    if revert_service.equals(current_service):
+        ret = {
+            'error': 'No difference between old and new service.'
+        }
+        return jsonify(ret), 400
+    if revert_service.credentials or revert_service.blind_credentials:
+        conflicts = credentialmanager.pair_key_conflicts_for_credentials(
+            revert_service.credentials,
+            revert_service.blind_credentials,
+        )
+        if conflicts:
+            ret = {
+                'error': 'Conflicting key pairs in mapped service.',
+                'conflicts': conflicts
+            }
+            return jsonify(ret), 400
+    # Try to save to the archive
+    try:
+        Service(
+            id='{0}-{1}'.format(id, new_revision),
+            data_type='archive-service',
+            credentials=revert_service.credentials,
+            blind_credentials=revert_service.blind_credentials,
+            account=revert_service.account,
+            enabled=revert_service.enabled,
+            revision=new_revision,
+            modified_by=authnz.get_logged_in_user()
+        ).save(id__null=True)
+    except PutError as e:
+        logging.error(e)
+        return jsonify({'error': 'Failed to add service to archive.'}), 500
+
+    try:
+        service = Service(
+            id=id,
+            data_type='service',
+            credentials=revert_service.credentials,
+            blind_credentials=revert_service.blind_credentials,
+            account=revert_service.account,
+            enabled=revert_service.enabled,
+            revision=new_revision,
+            modified_by=authnz.get_logged_in_user()
+        )
+        service.save()
+    except PutError as e:
+        logging.error(e)
+        return jsonify({'error': 'Failed to update active service.'}), 500
+    servicemanager.send_service_mapping_graphite_event(service, current_service)
+    webhook.send_event(
+        'service_update',
+        [service.id],
+        service.credentials,
+    )
+    credentials = credentialmanager.get_credentials(
+        service.credentials,
+        metadata_only=True,
+    )
+    blind_credentials = credentialmanager.get_blind_credentials(
+        service.blind_credentials,
+        metadata_only=True,
+    )
     return jsonify({
         'id': service.id,
         'account': service.account,
@@ -380,18 +492,6 @@ def get_credential(id):
     services = []
     for service in Service.data_type_date_index.query('service'):
         services.append(service.id)
-    if cred.data_type == 'credential':
-        context = id
-    else:
-        context = id.split('-')[0]
-    data_key = keymanager.decrypt_datakey(
-        cred.data_key,
-        encryption_context={'id': context}
-    )
-    cipher_version = cred.cipher_version
-    cipher = CipherManager(data_key, cipher_version)
-    _credential_pairs = cipher.decrypt(cred.credential_pairs)
-    _credential_pairs = json.loads(_credential_pairs)
 
     if authnz.user_is_user_type('user'):
         log_line = "{0} fetching credential {1}".format(
@@ -399,10 +499,11 @@ def get_credential(id):
             id
         )
         logging.info(log_line)
+
     return jsonify({
         'id': id,
         'name': cred.name,
-        'credential_pairs': _credential_pairs,
+        'credential_pairs': cred.decrypted_credential_pairs,
         'metadata': cred.metadata,
         'services': services,
         'revision': cred.revision,
@@ -468,184 +569,6 @@ def get_archive_credential_list():
     return jsonify({'credentials': credentials})
 
 
-def _get_credentials(credential_ids):
-    credentials = []
-    with stats.timer('service_batch_get_credentials'):
-        for cred in Credential.batch_get(copy.deepcopy(credential_ids)):
-            data_key = keymanager.decrypt_datakey(
-                cred.data_key,
-                encryption_context={'id': cred.id}
-            )
-            cipher_version = cred.cipher_version
-            cipher = CipherManager(data_key, cipher_version)
-            _credential_pairs = cipher.decrypt(cred.credential_pairs)
-            _credential_pairs = json.loads(_credential_pairs)
-            credentials.append({
-                'id': cred.id,
-                'data_type': 'credential',
-                'name': cred.name,
-                'enabled': cred.enabled,
-                'revision': cred.revision,
-                'credential_pairs': _credential_pairs,
-                'metadata': cred.metadata,
-                'documentation': cred.documentation
-            })
-    return credentials
-
-
-def _get_blind_credentials(credential_ids):
-    credentials = []
-    with stats.timer('service_batch_get_blind_credentials'):
-        for cred in BlindCredential.batch_get(copy.deepcopy(credential_ids)):
-            credentials.append({
-                'id': cred.id,
-                'data_type': 'blind-credential',
-                'name': cred.name,
-                'enabled': cred.enabled,
-                'revision': cred.revision,
-                'credential_pairs': cred.credential_pairs,
-                'credential_keys': list(cred.credential_keys),
-                'metadata': cred.metadata,
-                'data_key': cred.data_key,
-                'cipher_version': cred.cipher_version,
-                'cipher_type': cred.cipher_type,
-                'documentation': cred.documentation
-            })
-    return credentials
-
-
-def _pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
-    conflicts = {}
-    pair_keys = {}
-    # If we don't care about conflicts, return immediately
-    if app.config['IGNORE_CONFLICTS']:
-        return conflicts
-    # For all credentials, get their credential pairs and track which
-    # credentials have which keys
-    credentials = _get_credentials(credential_ids)
-    credentials.extend(_get_blind_credentials(blind_credential_ids))
-    for credential in credentials:
-        if credential['data_type'] == 'credential':
-            keys = credential['credential_pairs']
-        elif credential['data_type'] == 'blind-credential':
-            keys = credential['credential_keys']
-        for key in keys:
-            data = {
-                'id': credential['id'],
-                'data_type': credential['data_type']
-            }
-            if key in pair_keys:
-                pair_keys[key].append(data)
-            else:
-                pair_keys[key] = [data]
-    # Iterate the credential pair keys, if there's any keys with more than
-    # one credential add it to the conflict dict.
-    for key, data in pair_keys.items():
-        if len(data) > 1:
-            blind_ids = [k['id'] for k in data
-                         if k['data_type'] == 'blind-credential']
-            ids = [k['id'] for k in data if k['data_type'] == 'credential']
-            conflicts[key] = {
-                'credentials': ids,
-                'blind_credentials': blind_ids
-            }
-    return conflicts
-
-
-def _get_services_for_credential(_id):
-    services = []
-    for service in Service.data_type_date_index.query('service'):
-        if _id in service.credentials:
-            services.append(service)
-    return services
-
-
-def _get_services_for_blind_credential(_id):
-    services = []
-    for service in Service.data_type_date_index.query('service'):
-        if _id in service.blind_credentials:
-            services.append(service)
-    return services
-
-
-def _check_credential_pair_values(credential_pairs):
-    for key, val in credential_pairs.items():
-        if isinstance(val, dict) or isinstance(val, list):
-            ret = {'error': 'credential pairs must be key: value'}
-            return (False, ret)
-    return (True, {})
-
-
-def _get_service_map(services):
-    service_map = {}
-    for service in services:
-        for credential in service.credentials:
-            if credential in service_map:
-                service_map[credential]['service_ids'].append(service.id)
-            else:
-                service_map[credential] = {
-                    'data_type': 'credential',
-                    'service_ids': [service.id]
-                }
-        for credential in service.blind_credentials:
-            if credential in service_map:
-                service_map[credential]['service_ids'].append(service.id)
-            else:
-                service_map[credential] = {
-                    'data_type': 'blind-credential',
-                    'service_ids': [service.id]
-                }
-    return service_map
-
-
-def _pair_key_conflicts_for_services(_id, credential_keys, services):
-    conflicts = {}
-    # If we don't care about conflicts, return immediately
-    if app.config['IGNORE_CONFLICTS']:
-        return conflicts
-    service_map = _get_service_map(services)
-    credential_ids = []
-    blind_credential_ids = []
-    for credential, data in service_map.items():
-        if _id == credential:
-            continue
-        if data['data_type'] == 'credential':
-            credential_ids.append(credential)
-        elif data['data_type'] == 'blind-credential':
-            blind_credential_ids.append(credential)
-    credentials = _get_credentials(credential_ids)
-    credentials.extend(_get_blind_credentials(blind_credential_ids))
-    for credential in credentials:
-        services = service_map[credential['id']]['service_ids']
-        if credential['data_type'] == 'credential':
-            data_type = 'credentials'
-            lookup = 'credential_pairs'
-        elif credential['data_type'] == 'blind-credential':
-            data_type = 'blind_credentials'
-            lookup = 'credential_keys'
-        for key in credential_keys:
-            if key in credential[lookup]:
-                if key not in conflicts:
-                    conflicts[key] = {
-                        data_type: [credential['id']],
-                        'services': services
-                    }
-                else:
-                    conflicts[key]['services'].extend(services)
-                    conflicts[key][data_type].append(credential['id'])
-                conflicts[key]['services'] = list(
-                    set(conflicts[key]['services'])
-                )
-                conflicts[key][data_type] = list(
-                    set(conflicts[key][data_type])
-                )
-    return conflicts
-
-
-def _lowercase_credential_pairs(credential_pairs):
-    return {i.lower(): j for i, j in credential_pairs.items()}
-
-
 @app.route('/v1/credentials', methods=['POST'])
 @authnz.require_auth
 @authnz.require_csrf_token
@@ -659,8 +582,12 @@ def create_credential():
     if not isinstance(data.get('metadata', {}), dict):
         return jsonify({'error': 'metadata must be a dict'}), 400
     # Ensure credential pair keys are lowercase
-    credential_pairs = _lowercase_credential_pairs(data['credential_pairs'])
-    _check, ret = _check_credential_pair_values(credential_pairs)
+    credential_pairs = credentialmanager.lowercase_credential_pairs(
+        data['credential_pairs']
+    )
+    _check, ret = credentialmanager.check_credential_pair_values(
+        credential_pairs
+    )
     if not _check:
         return jsonify(ret), 400
     for cred in Credential.data_type_date_index.query(
@@ -720,7 +647,7 @@ def create_credential():
 @app.route('/v1/credentials/<id>/services', methods=['GET'])
 @authnz.require_auth
 def get_credential_dependencies(id):
-    services = _get_services_for_credential(id)
+    services = servicemanager.get_services_for_credential(id)
     _services = [{'id': x.id, 'enabled': x.enabled} for x in services]
     return jsonify({
         'services': _services
@@ -741,7 +668,10 @@ def update_credential(id):
         return jsonify({'error': msg}), 400
     data = request.get_json()
     update = {}
-    revision = _get_latest_credential_revision(id, _cred.revision)
+    revision = credentialmanager.get_latest_credential_revision(
+        id,
+        _cred.revision
+    )
     update['name'] = data.get('name', _cred.name)
     if 'enabled' in data:
         if not isinstance(data['enabled'], bool):
@@ -751,18 +681,20 @@ def update_credential(id):
         update['enabled'] = _cred.enabled
     if not isinstance(data.get('metadata', {}), dict):
         return jsonify({'error': 'metadata must be a dict'}), 400
-    services = _get_services_for_credential(id)
+    services = servicemanager.get_services_for_credential(id)
     if 'credential_pairs' in data:
         # Ensure credential pair keys are lowercase
-        credential_pairs = _lowercase_credential_pairs(
+        credential_pairs = credentialmanager.lowercase_credential_pairs(
             data['credential_pairs']
         )
-        _check, ret = _check_credential_pair_values(credential_pairs)
+        _check, ret = credentialmanager.check_credential_pair_values(
+            credential_pairs
+        )
         if not _check:
             return jsonify(ret), 400
         # Ensure credential pairs don't conflicts with pairs from other
         # services
-        conflicts = _pair_key_conflicts_for_services(
+        conflicts = servicemanager.pair_key_conflicts_for_services(
             id,
             list(credential_pairs.keys()),
             services
@@ -775,13 +707,7 @@ def update_credential(id):
             return jsonify(ret), 400
         update['credential_pairs'] = json.dumps(credential_pairs)
     else:
-        data_key = keymanager.decrypt_datakey(
-            _cred.data_key,
-            encryption_context={'id': id}
-        )
-        cipher_version = _cred.cipher_version
-        cipher = CipherManager(data_key, cipher_version)
-        update['credential_pairs'] = cipher.decrypt(_cred.credential_pairs)
+        update['credential_pairs'] = _cred.decrypted_credential_pairs
     data_key = keymanager.create_datakey(encryption_context={'id': id})
     cipher = CipherManager(data_key['plaintext'], version=2)
     credential_pairs = cipher.encrypt(update['credential_pairs'])
@@ -847,6 +773,113 @@ def update_credential(id):
     })
 
 
+@app.route('/v1/credentials/<id>/<to_revision>', methods=['PUT'])
+@authnz.require_auth
+@authnz.require_csrf_token
+@maintenance.check_maintenance_mode
+def revert_credential_to_revision(id, to_revision):
+    try:
+        current_credential = Credential.get(id)
+    except DoesNotExist:
+        return jsonify({'error': 'Credential not found.'}), 404
+    if current_credential.data_type != 'credential':
+        msg = 'id provided is not a credential.'
+        return jsonify({'error': msg}), 400
+    new_revision = credentialmanager.get_latest_credential_revision(
+        id,
+        current_credential.revision
+    )
+    try:
+        revert_credential = Credential.get('{}-{}'.format(id, to_revision))
+    except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
+        return jsonify({}), 404
+    if revert_credential.data_type != 'archive-credential':
+        msg = 'id provided is not a credential.'
+        return jsonify({'error': msg}), 400
+    if revert_credential.equals(current_credential):
+        ret = {
+            'error': 'No difference between old and new credential.'
+        }
+        return jsonify(ret), 400
+    services = servicemanager.get_services_for_credential(id)
+    if revert_credential.credential_pairs:
+        _credential_pairs = revert_credential.decrypted_credential_pairs
+        _check, ret = credentialmanager.check_credential_pair_values(
+            _credential_pairs
+        )
+        if not _check:
+            return jsonify(ret), 400
+        # Ensure credential pairs don't conflicts with pairs from other
+        # services
+        conflicts = servicemanager.pair_key_conflicts_for_services(
+            id,
+            list(_credential_pairs.keys()),
+            services
+        )
+        if conflicts:
+            ret = {
+                'error': 'Conflicting key pairs in mapped service.',
+                'conflicts': conflicts
+            }
+            return jsonify(ret), 400
+    # Try to save to the archive
+    try:
+        Credential(
+            id='{0}-{1}'.format(id, new_revision),
+            name=revert_credential.name,
+            data_type='archive-credential',
+            credential_pairs=revert_credential.credential_pairs,
+            metadata=revert_credential.metadata,
+            enabled=revert_credential.enabled,
+            revision=new_revision,
+            data_key=revert_credential.data_key,
+            cipher_version=revert_credential.cipher_version,
+            modified_by=authnz.get_logged_in_user(),
+            documentation=revert_credential.documentation,
+        ).save(id__null=True)
+    except PutError as e:
+        logging.error(e)
+        return jsonify({'error': 'Failed to add credential to archive.'}), 500
+    try:
+        cred = Credential(
+            id=id,
+            name=revert_credential.name,
+            data_type='credential',
+            credential_pairs=revert_credential.credential_pairs,
+            metadata=revert_credential.metadata,
+            enabled=revert_credential.enabled,
+            revision=new_revision,
+            data_key=revert_credential.data_key,
+            cipher_version=revert_credential.cipher_version,
+            modified_by=authnz.get_logged_in_user(),
+            documentation=revert_credential.documentation,
+        )
+        cred.save()
+    except PutError as e:
+        logging.error(e)
+        return jsonify({'error': 'Failed to update active credential.'}), 500
+    if services:
+        service_names = [x.id for x in services]
+        msg = 'Updated credential "{0}" ({1}); Revision {2}'
+        msg = msg.format(cred.name, cred.id, cred.revision)
+        graphite.send_event(service_names, msg)
+        webhook.send_event('credential_update', service_names, [cred.id])
+    return jsonify({
+        'id': cred.id,
+        'name': cred.name,
+        'credential_pairs': cred.decrypted_credential_pairs,
+        'metadata': cred.metadata,
+        'revision': cred.revision,
+        'enabled': cred.enabled,
+        'modified_date': cred.modified_date,
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
+    })
+
+
 @app.route('/v1/blind_credentials', methods=['GET'])
 @authnz.require_auth
 def get_blind_credential_list():
@@ -892,28 +925,6 @@ def get_blind_credential(id):
         'modified_by': cred.modified_by,
         'documentation': cred.documentation
     })
-
-
-def _get_latest_credential_revision(id, revision):
-    i = revision + 1
-    while True:
-        _id = '{0}-{1}'.format(id, i)
-        try:
-            Credential.get(_id)
-        except DoesNotExist:
-            return i
-        i = i + 1
-
-
-def _get_latest_blind_credential_revision(id, revision):
-    i = revision + 1
-    while True:
-        _id = '{0}-{1}'.format(id, i)
-        try:
-            BlindCredential.get(_id)
-        except DoesNotExist:
-            return i
-        i = i + 1
 
 
 @app.route('/v1/archive/blind_credentials/<id>', methods=['GET'])
@@ -1020,7 +1031,7 @@ def create_blind_credential():
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
     revision = 1
-    cred = BlindCredential(
+    BlindCredential(
         id='{0}-{1}'.format(id, revision),
         data_type='archive-blind-credential',
         name=data['name'],
@@ -1072,7 +1083,7 @@ def create_blind_credential():
 @app.route('/v1/blind_credentials/<id>/services', methods=['GET'])
 @authnz.require_auth
 def get_blind_credential_dependencies(id):
-    services = _get_services_for_blind_credential(id)
+    services = servicemanager.get_services_for_blind_credential(id)
     _services = [{'id': x.id, 'enabled': x.enabled} for x in services]
     return jsonify({
         'services': _services
@@ -1093,7 +1104,10 @@ def update_blind_credential(id):
         return jsonify({'error': msg}), 400
     data = request.get_json()
     update = {}
-    revision = _get_latest_blind_credential_revision(id, _cred.revision)
+    revision = credentialmanager.get_latest_blind_credential_revision(
+        id,
+        _cred.revision
+    )
     update['name'] = data.get('name', _cred.name)
     if 'enabled' in data:
         if not isinstance(data['enabled'], bool):
@@ -1103,7 +1117,7 @@ def update_blind_credential(id):
         update['enabled'] = _cred.enabled
     if not isinstance(data.get('metadata', {}), dict):
         return jsonify({'error': 'metadata must be a dict'}), 400
-    services = _get_services_for_blind_credential(id)
+    services = servicemanager.get_services_for_blind_credential(id)
     if 'credential_pairs' in data:
         for key in ['data_key', 'cipher_type', 'cipher_version']:
             if key not in data:
@@ -1118,7 +1132,7 @@ def update_blind_credential(id):
             }), 400
         # Ensure credential keys don't conflicts with pairs from other
         # services
-        conflicts = _pair_key_conflicts_for_services(
+        conflicts = servicemanager.pair_key_conflicts_for_services(
             id,
             data['credential_keys'],
             services
@@ -1216,8 +1230,119 @@ def update_blind_credential(id):
     })
 
 
+@app.route('/v1/blind_credentials/<id>/<to_revision>', methods=['PUT'])
+@authnz.require_auth
+@authnz.require_csrf_token
+@maintenance.check_maintenance_mode
+def revert_blind_credential_to_revision(id, to_revision):
+    try:
+        current_credential = BlindCredential.get(id)
+    except DoesNotExist:
+        return jsonify({'error': 'Blind credential not found.'}), 404
+    if current_credential.data_type != 'blind-credential':
+        msg = 'id provided is not a blind-credential.'
+        return jsonify({'error': msg}), 400
+    new_revision = credentialmanager.get_latest_blind_credential_revision(
+        id,
+        current_credential.revision
+    )
+    try:
+        revert_credential = BlindCredential.get('{}-{}'.format(id, to_revision))
+    except DoesNotExist:
+        return jsonify({'error': 'Blind credential not found.'}), 404
+    if revert_credential.data_type != 'archive-blind-credential':
+        msg = 'id provided is not an archive-blind-credential.'
+        return jsonify({'error': msg}), 400
+    if revert_credential.equals(current_credential):
+        ret = {
+            'error': 'No difference between old and new blind credential.'
+        }
+        return jsonify(ret), 400
+    services = servicemanager.get_services_for_blind_credential(id)
+    if revert_credential.credential_keys:
+        # Ensure credential keys don't conflicts with pairs from other
+        # services
+        conflicts = servicemanager.pair_key_conflicts_for_services(
+            id,
+            revert_credential.credential_keys,
+            services
+        )
+        if conflicts:
+            ret = {
+                'error': 'Conflicting key pairs in mapped service.',
+                'conflicts': conflicts
+            }
+            return jsonify(ret), 400
+    # Try to save to the archive
+    try:
+        BlindCredential(
+            id='{}-{}'.format(id, new_revision),
+            data_type='archive-blind-credential',
+            name=revert_credential.name,
+            credential_pairs=revert_credential.credential_pairs,
+            credential_keys=revert_credential.credential_keys,
+            metadata=revert_credential.metadata,
+            revision=new_revision,
+            enabled=revert_credential.enabled,
+            data_key=revert_credential.data_key,
+            cipher_type=revert_credential.cipher_type,
+            cipher_version=revert_credential.cipher_version,
+            modified_by=authnz.get_logged_in_user(),
+            documentation=revert_credential.documentation
+        ).save(id__null=True)
+    except PutError as e:
+        logging.error(e)
+        return jsonify(
+            {'error': 'Failed to add blind-credential to archive.'}
+        ), 500
+    try:
+        cred = BlindCredential(
+            id=id,
+            data_type='blind-credential',
+            name=revert_credential.name,
+            credential_pairs=revert_credential.credential_pairs,
+            credential_keys=revert_credential.credential_keys,
+            metadata=revert_credential.metadata,
+            revision=new_revision,
+            enabled=revert_credential.enabled,
+            data_key=revert_credential.data_key,
+            cipher_type=revert_credential.cipher_type,
+            cipher_version=revert_credential.cipher_version,
+            modified_by=authnz.get_logged_in_user(),
+            documentation=revert_credential.documentation
+        )
+        cred.save()
+    except PutError as e:
+        logging.error(e)
+        return jsonify(
+            {'error': 'Failed to update active blind-credential.'}
+        ), 500
+    if services:
+        service_names = [x.id for x in services]
+        msg = 'Updated credential "{0}" ({1}); Revision {2}'
+        msg = msg.format(cred.name, cred.id, cred.revision)
+        graphite.send_event(service_names, msg)
+        webhook.send_event('blind_credential_update', service_names, [cred.id])
+    return jsonify({
+        'id': cred.id,
+        'name': cred.name,
+        'credential_pairs': cred.credential_pairs,
+        'credential_keys': list(cred.credential_keys),
+        'cipher_type': cred.cipher_type,
+        'cipher_version': cred.cipher_version,
+        'metadata': cred.metadata,
+        'revision': cred.revision,
+        'enabled': cred.enabled,
+        'data_key': cred.data_key,
+        'modified_date': cred.modified_date,
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
+    })
+
+
 @app.route('/v1/value_generator', methods=['GET'])
 def generate_value():
+    kms_client = confidant.clients.get_boto_client('kms')
     value = kms_client.generate_random(NumberOfBytes=128)['Plaintext']
     value = base64.urlsafe_b64encode(value).decode('UTF-8')
     value = re.sub(r'[\W_]+', '', value)

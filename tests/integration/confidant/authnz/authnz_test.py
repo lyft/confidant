@@ -6,7 +6,6 @@ from mock import PropertyMock
 from confidant.app import app
 from confidant.authnz import userauth
 from confidant import routes  # noqa
-from confidant.models.service import Service
 
 
 class AuthnzTest(unittest.TestCase):

@@ -69,18 +69,17 @@
                 }
             });
 
+            $scope.getCredentialByID = function(id) {
+                return $filter('filter')($scope.$parent.credentialList, {'id': id})[0];
+            };
+
+            $scope.getBlindCredentialByID = function(id) {
+                return $filter('filter')($scope.$parent.blindCredentialList, {'id': id})[0];
+            };
+
             $scope.revertToDiffRevision = function() {
                 var deferred = $q.defer();
-                if (angular.equals($scope.diffBlindCredential.name, $scope.currentBlindCredential.name) &&
-                    angular.equals($scope.diffBlindCredential.credential_keys, $scope.currentBlindCredential.credential_keys) &&
-                    angular.equals($scope.diffBlindCredential.credential_pairs, $scope.currentBlindCredential.credential_pairs) &&
-                    angular.equals($scope.diffBlindCredential.metadata, $scope.currentBlindCredential.metadata) &&
-                    angular.equals($scope.diffBlindCredential.enabled, $scope.currentBlindCredential.enabled)) {
-                    $scope.saveError = 'Can not revert to revision ' + $scope.diffBlindCredential.revision + '. No difference between it and current revision.';
-                    deferred.reject();
-                    return deferred.promise;
-                }
-                BlindCredential.update({'id': $scope.blindCredentialId}, $scope.diffBlindCredential).$promise.then(function(newBlindCredential) {
+                BlindCredential.revert({'id': $scope.blindCredentialId, 'revision': $scope.diffBlindCredential.revision}).$promise.then(function(newBlindCredential) {
                     deferred.resolve();
                     ResourceArchiveService.updateResourceArchive();
                     $location.path('/history/blind_credential/' + newBlindCredential.id + '-' + newBlindCredential.revision);

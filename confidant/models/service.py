@@ -45,3 +45,12 @@ class Service(Model):
     account = UnicodeAttribute(null=True)
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
+
+    def equals(self, other_service):
+        if self.credentials != other_service.credentials:
+            return False
+        if self.blind_credentials != other_service.blind_credentials:
+            return False
+        if self.account != other_service.account:
+            return False
+        return True
