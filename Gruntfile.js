@@ -13,7 +13,9 @@ module.exports = function (grunt) {
 
   // Configurable paths for the application
   var appConfig = {
-    app: require('./bower.json').appPath,
+    nodeDir: 'node_modules',
+    app: 'confidant/public',
+    components: 'confidant/public/components',
     dist: 'confidant/dist'
   };
 
@@ -25,10 +27,6 @@ module.exports = function (grunt) {
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
-      bower: {
-        files: ['bower.json'],
-        tasks: ['bower:install', 'wiredep', 'compass:app']
-      },
       js: {
         files: ['<%= project.app %>/modules/**/*.js'],
         tasks: ['newer:jshint:all']
@@ -50,20 +48,6 @@ module.exports = function (grunt) {
       }
     },
 
-    bower: {
-      options: {
-        targetDir: '<%= project.app %>/bower_components',
-        copy: false
-      },
-      install: {
-        options: {
-          bowerOptions: {
-            production: true
-          }
-        }
-      }
-    },
-
     compass: {
       options: {
         sassDir: '<%= project.app %>/styles',
@@ -75,7 +59,6 @@ module.exports = function (grunt) {
         javascriptsDir: '<%= project.app %>/scripts',
         fontsDir: '<%= project.app %>/styles/fonts',
         importPath: [
-            '<%= project.app %>/bower_components',
             '<%= project.app %>/modules'
         ],
         httpImagesPath: '/images',
@@ -130,21 +113,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Automatically inject Bower components
-    wiredep: {
-      app: {
-        src: ['<%= project.app %>/index.html'],
-        ignorePath:  /\.\.\//,
-        fileTypes: {
-          html: {
-            replace: {
-              js: '<script src="/{{filePath}}"></script>'
-            }
-          }
-        }
-      }
-    },
-
     // Automatically inject app components
     injector: {
       options: {
@@ -154,14 +122,16 @@ module.exports = function (grunt) {
       },
       scripts: {
         src: [
+            '<%= project.app %>/components/**/*.js',
             '<%= project.app %>/js/**/*.js',
             '<%= project.app %>/modules/**/*.js'
         ]
       },
       styles: {
         src: [
+            '<%= project.app %>/components/**/*.css',
             '<%= project.app %>/styles/**/*.css',
-            '<%= project.app %>/bower_components/angular/angular-csp.css'
+            '<%= project.app %>/angular/angular-csp.css'
         ]
       }
     },
@@ -302,6 +272,25 @@ module.exports = function (grunt) {
 
     // Copies remaining files to places other tasks can use
     copy: {
+      components: {
+        files: [
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['json3/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['es5-shim/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['bootstrap/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular-resource/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular-cookies/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular-sanitize/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular-animate/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular-touch/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular-route/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular-ui-bootstrap/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular-xeditable/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['\@uirouter/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['lodash/**']},
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['spin\.js/**']}
+        ]
+      },
       dist: {
         files: [{
           expand: true,
@@ -321,7 +310,7 @@ module.exports = function (grunt) {
           src: ['generated/*']
         }, {
           expand: true,
-          cwd: '<%= project.app %>/bower_components/bootstrap/dist',
+          cwd: '<%= project.app %>/bootstrap/dist',
           src: 'fonts/*',
           dest: '<%= project.dist %>'
         }]
@@ -336,7 +325,7 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%= project.app %>',
           dest: '<%= project.dist %>',
-          src: 'bower_components/angular/angular-csp.css'
+          src: 'angular/angular-csp.css'
         }]
       }
     },
@@ -357,6 +346,7 @@ module.exports = function (grunt) {
     },
 
     clean: {
+        components: ['<%= project.components %>'],
         dist: ['<%= project.dist %>']
     },
 
@@ -385,12 +375,12 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('build', [
-    'bower:install',
     'clean:dist',
+    'clean:components',
     'compass:clean',
     'compass:app',
     'compass:dist',
-    'wiredep',
+    'copy:components',
     'injector',
     'useminPrepare',
     'concurrent:dist',
