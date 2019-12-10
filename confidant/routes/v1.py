@@ -112,7 +112,7 @@ def get_service(id):
         logged_in_user = authnz.get_logged_in_user()
         if not acl_module_check('get_service',
                                 metadata_only=metadata_only,
-                                id=id):
+                                resource=id):
             logging.warning('Authz failed for user {0}.'.format(logged_in_user))
             msg = 'Authenticated user is not authorized.'
             return jsonify({'error': msg}), 401
