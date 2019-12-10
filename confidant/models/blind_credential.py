@@ -51,3 +51,24 @@ class BlindCredential(Model):
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
+
+    def equals(self, other_cred):
+        if self.name != other_cred.name:
+            return False
+        if self.credential_pairs != other_cred.credential_pairs:
+            return False
+        if self.credential_keys != other_cred.credential_keys:
+            return False
+        if self.enabled != other_cred.enabled:
+            return False
+        if self.data_key != other_cred.data_key:
+            return False
+        if self.cipher_version != other_cred.cipher_version:
+            return False
+        if self.cipher_type != other_cred.cipher_type:
+            return False
+        if self.metadata != other_cred.metadata:
+            return False
+        if self.documentation != other_cred.documentation:
+            return False
+        return True

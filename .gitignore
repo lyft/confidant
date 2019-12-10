@@ -1,6 +1,7 @@
 *.swp
 
 *.py[cod]
+.mypy_cache
 
 # C extensions
 *.so

@@ -25,6 +25,7 @@
         ARCHIVE_CREDENTIALS: 'v1/archive/credentials',
         ARCHIVE_CREDENTIAL_REVISIONS: 'v1/archive/credentials/:id/:revision',
         BLIND_CREDENTIAL: 'v1/blind_credentials/:id',
+        BLIND_CREDENTIAL_REVISION: 'v1/blind_credentials/:id/:revision',
         BLIND_CREDENTIAL_SERVICES: 'v1/blind_credentials/:id/services',
         BLIND_CREDENTIALS: 'v1/blind_credentials',
         BLIND_ARCHIVE_CREDENTIALS: 'v1/archive/blind_credentials',

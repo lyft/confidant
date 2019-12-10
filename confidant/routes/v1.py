@@ -1023,7 +1023,7 @@ def create_blind_credential():
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
     revision = 1
-    cred = BlindCredential(
+    BlindCredential(
         id='{0}-{1}'.format(id, revision),
         data_type='archive-blind-credential',
         name=data['name'],
@@ -1192,6 +1192,116 @@ def update_blind_credential(id):
             cipher_version=update['cipher_version'],
             modified_by=authnz.get_logged_in_user(),
             documentation=update['documentation']
+        )
+        cred.save()
+    except PutError as e:
+        logging.error(e)
+        return jsonify(
+            {'error': 'Failed to update active blind-credential.'}
+        ), 500
+    if services:
+        service_names = [x.id for x in services]
+        msg = 'Updated credential "{0}" ({1}); Revision {2}'
+        msg = msg.format(cred.name, cred.id, cred.revision)
+        graphite.send_event(service_names, msg)
+        webhook.send_event('blind_credential_update', service_names, [cred.id])
+    return jsonify({
+        'id': cred.id,
+        'name': cred.name,
+        'credential_pairs': cred.credential_pairs,
+        'credential_keys': list(cred.credential_keys),
+        'cipher_type': cred.cipher_type,
+        'cipher_version': cred.cipher_version,
+        'metadata': cred.metadata,
+        'revision': cred.revision,
+        'enabled': cred.enabled,
+        'data_key': cred.data_key,
+        'modified_date': cred.modified_date,
+        'modified_by': cred.modified_by,
+        'documentation': cred.documentation
+    })
+
+
+@app.route('/v1/blind_credentials/<id>/<to_revision>', methods=['PUT'])
+@authnz.require_auth
+@authnz.require_csrf_token
+@maintenance.check_maintenance_mode
+def revert_blind_credential_to_revision(id, to_revision):
+    try:
+        current_credential = BlindCredential.get(id)
+    except DoesNotExist:
+        return jsonify({'error': 'Blind credential not found.'}), 404
+    if current_credential.data_type != 'blind-credential':
+        msg = 'id provided is not a blind-credential.'
+        return jsonify({'error': msg}), 400
+    new_revision = credentialmanager.get_latest_blind_credential_revision(
+        id,
+        current_credential.revision
+    )
+    try:
+        revert_credential = BlindCredential.get('{}-{}'.format(id, to_revision))
+    except DoesNotExist:
+        return jsonify({'error': 'Blind credential not found.'}), 404
+    if revert_credential.data_type != 'archive-blind-credential':
+        msg = 'id provided is not an archive-blind-credential.'
+        return jsonify({'error': msg}), 400
+    if revert_credential.equals(current_credential):
+        ret = {
+            'error': 'No difference between old and new blind credential.'
+        }
+        return jsonify(ret), 400
+    services = servicemanager.get_services_for_blind_credential(id)
+    if revert_credential.credential_keys:
+        # Ensure credential keys don't conflicts with pairs from other
+        # services
+        conflicts = servicemanager.pair_key_conflicts_for_services(
+            id,
+            revert_credential.credential_keys,
+            services
+        )
+        if conflicts:
+            ret = {
+                'error': 'Conflicting key pairs in mapped service.',
+                'conflicts': conflicts
+            }
+            return jsonify(ret), 400
+    # Try to save to the archive
+    try:
+        BlindCredential(
+            id='{}-{}'.format(id, new_revision),
+            data_type='archive-blind-credential',
+            name=revert_credential.name,
+            credential_pairs=revert_credential.credential_pairs,
+            credential_keys=revert_credential.credential_keys,
+            metadata=revert_credential.metadata,
+            revision=new_revision,
+            enabled=revert_credential.enabled,
+            data_key=revert_credential.data_key,
+            cipher_type=revert_credential.cipher_type,
+            cipher_version=revert_credential.cipher_version,
+            modified_by=authnz.get_logged_in_user(),
+            documentation=revert_credential.documentation
+        ).save(id__null=True)
+    except PutError as e:
+        logging.error(e)
+        return jsonify(
+            {'error': 'Failed to add blind-credential to archive.'}
+        ), 500
+    try:
+        cred = BlindCredential(
+            id=id,
+            data_type='blind-credential',
+            name=revert_credential.name,
+            credential_pairs=revert_credential.credential_pairs,
+            credential_keys=revert_credential.credential_keys,
+            metadata=revert_credential.metadata,
+            revision=new_revision,
+            enabled=revert_credential.enabled,
+            data_key=revert_credential.data_key,
+            cipher_type=revert_credential.cipher_type,
+            cipher_version=revert_credential.cipher_version,
+            modified_by=authnz.get_logged_in_user(),
+            documentation=revert_credential.documentation
         )
         cred.save()
     except PutError as e:
