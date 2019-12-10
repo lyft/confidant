@@ -66,6 +66,10 @@ class Credential(Model):
         return True
 
     @property
+    def credential_keys(self):
+        return list(self.decrypted_credential_pairs)
+
+    @property
     def decrypted_credential_pairs(self):
         if self.data_type == 'credential':
             context = self.id
