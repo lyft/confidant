@@ -122,29 +122,29 @@ module.exports = function (grunt) {
       },
       scripts: {
         src: [
-            '<%= project.app %>/components/lodash/index.js',
-            '<%= project.app %>/components/jquery/dist/jquery.js',
-            '<%= project.app %>/components/angular/angular.js',
-            '<%= project.app %>/components/bootstrap/dist/js/bootstrap.js',
-            '<%= project.app %>/components/angular-resource/angular-resource.js',
-            '<%= project.app %>/components/angular-cookies/angular-cookies.js',
-            '<%= project.app %>/components/angular-sanitize/angular-sanitize.js',
-            '<%= project.app %>/components/angular-animate/angular-animate.js',
-            '<%= project.app %>/components/angular-touch/angular-touch.js',
-            '<%= project.app %>/components/angular-route/angular-route.js',
-            '<%= project.app %>/components/angular-ui-bootstrap/ui-bootstrap-tpls.js',
-            '<%= project.app %>/components/angular-xeditable/dist/js/xeditable.js',
-            '<%= project.app %>/components/@uirouter/angularjs/release/angular-ui-router.js',
-            '<%= project.app %>/components/spin.js/spin.js',
+            '<%= project.components %>/lodash/index.js',
+            '<%= project.components %>/jquery/dist/jquery.js',
+            '<%= project.components %>/angular/angular.js',
+            '<%= project.components %>/bootstrap/dist/js/bootstrap.js',
+            '<%= project.components %>/angular-resource/angular-resource.js',
+            '<%= project.components %>/angular-cookies/angular-cookies.js',
+            '<%= project.components %>/angular-sanitize/angular-sanitize.js',
+            '<%= project.components %>/angular-animate/angular-animate.js',
+            '<%= project.components %>/angular-touch/angular-touch.js',
+            '<%= project.components %>/angular-route/angular-route.js',
+            '<%= project.components %>/angular-ui-bootstrap/ui-bootstrap-tpls.js',
+            '<%= project.components %>/angular-xeditable/dist/js/xeditable.js',
+            '<%= project.components %>/@uirouter/angularjs/release/angular-ui-router.js',
+            '<%= project.components %>/spin.js/spin.js',
             '<%= project.app %>/js/**/*.js',
             '<%= project.app %>/modules/**/*.js'
         ]
       },
       styles: {
         src: [
-            '<%= project.app %>/components/bootstrap/dist/css/bootstrap.css',
-            '<%= project.app %>/components/angular-xeditable/dist/css/xeditable.css',
-            '<%= project.app %>/components/angular/angular-csp.css',
+            '<%= project.components %>/bootstrap/dist/css/bootstrap.css',
+            '<%= project.components %>/angular-xeditable/dist/css/xeditable.css',
+            '<%= project.components %>/angular/angular-csp.css',
             '<%= project.app %>/styles/**/*.css',
             '<%= project.app %>/angular/angular-csp.css'
         ]
@@ -326,7 +326,7 @@ module.exports = function (grunt) {
           src: ['generated/*']
         }, {
           expand: true,
-          cwd: '<%= project.app %>/bootstrap/dist',
+          cwd: '<%= project.components %>/bootstrap/dist',
           src: 'fonts/*',
           dest: '<%= project.dist %>'
         }]
