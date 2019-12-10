@@ -79,15 +79,7 @@
 
             $scope.revertToDiffRevision = function() {
                 var deferred = $q.defer();
-                if (angular.equals($scope.diffCredential.name, $scope.currentCredential.name) &&
-                    angular.equals($scope.diffCredential.credential_pairs, $scope.currentCredential.credential_pairs) &&
-                    angular.equals($scope.diffCredential.metadata, $scope.currentCredential.metadata) &&
-                    angular.equals($scope.diffCredential.enabled, $scope.currentCredential.enabled)) {
-                    $scope.saveError = 'Can not revert to revision ' + $scope.diffCredential.revision + '. No difference between it and current revision.';
-                    deferred.reject();
-                    return deferred.promise;
-                }
-                Credential.update({'id': $scope.credentialId}, $scope.diffCredential).$promise.then(function(newCredential) {
+                Credential.revert({'id': $scope.credentialId, revision: $scope.diffCredential.revision}).$promise.then(function(newCredential) {
                     deferred.resolve();
                     ResourceArchiveService.updateResourceArchive();
                     $location.path('/history/credential/' + newCredential.id + '-' + newCredential.revision);
