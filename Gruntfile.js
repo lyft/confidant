@@ -122,14 +122,29 @@ module.exports = function (grunt) {
       },
       scripts: {
         src: [
-            '<%= project.app %>/components/**/*.js',
+            '<%= project.app %>/components/lodash/index.js',
+            '<%= project.app %>/components/jquery/dist/jquery.js',
+            '<%= project.app %>/components/angular/angular.js',
+            '<%= project.app %>/components/bootstrap/dist/js/bootstrap.js',
+            '<%= project.app %>/components/angular-resource/angular-resource.js',
+            '<%= project.app %>/components/angular-cookies/angular-cookies.js',
+            '<%= project.app %>/components/angular-sanitize/angular-sanitize.js',
+            '<%= project.app %>/components/angular-animate/angular-animate.js',
+            '<%= project.app %>/components/angular-touch/angular-touch.js',
+            '<%= project.app %>/components/angular-route/angular-route.js',
+            '<%= project.app %>/components/angular-ui-bootstrap/ui-bootstrap-tpls.js',
+            '<%= project.app %>/components/angular-xeditable/dist/js/xeditable.js',
+            '<%= project.app %>/components/@uirouter/angularjs/release/angular-ui-router.js',
+            '<%= project.app %>/components/spin.js/spin.js',
             '<%= project.app %>/js/**/*.js',
             '<%= project.app %>/modules/**/*.js'
         ]
       },
       styles: {
         src: [
-            '<%= project.app %>/components/**/*.css',
+            '<%= project.app %>/components/bootstrap/dist/css/bootstrap.css',
+            '<%= project.app %>/components/angular-xeditable/dist/css/xeditable.css',
+            '<%= project.app %>/components/angular/angular-csp.css',
             '<%= project.app %>/styles/**/*.css',
             '<%= project.app %>/angular/angular-csp.css'
         ]
@@ -274,6 +289,7 @@ module.exports = function (grunt) {
     copy: {
       components: {
         files: [
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['jquery/**']},
           {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular/**']},
           {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['json3/**']},
           {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['es5-shim/**']},
@@ -288,7 +304,7 @@ module.exports = function (grunt) {
           {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['angular-xeditable/**']},
           {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['\@uirouter/**']},
           {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['lodash/**']},
-          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['spin\.js/**']}
+          {expand: true, cwd: '<%= project.nodeDir %>', dest: '<%= project.components %>/', src: ['spin.js/**']}
         ]
       },
       dist: {
