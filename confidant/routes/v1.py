@@ -24,8 +24,6 @@ from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
 
-iam_resource = confidant.clients.get_boto_resource('iam')
-kms_client = confidant.clients.get_boto_client('kms')
 acl_module_check = settings.load_module(settings.ACL_MODULE)
 
 VALUE_LENGTH = 50
@@ -289,7 +287,7 @@ def get_grants(id):
 @maintenance.check_maintenance_mode
 def map_service_credentials(id):
     if not acl_module_check('map_service_credential',
-                            actions=['create'],
+                            actions=['update'],
                             resource=id):
         msg = "{} does not have access to map service credential {}".format(
             authnz.get_logged_in_user(),
@@ -1314,16 +1312,6 @@ def update_blind_credential(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def revert_blind_credential_to_revision(id, to_revision):
-    if not acl_module_check('revert_blind_credential_to_revision',
-                            actions=['revert'],
-                            resource=id):
-        msg = "{} does not have access to revert blind credential {}".format(
-            authnz.get_logged_in_user(),
-            id
-        )
-        error_msg = {'error': msg, 'reference': id}
-        return jsonify(error_msg), 403
-
     try:
         current_credential = BlindCredential.get(id)
     except DoesNotExist:
