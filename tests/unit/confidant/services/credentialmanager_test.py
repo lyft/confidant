@@ -19,3 +19,18 @@ class CredentialManagerTest(unittest.TestCase):
         get.side_effect = DoesNotExist()
         res = credentialmanager.get_latest_credential_revision('123', 1)
         assert res == 2
+
+    def test_lowercase_credential_pairs(self):
+        test = {
+            'A': '123',
+            'B': '345',
+            'C': '678'
+        }
+
+        expected = {
+            'a': '123',
+            'b': '345',
+            'c': '678'
+        }
+        res = credentialmanager.lowercase_credential_pairs(test)
+        assert res == expected
