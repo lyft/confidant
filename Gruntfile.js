@@ -206,54 +206,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // The following *-min tasks will produce minified files in the dist folder
-    // By default, your `index.html`'s <!-- Usemin block --> will take care of
-    // minification. These next options are pre-configured if you do not wish
-    // to use the Usemin blocks.
-    // cssmin: {
-    //   dist: {
-    //     files: {
-    //       '<%= project.dist %>/styles/main.css': [
-    //         '.tmp/styles/**/*.css'
-    //       ]
-    //     }
-    //   }
-    // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= project.dist %>/scripts/scripts.js': [
-    //         '<%= project.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
-    // concat: {
-    //   dist: {}
-    // },
-
-    imagemin: {
-     dist: {
-       files: [{
-         expand: true,
-         cwd: '<%= project.app %>/images',
-         src: '**/*.{png,jpg,jpeg,gif}',
-         dest: '<%= project.dist %>/images'
-       }]
-     }
-    },
-
-    svgmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= project.app %>/images',
-          src: '**/*.svg',
-          dest: '<%= project.dist %>/images'
-        }]
-      }
-    },
-
     htmlmin: {
       dist: {
         options: {
