@@ -1,4 +1,3 @@
-@media
 html, body {
   height: 100%;
   width: 100%;
@@ -6,132 +5,108 @@ html, body {
   position: relative;
 }
 
-@media
 body {
   background-color: #F4F5F5;
 }
 
-@media
 #site-navigation {
   position: relative;
 }
 
-@media
 #page-header {
   color: #F4F5F5;
   background-color: #333D47;
 }
-@media
 #page-header h1 {
   color: #F4F5F5;
   background-color: #333D47;
   margin-top: -2px;
 }
-@media
 #page-header .nav li a:hover {
   background: transparent;
 }
-@media
 #page-header #header-subtext {
   margin-top: -5px;
 }
 
-@media
 #page-navigation {
   margin-top: 5px;
 }
 
-@media
 .no-details-text {
   vertical-align: middle;
   text-align: center;
 }
 
-@media
 .row-overflow-resources {
   position: relative;
   overflow-y: auto;
   height: calc(100% - 70px);
 }
 
-@media
 .row-overflow-history-resources {
   position: relative;
   overflow-y: auto;
   height: calc(100% - 70px);
 }
 
-@media
 .row-overflow {
   position: relative;
   overflow-y: auto;
   height: 100%;
 }
 
-@media
 .row-relative {
   position: relative;
   height: 100%;
 }
 
-@media
 .container-body {
   height: calc(100% - 155px);
   padding-top: 5px;
 }
 
-@media
 .container-bottomborder {
   border-bottom-width: 1px;
   border-bottom-style: solid;
 }
 
-@media
 .textarea-fullwidth {
   width: 100%;
 }
 
-@media
 .editable-textarea {
   width: 100%;
 }
 
-@media
 .editable-controls {
   width: 100%;
 }
 
-@media
 .ng-invalid-pattern {
   border-color: red;
 }
 
-@media
 .has-margin-bottom {
   margin-bottom: 5px;
 }
 
-@media
 .has-margin-bottom-lg {
   margin-bottom: 10px;
 }
 
-@media
 .has-margin-top {
   margin-top: 5px;
 }
 
-@media
 .has-margin-top-lg {
   margin-top: 10px;
 }
 
-@media
 .well {
   background-color: #FFF;
 }
 
-@media
 .dont-break-out {
   /* These are technically the same, but use both */
   overflow-wrap: break-word;
@@ -146,7 +121,6 @@ body {
 /*
  * Loading spinner
  */
-@media
 #loading-spinner.opaque {
   width: 100%;
   height: 100%;
@@ -154,7 +128,6 @@ body {
   z-index: 6000;
   background-color: #333D47;
 }
-@media
 #loading-spinner .spinner:before {
   content: '';
   position: absolute;
