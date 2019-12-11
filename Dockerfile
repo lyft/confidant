@@ -29,6 +29,7 @@ RUN virtualenv /venv -ppython3 && \
     pip install --no-cache -r piptools_requirements3.txt && \
     pip install --no-cache -r requirements3.txt
 
+COPY .jshintrc Gruntfile.js /srv/confidant/
 COPY confidant/public /srv/confidant/confidant/public
 
 RUN node_modules/grunt-cli/bin/grunt build
