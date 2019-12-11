@@ -15,7 +15,7 @@ RUN apt-get update \
         libffi-dev libxml2-dev libxmlsec1-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY package.json bower.json piptools_requirements*.txt requirements*.txt /srv/confidant/
+COPY package.json piptools_requirements*.txt requirements*.txt /srv/confidant/
 
 WORKDIR /srv/confidant
 
