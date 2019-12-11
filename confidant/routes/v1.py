@@ -74,6 +74,13 @@ def get_client_config():
 @app.route('/v1/services', methods=['GET'])
 @authnz.require_auth
 def get_service_list():
+    if not acl_module_check('get_service',
+                            actions=['list']):
+        msg = "{} does not have access to list services".format(
+            authnz.get_logged_in_user()
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
     services = []
     for service in Service.data_type_date_index.query('service'):
         services.append({
@@ -110,12 +117,18 @@ def get_service(id):
             return jsonify({'error': msg}), 401
     else:
         logged_in_user = authnz.get_logged_in_user()
+        acl_actions = ['metadata']
+        if not metadata_only:
+            acl_actions.append('get')
         if not acl_module_check('get_service',
-                                metadata_only=metadata_only,
+                                actions=acl_actions,
                                 resource=id):
-            logging.warning('Authz failed for user {0}.'.format(logged_in_user))
-            msg = 'Authenticated user is not authorized.'
-            return jsonify({'error': msg}), 401
+            msg = "{} does not have access to get service {}".format(
+                authnz.get_logged_in_user(),
+                id
+            )
+            error_msg = {'error': msg, 'reference': id}
+            return jsonify(error_msg), 403
 
         logging.info(
             'get_service called on id={} by user={} metadata_only={}'.format(
@@ -275,6 +288,16 @@ def get_grants(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def map_service_credentials(id):
+    if not acl_module_check('map_service_credential',
+                            actions=['create'],
+                            resource=id):
+        msg = "{} does not have access to map service credential {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     data = request.get_json()
     try:
         _service = Service.get(id)
@@ -372,6 +395,16 @@ def map_service_credentials(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def revert_service_to_revision(id, to_revision):
+    if not acl_module_check('revert_service_to_revision',
+                            actions=['revert'],
+                            resource=id):
+        msg = "{} does not have access to revert service {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     try:
         current_service = Service.get(id)
     except DoesNotExist:
@@ -472,6 +505,13 @@ def revert_service_to_revision(id, to_revision):
 @app.route('/v1/credentials', methods=['GET'])
 @authnz.require_auth
 def get_credential_list():
+    if not acl_module_check('get_credential', actions=['list']):
+        msg = "{} does not have access to list credentials".format(
+            authnz.get_logged_in_user()
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     credentials = []
     for cred in Credential.data_type_date_index.query('credential'):
         credentials.append({
@@ -491,8 +531,8 @@ def get_credential_list():
 @app.route('/v1/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_credential(id):
-    if not acl_module_check('get_credential', action='view', resource=id):
-        msg = "{} does not have access to {}".format(
+    if not acl_module_check('get_credential', actions=['get'], resource=id):
+        msg = "{} does not have access to credential {}".format(
             authnz.get_logged_in_user(),
             id
         )
@@ -586,6 +626,13 @@ def get_archive_credential_list():
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def create_credential():
+    if not acl_module_check('create_credential', actions=['create']):
+        msg = "{} does not have access to create credentials".format(
+            authnz.get_logged_in_user()
+        )
+        error_msg = {'error': msg}
+        return jsonify(error_msg), 403
+
     data = request.get_json()
     if not data.get('documentation') and settings.get('ENFORCE_DOCUMENTATION'):
         return jsonify({'error': 'documentation is a required field'}), 400
@@ -671,6 +718,16 @@ def get_credential_dependencies(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def update_credential(id):
+    if not acl_module_check('update_credential',
+                            actions=['update'],
+                            resource=id):
+        msg = "{} does not have access to update credential {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     try:
         _cred = Credential.get(id)
     except DoesNotExist:
@@ -790,6 +847,16 @@ def update_credential(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def revert_credential_to_revision(id, to_revision):
+    if not acl_module_check('revert_credential_to_revision',
+                            actions=['revert'],
+                            resource=id):
+        msg = "{} does not have access to revert credential {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     try:
         current_credential = Credential.get(id)
     except DoesNotExist:
@@ -1247,6 +1314,16 @@ def update_blind_credential(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def revert_blind_credential_to_revision(id, to_revision):
+    if not acl_module_check('revert_blind_credential_to_revision',
+                            actions=['revert'],
+                            resource=id):
+        msg = "{} does not have access to revert blind credential {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     try:
         current_credential = BlindCredential.get(id)
     except DoesNotExist:
