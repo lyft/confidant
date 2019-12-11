@@ -17,12 +17,12 @@ RUN apt-get update \
         libffi-dev libxml2-dev libxmlsec1-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY package.json
+COPY package.json /srv/confidant/
 
 RUN npm install grunt-cli && \
     npm install
 
-COPY piptools_requirements*.txt requirements*.txt
+COPY piptools_requirements*.txt requirements*.txt /srv/confidant/
 
 ENV PATH=/venv/bin:$PATH
 RUN virtualenv /venv -ppython3 && \
