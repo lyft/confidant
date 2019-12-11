@@ -6,8 +6,6 @@ module.exports = function (grunt) {
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
-  grunt.loadNpmTasks('grunt-contrib-compass');
-
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -39,55 +37,8 @@ module.exports = function (grunt) {
         files: ['<%= project.app %>/styles/**/*.css'],
         tasks: ['newer:copy:styles']
       },
-      compass: {
-        files: ['<%= project.app %>/{modules,styles}/**/*.{scss,sass}'],
-        tasks: ['compass:app']
-      },
       gruntfile: {
         files: ['Gruntfile.js']
-      }
-    },
-
-    compass: {
-      options: {
-        sassDir: '<%= project.app %>/styles',
-        cssDir: '<%= project.app %>/styles',
-        generatedImagesDir: '<%= project.app %>/images/generated',
-        imagesDir: [
-            '<%= project.app %>/images'
-        ],
-        javascriptsDir: '<%= project.app %>/scripts',
-        fontsDir: '<%= project.app %>/styles/fonts',
-        importPath: [
-            '<%= project.app %>/modules'
-        ],
-        httpImagesPath: '/images',
-        httpGeneratedImagesPath: '/images/generated',
-        httpFontsPath: '/styles/fonts',
-        relativeAssets: true,
-        assetCacheBuster: false,
-        outputStyle: 'expanded',
-        debugInfo: true
-      },
-      clean: {
-        options: {
-          debugInfo: false,
-          clean: true
-        }
-      },
-      app: {
-        options: {
-          outputStyle: 'expanded',
-          debugInfo: true
-        }
-      },
-      dist: {
-        options: {
-          cssDir: '<%= project.app %>/styles',
-          generatedImagesDir: '<%= project.app %>/images/generated',
-          outputStyle: 'compressed',
-          debugInfo: false
-        }
       }
     },
 
@@ -327,9 +278,6 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'clean:components',
-    'compass:clean',
-    'compass:app',
-    'compass:dist',
     'copy:components',
     'injector',
     'useminPrepare',

@@ -8,7 +8,7 @@ RUN apt-get update \
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         # For frontend
-        make ruby-dev nodejs git-core \
+        make nodejs git-core \
         # For backend
         gcc pkg-config \
         python3-dev virtualenv \
@@ -24,10 +24,7 @@ RUN virtualenv /venv -ppython3 && \
     pip install --no-cache -r piptools_requirements3.txt && \
     pip install --no-cache -r requirements3.txt
 
-RUN gem install ffi -v 1.10.0 && \
-    gem install rb-inotify -v 0.9.10 && \
-    gem install compass -v 1.0.3 && \
-    npm install grunt-cli && \
+RUN npm install grunt-cli && \
     npm install
 
 COPY . /srv/confidant
