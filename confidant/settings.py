@@ -510,3 +510,4 @@ def load_module(module_path):
 
 # Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:no_acl')
+ACL_MODULE = str_env('ACL_MODULE', 'private.authnz:acl_check')

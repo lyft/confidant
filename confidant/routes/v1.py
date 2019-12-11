@@ -529,7 +529,9 @@ def get_credential_list():
 @app.route('/v1/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_credential(id):
-    if not acl_module_check('get_credential', actions=['get'], resource=id):
+    if not acl_module_check('get_credential',
+                            actions=['get'],
+                            resource=id):
         msg = "{} does not have access to credential {}".format(
             authnz.get_logged_in_user(),
             id
