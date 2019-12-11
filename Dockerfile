@@ -1,6 +1,8 @@
 FROM ubuntu:bionic
 LABEL maintainer="rlane@lyft.com"
 
+WORKDIR /srv/confidant
+
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         curl ca-certificates \
@@ -15,21 +17,23 @@ RUN apt-get update \
         libffi-dev libxml2-dev libxmlsec1-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY package.json piptools_requirements*.txt requirements*.txt /srv/confidant/
+COPY package.json
 
-WORKDIR /srv/confidant
+RUN npm install grunt-cli && \
+    npm install
+
+COPY piptools_requirements*.txt requirements*.txt
 
 ENV PATH=/venv/bin:$PATH
 RUN virtualenv /venv -ppython3 && \
     pip install --no-cache -r piptools_requirements3.txt && \
     pip install --no-cache -r requirements3.txt
 
-RUN npm install grunt-cli && \
-    npm install
-
-COPY . /srv/confidant
+COPY confidant/public /srv/confidant/confidant/public
 
 RUN node_modules/grunt-cli/bin/grunt build
+
+COPY . /srv/confidant
 
 EXPOSE 80
 
