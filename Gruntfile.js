@@ -88,8 +88,6 @@ module.exports = function (grunt) {
           outputStyle: 'compressed',
           debugInfo: false
         }
-      },
-      test: {
       }
     },
 
@@ -318,28 +316,14 @@ module.exports = function (grunt) {
         dist: ['<%= project.dist %>']
     },
 
-    // Test settings
-    karma: {
-      unit: {
-        configFile: 'test/karma.conf.js',
-        singleRun: true
-      },
-      ci: {
-        configFile: 'test/karma.conf.js',
-        reporters: ['progress', 'junit'],
-        singleRun: true
-      }
-    }
   });
 
   grunt.registerTask('test', [
-    'newer:jshint:all',
-    'karma:unit'
+    'newer:jshint:all'
   ]);
 
   grunt.registerTask('testci', [
-    'newer:jshint:all',
-    'karma:ci'
+    'newer:jshint:all'
   ]);
 
   grunt.registerTask('build', [
@@ -364,7 +348,6 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'newer:jshint',
-    'test'
+    'newer:jshint'
   ]);
 };
