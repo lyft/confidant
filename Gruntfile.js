@@ -6,8 +6,6 @@ module.exports = function (grunt) {
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
-  grunt.loadNpmTasks('grunt-contrib-compass');
-
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -39,57 +37,8 @@ module.exports = function (grunt) {
         files: ['<%= project.app %>/styles/**/*.css'],
         tasks: ['newer:copy:styles']
       },
-      compass: {
-        files: ['<%= project.app %>/{modules,styles}/**/*.{scss,sass}'],
-        tasks: ['compass:app']
-      },
       gruntfile: {
         files: ['Gruntfile.js']
-      }
-    },
-
-    compass: {
-      options: {
-        sassDir: '<%= project.app %>/styles',
-        cssDir: '<%= project.app %>/styles',
-        generatedImagesDir: '<%= project.app %>/images/generated',
-        imagesDir: [
-            '<%= project.app %>/images'
-        ],
-        javascriptsDir: '<%= project.app %>/scripts',
-        fontsDir: '<%= project.app %>/styles/fonts',
-        importPath: [
-            '<%= project.app %>/modules'
-        ],
-        httpImagesPath: '/images',
-        httpGeneratedImagesPath: '/images/generated',
-        httpFontsPath: '/styles/fonts',
-        relativeAssets: true,
-        assetCacheBuster: false,
-        outputStyle: 'expanded',
-        debugInfo: true
-      },
-      clean: {
-        options: {
-          debugInfo: false,
-          clean: true
-        }
-      },
-      app: {
-        options: {
-          outputStyle: 'expanded',
-          debugInfo: true
-        }
-      },
-      dist: {
-        options: {
-          cssDir: '<%= project.app %>/styles',
-          generatedImagesDir: '<%= project.app %>/images/generated',
-          outputStyle: 'compressed',
-          debugInfo: false
-        }
-      },
-      test: {
       }
     },
 
@@ -206,54 +155,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // The following *-min tasks will produce minified files in the dist folder
-    // By default, your `index.html`'s <!-- Usemin block --> will take care of
-    // minification. These next options are pre-configured if you do not wish
-    // to use the Usemin blocks.
-    // cssmin: {
-    //   dist: {
-    //     files: {
-    //       '<%= project.dist %>/styles/main.css': [
-    //         '.tmp/styles/**/*.css'
-    //       ]
-    //     }
-    //   }
-    // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= project.dist %>/scripts/scripts.js': [
-    //         '<%= project.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
-    // concat: {
-    //   dist: {}
-    // },
-
-    imagemin: {
-     dist: {
-       files: [{
-         expand: true,
-         cwd: '<%= project.app %>/images',
-         src: '**/*.{png,jpg,jpeg,gif}',
-         dest: '<%= project.dist %>/images'
-       }]
-     }
-    },
-
-    svgmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= project.app %>/images',
-          src: '**/*.svg',
-          dest: '<%= project.dist %>/images'
-        }]
-      }
-    },
-
     htmlmin: {
       dist: {
         options: {
@@ -355,9 +256,7 @@ module.exports = function (grunt) {
         'copy:styles'
       ],
       dist: [
-        'copy:styles',
-        'imagemin',
-        'svgmin'
+        'copy:styles'
       ]
     },
 
@@ -366,36 +265,19 @@ module.exports = function (grunt) {
         dist: ['<%= project.dist %>']
     },
 
-    // Test settings
-    karma: {
-      unit: {
-        configFile: 'test/karma.conf.js',
-        singleRun: true
-      },
-      ci: {
-        configFile: 'test/karma.conf.js',
-        reporters: ['progress', 'junit'],
-        singleRun: true
-      }
-    }
   });
 
   grunt.registerTask('test', [
-    'newer:jshint:all',
-    'karma:unit'
+    'newer:jshint:all'
   ]);
 
   grunt.registerTask('testci', [
-    'newer:jshint:all',
-    'karma:ci'
+    'newer:jshint:all'
   ]);
 
   grunt.registerTask('build', [
     'clean:dist',
     'clean:components',
-    'compass:clean',
-    'compass:app',
-    'compass:dist',
     'copy:components',
     'injector',
     'useminPrepare',
@@ -412,7 +294,6 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'newer:jshint',
-    'test'
+    'newer:jshint'
   ]);
 };

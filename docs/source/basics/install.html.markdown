@@ -94,7 +94,7 @@ deactivate
 
 ```bash
 cd /srv/confidant
-sudo apt-get install -y ruby-full npm nodejs nodejs-legacy git git-core
+sudo apt-get install -y npm nodejs nodejs-legacy git git-core
 gem install compass
 npm install grunt-cli
 npm install

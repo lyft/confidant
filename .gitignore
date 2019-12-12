@@ -42,7 +42,6 @@ components
 .sass-cache
 .tmp
 confidant/public/dist
-confidant/public/styles/*.css
 service.env
 
 # Mr Developer (mac, editor, IDEs, etc)
