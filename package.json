@@ -19,7 +19,7 @@
     "angular-xeditable": "~0.1.9",
     "es5-shim": "~4.1.13",
     "json3": "~3.3.2",
-    "lodash": "~3.10.1",
+    "lodash": "~4.17.15",
     "spin.js": "~2.3.2"
   },
   "devDependencies": {
