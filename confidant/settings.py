@@ -1,5 +1,4 @@
 import json
-import importlib
 import logging
 from os import getenv
 
@@ -492,20 +491,6 @@ def get(name, default=None):
     if encrypted_settings.registered(name):
         return encrypted_settings.get_secret(name)
     return globals().get(name, default)
-
-
-def load_module(module_path):
-    """ Load's a python module.
-
-    ex: module_path = "confidant.authnz.rbac:no_acl"
-
-    Will load the module confidant.authnz.rbac and return the function no_acl
-    """
-    module_name, function_name = module_path.split(':')
-    module = importlib.import_module(module_name)
-    function = getattr(module, function_name)
-
-    return function
 
 
 # Module that will perform an external ACL check on API endpoints

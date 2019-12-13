@@ -20,11 +20,13 @@ from confidant.services import credentialmanager
 from confidant.services import servicemanager
 from confidant.services.ciphermanager import CipherManager
 from confidant.utils import maintenance
+from confidant.utils import misc
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
 
-acl_module_check = settings.load_module(settings.ACL_MODULE)
+
+acl_module_check = misc.load_module(settings.ACL_MODULE)
 
 VALUE_LENGTH = 50
 
