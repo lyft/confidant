@@ -45,7 +45,12 @@
             var credentialCopy = null;
             $scope.$log = $log;
             $scope.saveError = '';
+            $scope.getError = '';
             $scope.credentialPairConflicts = null;
+            $scope.hasMetadata = false;
+            $scope.hasView = false;
+            // TODO: get this from the credential return
+            $scope.hasModify = true;
 
             if ($stateParams.credentialId) {
                 CredentialServices.get({'id': $stateParams.credentialId}).$promise.then(function(credentialServices) {
@@ -55,10 +60,16 @@
                 Credential.get({'id': $stateParams.credentialId}).$promise.then(function(credential) {
                     var _credentialPairs = [],
                         _metadata = [];
-                    angular.forEach(credential.credential_pairs, function(value, key) {
-                        this.push({'key': key, 'value': value});
-                    }, _credentialPairs);
-                    credential.credentialPairs = _credentialPairs;
+                    if (credential.credential_pairs) {
+                        angular.forEach(credential.credential_pairs, function(value, key) {
+                            this.push({'key': key, 'value': value});
+                        }, _credentialPairs);
+                        credential.credentialPairs = _credentialPairs;
+                        $scope.hasView = true;
+                    }
+                    if (credential.credential_keys) {
+                        $scope.hasMetadata = true;
+                    }
                     angular.forEach(credential.metadata, function(value, key) {
                         this.push({'key': key, 'value': value});
                     }, _metadata);
@@ -67,6 +78,14 @@
                     $scope.credential = credential;
                     credentialCopy = angular.copy($scope.credential);
                     $scope.shown = false;
+                }, function(res) {
+                    if (res.status === 500) {
+                        $scope.getError = 'Unexpected server error.';
+                        $log.error(res);
+                    } else {
+                        $scope.getError = res.data.error;
+                    }
+                    deferred.reject();
                 });
             } else {
                 $scope.credential = {
