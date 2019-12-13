@@ -77,7 +77,7 @@ def get_service_list():
         msg = "{} does not have access to list services".format(
             authnz.get_logged_in_user()
         )
-        error_msg = {'error': msg, 'reference': id}
+        error_msg = {'error': msg}
         return jsonify(error_msg), 403
     services = []
     for service in Service.data_type_date_index.query('service'):
@@ -286,17 +286,6 @@ def get_grants(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def map_service_credentials(id):
-    if not acl_module_check('map_service_credential',
-                            actions=['update'],
-                            resource=id):
-        msg = "{} does not have access to map service credential {}".format(
-            authnz.get_logged_in_user(),
-            id
-        )
-        error_msg = {'error': msg, 'reference': id}
-        return jsonify(error_msg), 403
-
-    data = request.get_json()
     try:
         _service = Service.get(id)
         if _service.data_type != 'service':
@@ -310,10 +299,25 @@ def map_service_credentials(id):
         revision = 1
         _service = None
 
+    data = request.get_json()
     if data.get('credentials') or data.get('blind_credentials'):
+        credentials = data.get('credentials', [])
+        blind_credentials = data.get('blind_credentials', [])
+        credentials = credentials + blind_credentials
+        if not acl_module_check('map_service_credential',
+                                actions=['put'],
+                                resource_credentials=credentials,
+                                resource_service=id):
+            msg = "{} does not have access to map service credential {}".format(
+                authnz.get_logged_in_user(),
+                id
+            )
+            error_msg = {'error': msg, 'reference': id}
+            return jsonify(error_msg), 403
+
         conflicts = credentialmanager.pair_key_conflicts_for_credentials(
-            data.get('credentials', []),
-            data.get('blind_credentials', []),
+            credentials,
+            blind_credentials,
         )
         if conflicts:
             ret = {
