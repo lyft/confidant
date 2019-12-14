@@ -48,7 +48,7 @@ jobs:
         with:
           python-version: 3.6
       - name: Install apt dependencies
-        run: sudo apt-get install -y python3-dev openssl libssl-dev gcc pkg-config libffi-dev libxml2-dev libxmlsec1-dev
+        run: sudo apt-get update && sudo apt-get install -y python3-dev openssl libssl-dev gcc pkg-config libffi-dev libxml2-dev libxmlsec1-dev
       - name: Install dependencies
         run: pip install -r piptools_requirements3.txt && pip install -r requirements3.txt
       - run: "npm install grunt-cli && npm install"
