@@ -34,7 +34,7 @@
                     for (var i = credentialArchive.length; i--;) {
                         credentialArchive[i].type = 'credential';
                     }
-                    for (var i = blindCredentialArchive.length; i--;) {
+                    for (i = blindCredentialArchive.length; i--;) {
                         blindCredentialArchive[i].type = 'blind_credential';
                     }
                     for (i = serviceArchive.length; i--;) {

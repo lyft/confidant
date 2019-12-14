@@ -53,12 +53,12 @@
             };
 
             $scope.resourceTypeFilter = function(field) {
-                return function(resource) {
-                    if (field == 'credential' && $scope.showCredential) {
+                return function() {
+                    if (field === 'credential' && $scope.showCredential) {
                         return true;
-                    } else if (field == 'blind-credential' && $scope.showBlindCredential) {
+                    } else if (field === 'blind-credential' && $scope.showBlindCredential) {
                         return true;
-                    } else if (field == 'service' && $scope.showService) {
+                    } else if (field === 'service' && $scope.showService) {
                         return true;
                     }
                     return false;

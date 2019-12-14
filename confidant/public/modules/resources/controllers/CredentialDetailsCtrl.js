@@ -42,7 +42,8 @@
         'credentials.services',
         'credentials.valueGenerator',
         function ($scope, $stateParams, $q, $log, $filter, $location, Credential, Credentials, CredentialServices, ValueGenerator) {
-            var credentialCopy = null;
+            var credentialCopy = null,
+                deferred = $q.defer();
             $scope.$log = $log;
             $scope.saveError = '';
             $scope.getError = '';
@@ -54,7 +55,7 @@
 
             if ($stateParams.credentialId) {
                 CredentialServices.get({'id': $stateParams.credentialId}).$promise.then(function(credentialServices) {
-                    $scope.credentialServices = credentialServices['services'];
+                    $scope.credentialServices = credentialServices.services;
                 });
 
                 Credential.get({'id': $stateParams.credentialId}).$promise.then(function(credential) {
@@ -192,7 +193,7 @@
                 }
                 // Ensure metadata keys are unique and transform them
                 // into key/value dict.
-                for (var i = $scope.credential.mungedMetadata.length; i--;) {
+                for (i = $scope.credential.mungedMetadata.length; i--;) {
                     var metadataItem = $scope.credential.mungedMetadata[i];
                     if (metadataItem.isDeleted) {
                         $scope.credential.mungedMetadata.splice(i, 1);
@@ -224,7 +225,7 @@
                         newCredential.mungedMetadata = _metadata;
                         $scope.credential = newCredential;
                         if (credentialCopy.name !== $scope.credential.name ||
-                            credentialCopy.enabled != $scope.credential.enabled) {
+                            credentialCopy.enabled !== $scope.credential.enabled) {
                             $scope.$emit('updateCredentialList');
                         }
                         credentialCopy = angular.copy(newCredential);

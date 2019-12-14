@@ -49,11 +49,11 @@
 
             $scope.resourceTypeFilter = function(field) {
                 return function(resource) {
-                    if (resource[field] == 'credential' && $scope.showCredentials) {
+                    if (resource[field] === 'credential' && $scope.showCredentials) {
                         return true;
-                    } else if (resource[field] == 'blind_credential' && $scope.showBlindCredentials) {
+                    } else if (resource[field] === 'blind_credential' && $scope.showBlindCredentials) {
                         return true;
-                    } else if (resource[field] == 'service' && $scope.showServices) {
+                    } else if (resource[field] === 'service' && $scope.showServices) {
                         return true;
                     }
                     return false;
