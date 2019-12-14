@@ -536,7 +536,7 @@ def get_credential_list():
 @authnz.require_auth
 def get_credential(id):
     if not acl_module_check('get_credential',
-                            actions=['get'],
+                            actions=['metadata'],
                             resource=id):
         msg = "{} does not have access to credential {}".format(
             authnz.get_logged_in_user(),
@@ -558,10 +558,10 @@ def get_credential(id):
     services = []
     for service in Service.data_type_date_index.query('service'):
         services.append(service.id)
-    return jsonify({
+
+    credential = {
         'id': id,
         'name': cred.name,
-        'credential_pairs': cred.decrypted_credential_pairs,
         'metadata': cred.metadata,
         'services': services,
         'revision': cred.revision,
@@ -569,7 +569,12 @@ def get_credential(id):
         'modified_date': cred.modified_date,
         'modified_by': cred.modified_by,
         'documentation': cred.documentation
-    })
+    }
+    if acl_module_check('get_credential',
+                        actions=['get'],
+                        resource=id):
+        credential['credential_pairs'] = cred.decrypted_credential_pairs
+    return jsonify(credential)
 
 
 @app.route('/v1/archive/credentials/<id>', methods=['GET'])
