@@ -71,7 +71,7 @@ module.exports = function (grunt) {
       },
       scripts: {
         src: [
-            '<%= project.components %>/lodash/index.js',
+            '<%= project.components %>/lodash/lodash.js',
             '<%= project.components %>/jquery/dist/jquery.js',
             '<%= project.components %>/angular/angular.js',
             '<%= project.components %>/bootstrap/dist/js/bootstrap.js',
