@@ -57,7 +57,7 @@
                     templateUrl: '/modules/resources/views/credential-details.html'
                 },
                 'docs': {
-                    controller: 'resources.CredentialDocsCtrl',
+                    controller: 'resources.CredentialDetailsCtrl',
                     templateUrl: '/custom/modules/resources/views/credential-docs.html'
                 }
             },
@@ -74,7 +74,7 @@
                     templateUrl: '/modules/resources/views/blind-credential-details.html'
                 },
                 'docs': {
-                    controller: 'resources.BlindCredentialDocsCtrl',
+                    controller: 'resources.BlindCredentialDetailsCtrl',
                     templateUrl: '/custom/modules/resources/views/blind-credential-docs.html'
                 }
             },

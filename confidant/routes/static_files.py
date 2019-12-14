@@ -41,6 +41,7 @@ def robots():
 
 
 @app.route('/components/<path:path>')
+@app.route('/bower_components/<path:path>')
 def components(path):
     return app.send_static_file(os.path.join('components', path))
 
