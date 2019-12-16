@@ -15,7 +15,7 @@ jobs:
       - name: Setup Ruby
         uses: actions/setup-ruby@v1
         with:
-          ruby-version: '2.6.x'
+          ruby-version: '2.2.x'
       - name: Install bundler deps
         run: |
             cd docs
