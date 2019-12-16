@@ -1,16 +1,13 @@
 import unittest
-import datetime
-import json
 
 from mock import patch
-from mock import MagicMock
 
 # Prevent call to KMS during tests
 from confidant import settings
 settings.encrypted_settings.secret_string = {}
 
-from confidant.services import keymanager
-from confidant.app import app
+from confidant.services import keymanager  # noqa:E402
+from confidant.app import app  # noqa:E402
 
 
 class KeyManagerTest(unittest.TestCase):

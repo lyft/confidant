@@ -19,12 +19,11 @@
         'blindcredentials.credential',
         'blindcredentials.services',
         function ($scope, $stateParams, $q, $log, $filter, $location, BlindCredential, BlindCredentialServices) {
-            var credentialCopy = null;
             $scope.$log = $log;
 
             if ($stateParams.blindCredentialId) {
                 BlindCredentialServices.get({'id': $stateParams.blindCredentialId}).$promise.then(function(blindCredentialServices) {
-                    $scope.blindCredentialServices = blindCredentialServices['services'];
+                    $scope.blindCredentialServices = blindCredentialServices.services;
                 });
 
                 BlindCredential.get({'id': $stateParams.blindCredentialId}).$promise.then(function(blindCredential) {

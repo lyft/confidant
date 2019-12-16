@@ -1,8 +1,6 @@
 import unittest
 from mock import patch
-from mock import Mock
 
-from confidant import settings
 from confidant.encrypted_settings import EncryptedSettings
 
 

@@ -8,9 +8,9 @@ from confidant import settings
 settings.encrypted_settings.secret_string = {}
 settings.encrypted_settings.decrypted_secrets = {'SESSION_SECRET': 'TEST_KEY'}
 
-import confidant.routes
-from confidant.app import app
-from confidant import authnz
+import confidant.routes  # noqa:E402,F401
+from confidant.app import app  # noqa:E402
+from confidant import authnz  # noqa:E402
 
 
 class AuthnzTest(unittest.TestCase):
@@ -159,16 +159,19 @@ class HeaderAuthenticatorTest(unittest.TestCase):
             with patch('confidant.authnz.userauth.request') as request_mock:
                 request_mock.headers = {
                     app.config['HEADER_AUTH_USERNAME_HEADER']: 'unittestuser',
-                    app.config['HEADER_AUTH_EMAIL_HEADER']: 'unittestuser@example.com',
+                    app.config['HEADER_AUTH_EMAIL_HEADER']: 'unittestuser@example.com',  # noqa:E501
                 }
-                self.assertEqual(authnz.get_logged_in_user(), 'unittestuser@example.com')
+                self.assertEqual(
+                    authnz.get_logged_in_user(),
+                    'unittestuser@example.com'
+                )
 
     def test_will_log_in(self):
         with app.test_request_context('/fake'):
             with patch('confidant.authnz.userauth.request') as request_mock:
                 request_mock.headers = {
                     app.config['HEADER_AUTH_USERNAME_HEADER']: 'unittestuser',
-                    app.config['HEADER_AUTH_EMAIL_HEADER']: 'unittestuser@example.com',
+                    app.config['HEADER_AUTH_EMAIL_HEADER']: 'unittestuser@example.com',  # noqa:E501
                 }
                 resp = authnz.user_mod.log_in()
 
