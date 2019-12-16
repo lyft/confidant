@@ -89,6 +89,7 @@
                     deferred.reject();
                 });
             } else {
+                // A new credential is being created
                 $scope.credential = {
                     name: '',
                     enabled: true,
@@ -97,6 +98,10 @@
                 };
                 credentialCopy = angular.copy($scope.credential);
                 $scope.shown = true;
+                $scope.hasView = true;
+                $scope.hasModify = true;
+                // TODO: need a hasCreate here, which we'd get determine
+                // based on config endpoint.
             }
 
             $scope.showValue = function(credentialPair) {
