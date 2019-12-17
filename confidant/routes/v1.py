@@ -513,7 +513,7 @@ def get_credential_list():
         msg = "{} does not have access to list credentials".format(
             authnz.get_logged_in_user()
         )
-        error_msg = {'error': msg, 'reference': id}
+        error_msg = {'error': msg}
         return jsonify(error_msg), 403
 
     credentials = []
