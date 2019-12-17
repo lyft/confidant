@@ -88,13 +88,14 @@ class Credential(Model):
             diff['metadata'] = self._diff_dict(old.metadata, new.metadata)
         if old.enabled != new.enabled:
             diff['enabled'] = {'added': new.enabled, 'removed': old.enabled}
-        if old.enabled != new.enabled:
+        if old.documentation != new.documentation:
             diff['documentation'] = {
                 'added': new.documentation,
                 'removed': old.documentation
             }
+        return diff
 
-    def _diff_dict(old, new):
+    def _diff_dict(self, old, new):
         diff = {}
         removed = []
         added = []
