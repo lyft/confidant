@@ -143,7 +143,7 @@
                         $scope.service.credentials.splice(i, 1);
                     }
                 }
-                for (var i = $scope.service.blind_credentials.length; i--;) {
+                for (i = $scope.service.blind_credentials.length; i--;) {
                     var blind_credential = $scope.service.blind_credentials[i];
                     if (blind_credential.isDeleted) {
                         delete blind_credential.isDeleted;
@@ -196,7 +196,7 @@
                     deferred.resolve();
                 }
                 return deferred.promise;
-            }
+            };
 
             $scope.saveService = function() {
                 var _service = {},
@@ -221,7 +221,7 @@
                     }
                     _service.credentials.push(credential.id);
                 }
-                for (var i = $scope.service.blind_credentials.length; i--;) {
+                for (i = $scope.service.blind_credentials.length; i--;) {
                     var blind_credential = $scope.service.blind_credentials[i];
                     if (blind_credential.isDeleted) {
                         $scope.service.blind_credentials.splice(i, 1);
