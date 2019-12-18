@@ -70,8 +70,14 @@
                 return $filter('filter')($scope.$parent.blindCredentialList, {'id': id, 'revision': revision})[0];
             };
 
-            $scope.isString = function(value) {
-                return angular.isString(value);
+            $scope.shouldDisplayList = function(value) {
+                if (typeof value === 'string') {
+                    return false;
+                } else if (typeof value === "boolean") {
+                    return false;
+                } else {
+                    return true;
+                }
             };
 
             $scope.revertToDiffRevision = function() {
