@@ -73,7 +73,7 @@
             $scope.shouldDisplayList = function(value) {
                 if (typeof value === 'string') {
                     return false;
-                } else if (typeof value === "boolean") {
+                } else if (typeof value === 'boolean') {
                     return false;
                 } else {
                     return true;
