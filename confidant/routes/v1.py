@@ -585,6 +585,16 @@ def get_credential(id):
 )
 @authnz.require_auth
 def diff_credential(id, old_revision, new_revision):
+    if not acl_module_check('diff_credential',
+                            actions=['metadata'],
+                            resource=id):
+        msg = "{} does not have access to diff credential {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     try:
         old_credential = Credential.get('{}-{}'.format(id, old_revision))
     except DoesNotExist:
