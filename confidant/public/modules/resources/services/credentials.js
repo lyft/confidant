@@ -24,6 +24,10 @@
         });
     }])
 
+    .factory('credentials.credentialDiff', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
+        return $resource(CONFIDANT_URLS.CREDENTIAL_DIFF, {id: '@id', old_revision: '@old_revision', new_revision: '@new_revision'});
+    }])
+
     .factory('credentials.archiveCredentialRevisions', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
         return $resource(CONFIDANT_URLS.ARCHIVE_CREDENTIAL_REVISIONS, {id: '@id'});
     }])

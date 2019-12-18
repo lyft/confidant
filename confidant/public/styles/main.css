@@ -118,6 +118,30 @@ body {
   word-break: break-word;
 }
 
+.diff-removed li {
+  background-color: rgb(255, 238, 240);
+}
+
+.diff-removed p {
+  background-color: rgb(255, 238, 240);
+}
+
+.diff-removed-item::before {
+  content: "- ";
+}
+
+.diff-added li {
+  background-color: rgb(230, 255, 237);
+}
+
+.diff-added p {
+  background-color: rgb(230, 255, 237);
+}
+
+.diff-added-item::before {
+  content: "+ ";
+}
+
 /*
  * Loading spinner
  */
