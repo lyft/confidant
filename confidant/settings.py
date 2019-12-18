@@ -491,3 +491,7 @@ def get(name, default=None):
     if encrypted_settings.registered(name):
         return encrypted_settings.get_secret(name)
     return globals().get(name, default)
+
+
+# Module that will perform an external ACL check on API endpoints
+ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:no_acl')
