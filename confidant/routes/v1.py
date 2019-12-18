@@ -579,6 +579,32 @@ def get_credential(id):
     return jsonify(credential)
 
 
+@app.route(
+    '/v1/credentials/<id>/<old_revision>/<new_revision>',
+    methods=['GET']
+)
+@authnz.require_auth
+def diff_credential(id, old_revision, new_revision):
+    try:
+        old_credential = Credential.get('{}-{}'.format(id, old_revision))
+    except DoesNotExist:
+        return jsonify({'error': 'Credential not found.'}), 404
+    if old_credential.data_type != 'archive-credential':
+        msg = 'id provided is not a credential.'
+        return jsonify({'error': msg}), 400
+    try:
+        new_credential = Credential.get('{}-{}'.format(id, new_revision))
+    except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
+        return jsonify({}), 404
+    if new_credential.data_type != 'archive-credential':
+        msg = 'id provided is not a credential.'
+        return jsonify({'error': msg}), 400
+    return jsonify(old_credential.diff(new_credential))
+
+
 @app.route('/v1/archive/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_archive_credential_revisions(id):
