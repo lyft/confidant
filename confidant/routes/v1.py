@@ -562,7 +562,6 @@ def get_credential(id):
     credential = {
         'id': id,
         'name': cred.name,
-        'credential_pairs': cred.decrypted_credential_pairs,
         'credential_keys': cred.credential_keys,
         'metadata': cred.metadata,
         'services': services,
