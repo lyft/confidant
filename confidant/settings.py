@@ -331,6 +331,8 @@ DYNAMODB_CREATE_TABLE = bool_env('DYNAMODB_CREATE_TABLE', False)
 # Connection pool size for PynamoDB connections to DynamoDB
 PYNAMO_CONNECTION_POOL_SIZE = int_env('PYNAMO_CONNECTION_POOL_SIZE', 100)
 PYNAMO_REQUEST_TIMEOUT_SECONDS = int_env('PYNAMO_REQUEST_TIMEOUT_SECONDS', 1)
+# page limit size for history API endpoints listing
+HISTORY_PAGE_LIMIT = int_env('HISTORY_PAGE_LIMIT')
 
 # Encryption
 

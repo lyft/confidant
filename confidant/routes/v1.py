@@ -56,12 +56,13 @@ def get_client_config():
     '''
     # TODO: add more config in here.
     response = jsonify({
-        'defined': app.config['CLIENT_CONFIG'],
+        'defined': settings.CLIENT_CONFIG,
         'generated': {
-            'kms_auth_manage_grants': app.config['KMS_AUTH_MANAGE_GRANTS'],
-            'aws_accounts': list(app.config['SCOPED_AUTH_KEYS'].values()),
-            'xsrf_cookie_name': app.config['XSRF_COOKIE_NAME'],
-            'maintenance_mode': app.config['MAINTENANCE_MODE']
+            'kms_auth_manage_grants': settings.KMS_AUTH_MANAGE_GRANTS,
+            'aws_accounts': list(settings.SCOPED_AUTH_KEYS.values()),
+            'xsrf_cookie_name': settings.XSRF_COOKIE_NAME,
+            'maintenance_mode': settings.MAINTENANCE_MODE,
+            'history_page_limit': settings.HISTORY_PAGE_LIMIT,
         }
     })
     return response
@@ -191,9 +192,19 @@ def get_archive_service_revisions(id):
 @app.route('/v1/archive/services', methods=['GET'])
 @authnz.require_auth
 def get_archive_service_list():
+    limit = request.args.get(
+        'limit',
+        default=settings.HISTORY_PAGE_LIMIT,
+        type=int,
+    )
+    page = request.args.get('page', default=None, type=str)
     services = []
     for service in Service.data_type_date_index.query(
-            'archive-service', scan_index_forward=False):
+        'archive-service',
+        scan_index_forward=False,
+        limit=limit,
+        last_evaluated_key=page,
+    ):
         services.append({
             'id': service.id,
             'account': service.account,
@@ -573,9 +584,19 @@ def get_archive_credential_revisions(id):
 @app.route('/v1/archive/credentials', methods=['GET'])
 @authnz.require_auth
 def get_archive_credential_list():
+    limit = request.args.get(
+        'limit',
+        default=settings.HISTORY_PAGE_LIMIT,
+        type=int,
+    )
+    page = request.args.get('page', default=None, type=str)
     credentials = []
     for cred in Credential.data_type_date_index.query(
-            'archive-credential', scan_index_forward=False):
+        'archive-credential',
+        scan_index_forward=False,
+        limit=limit,
+        last_evaluated_key=page,
+    ):
         credentials.append({
             'id': cred.id,
             'name': cred.name,
@@ -995,9 +1016,19 @@ def get_archive_blind_credential_revisions(id):
 @app.route('/v1/archive/blind_credentials', methods=['GET'])
 @authnz.require_auth
 def get_archive_blind_credential_list():
+    limit = request.args.get(
+        'limit',
+        default=settings.HISTORY_PAGE_LIMIT,
+        type=int,
+    )
+    page = request.args.get('page', default=None, type=str)
     blind_credentials = []
     for cred in BlindCredential.data_type_date_index.query(
-            'archive-blind-credential', scan_index_forward=False):
+        'archive-blind-credential',
+        scan_index_forward=False,
+        limit=limit,
+        last_evaluated_key=page,
+    ):
         blind_credentials.append({
             'id': cred.id,
             'name': cred.name,
