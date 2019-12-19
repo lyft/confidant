@@ -10,9 +10,9 @@
     <div class="row has-margin-bottom-lg">
       <div class="form">
         <div class="simple-form col-md-12">
-          <label for="showCredentials"><input id="showCredentials" type="checkbox" data-ng-model="showCredentials" /> Credentials&nbsp;</label>
-          <label for="showBlindCredentials"><input id="showBlindCredentials" type="checkbox" data-ng-model="showBlindCredentials" /> Blind Credentials&nbsp;</label>
-          <label for="showServices"><input id="showServices" type="checkbox" data-ng-model="showServices" /> Services</label>
+          <button type="button" ng-class="{ 'history-active': typeFilter == 'credential' }" ng-click="setTypeFilter('credential')" class="btn">Credentials</button>
+          <button type="button" ng-class="{ 'history-active': typeFilter == 'blind-credential' }" ng-click="setTypeFilter('blind-credential')" class="btn">Blind Credentials</button>
+          <button type="button" ng-class="{ 'history-active': typeFilter == 'service' }" ng-click="setTypeFilter('service')" class="btn">Services</button>
         </div>
       </div>
     </div>
@@ -33,8 +33,12 @@
               <td class="dont-break-out">{{ resource.name }}</td>
               <td>{{ resource.revision }}</td>
               <td>{{ resource.modified_date | date:'medium':'GMT' }} GMT</td>
+            </tr>
           </tbody>
         </table>
+        <button type="button" ng-show="typeFilter == 'credential' && hasNext('credential')" ng-click="fetchMoreResourceArchive()" class="btn pull-center">Load more credentials...</button>
+        <button type="button" ng-show="typeFilter == 'blind-credential' && hasNext('blind-credential')" ng-click="fetchMoreResourceArchive()" class="btn pull-center">Load more blind credentials...</button>
+        <button type="button" ng-show="typeFilter == 'service' && hasNext('service')" ng-click="fetchMoreResourceArchive()" class="btn pull-center">Load more services...</button>
       </div>
     </div>
   </div>

@@ -20,6 +20,10 @@ from confidant.services import credentialmanager
 from confidant.services import servicemanager
 from confidant.services.ciphermanager import CipherManager
 from confidant.utils import maintenance
+from confidant.utils.dynamodb import (
+    decode_last_evaluated_key,
+    encode_last_evaluated_key,
+)
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
@@ -198,13 +202,20 @@ def get_archive_service_list():
         type=int,
     )
     page = request.args.get('page', default=None, type=str)
+    if page:
+        try:
+            page = decode_last_evaluated_key(page)
+        except Exception:
+            logging.exception('Failed to parse provided page')
+            return jsonify({'error': 'Failed to parse page'}), 400
     services = []
-    for service in Service.data_type_date_index.query(
+    results = Service.data_type_date_index.query(
         'archive-service',
         scan_index_forward=False,
         limit=limit,
         last_evaluated_key=page,
-    ):
+    )
+    for service in results:
         services.append({
             'id': service.id,
             'account': service.account,
@@ -214,7 +225,11 @@ def get_archive_service_list():
             'modified_date': service.modified_date,
             'modified_by': service.modified_by
         })
-    return jsonify({'services': services})
+    service_list = {'services': services}
+    service_list['next_page'] = encode_last_evaluated_key(
+        results.last_evaluated_key
+    )
+    return jsonify(service_list)
 
 
 @app.route('/v1/grants/<id>', methods=['PUT'])
@@ -566,6 +581,7 @@ def get_archive_credential_revisions(id):
         revisions.append({
             'id': revision.id,
             'name': revision.name,
+            'metadata': cred.metadata,
             'revision': revision.revision,
             'enabled': revision.enabled,
             'modified_date': revision.modified_date,
@@ -590,23 +606,35 @@ def get_archive_credential_list():
         type=int,
     )
     page = request.args.get('page', default=None, type=str)
+    if page:
+        try:
+            page = decode_last_evaluated_key(page)
+        except Exception:
+            logging.exception('Failed to parse provided page')
+            return jsonify({'error': 'Failed to parse page'}), 400
     credentials = []
-    for cred in Credential.data_type_date_index.query(
+    results = Credential.data_type_date_index.query(
         'archive-credential',
         scan_index_forward=False,
         limit=limit,
         last_evaluated_key=page,
-    ):
+    )
+    for cred in results:
         credentials.append({
             'id': cred.id,
             'name': cred.name,
+            'metadata': cred.metadata,
             'revision': cred.revision,
             'enabled': cred.enabled,
             'modified_date': cred.modified_date,
             'modified_by': cred.modified_by,
             'documentation': cred.documentation
         })
-    return jsonify({'credentials': credentials})
+    credential_list = {'credentials': credentials}
+    credential_list['next_page'] = encode_last_evaluated_key(
+        results.last_evaluated_key
+    )
+    return jsonify(credential_list)
 
 
 @app.route('/v1/credentials', methods=['POST'])
@@ -912,8 +940,6 @@ def revert_credential_to_revision(id, to_revision):
     return jsonify({
         'id': cred.id,
         'name': cred.name,
-        'credential_pairs': cred.decrypted_credential_pairs,
-        'credential_keys': cred.credential_keys,
         'metadata': cred.metadata,
         'revision': cred.revision,
         'enabled': cred.enabled,
@@ -1022,13 +1048,20 @@ def get_archive_blind_credential_list():
         type=int,
     )
     page = request.args.get('page', default=None, type=str)
+    if page:
+        try:
+            page = decode_last_evaluated_key(page)
+        except Exception:
+            logging.exception('Failed to parse provided page')
+            return jsonify({'error': 'Failed to parse page'}), 400
     blind_credentials = []
-    for cred in BlindCredential.data_type_date_index.query(
+    results = BlindCredential.data_type_date_index.query(
         'archive-blind-credential',
         scan_index_forward=False,
         limit=limit,
         last_evaluated_key=page,
-    ):
+    )
+    for cred in results:
         blind_credentials.append({
             'id': cred.id,
             'name': cred.name,
@@ -1044,7 +1077,11 @@ def get_archive_blind_credential_list():
             'modified_by': cred.modified_by,
             'documentation': cred.documentation
         })
-    return jsonify({'blind_credentials': blind_credentials})
+    credential_list = {'blind_credentials': blind_credentials}
+    credential_list['next_page'] = encode_last_evaluated_key(
+        results.last_evaluated_key
+    )
+    return jsonify(credential_list)
 
 
 @app.route('/v1/blind_credentials', methods=['POST'])

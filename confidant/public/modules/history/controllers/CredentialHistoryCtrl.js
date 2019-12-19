@@ -62,14 +62,6 @@
                 }
             });
 
-            $scope.getCredentialByID = function(id, revision) {
-                return $filter('filter')($scope.$parent.credentialList, {'id': id, 'revision': revision})[0];
-            };
-
-            $scope.getBlindCredentialByID = function(id, revision) {
-                return $filter('filter')($scope.$parent.blindCredentialList, {'id': id, 'revision': revision})[0];
-            };
-
             $scope.isString = function(value) {
                 return angular.isString(value);
             };

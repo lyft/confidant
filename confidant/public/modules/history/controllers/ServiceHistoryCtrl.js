@@ -45,14 +45,6 @@
                 }
             });
 
-            $scope.getCredentialByID = function(id) {
-                return $filter('filter')($scope.$parent.credentialList, {'id': id})[0];
-            };
-
-            $scope.getBlindCredentialByID = function(id) {
-                return $filter('filter')($scope.$parent.blindCredentialList, {'id': id})[0];
-            };
-
             $scope.getServiceByRevision = function(rev) {
                 return $filter('filter')($scope.revisions, {revision: rev})[0];
             };

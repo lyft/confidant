@@ -69,14 +69,6 @@
                 }
             });
 
-            $scope.getCredentialByID = function(id) {
-                return $filter('filter')($scope.$parent.credentialList, {'id': id})[0];
-            };
-
-            $scope.getBlindCredentialByID = function(id) {
-                return $filter('filter')($scope.$parent.blindCredentialList, {'id': id})[0];
-            };
-
             $scope.revertToDiffRevision = function() {
                 var deferred = $q.defer();
                 BlindCredential.revert({'id': $scope.blindCredentialId, 'revision': $scope.diffBlindCredential.revision}).$promise.then(function(newBlindCredential) {
