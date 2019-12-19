@@ -5,7 +5,6 @@ from mock import PropertyMock
 
 from confidant.app import app
 from confidant.authnz import userauth
-from confidant import routes  # noqa
 
 
 class AuthnzTest(unittest.TestCase):
