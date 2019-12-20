@@ -1,3 +1,4 @@
+import gevent
 import guard
 
 from confidant.app import app  # noqa
@@ -16,4 +17,4 @@ CSP_POLICY = {
 app.wsgi_app = guard.ContentSecurityPolicy(app.wsgi_app, CSP_POLICY)
 
 if settings.BACKGROUND_CACHE_IAM_ROLES:
-    iamrolemanager.refresh_cache()
+    gevent.spawn(iamrolemanager.refresh_cache)

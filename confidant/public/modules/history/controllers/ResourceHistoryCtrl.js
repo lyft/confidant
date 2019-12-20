@@ -15,10 +15,11 @@
         '$log',
         '$timeout',
         '$location',
+        '$filter',
         'credentials.list',
         'blindcredentials.list',
         'history.ResourceArchiveService',
-        function ($scope, $log, $timeout, $location, CredentialList, BlindCredentialList, ResourceArchiveService) {
+        function ($scope, $log, $timeout, $location, $filter, CredentialList, BlindCredentialList, ResourceArchiveService) {
             $scope.typeFilter = 'credentials';
 
             CredentialList.get().$promise.then(function(credentialList) {

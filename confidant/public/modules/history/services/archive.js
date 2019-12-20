@@ -44,8 +44,8 @@
             function doQuery(service, page, limit) {
                 limit = limit || _this.limit;
                 page = page || null;
-                var defer = $q.defer(),
-                    result = service.get({'page': page, 'limit': limit}).$promise.then(function(result) {
+                var defer = $q.defer();
+                service.get({'page': page, 'limit': limit}).$promise.then(function(result) {
                     defer.resolve(result);
                 });
                 return defer.promise;
@@ -64,9 +64,9 @@
             }
 
             function queryUntilItem(service, type, item, data, page, count) {
-                data = data || []
-                page = page || null
-                count = count || 0
+                data = data || [];
+                page = page || null;
+                count = count || 0;
                 var max = 10,
                     defer = $q.defer();
 
@@ -120,8 +120,7 @@
 
             this.updateResourceArchive = function(type) {
                 var archive = _this.resourceArchive[type],
-                    latestItem = archive.archive[0],
-                    newData = [];
+                    latestItem = archive.archive[0];
                 queryUntilItem(archive.service, type, latestItem).then(function(newData) {
                     mungeResourceData(newData, type);
                     archive.archive = newData.concat(archive.archive);
