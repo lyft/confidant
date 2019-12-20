@@ -19,7 +19,7 @@
         'blindcredentials.list',
         'history.ResourceArchiveService',
         function ($scope, $log, $timeout, $location, CredentialList, BlindCredentialList, ResourceArchiveService) {
-            $scope.typeFilter = 'credential';
+            $scope.typeFilter = 'credentials';
 
             CredentialList.get().$promise.then(function(credentialList) {
                 $scope.credentialList = credentialList.credentials;
@@ -68,13 +68,7 @@
             };
 
             $scope.gotoResource = function(resource) {
-                if (resource.type === 'credential') {
-                    $location.path('/history/credential/' + resource.id);
-                } else if (resource.type === 'blind_credential') {
-                    $location.path('/history/blind_credential/' + resource.id);
-                } else if (resource.type === 'service') {
-                    $location.path('/history/service/' + resource.id);
-                }
+                $location.path('/history/' + resource.type + '/' + resource.id);
             };
 
 
@@ -82,9 +76,10 @@
             $scope.hasNext = ResourceArchiveService.hasNext;
             $scope.fetchMoreResourceArchive = ResourceArchiveService.fetchMoreResourceArchive;
             $scope.getResourceArchive = ResourceArchiveService.getResourceArchive;
-            $scope.$watch('getResourceArchive()', function(newResourceArchive, oldResourceArchive) {
-                if(newResourceArchive !== oldResourceArchive) {
-                    $scope.resourceArchive = newResourceArchive;
+            $scope.getResourceArchiveVersion = ResourceArchiveService.getResourceArchiveVersion;
+            $scope.$watch('getResourceArchiveVersion()', function(newVersion, oldVersion) {
+                if(newVersion !== oldVersion) {
+                    $scope.resourceArchive = ResourceArchiveService.getResourceArchive();
                 }
             });
             // TODO: There's a race condition here, for some reason. We need to figure out how to
@@ -94,13 +89,17 @@
             if (angular.isUndefined($scope.clientconfig)) {
                 $timeout(function() {
                     ResourceArchiveService.setLimit($scope.clientconfig.generated.history_page_limit);
-                    ResourceArchiveService.updateResourceArchive();
+                    ResourceArchiveService.initResourceArchive('credentials');
+                    ResourceArchiveService.initResourceArchive('blind_credentials');
+                    ResourceArchiveService.initResourceArchive('services');
                 }, 1000);
             } else {
                 // When moving between resources and history, the client config already exists, so we
                 // can avoid the timeout.
                 ResourceArchiveService.setLimit($scope.clientconfig.generated.history_page_limit);
-                ResourceArchiveService.updateResourceArchive();
+                ResourceArchiveService.initResourceArchive('credentials');
+                ResourceArchiveService.initResourceArchive('blind_credentials');
+                ResourceArchiveService.initResourceArchive('services');
             }
 
         }])

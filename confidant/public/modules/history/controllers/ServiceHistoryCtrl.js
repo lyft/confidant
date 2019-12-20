@@ -75,8 +75,8 @@
                 var deferred = $q.defer();
                 Service.revert({'id': $scope.serviceId, revision: $scope.diffRevision}).$promise.then(function(newService) {
                     deferred.resolve();
-                    ResourceArchiveService.updateResourceArchive();
-                    $location.path('/history/service/' + newService.id + '-' + newService.revision);
+                    ResourceArchiveService.updateResourceArchive('services');
+                    $location.path('/history/services/' + newService.id + '-' + newService.revision);
                 }, function(res) {
                     if (res.status === 500) {
                         $scope.saveError = 'Unexpected server error.';

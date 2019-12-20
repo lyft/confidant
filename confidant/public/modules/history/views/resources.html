@@ -3,16 +3,16 @@
     <div class="row">
       <div class="form">
         <div class="form-group col-md-12">
-          <input type="search" class="form-control" data-ng-model="resourceRegex" placeholder="filter (credential or service name)">
+          <input type="search" class="form-control" data-ng-model="resourceRegex" placeholder="filter (credential, blind credential, or service name)">
         </div>
       </div>
     </div>
     <div class="row has-margin-bottom-lg">
       <div class="form">
         <div class="simple-form col-md-12">
-          <button type="button" ng-class="{ 'history-active': typeFilter == 'credential' }" ng-click="setTypeFilter('credential')" class="btn">Credentials</button>
-          <button type="button" ng-class="{ 'history-active': typeFilter == 'blind-credential' }" ng-click="setTypeFilter('blind-credential')" class="btn">Blind Credentials</button>
-          <button type="button" ng-class="{ 'history-active': typeFilter == 'service' }" ng-click="setTypeFilter('service')" class="btn">Services</button>
+          <button type="button" ng-class="{ 'history-active': typeFilter == 'credentials' }" ng-click="setTypeFilter('credentials')" class="btn">Credentials</button>
+          <button type="button" ng-class="{ 'history-active': typeFilter == 'blind_credentials' }" ng-click="setTypeFilter('blind_credentials')" class="btn">Blind Credentials</button>
+          <button type="button" ng-class="{ 'history-active': typeFilter == 'services' }" ng-click="setTypeFilter('services')" class="btn">Services</button>
         </div>
       </div>
     </div>
@@ -28,7 +28,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="resource in resourceArchive | filter: resourceRegexFilter('name', resourceRegex) | filter: resourceTypeFilter('type') | orderBy:'-modified_date'" ng-click="gotoResource(resource)" style="cursor: pointer">
+            <tr ng-repeat="resource in resourceArchive[typeFilter].archive | filter: resourceRegexFilter('name', resourceRegex) | orderBy:'-modified_date'" ng-click="gotoResource(resource)" style="cursor: pointer">
               <td>{{ resource.type }}</td>
               <td class="dont-break-out">{{ resource.name }}</td>
               <td>{{ resource.revision }}</td>
@@ -36,9 +36,9 @@
             </tr>
           </tbody>
         </table>
-        <button type="button" ng-show="typeFilter == 'credential' && hasNext('credential')" ng-click="fetchMoreResourceArchive()" class="btn pull-center">Load more credentials...</button>
-        <button type="button" ng-show="typeFilter == 'blind-credential' && hasNext('blind-credential')" ng-click="fetchMoreResourceArchive()" class="btn pull-center">Load more blind credentials...</button>
-        <button type="button" ng-show="typeFilter == 'service' && hasNext('service')" ng-click="fetchMoreResourceArchive()" class="btn pull-center">Load more services...</button>
+        <button type="button" ng-show="typeFilter == 'credentials' && hasNext(typeFilter)" ng-click="fetchMoreResourceArchive(typeFilter)" class="btn pull-center">Load more credentials...</button>
+        <button type="button" ng-show="typeFilter == 'blind_credentials' && hasNext(typeFilter)" ng-click="fetchMoreResourceArchive(typeFilter)" class="btn pull-center">Load more blind credentials...</button>
+        <button type="button" ng-show="typeFilter == 'services' && hasNext(typeFilter)" ng-click="fetchMoreResourceArchive(typeFilter)" class="btn pull-center">Load more services...</button>
       </div>
     </div>
   </div>

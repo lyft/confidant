@@ -73,8 +73,8 @@
                 var deferred = $q.defer();
                 BlindCredential.revert({'id': $scope.blindCredentialId, 'revision': $scope.diffBlindCredential.revision}).$promise.then(function(newBlindCredential) {
                     deferred.resolve();
-                    ResourceArchiveService.updateResourceArchive();
-                    $location.path('/history/blind_credential/' + newBlindCredential.id + '-' + newBlindCredential.revision);
+                    ResourceArchiveService.updateResourceArchive('blind_credentials');
+                    $location.path('/history/blind_credentials/' + newBlindCredential.id + '-' + newBlindCredential.revision);
                 }, function(res) {
                     if (res.status === 500) {
                         $scope.saveError = 'Unexpected server error.';
