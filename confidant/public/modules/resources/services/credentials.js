@@ -14,7 +14,7 @@
     }])
 
     .factory('credentials.archiveList', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
-        return $resource(CONFIDANT_URLS.ARCHIVE_CREDENTIALS);
+        return $resource(CONFIDANT_URLS.ARCHIVE_CREDENTIALS, {page: '@page', revision: '@revision'});
     }])
 
     .factory('credentials.credential', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {

@@ -1,26 +1,38 @@
 <div class="alert alert-warning" ng-show="saveError">
 <p>{{ saveError }}</p>
 <div ng-show="credentialPairConflicts">
-  <p>The following credential pair keys conflict in the listed credentials:</p>
+  <p>The following credential pair keys conflict in the listed credentials in the listed mapped services:</p>
   <ul>
     <li ng-repeat="(credentialPairKey, conflicts) in credentialPairConflicts">
       {{ credentialPairKey }}:
       <ul>
         <li>Credentials:</li>
         <ul>
-          <li ng-repeat="credentialId in conflicts.credentials"><a class="color-text-snow" href="#/resources/credential/{{ credentialId }}">{{ getCredentialByID(credentialId).name }}</a></li>
+          <li ng-repeat="credentialId in conflicts.credentials"><a class="color-text-snow" href="#/resources/credential/{{ credentialId }}">{{ parent.getCredentialByID(credentialId).name }}</a></li>
+        </ul>
+      </ul>
+      <ul>
+        <li>Blind credentials:</li>
+        <ul>
+          <li ng-repeat="credentialId in conflicts.blind_credentials"><a class="color-text-snow" href="#/resources/blind_credential/{{ credentialId }}">{{ parent.getBlindCredentialByID(credentialId).name }}</a></li>
+        </ul>
+      </ul>
+      <ul>
+        <li>Services:</li>
+        <ul>
+          <li ng-repeat="serviceId in conflicts.services"><a class="color-text-snow" href="#/resources/service/{{ serviceId }}">{{ serviceId }}</a></li>
         </ul>
       </ul>
     </li>
   </ul>
-  <p>Please ensure credential pair keys are unique, then try again.</p>
+  <p>Please ensure credential pair keys are unique for the mapped services, then try again.</p>
 </div>
 </div>
 <div class="well">
   <h3 class="has-margin-bottom-lg">Difference between revisions of {{ serviceId }}</h3>
   <div class="row">
-    <a ng-show="serviceRevision > 1" style="float: left" class="has-margin-bottom-lg" href="#/history/service/{{ serviceId }}-{{ serviceRevision - 1 }}"><span class="glyphicon glyphicon-menu-left"></span> previous revision</a>
-    <a ng-show="serviceRevision < currentRevision" style="float: right" class="has-margin-bottom-lg" href="#/history/service/{{ serviceId }}-{{ serviceRevision + 1 }}">next revision <span class="glyphicon glyphicon-menu-right"></span></a>
+    <a ng-show="serviceRevision > 1" style="float: left" class="has-margin-bottom-lg" href="#/history/services/{{ serviceId }}-{{ serviceRevision - 1 }}"><span class="glyphicon glyphicon-menu-left"></span> previous revision</a>
+    <a ng-show="serviceRevision < currentRevision" style="float: right" class="has-margin-bottom-lg" href="#/history/services/{{ serviceId }}-{{ serviceRevision + 1 }}">next revision <span class="glyphicon glyphicon-menu-right"></span></a>
   </div>
   <div class="row">
     <div class="col-md-6">

@@ -13,14 +13,14 @@
     .controller('history.ResourceHistoryCtrl', [
         '$scope',
         '$log',
+        '$timeout',
         '$location',
+        '$filter',
         'credentials.list',
         'blindcredentials.list',
         'history.ResourceArchiveService',
-        function ($scope, $log, $location, CredentialList, BlindCredentialList, ResourceArchiveService) {
-            $scope.showCredentials = true;
-            $scope.showBlindCredentials = true;
-            $scope.showServices = true;
+        function ($scope, $log, $timeout, $location, $filter, CredentialList, BlindCredentialList, ResourceArchiveService) {
+            $scope.typeFilter = 'credentials';
 
             CredentialList.get().$promise.then(function(credentialList) {
                 $scope.credentialList = credentialList.credentials;
@@ -33,6 +33,14 @@
             }, function() {
                 $scope.blindCredentialList = [];
             });
+
+            $scope.getCredentialByID = function(id) {
+                return $filter('filter')($scope.credentialList, {'id': id})[0];
+            };
+
+            $scope.getBlindCredentialByID = function(id) {
+                return $filter('filter')($scope.blindCredentialList, {'id': id})[0];
+            };
 
             // Reformat archive credential IDs for display. Archive credential IDs
             // are formatted as id-revision.
@@ -49,35 +57,51 @@
 
             $scope.resourceTypeFilter = function(field) {
                 return function(resource) {
-                    if (resource[field] === 'credential' && $scope.showCredentials) {
-                        return true;
-                    } else if (resource[field] === 'blind_credential' && $scope.showBlindCredentials) {
-                        return true;
-                    } else if (resource[field] === 'service' && $scope.showServices) {
+                    if (resource[field] === $scope.typeFilter) {
                         return true;
                     }
                     return false;
                 };
             };
 
-            $scope.gotoResource = function(resource) {
-                if (resource.type === 'credential') {
-                    $location.path('/history/credential/' + resource.id);
-                } else if (resource.type === 'blind_credential') {
-                    $location.path('/history/blind_credential/' + resource.id);
-                } else if (resource.type === 'service') {
-                    $location.path('/history/service/' + resource.id);
-                }
+            $scope.setTypeFilter = function(type) {
+                $scope.typeFilter = type;
             };
 
+            $scope.gotoResource = function(resource) {
+                $location.path('/history/' + resource.type + '/' + resource.id);
+            };
+
+
             $scope.$log = $log;
+            $scope.hasNext = ResourceArchiveService.hasNext;
+            $scope.fetchMoreResourceArchive = ResourceArchiveService.fetchMoreResourceArchive;
             $scope.getResourceArchive = ResourceArchiveService.getResourceArchive;
-            $scope.$watch('getResourceArchive()', function(newResourceArchive, oldResourceArchive) {
-                if(newResourceArchive !== oldResourceArchive) {
-                    $scope.resourceArchive = newResourceArchive;
+            $scope.getResourceArchiveVersion = ResourceArchiveService.getResourceArchiveVersion;
+            $scope.$watch('getResourceArchiveVersion()', function(newVersion, oldVersion) {
+                if(newVersion !== oldVersion) {
+                    $scope.resourceArchive = ResourceArchiveService.getResourceArchive();
                 }
             });
-            ResourceArchiveService.updateResourceArchive();
+            // TODO: There's a race condition here, for some reason. We need to figure out how to
+            // wait until the clientconfig is loaded before calling this. For now we're using a gross
+            // timeout hack. client_config endpoint is fast, so it's very likely it'll be loaded within
+            // the time period
+            if (angular.isUndefined($scope.clientconfig)) {
+                $timeout(function() {
+                    ResourceArchiveService.setLimit($scope.clientconfig.generated.history_page_limit);
+                    ResourceArchiveService.initResourceArchive('credentials');
+                    ResourceArchiveService.initResourceArchive('blind_credentials');
+                    ResourceArchiveService.initResourceArchive('services');
+                }, 1000);
+            } else {
+                // When moving between resources and history, the client config already exists, so we
+                // can avoid the timeout.
+                ResourceArchiveService.setLimit($scope.clientconfig.generated.history_page_limit);
+                ResourceArchiveService.initResourceArchive('credentials');
+                ResourceArchiveService.initResourceArchive('blind_credentials');
+                ResourceArchiveService.initResourceArchive('services');
+            }
 
         }])
 

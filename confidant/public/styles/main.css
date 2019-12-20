@@ -142,6 +142,10 @@ body {
   content: "+ ";
 }
 
+.history-active {
+  color: #337ab7;
+}
+
 /*
  * Loading spinner
  */

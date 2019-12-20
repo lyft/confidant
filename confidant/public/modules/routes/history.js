@@ -23,7 +23,7 @@
         })
 
         .state('history.credential-history', {
-            url: '/credential/:credentialId',
+            url: '/credentials/:credentialId',
             views: {
                 'details': {
                     controller: 'history.CredentialHistoryCtrl',
@@ -36,7 +36,7 @@
         })
 
         .state('history.blind-credential-history', {
-            url: '/blind_credential/:blindCredentialId',
+            url: '/blind_credentials/:blindCredentialId',
             views: {
                 'details': {
                     controller: 'history.BlindCredentialHistoryCtrl',
@@ -49,7 +49,7 @@
         })
 
         .state('history.service-history', {
-            url: '/service/:serviceId',
+            url: '/services/:serviceId',
             views: {
                 'details': {
                     controller: 'history.ServiceHistoryCtrl',

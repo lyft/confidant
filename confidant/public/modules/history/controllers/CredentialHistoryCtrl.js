@@ -44,7 +44,7 @@
                 } else {
                     if ($scope.credentialRevision === $scope.currentRevision) {
                         $scope.diffRevision = $scope.currentRevision - 1;
-                        $location.path('/history/credential/' + $scope.credentialId + '-' + $scope.diffRevision);
+                        $location.path('/history/credentials/' + $scope.credentialId + '-' + $scope.diffRevision);
                     } else {
                         $scope.diffRevision = $scope.credentialRevision;
                     }
@@ -62,14 +62,6 @@
                 }
             });
 
-            $scope.getCredentialByID = function(id, revision) {
-                return $filter('filter')($scope.$parent.credentialList, {'id': id, 'revision': revision})[0];
-            };
-
-            $scope.getBlindCredentialByID = function(id, revision) {
-                return $filter('filter')($scope.$parent.blindCredentialList, {'id': id, 'revision': revision})[0];
-            };
-
             $scope.shouldDisplayList = function(value) {
                 if (typeof value === 'string') {
                     return false;
@@ -84,8 +76,8 @@
                 var deferred = $q.defer();
                 Credential.revert({'id': $scope.credentialId, revision: $scope.diffRevision}).$promise.then(function(newCredential) {
                     deferred.resolve();
-                    ResourceArchiveService.updateResourceArchive();
-                    $location.path('/history/credential/' + newCredential.id + '-' + newCredential.revision);
+                    ResourceArchiveService.updateResourceArchive('credentials');
+                    $location.path('/history/credentials/' + newCredential.id + '-' + newCredential.revision);
                 }, function(res) {
                     if (res.status === 500) {
                         $scope.saveError = 'Unexpected server error.';
