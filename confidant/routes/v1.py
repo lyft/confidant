@@ -601,6 +601,11 @@ def get_credential(id):
                         actions=['get'],
                         resource=id):
         credential['credential_pairs'] = cred.decrypted_credential_pairs
+        log_line = "{0} get credential {1}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        logging.info(log_line)
     return jsonify(credential)
 
 
