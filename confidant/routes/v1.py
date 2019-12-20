@@ -585,13 +585,6 @@ def get_credential(id):
     for service in Service.data_type_date_index.query('service'):
         services.append(service.id)
 
-    if authnz.user_is_user_type('user'):
-        log_line = "{0} get credential {1}".format(
-            authnz.get_logged_in_user(),
-            id
-        )
-        logging.info(log_line)
-
     credential = {
         'id': id,
         'name': cred.name,
@@ -608,6 +601,11 @@ def get_credential(id):
                         actions=['get'],
                         resource=id):
         credential['credential_pairs'] = cred.decrypted_credential_pairs
+        log_line = "{0} get credential {1}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        logging.info(log_line)
     return jsonify(credential)
 
 
