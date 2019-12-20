@@ -80,7 +80,7 @@
                 responseError: function(rejection) {
                     var status = rejection.status;
                     finish();
-                    if (status == 401) {
+                    if (status === 401) {
                         window.location.href = 'loggedout';
                     }
                     return $q.reject(rejection);

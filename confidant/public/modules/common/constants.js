@@ -19,6 +19,7 @@
         ARCHIVE_SERVICES: 'v1/archive/services',
         ARCHIVE_SERVICE_REVISIONS: 'v1/archive/services/:id/:revision',
         CREDENTIAL: 'v1/credentials/:id',
+        CREDENTIAL_DIFF: 'v1/credentials/:id/:old_revision/:new_revision',
         CREDENTIAL_REVISION: 'v1/credentials/:id/:revision',
         CREDENTIAL_SERVICES: 'v1/credentials/:id/services',
         CREDENTIALS: 'v1/credentials',

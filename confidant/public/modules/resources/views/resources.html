@@ -1,17 +1,24 @@
 <div class="row row-relative">
-  <div class="col-md-4 well row-relative">
+  <div class="col-md-5 well row-relative">
     <div class="row">
       <div class="form">
-        <div class="form-group col-md-9">
-          <input type="search" class="form-control" data-ng-model="resourceRegex" placeholder="filter (credential or service name)" />
+        <div class="form-group col-md-12">
+          <input type="search" class="form-control" data-ng-model="resourceRegex" placeholder="filter (credential, blind-credential, or service name)" />
         </div>
-        <div class="btn-group col-md-3 dropdown">
-          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-plus"> <small><span class="glyphicon glyphicon-chevron-down glyphicon-xs"></span></small></span></button>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#/resources/new/credential">Create credential</a></li>
-            <li><a href="#/resources/new/service">Create service</a></li>
-          </ul>
-        </div>
+      </div>
+    </div>
+    <div class="row has-margin-bottom-lg">
+      <div class="col-md-9">
+        <button type="button" ng-class="{ 'active': typeFilter == 'credentials' }" ng-click="setTypeFilter('credentials')" class="btn">Credentials</button>
+        <button type="button" ng-class="{ 'active': typeFilter == 'blind_credentials' }" ng-click="setTypeFilter('blind_credentials')" class="btn">Blind Credentials</button>
+        <button type="button" ng-class="{ 'active': typeFilter == 'services' }" ng-click="setTypeFilter('services')" class="btn">Services</button>
+      </div>
+      <div class="btn-group dropdown col-md-3">
+        <button type="button" class="btn dropdown-toggle call-to-action" data-toggle="dropdown" aria-expanded="false">Create <span class="glyphicon glyphicon-chevron-down glyphicon-xs"></span></small></span></button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="#/resources/new/credential">Create credential</a></li>
+          <li><a href="#/resources/new/service">Create service</a></li>
+        </ul>
       </div>
     </div>
     <div class="row has-margin-bottom-lg">
@@ -22,38 +29,45 @@
       </div>
     </div>
     <div class="row row-overflow-resources">
-      <div class="col-md-12">
-        <div class="panel panel-default">
-          <div class="panel-heading">Credentials</div>
-          <div ng-hide="credentialList" class="panel-body">No credentials.</div>
-          <div class="list-group" ng-show="credentialList">
-            <div ng-repeat="cred in credentialList | filter: resourceRegexFilter('name', resourceRegex)" ng-show="cred.enabled || showDisabled">
-                <a href="#/resources/credential/{{ cred.id }}" class="dont-break-out list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ cred.name }}</p></span></a>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading">Blind Credentials</div>
-          <div ng-hide="blindCredentialList" class="panel-body">No blind credentials.</div>
-          <div class="list-group" ng-show="blindCredentialList">
-            <div ng-repeat="cred in blindCredentialList | filter: resourceRegexFilter('name', resourceRegex)" ng-show="cred.enabled || showDisabled">
-                <a href="#/resources/blind_credential/{{ cred.id }}" class="dont-break-out list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ cred.name }}</p></span></a>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading">Services</div>
-          <div ng-hide="serviceList" class="panel-body">No services.</div>
-          <div class="list-group" ng-show="serviceList">
-            <div ng-repeat="service in serviceList | filter: resourceRegexFilter('id', resourceRegex)" ng-show="service.enabled || showDisabled">
-                <a href="#/resources/service/{{ service.id }}" class="dont-break-out list-group-item"><span class="glyphicon glyphicon-menu-right pull-right"></span><p class="list-group-item-heading">{{ service.id }}</p></span></a>
-            </div>
-          </div>
-        </div>
+      <div class="col-md-12 row-relative">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Revision</th>
+              <th>Modified</th>
+              <th>Modified By</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="resource in credentialList | filter: resourceRegexFilter('name', resourceRegex)" ng-click="gotoResource(resource, typeFilter)" style="cursor: pointer" ng-show="showResource(resource) && typeFilter == 'credentials'">
+              <td class="dont-break-out">{{ resource.name }}</td>
+              <td>{{ resource.revision }}</td>
+              <td>{{ resource.modified_date | date:'medium':'GMT' }}</td>
+              <td>{{ resource.modified_by }}</td>
+              <td><span class="glyphicon glyphicon-menu-right"></span></td>
+            </tr>
+            <tr ng-repeat="resource in blindCredentialList | filter: resourceRegexFilter('name', resourceRegex)" ng-click="gotoResource(resource, typeFilter)" style="cursor: pointer" ng-show="showResource(resource) && typeFilter == 'blind_credentials'">
+              <td class="dont-break-out">{{ resource.name }}</td>
+              <td>{{ resource.revision }}</td>
+              <td>{{ resource.modified_date | date:'medium':'GMT' }}</td>
+              <td>{{ resource.modified_by }}</td>
+              <td><span class="glyphicon glyphicon-menu-right"></span></td>
+            </tr>
+            <tr ng-repeat="resource in serviceList | filter: resourceRegexFilter('id', resourceRegex)" ng-click="gotoResource(resource, typeFilter)" style="cursor: pointer" ng-show="showResource(resource) && typeFilter == 'services'">
+              <td class="dont-break-out">{{ resource.id }}</td>
+              <td>{{ resource.revision }}</td>
+              <td>{{ resource.modified_date | date:'medium':'GMT' }}</td>
+              <td>{{ resource.modified_by }}</td>
+              <td><span class="glyphicon glyphicon-menu-right"></span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-  <div class="col-md-8 row-overflow">
+  <div class="col-md-7 row-overflow">
     <div ui-view="details"><div class="row"><div class="no-details-text"><h3>No resource selected.</h3></div></div></div>
     <div ui-view="docs"></div>
   </div>

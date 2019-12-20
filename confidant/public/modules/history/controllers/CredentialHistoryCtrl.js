@@ -18,17 +18,17 @@
         '$log',
         '$location',
         'credentials.credential',
+        'credentials.credentialDiff',
         'credentials.archiveCredentialRevisions',
         'history.ResourceArchiveService',
-        function ($scope, $stateParams, $filter, $q, $log, $location, Credential, CredentialArchiveRevisions, ResourceArchiveService) {
-            function doQuery(credential, id) {
-                var d = $q.defer(),
-                    result = credential.get({'id': id}, function() { d.resolve(result); });
-                return d.promise;
-            }
-
+        function ($scope, $stateParams, $filter, $q, $log, $location, Credential, CredentialDiff, CredentialArchiveRevisions, ResourceArchiveService) {
             $scope.$log = $log;
             $scope.revisions = [];
+            $scope.getError = '';
+            $scope.saveError = '';
+            $scope.noDiff = false;
+            // TODO: set this from the return value
+            $scope.hasDiff = true;
 
             var idArr = $stateParams.credentialId.split('-');
             $scope.credentialRevision = parseInt(idArr.pop(), 10);
@@ -36,32 +36,25 @@
             CredentialArchiveRevisions.get({'id': $scope.credentialId}).$promise.then(function(revisions) {
                 $scope.revisions = $filter('orderBy')(revisions.revisions, 'revision', true);
                 $scope.currentRevision = parseInt($scope.revisions[0].revision, 10);
+                $scope.currentCredential = $scope.revisions[0];
                 $scope.isOnlyRevision = false;
                 $scope.isCurrentRevision = false;
                 if ($scope.currentRevision === 1) {
                     $scope.isOnlyRevision = true;
-                    $scope.diffRevision = $scope.currentRevision;
-                    Credential.get({'id': $stateParams.credentialId}).$promise.then(function(credential) {
-                        $scope.currentCredential = credential;
-                        $scope.diffCredential = credential;
-                    }, function() {
-                        $scope.currentCredential = null;
-                        $scope.diffCredential = null;
-                    });
                 } else {
                     if ($scope.credentialRevision === $scope.currentRevision) {
                         $scope.diffRevision = $scope.currentRevision - 1;
+                        $location.path('/history/credentials/' + $scope.credentialId + '-' + $scope.diffRevision);
                     } else {
                         $scope.diffRevision = $scope.credentialRevision;
                     }
-                    var currentCredentialPromise = doQuery(Credential, $scope.credentialId + '-' + $scope.currentRevision),
-                        diffCredentialPromise = doQuery(Credential, $scope.credentialId + '-' + $scope.diffRevision);
-                    $q.all([currentCredentialPromise, diffCredentialPromise]).then(function(results) {
-                        $scope.currentCredential = results[0];
-                        $scope.diffCredential = results[1];
-                    }, function() {
-                        $scope.currentCredential = null;
-                        $scope.diffCredential = null;
+                    CredentialDiff.get({'id': $scope.credentialId, 'old_revision': $scope.diffRevision, 'new_revision': $scope.currentRevision}).$promise.then(function(diff) {
+                        $scope.diff = diff;
+                        if (angular.equals({}, diff)) {
+                            $scope.noDiff = true;
+                        }
+                    }, function(res) {
+                        $scope.getError = res.data.error;
                     });
                 }
                 if ($scope.currentRevision === $scope.credentialRevision) {
@@ -69,20 +62,22 @@
                 }
             });
 
-            $scope.getCredentialByID = function(id) {
-                return $filter('filter')($scope.$parent.credentialList, {'id': id})[0];
-            };
-
-            $scope.getBlindCredentialByID = function(id) {
-                return $filter('filter')($scope.$parent.blindCredentialList, {'id': id})[0];
+            $scope.shouldDisplayList = function(value) {
+                if (typeof value === 'string') {
+                    return false;
+                } else if (typeof value === 'boolean') {
+                    return false;
+                } else {
+                    return true;
+                }
             };
 
             $scope.revertToDiffRevision = function() {
                 var deferred = $q.defer();
-                Credential.revert({'id': $scope.credentialId, revision: $scope.diffCredential.revision}).$promise.then(function(newCredential) {
+                Credential.revert({'id': $scope.credentialId, revision: $scope.diffRevision}).$promise.then(function(newCredential) {
                     deferred.resolve();
-                    ResourceArchiveService.updateResourceArchive();
-                    $location.path('/history/credential/' + newCredential.id + '-' + newCredential.revision);
+                    ResourceArchiveService.updateResourceArchive('credentials');
+                    $location.path('/history/credentials/' + newCredential.id + '-' + newCredential.revision);
                 }, function(res) {
                     if (res.status === 500) {
                         $scope.saveError = 'Unexpected server error.';

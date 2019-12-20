@@ -1,0 +1,66 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+jobs:
+  ## TODO: switch to sphinx and git rid of middleman
+  #build-and-deploy-docs:
+  #  name: Build and publish docs
+  #  runs-on: ubuntu-18.04
+  #  steps:
+  #    - name: Checkout
+  #      uses: actions/checkout@v1
+  #    - name: Setup Ruby
+  #      uses: actions/setup-ruby@v1
+  #      with:
+  #        ruby-version: '2.2.x'
+  #    - name: Install bundler deps
+  #      run: |
+  #          cd docs
+  #          gem install bundler -v 1.1.0
+  #          bundle install --jobs 4 --retry 3
+  #    - name: Build docs
+  #      run: cd docs && bundler exec middleman build && touch build/.nojekyll
+  #    - name: Deploy docs
+  #      uses: JamesIves/github-pages-deploy-action@releases/v3
+  #      with:
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #        BASE_BRANCH: master # The branch the action should deploy from.
+  #        BRANCH: gh-pages # The branch the action should deploy to.
+  #        FOLDER: docs/build # The folder the action should deploy.
+  build-and-publish-python-module:
+    name: Build and publish python module to pypi
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup python 3.6
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.6
+      - name: Add wheel dependency
+        run: pip install wheel
+      - name: Generate dist
+        run: python setup.py sdist bdist_wheel
+      - name: Publish to PyPI
+        if: startsWith(github.event.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
+  build-and-publish-docker-image:
+    name: Build and publish docker image
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@2.8
+        with:
+          name: lyft/confidant
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tag_names: true

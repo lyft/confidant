@@ -20,9 +20,17 @@ from confidant.services import credentialmanager
 from confidant.services import servicemanager
 from confidant.services.ciphermanager import CipherManager
 from confidant.utils import maintenance
+from confidant.utils.dynamodb import (
+    decode_last_evaluated_key,
+    encode_last_evaluated_key,
+)
+from confidant.utils import misc
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
+
+
+acl_module_check = misc.load_module(settings.ACL_MODULE)
 
 VALUE_LENGTH = 50
 
@@ -56,12 +64,13 @@ def get_client_config():
     '''
     # TODO: add more config in here.
     response = jsonify({
-        'defined': app.config['CLIENT_CONFIG'],
+        'defined': settings.CLIENT_CONFIG,
         'generated': {
-            'kms_auth_manage_grants': app.config['KMS_AUTH_MANAGE_GRANTS'],
-            'aws_accounts': list(app.config['SCOPED_AUTH_KEYS'].values()),
-            'xsrf_cookie_name': app.config['XSRF_COOKIE_NAME'],
-            'maintenance_mode': app.config['MAINTENANCE_MODE']
+            'kms_auth_manage_grants': settings.KMS_AUTH_MANAGE_GRANTS,
+            'aws_accounts': list(settings.SCOPED_AUTH_KEYS.values()),
+            'xsrf_cookie_name': settings.XSRF_COOKIE_NAME,
+            'maintenance_mode': settings.MAINTENANCE_MODE,
+            'history_page_limit': settings.HISTORY_PAGE_LIMIT,
         }
     })
     return response
@@ -70,6 +79,13 @@ def get_client_config():
 @app.route('/v1/services', methods=['GET'])
 @authnz.require_auth
 def get_service_list():
+    if not acl_module_check('get_service',
+                            actions=['list']):
+        msg = "{} does not have access to list services".format(
+            authnz.get_logged_in_user()
+        )
+        error_msg = {'error': msg}
+        return jsonify(error_msg), 403
     services = []
     for service in Service.data_type_date_index.query('service'):
         services.append({
@@ -102,13 +118,27 @@ def get_service(id):
     if authnz.user_is_user_type('service'):
         if not authnz.user_is_service(id):
             logging.warning('Authz failed for service {0}.'.format(id))
-            msg = 'Authenticated user is not authorized.'
+            msg = 'Service is not authorized.'
             return jsonify({'error': msg}), 401
     else:
+        logged_in_user = authnz.get_logged_in_user()
+        acl_actions = ['metadata']
+        if not metadata_only:
+            acl_actions.append('get')
+        if not acl_module_check('get_service',
+                                actions=acl_actions,
+                                resource=id):
+            msg = "{} does not have access to get service {}".format(
+                authnz.get_logged_in_user(),
+                id
+            )
+            error_msg = {'error': msg, 'reference': id}
+            return jsonify(error_msg), 403
+
         logging.info(
             'get_service called on id={} by user={} metadata_only={}'.format(
                 id,
-                authnz.get_logged_in_user(),
+                logged_in_user,
                 metadata_only,
             )
         )
@@ -191,9 +221,26 @@ def get_archive_service_revisions(id):
 @app.route('/v1/archive/services', methods=['GET'])
 @authnz.require_auth
 def get_archive_service_list():
+    limit = request.args.get(
+        'limit',
+        default=settings.HISTORY_PAGE_LIMIT,
+        type=int,
+    )
+    page = request.args.get('page', default=None, type=str)
+    if page:
+        try:
+            page = decode_last_evaluated_key(page)
+        except Exception:
+            logging.exception('Failed to parse provided page')
+            return jsonify({'error': 'Failed to parse page'}), 400
     services = []
-    for service in Service.data_type_date_index.query(
-            'archive-service', scan_index_forward=False):
+    results = Service.data_type_date_index.query(
+        'archive-service',
+        scan_index_forward=False,
+        limit=limit,
+        last_evaluated_key=page,
+    )
+    for service in results:
         services.append({
             'id': service.id,
             'account': service.account,
@@ -203,7 +250,11 @@ def get_archive_service_list():
             'modified_date': service.modified_date,
             'modified_by': service.modified_by
         })
-    return jsonify({'services': services})
+    service_list = {'services': services}
+    service_list['next_page'] = encode_last_evaluated_key(
+        results.last_evaluated_key
+    )
+    return jsonify(service_list)
 
 
 @app.route('/v1/grants/<id>', methods=['PUT'])
@@ -263,7 +314,6 @@ def get_grants(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def map_service_credentials(id):
-    data = request.get_json()
     try:
         _service = Service.get(id)
         if _service.data_type != 'service':
@@ -277,10 +327,25 @@ def map_service_credentials(id):
         revision = 1
         _service = None
 
+    data = request.get_json()
     if data.get('credentials') or data.get('blind_credentials'):
+        credentials = data.get('credentials', [])
+        blind_credentials = data.get('blind_credentials', [])
+        credentials = credentials + blind_credentials
+        if not acl_module_check('map_service_credential',
+                                actions=['put'],
+                                resource_credentials=credentials,
+                                resource_service=id):
+            msg = "{} does not have access to map service credential {}".format(
+                authnz.get_logged_in_user(),
+                id
+            )
+            error_msg = {'error': msg, 'reference': id}
+            return jsonify(error_msg), 403
+
         conflicts = credentialmanager.pair_key_conflicts_for_credentials(
-            data.get('credentials', []),
-            data.get('blind_credentials', []),
+            credentials,
+            blind_credentials,
         )
         if conflicts:
             ret = {
@@ -360,6 +425,16 @@ def map_service_credentials(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def revert_service_to_revision(id, to_revision):
+    if not acl_module_check('revert_service_to_revision',
+                            actions=['revert'],
+                            resource=id):
+        msg = "{} does not have access to revert service {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     try:
         current_service = Service.get(id)
     except DoesNotExist:
@@ -460,6 +535,13 @@ def revert_service_to_revision(id, to_revision):
 @app.route('/v1/credentials', methods=['GET'])
 @authnz.require_auth
 def get_credential_list():
+    if not acl_module_check('get_credential', actions=['list']):
+        msg = "{} does not have access to list credentials".format(
+            authnz.get_logged_in_user()
+        )
+        error_msg = {'error': msg}
+        return jsonify(error_msg), 403
+
     credentials = []
     for cred in Credential.data_type_date_index.query('credential'):
         credentials.append({
@@ -479,6 +561,16 @@ def get_credential_list():
 @app.route('/v1/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_credential(id):
+    if not acl_module_check('get_credential',
+                            actions=['metadata'],
+                            resource=id):
+        msg = "{} does not have access to credential {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     try:
         cred = Credential.get(id)
     except DoesNotExist:
@@ -494,16 +586,16 @@ def get_credential(id):
         services.append(service.id)
 
     if authnz.user_is_user_type('user'):
-        log_line = "{0} fetching credential {1}".format(
+        log_line = "{0} get credential {1}".format(
             authnz.get_logged_in_user(),
             id
         )
         logging.info(log_line)
 
-    return jsonify({
+    credential = {
         'id': id,
         'name': cred.name,
-        'credential_pairs': cred.decrypted_credential_pairs,
+        'credential_keys': cred.credential_keys,
         'metadata': cred.metadata,
         'services': services,
         'revision': cred.revision,
@@ -511,7 +603,48 @@ def get_credential(id):
         'modified_date': cred.modified_date,
         'modified_by': cred.modified_by,
         'documentation': cred.documentation
-    })
+    }
+    if acl_module_check('get_credential',
+                        actions=['get'],
+                        resource=id):
+        credential['credential_pairs'] = cred.decrypted_credential_pairs
+    return jsonify(credential)
+
+
+@app.route(
+    '/v1/credentials/<id>/<old_revision>/<new_revision>',
+    methods=['GET']
+)
+@authnz.require_auth
+def diff_credential(id, old_revision, new_revision):
+    if not acl_module_check('diff_credential',
+                            actions=['metadata'],
+                            resource=id):
+        msg = "{} does not have access to diff credential {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
+    try:
+        old_credential = Credential.get('{}-{}'.format(id, old_revision))
+    except DoesNotExist:
+        return jsonify({'error': 'Credential not found.'}), 404
+    if old_credential.data_type != 'archive-credential':
+        msg = 'id provided is not a credential.'
+        return jsonify({'error': msg}), 400
+    try:
+        new_credential = Credential.get('{}-{}'.format(id, new_revision))
+    except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
+        return jsonify({}), 404
+    if new_credential.data_type != 'archive-credential':
+        msg = 'id provided is not a credential.'
+        return jsonify({'error': msg}), 400
+    return jsonify(old_credential.diff(new_credential))
 
 
 @app.route('/v1/archive/credentials/<id>', methods=['GET'])
@@ -536,6 +669,7 @@ def get_archive_credential_revisions(id):
         revisions.append({
             'id': revision.id,
             'name': revision.name,
+            'metadata': cred.metadata,
             'revision': revision.revision,
             'enabled': revision.enabled,
             'modified_date': revision.modified_date,
@@ -554,19 +688,41 @@ def get_archive_credential_revisions(id):
 @app.route('/v1/archive/credentials', methods=['GET'])
 @authnz.require_auth
 def get_archive_credential_list():
+    limit = request.args.get(
+        'limit',
+        default=settings.HISTORY_PAGE_LIMIT,
+        type=int,
+    )
+    page = request.args.get('page', default=None, type=str)
+    if page:
+        try:
+            page = decode_last_evaluated_key(page)
+        except Exception:
+            logging.exception('Failed to parse provided page')
+            return jsonify({'error': 'Failed to parse page'}), 400
     credentials = []
-    for cred in Credential.data_type_date_index.query(
-            'archive-credential', scan_index_forward=False):
+    results = Credential.data_type_date_index.query(
+        'archive-credential',
+        scan_index_forward=False,
+        limit=limit,
+        last_evaluated_key=page,
+    )
+    for cred in results:
         credentials.append({
             'id': cred.id,
             'name': cred.name,
+            'metadata': cred.metadata,
             'revision': cred.revision,
             'enabled': cred.enabled,
             'modified_date': cred.modified_date,
             'modified_by': cred.modified_by,
             'documentation': cred.documentation
         })
-    return jsonify({'credentials': credentials})
+    credential_list = {'credentials': credentials}
+    credential_list['next_page'] = encode_last_evaluated_key(
+        results.last_evaluated_key
+    )
+    return jsonify(credential_list)
 
 
 @app.route('/v1/credentials', methods=['POST'])
@@ -574,6 +730,13 @@ def get_archive_credential_list():
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def create_credential():
+    if not acl_module_check('create_credential', actions=['create']):
+        msg = "{} does not have access to create credentials".format(
+            authnz.get_logged_in_user()
+        )
+        error_msg = {'error': msg}
+        return jsonify(error_msg), 403
+
     data = request.get_json()
     if not data.get('documentation') and settings.get('ENFORCE_DOCUMENTATION'):
         return jsonify({'error': 'documentation is a required field'}), 400
@@ -635,6 +798,7 @@ def create_credential():
         'id': cred.id,
         'name': cred.name,
         'credential_pairs': json.loads(cipher.decrypt(cred.credential_pairs)),
+        'credential_keys': cred.credential_keys,
         'metadata': cred.metadata,
         'revision': cred.revision,
         'enabled': cred.enabled,
@@ -659,6 +823,16 @@ def get_credential_dependencies(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def update_credential(id):
+    if not acl_module_check('update_credential',
+                            actions=['update'],
+                            resource=id):
+        msg = "{} does not have access to update credential {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     try:
         _cred = Credential.get(id)
     except DoesNotExist:
@@ -764,6 +938,7 @@ def update_credential(id):
         'id': cred.id,
         'name': cred.name,
         'credential_pairs': json.loads(cipher.decrypt(cred.credential_pairs)),
+        'credential_keys': cred.credential_keys,
         'metadata': cred.metadata,
         'revision': cred.revision,
         'enabled': cred.enabled,
@@ -778,6 +953,16 @@ def update_credential(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def revert_credential_to_revision(id, to_revision):
+    if not acl_module_check('revert_credential_to_revision',
+                            actions=['revert'],
+                            resource=id):
+        msg = "{} does not have access to revert credential {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     try:
         current_credential = Credential.get(id)
     except DoesNotExist:
@@ -870,7 +1055,6 @@ def revert_credential_to_revision(id, to_revision):
     return jsonify({
         'id': cred.id,
         'name': cred.name,
-        'credential_pairs': cred.decrypted_credential_pairs,
         'metadata': cred.metadata,
         'revision': cred.revision,
         'enabled': cred.enabled,
@@ -973,9 +1157,26 @@ def get_archive_blind_credential_revisions(id):
 @app.route('/v1/archive/blind_credentials', methods=['GET'])
 @authnz.require_auth
 def get_archive_blind_credential_list():
+    limit = request.args.get(
+        'limit',
+        default=settings.HISTORY_PAGE_LIMIT,
+        type=int,
+    )
+    page = request.args.get('page', default=None, type=str)
+    if page:
+        try:
+            page = decode_last_evaluated_key(page)
+        except Exception:
+            logging.exception('Failed to parse provided page')
+            return jsonify({'error': 'Failed to parse page'}), 400
     blind_credentials = []
-    for cred in BlindCredential.data_type_date_index.query(
-            'archive-blind-credential', scan_index_forward=False):
+    results = BlindCredential.data_type_date_index.query(
+        'archive-blind-credential',
+        scan_index_forward=False,
+        limit=limit,
+        last_evaluated_key=page,
+    )
+    for cred in results:
         blind_credentials.append({
             'id': cred.id,
             'name': cred.name,
@@ -991,7 +1192,11 @@ def get_archive_blind_credential_list():
             'modified_by': cred.modified_by,
             'documentation': cred.documentation
         })
-    return jsonify({'blind_credentials': blind_credentials})
+    credential_list = {'blind_credentials': blind_credentials}
+    credential_list['next_page'] = encode_last_evaluated_key(
+        results.last_evaluated_key
+    )
+    return jsonify(credential_list)
 
 
 @app.route('/v1/blind_credentials', methods=['POST'])

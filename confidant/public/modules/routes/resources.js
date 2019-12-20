@@ -50,14 +50,14 @@
         })
 
         .state('resources.credential-details', {
-            url: '/credential/:credentialId',
+            url: '/credentials/:credentialId',
             views: {
                 'details': {
                     controller: 'resources.CredentialDetailsCtrl',
                     templateUrl: '/modules/resources/views/credential-details.html'
                 },
                 'docs': {
-                    controller: 'resources.CredentialDocsCtrl',
+                    controller: 'resources.CredentialDetailsCtrl',
                     templateUrl: '/custom/modules/resources/views/credential-docs.html'
                 }
             },
@@ -67,14 +67,14 @@
         })
 
         .state('resources.blind-credential-details', {
-            url: '/blind_credential/:blindCredentialId',
+            url: '/blind_credentials/:blindCredentialId',
             views: {
                 'details': {
                     controller: 'resources.BlindCredentialDetailsCtrl',
                     templateUrl: '/modules/resources/views/blind-credential-details.html'
                 },
                 'docs': {
-                    controller: 'resources.BlindCredentialDocsCtrl',
+                    controller: 'resources.BlindCredentialDetailsCtrl',
                     templateUrl: '/custom/modules/resources/views/blind-credential-docs.html'
                 }
             },
@@ -84,7 +84,7 @@
         })
 
         .state('resources.service-details', {
-            url: '/service/:serviceId',
+            url: '/services/:serviceId',
             views: {
                 'details': {
                     controller: 'resources.ServiceDetailsCtrl',

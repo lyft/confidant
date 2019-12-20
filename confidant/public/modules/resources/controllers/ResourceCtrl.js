@@ -13,12 +13,14 @@
         '$scope',
         '$stateParams',
         '$q',
+        '$location',
         '$log',
         'credentials.CredentialListService',
         'blindcredentials.BlindCredentialListService',
         'services.ServiceListService',
-        function ($scope, $stateParams, $q, $log, CredentialListService, BlindCredentialListService, ServiceListService) {
+        function ($scope, $stateParams, $q, $location, $log, CredentialListService, BlindCredentialListService, ServiceListService) {
             $scope.$log = $log;
+            $scope.typeFilter = 'credentials';
             $scope.showDisabled = false;
 
             $scope.getCredentialList = CredentialListService.getCredentialList;
@@ -45,6 +47,10 @@
             });
             $scope.$emit('updateServiceList');
 
+            $scope.setTypeFilter = function(type) {
+                $scope.typeFilter = type;
+            };
+
             $scope.resourceRegexFilter = function(field, regex) {
                 return function(resource) {
                     var pattern = new RegExp(regex, 'ig');
@@ -52,21 +58,17 @@
                 };
             };
 
-            $scope.resourceTypeFilter = function(field) {
-                return function(resource) {
-                    if (field == 'credential' && $scope.showCredential) {
-                        return true;
-                    } else if (field == 'blind-credential' && $scope.showBlindCredential) {
-                        return true;
-                    } else if (field == 'service' && $scope.showService) {
-                        return true;
-                    }
-                    return false;
-                };
+            $scope.gotoResource = function(resource, type) {
+                $location.path('/resources/' + type + '/' + resource.id);
             };
 
-        }])
+            $scope.showResource = function(resource) {
+                if (resource.enabled || $scope.showDisabled) {
+                    return true;
+                }
+                return false;
+            };
 
-    ;
+        }]);
 
 })(window.angular);

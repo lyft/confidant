@@ -65,6 +65,60 @@ class Credential(Model):
             return False
         return True
 
+    def diff(self, other_cred):
+        if self.revision == other_cred.revision:
+            return {}
+        elif self.revision > other_cred.revision:
+            old = other_cred
+            new = self
+        else:
+            old = self
+            new = other_cred
+        diff = {}
+        if old.name != new.name:
+            diff['name'] = {'added': new.name, 'removed': old.name}
+        old_cred_pairs = old.decrypted_credential_pairs
+        new_cred_pairs = new.decrypted_credential_pairs
+        if old_cred_pairs != new_cred_pairs:
+            diff['credential_pairs'] = self._diff_dict(
+                old_cred_pairs,
+                new_cred_pairs
+            )
+        if old.metadata != new.metadata:
+            diff['metadata'] = self._diff_dict(old.metadata, new.metadata)
+        if old.enabled != new.enabled:
+            diff['enabled'] = {'added': new.enabled, 'removed': old.enabled}
+        if old.documentation != new.documentation:
+            diff['documentation'] = {
+                'added': new.documentation,
+                'removed': old.documentation
+            }
+        return diff
+
+    def _diff_dict(self, old, new):
+        diff = {}
+        removed = []
+        added = []
+        for key, value in old.items():
+            if key not in new:
+                removed.append(key)
+            elif old[key] != new[key]:
+                # modified is indicated by a remove and add
+                removed.append(key)
+                added.append(key)
+        for key, value in new.items():
+            if key not in old:
+                added.append(key)
+        if removed:
+            diff['removed'] = sorted(removed)
+        if added:
+            diff['added'] = sorted(added)
+        return diff
+
+    @property
+    def credential_keys(self):
+        return list(self.decrypted_credential_pairs)
+
     @property
     def decrypted_credential_pairs(self):
         if self.data_type == 'credential':

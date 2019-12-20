@@ -42,23 +42,35 @@
         'credentials.services',
         'credentials.valueGenerator',
         function ($scope, $stateParams, $q, $log, $filter, $location, Credential, Credentials, CredentialServices, ValueGenerator) {
-            var credentialCopy = null;
+            var credentialCopy = null,
+                deferred = $q.defer();
             $scope.$log = $log;
             $scope.saveError = '';
+            $scope.getError = '';
             $scope.credentialPairConflicts = null;
+            $scope.hasMetadata = false;
+            $scope.hasView = false;
+            // TODO: get this from the credential return
+            $scope.hasModify = true;
 
             if ($stateParams.credentialId) {
                 CredentialServices.get({'id': $stateParams.credentialId}).$promise.then(function(credentialServices) {
-                    $scope.credentialServices = credentialServices['services'];
+                    $scope.credentialServices = credentialServices.services;
                 });
 
                 Credential.get({'id': $stateParams.credentialId}).$promise.then(function(credential) {
                     var _credentialPairs = [],
                         _metadata = [];
-                    angular.forEach(credential.credential_pairs, function(value, key) {
-                        this.push({'key': key, 'value': value});
-                    }, _credentialPairs);
-                    credential.credentialPairs = _credentialPairs;
+                    if (credential.credential_pairs) {
+                        angular.forEach(credential.credential_pairs, function(value, key) {
+                            this.push({'key': key, 'value': value});
+                        }, _credentialPairs);
+                        credential.credentialPairs = _credentialPairs;
+                        $scope.hasView = true;
+                    }
+                    if (credential.credential_keys) {
+                        $scope.hasMetadata = true;
+                    }
                     angular.forEach(credential.metadata, function(value, key) {
                         this.push({'key': key, 'value': value});
                     }, _metadata);
@@ -67,8 +79,17 @@
                     $scope.credential = credential;
                     credentialCopy = angular.copy($scope.credential);
                     $scope.shown = false;
+                }, function(res) {
+                    if (res.status === 500) {
+                        $scope.getError = 'Unexpected server error.';
+                        $log.error(res);
+                    } else {
+                        $scope.getError = res.data.error;
+                    }
+                    deferred.reject();
                 });
             } else {
+                // A new credential is being created
                 $scope.credential = {
                     name: '',
                     enabled: true,
@@ -77,6 +98,10 @@
                 };
                 credentialCopy = angular.copy($scope.credential);
                 $scope.shown = true;
+                $scope.hasView = true;
+                $scope.hasModify = true;
+                // TODO: need a hasCreate here, which we'd get determine
+                // based on config endpoint.
             }
 
             $scope.showValue = function(credentialPair) {
@@ -173,7 +198,7 @@
                 }
                 // Ensure metadata keys are unique and transform them
                 // into key/value dict.
-                for (var i = $scope.credential.mungedMetadata.length; i--;) {
+                for (i = $scope.credential.mungedMetadata.length; i--;) {
                     var metadataItem = $scope.credential.mungedMetadata[i];
                     if (metadataItem.isDeleted) {
                         $scope.credential.mungedMetadata.splice(i, 1);
@@ -205,7 +230,7 @@
                         newCredential.mungedMetadata = _metadata;
                         $scope.credential = newCredential;
                         if (credentialCopy.name !== $scope.credential.name ||
-                            credentialCopy.enabled != $scope.credential.enabled) {
+                            credentialCopy.enabled !== $scope.credential.enabled) {
                             $scope.$emit('updateCredentialList');
                         }
                         credentialCopy = angular.copy(newCredential);
@@ -227,7 +252,7 @@
                     Credentials.create(_credential).$promise.then(function(newCredential) {
                         $scope.$emit('updateCredentialList');
                         deferred.resolve();
-                        $location.path('/resources/credential/' + newCredential.id);
+                        $location.path('/resources/credentials/' + newCredential.id);
                     }, function(res) {
                         if (res.status === 500) {
                             $scope.saveError = 'Unexpected server error.';

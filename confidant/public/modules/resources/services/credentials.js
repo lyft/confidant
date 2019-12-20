@@ -14,7 +14,7 @@
     }])
 
     .factory('credentials.archiveList', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
-        return $resource(CONFIDANT_URLS.ARCHIVE_CREDENTIALS);
+        return $resource(CONFIDANT_URLS.ARCHIVE_CREDENTIALS, {page: '@page', revision: '@revision'});
     }])
 
     .factory('credentials.credential', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
@@ -22,6 +22,10 @@
             update: {method: 'PUT', isArray: false},
             revert: {method: 'PUT', isArray: false, url: CONFIDANT_URLS.CREDENTIAL_REVISION}
         });
+    }])
+
+    .factory('credentials.credentialDiff', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
+        return $resource(CONFIDANT_URLS.CREDENTIAL_DIFF, {id: '@id', old_revision: '@old_revision', new_revision: '@new_revision'});
     }])
 
     .factory('credentials.archiveCredentialRevisions', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {

@@ -1,3 +1,6 @@
+import importlib
+
+
 def dict_deep_update(a, b):
     """
     Deep merge in place of two dicts. For all keys in `b`, override matching
@@ -15,3 +18,17 @@ def dict_deep_update(a, b):
             dict_deep_update(a[key], val)
         else:
             a[key] = val
+
+
+def load_module(module_path):
+    """ Load's a python module.
+
+    ex: module_path = "confidant.authnz.rbac:no_acl"
+
+    Will load the module confidant.authnz.rbac and return the function no_acl
+    """
+    module_name, function_name = module_path.split(':')
+    module = importlib.import_module(module_name)
+    function = getattr(module, function_name)
+
+    return function

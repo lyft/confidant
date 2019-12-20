@@ -1,0 +1,178 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+body {
+  background-color: #F4F5F5;
+}
+
+#site-navigation {
+  position: relative;
+}
+
+#page-header {
+  color: #F4F5F5;
+  background-color: #333D47;
+}
+#page-header h1 {
+  color: #F4F5F5;
+  background-color: #333D47;
+  margin-top: -2px;
+}
+#page-header .nav li a:hover {
+  background: transparent;
+}
+#page-header #header-subtext {
+  margin-top: -5px;
+}
+
+#page-navigation {
+  margin-top: 5px;
+}
+
+.no-details-text {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.row-overflow-resources {
+  position: relative;
+  overflow-y: auto;
+  height: calc(100% - 120px);
+}
+
+.row-overflow-history-resources {
+  position: relative;
+  overflow-y: auto;
+  height: calc(100% - 90px);
+}
+
+.row-overflow {
+  position: relative;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.row-relative {
+  position: relative;
+  height: 100%;
+}
+
+.container-body {
+  height: calc(100% - 155px);
+  padding-top: 5px;
+}
+
+.container-bottomborder {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.textarea-fullwidth {
+  width: 100%;
+}
+
+.editable-textarea {
+  width: 100%;
+}
+
+.editable-controls {
+  width: 100%;
+}
+
+.ng-invalid-pattern {
+  border-color: red;
+}
+
+.has-margin-bottom {
+  margin-bottom: 5px;
+}
+
+.has-margin-bottom-lg {
+  margin-bottom: 10px;
+}
+
+.has-margin-top {
+  margin-top: 5px;
+}
+
+.has-margin-top-lg {
+  margin-top: 10px;
+}
+
+.well {
+  background-color: #FFF;
+}
+
+.dont-break-out {
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+}
+
+.diff-removed li {
+  background-color: rgb(255, 238, 240);
+}
+
+.diff-removed p {
+  background-color: rgb(255, 238, 240);
+}
+
+.diff-removed-item::before {
+  content: "- ";
+}
+
+.diff-added li {
+  background-color: rgb(230, 255, 237);
+}
+
+.diff-added p {
+  background-color: rgb(230, 255, 237);
+}
+
+.diff-added-item::before {
+  content: "+ ";
+}
+
+.active {
+  color: #337ab7;
+}
+
+.call-to-action {
+  background-color: rgb(51, 102, 204);
+  color: #FFF;
+}
+
+.call-to-action:hover {
+  background-color: #337ab7;
+  color: #FFF;
+}
+
+/*
+ * Loading spinner
+ */
+#loading-spinner.opaque {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 6000;
+  background-color: #333D47;
+}
+#loading-spinner .spinner:before {
+  content: '';
+  position: absolute;
+  margin-top: -2.5em;
+  margin-left: -2.5em;
+  width: 5em;
+  height: 5em;
+  background-color: rgba(0, 0, 0, 0.33);
+  border-radius: .5em;
+}

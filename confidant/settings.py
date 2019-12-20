@@ -331,6 +331,8 @@ DYNAMODB_CREATE_TABLE = bool_env('DYNAMODB_CREATE_TABLE', False)
 # Connection pool size for PynamoDB connections to DynamoDB
 PYNAMO_CONNECTION_POOL_SIZE = int_env('PYNAMO_CONNECTION_POOL_SIZE', 100)
 PYNAMO_REQUEST_TIMEOUT_SECONDS = int_env('PYNAMO_REQUEST_TIMEOUT_SECONDS', 1)
+# page limit size for history API endpoints listing
+HISTORY_PAGE_LIMIT = int_env('HISTORY_PAGE_LIMIT')
 
 # Encryption
 
@@ -491,3 +493,7 @@ def get(name, default=None):
     if encrypted_settings.registered(name):
         return encrypted_settings.get_secret(name)
     return globals().get(name, default)
+
+
+# Module that will perform an external ACL check on API endpoints
+ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:no_acl')
