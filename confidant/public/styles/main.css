@@ -41,13 +41,13 @@ body {
 .row-overflow-resources {
   position: relative;
   overflow-y: auto;
-  height: calc(100% - 70px);
+  height: calc(100% - 120px);
 }
 
 .row-overflow-history-resources {
   position: relative;
   overflow-y: auto;
-  height: calc(100% - 70px);
+  height: calc(100% - 90px);
 }
 
 .row-overflow {
@@ -142,8 +142,18 @@ body {
   content: "+ ";
 }
 
-.history-active {
+.active {
   color: #337ab7;
+}
+
+.call-to-action {
+  background-color: rgb(51, 102, 204);
+  color: #FFF;
+}
+
+.call-to-action:hover {
+  background-color: #337ab7;
+  color: #FFF;
 }
 
 /*

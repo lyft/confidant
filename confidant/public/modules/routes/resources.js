@@ -50,7 +50,7 @@
         })
 
         .state('resources.credential-details', {
-            url: '/credential/:credentialId',
+            url: '/credentials/:credentialId',
             views: {
                 'details': {
                     controller: 'resources.CredentialDetailsCtrl',
@@ -67,7 +67,7 @@
         })
 
         .state('resources.blind-credential-details', {
-            url: '/blind_credential/:blindCredentialId',
+            url: '/blind_credentials/:blindCredentialId',
             views: {
                 'details': {
                     controller: 'resources.BlindCredentialDetailsCtrl',
@@ -84,7 +84,7 @@
         })
 
         .state('resources.service-details', {
-            url: '/service/:serviceId',
+            url: '/services/:serviceId',
             views: {
                 'details': {
                     controller: 'resources.ServiceDetailsCtrl',

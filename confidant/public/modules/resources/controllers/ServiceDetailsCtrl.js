@@ -244,7 +244,7 @@
                     serviceCopy = angular.copy($scope.service);
                     deferred.resolve();
                     if ($scope.newService) {
-                        $location.path('/resources/service/' + newService.id);
+                        $location.path('/resources/services/' + newService.id);
                     }
                 }, function(res) {
                     if (res.status === 500) {

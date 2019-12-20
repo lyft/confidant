@@ -252,7 +252,7 @@
                     Credentials.create(_credential).$promise.then(function(newCredential) {
                         $scope.$emit('updateCredentialList');
                         deferred.resolve();
-                        $location.path('/resources/credential/' + newCredential.id);
+                        $location.path('/resources/credentials/' + newCredential.id);
                     }, function(res) {
                         if (res.status === 500) {
                             $scope.saveError = 'Unexpected server error.';
