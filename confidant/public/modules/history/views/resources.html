@@ -10,9 +10,9 @@
     <div class="row has-margin-bottom-lg">
       <div class="form">
         <div class="simple-form col-md-12">
-          <button type="button" ng-class="{ 'history-active': typeFilter == 'credentials' }" ng-click="setTypeFilter('credentials')" class="btn">Credentials</button>
-          <button type="button" ng-class="{ 'history-active': typeFilter == 'blind_credentials' }" ng-click="setTypeFilter('blind_credentials')" class="btn">Blind Credentials</button>
-          <button type="button" ng-class="{ 'history-active': typeFilter == 'services' }" ng-click="setTypeFilter('services')" class="btn">Services</button>
+          <button type="button" ng-class="{ 'active': typeFilter == 'credentials' }" ng-click="setTypeFilter('credentials')" class="btn">Credentials</button>
+          <button type="button" ng-class="{ 'active': typeFilter == 'blind_credentials' }" ng-click="setTypeFilter('blind_credentials')" class="btn">Blind Credentials</button>
+          <button type="button" ng-class="{ 'active': typeFilter == 'services' }" ng-click="setTypeFilter('services')" class="btn">Services</button>
         </div>
       </div>
     </div>
@@ -21,18 +21,20 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th>Type</th>
               <th>Name</th>
               <th>Revision</th>
               <th>Modified</th>
+              <th>Modified By</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="resource in resourceArchive[typeFilter].archive | filter: resourceRegexFilter('name', resourceRegex) | orderBy:'-modified_date'" ng-click="gotoResource(resource)" style="cursor: pointer">
-              <td>{{ resource.type }}</td>
               <td class="dont-break-out">{{ resource.name }}</td>
               <td>{{ resource.revision }}</td>
               <td>{{ resource.modified_date | date:'medium':'GMT' }} GMT</td>
+              <td>{{ resource.modified_by }}</td>
+              <td><span class="glyphicon glyphicon-menu-right"></span></td>
             </tr>
           </tbody>
         </table>

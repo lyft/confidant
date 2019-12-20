@@ -11,7 +11,7 @@
       <ul>
         <li>Credentials:</li>
         <ul>
-          <li ng-repeat="credentialId in conflicts.credentials"><a class="color-text-snow" href="#/resources/credential/{{ credentialId }}">{{ getCredentialByID(credentialId).name }}</a></li>
+          <li ng-repeat="credentialId in conflicts.credentials"><a class="color-text-snow" href="#/resources/credentials/{{ credentialId }}">{{ getCredentialByID(credentialId).name }}</a></li>
         </ul>
       </ul>
     </li>
@@ -20,7 +20,7 @@
       <ul>
         <li>Blind Credentials:</li>
         <ul>
-          <li ng-repeat="credentialId in conflicts.blind_credentials"><a class="color-text-snow" href="#/resources/blind_credential/{{ credentialId }}">{{ getBlindCredentialByID(credentialId).name }}</a></li>
+          <li ng-repeat="credentialId in conflicts.blind_credentials"><a class="color-text-snow" href="#/resources/blind_credentials/{{ credentialId }}">{{ getBlindCredentialByID(credentialId).name }}</a></li>
         </ul>
       </ul>
     </li>
@@ -50,7 +50,7 @@
       <div ng-repeat="credential in service.credentials | filter:filterCredentials" class="row">
         <div class="col-md-8">
           <span editable-select="credential.id" e-ng-selected="credential.id == c.id" e-name="{{ credential.id }}SelectMenu" e-ng-options="c.id as c.name for c in $parent.credentialList | filter:filterCredentialOptions">
-            <a href="#/resources/credential/{{ credential.id }}">{{ credential.name }} <span ng-hide="credential.enabled">(disabled)</span></a>
+            <a href="#/resources/credentials/{{ credential.id }}">{{ credential.name }} <span ng-hide="credential.enabled">(disabled)</span></a>
           </span>
           <span ng-hide="editableForm.$visible">(Revision: {{ credential.revision }})</span>
         </div>
@@ -71,7 +71,7 @@
       <div ng-repeat="blind_credential in service.blind_credentials | filter:filterCredentials" class="row">
         <div class="col-md-8">
           <span editable-select="blind_credential.id" e-ng-selected="blind_credential.id == c.id" e-name="{{ blind_credential.id }}SelectMenu" e-ng-options="c.id as c.name for c in $parent.blindCredentialList | filter:filterBlindCredentialOptions">
-            <a href="#/resources/blind_credential/{{ blind_credential.id }}">{{ blind_credential.name }} <span ng-hide="blind_credential.enabled">(disabled)</span></a>
+            <a href="#/resources/blind_credentials/{{ blind_credential.id }}">{{ blind_credential.name }} <span ng-hide="blind_credential.enabled">(disabled)</span></a>
             <!--{{ blind_credential.name }} <span ng-hide="blind_credential.enabled">(disabled)-->
           </span>
           <span ng-hide="editableForm.$visible">(Revision: {{ blind_credential.revision }})</span>
@@ -97,7 +97,7 @@
   </div>
   <div class="form-group" ng-hide="newService || missingService">
     <label for="serviceRevision">Service Revision</label>
-    <span id="serviceRevision">{{ service.revision }}</span>
+    <span id="serviceRevision">{{ service.revision }} (<a href="#/history/services/{{ service.id }}-{{ service.revision }}">view history</a>)</span>
   </div>
   <div class="form-group" ng-hide="newService || missingService || !showGrants">
     <label for="serviceGrants">Service Grants</label>
@@ -108,9 +108,9 @@
     </ul>
   </div>
   <div class="buttons">
-    <button type="button" class="btn btn-default" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">Edit</button>
+    <button type="button" class="btn btn-default call-to-action" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">Edit</button>
     <span ng-show="editableForm.$visible">
-      <button type="submit" class="btn" ng-disabled="editableForm.$waiting">Save</button>
+      <button type="submit" class="btn call-to-action" ng-disabled="editableForm.$waiting">Save</button>
       <button type="button" class="btn btn-alternate" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">Cancel</button>
     </span>
   </div>
