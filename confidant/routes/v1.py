@@ -80,7 +80,7 @@ def get_client_config():
 @authnz.require_auth
 def get_service_list():
     if not acl_module_check(resource_type='service',
-                            actions=['list']):
+                            action='list'):
         msg = "{} does not have access to list services".format(
             authnz.get_logged_in_user()
         )
@@ -122,11 +122,9 @@ def get_service(id):
             return jsonify({'error': msg}), 401
     else:
         logged_in_user = authnz.get_logged_in_user()
-        acl_actions = ['metadata']
-        if not metadata_only:
-            acl_actions.append('get')
+        action = 'metadata' if metadata_only else 'get'
         if not acl_module_check(resource_type='service',
-                                actions=acl_actions,
+                                action=action,
                                 resource_id=id):
             msg = "{} does not have access to get service {}".format(
                 authnz.get_logged_in_user(),
@@ -333,7 +331,7 @@ def map_service_credentials(id):
         blind_credentials = data.get('blind_credentials', [])
         credentials = credentials + blind_credentials
         if not acl_module_check(resource_type='service',
-                                actions=['update'],
+                                action='update',
                                 resource_id=id,
                                 kwargs={
                                     'credential_ids': credentials,
@@ -428,7 +426,7 @@ def map_service_credentials(id):
 @maintenance.check_maintenance_mode
 def revert_service_to_revision(id, to_revision):
     if not acl_module_check(resource_type='service',
-                            actions=['revert'],
+                            action='revert',
                             resource_id=id):
         msg = "{} does not have access to revert service {}".format(
             authnz.get_logged_in_user(),
@@ -537,7 +535,7 @@ def revert_service_to_revision(id, to_revision):
 @app.route('/v1/credentials', methods=['GET'])
 @authnz.require_auth
 def get_credential_list():
-    if not acl_module_check(resource_type='credential', actions=['list']):
+    if not acl_module_check(resource_type='credential', action='list'):
         msg = "{} does not have access to list credentials".format(
             authnz.get_logged_in_user()
         )
@@ -564,7 +562,7 @@ def get_credential_list():
 @authnz.require_auth
 def get_credential(id):
     if not acl_module_check(resource_type='credential',
-                            actions=['metadata'],
+                            action='metadata',
                             resource_id=id):
         msg = "{} does not have access to credential {}".format(
             authnz.get_logged_in_user(),
@@ -600,7 +598,7 @@ def get_credential(id):
         'documentation': cred.documentation
     }
     if acl_module_check(resource_type='credential',
-                        actions=['get'],
+                        action='get',
                         resource_id=id):
         credential['credential_pairs'] = cred.decrypted_credential_pairs
         log_line = "{0} get credential {1}".format(
@@ -618,7 +616,7 @@ def get_credential(id):
 @authnz.require_auth
 def diff_credential(id, old_revision, new_revision):
     if not acl_module_check(resource_type='credential',
-                            actions=['metadata'],
+                            action='metadata',
                             resource_id=id):
         msg = "{} does not have access to diff credential {}".format(
             authnz.get_logged_in_user(),
@@ -730,7 +728,7 @@ def get_archive_credential_list():
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def create_credential():
-    if not acl_module_check(resource_type='credential', actions=['create']):
+    if not acl_module_check(resource_type='credential', action='create'):
         msg = "{} does not have access to create credentials".format(
             authnz.get_logged_in_user()
         )
@@ -824,7 +822,7 @@ def get_credential_dependencies(id):
 @maintenance.check_maintenance_mode
 def update_credential(id):
     if not acl_module_check(resource_type='credential',
-                            actions=['update'],
+                            action='update',
                             resource_id=id):
         msg = "{} does not have access to update credential {}".format(
             authnz.get_logged_in_user(),
@@ -954,7 +952,7 @@ def update_credential(id):
 @maintenance.check_maintenance_mode
 def revert_credential_to_revision(id, to_revision):
     if not acl_module_check(resource_type='credential',
-                            actions=['revert'],
+                            action='revert',
                             resource_id=id):
         msg = "{} does not have access to revert credential {}".format(
             authnz.get_logged_in_user(),
