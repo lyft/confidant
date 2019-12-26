@@ -5,15 +5,15 @@ import re
 import uuid
 
 from flask import jsonify, request
-from pynamodb.exceptions import PutError, DoesNotExist
+from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, clients, settings
 from confidant.app import app
 from confidant.models.credential import Credential
 from confidant.models.service import Service
 from confidant.services import (
-    graphite,
     credentialmanager,
+    graphite,
     servicemanager,
     webhook,
 )

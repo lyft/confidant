@@ -4,9 +4,9 @@ from flask import jsonify
 from flask import request
 from pynamodb.exceptions import DoesNotExist, PutError
 
-from confidant import authnz
-from confidant import settings
+from confidant import authnz, settings
 from confidant.app import app
+from confidant.models.service import Service
 from confidant.services import (
     credentialmanager,
     iamrolemanager,
@@ -19,7 +19,6 @@ from confidant.utils.dynamodb import (
     decode_last_evaluated_key,
     encode_last_evaluated_key,
 )
-from confidant.models.service import Service
 
 acl_module_check = misc.load_module(settings.ACL_MODULE)
 

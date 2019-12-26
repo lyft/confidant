@@ -1,15 +1,15 @@
-import uuid
 import logging
+import uuid
 
-from pynamodb.exceptions import PutError, DoesNotExist
 from flask import jsonify, request
+from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, settings
 from confidant.app import app
 from confidant.services import (
+    credentialmanager,
     graphite,
     webhook,
-    credentialmanager,
     servicemanager,
 )
 from confidant.utils import maintenance, misc

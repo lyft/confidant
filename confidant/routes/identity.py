@@ -1,7 +1,6 @@
 from flask import jsonify
 
-from confidant import authnz
-from confidant import settings
+from confidant import authnz, settings
 from confidant.app import app
 
 

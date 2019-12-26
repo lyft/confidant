@@ -1,3 +1,8 @@
-from confidant.routes import static_files  # noqa
-from confidant.routes import v1  # noqa
-from confidant.routes import saml  # noqa
+from confidant.routes import (  # noqa:F401
+    blind_credentials,
+    credentials,
+    identity,
+    saml,
+    services,
+    static_files,
+)
