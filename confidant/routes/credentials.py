@@ -14,6 +14,7 @@ from confidant.models.service import Service
 from confidant.services import (
     credentialmanager,
     graphite,
+    keymanager,
     servicemanager,
     webhook,
 )
