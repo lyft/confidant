@@ -33,8 +33,8 @@ def get_iam_roles_list():
 @app.route('/v1/services', methods=['GET'])
 @authnz.require_auth
 def get_service_list():
-    if not acl_module_check('get_service',
-                            actions=['list']):
+    if not acl_module_check(resource_type='service',
+                            actions='list'):
         msg = "{} does not have access to list services".format(
             authnz.get_logged_in_user()
         )
@@ -69,12 +69,10 @@ def get_service(id):
             return jsonify({'error': msg}), 401
     else:
         logged_in_user = authnz.get_logged_in_user()
-        acl_actions = ['metadata']
-        if not metadata_only:
-            acl_actions.append('get')
-        if not acl_module_check('get_service',
-                                actions=acl_actions,
-                                resource=id):
+        action = 'metadata' if metadata_only else 'get'
+        if not acl_module_check(resource_type='service',
+                                action=action,
+                                resource_id=id):
             msg = "{} does not have access to get service {}".format(
                 authnz.get_logged_in_user(),
                 id
@@ -227,10 +225,12 @@ def map_service_credentials(id):
         credentials = data.get('credentials', [])
         blind_credentials = data.get('blind_credentials', [])
         credentials = credentials + blind_credentials
-        if not acl_module_check('map_service_credential',
-                                actions=['put'],
-                                resource_credentials=credentials,
-                                resource_service=id):
+        if not acl_module_check(resource_type='service',
+                                action='put',
+                                resource_id=id,
+                                kwargs={
+                                    'credential_ids': credentials,
+                                }):
             msg = "{} does not have access to map service credential {}".format(
                 authnz.get_logged_in_user(),
                 id
@@ -320,9 +320,9 @@ def map_service_credentials(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def revert_service_to_revision(id, to_revision):
-    if not acl_module_check('revert_service_to_revision',
-                            actions=['revert'],
-                            resource=id):
+    if not acl_module_check(resource_type='service',
+                            action='revert',
+                            resource_id=id):
         msg = "{} does not have access to revert service {}".format(
             authnz.get_logged_in_user(),
             id

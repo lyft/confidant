@@ -33,7 +33,7 @@ VALUE_LENGTH = 50
 @app.route('/v1/credentials', methods=['GET'])
 @authnz.require_auth
 def get_credential_list():
-    if not acl_module_check('get_credential', actions=['list']):
+    if not acl_module_check(resource_type='credential', actions='list'):
         msg = "{} does not have access to list credentials".format(
             authnz.get_logged_in_user()
         )
@@ -59,9 +59,9 @@ def get_credential_list():
 @app.route('/v1/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_credential(id):
-    if not acl_module_check('get_credential',
-                            actions=['metadata'],
-                            resource=id):
+    if not acl_module_check(resource_type='credential',
+                            action='metadata',
+                            resource_id=id):
         msg = "{} does not have access to credential {}".format(
             authnz.get_logged_in_user(),
             id
@@ -95,9 +95,9 @@ def get_credential(id):
         'modified_by': cred.modified_by,
         'documentation': cred.documentation
     }
-    if acl_module_check('get_credential',
-                        actions=['get'],
-                        resource=id):
+    if acl_module_check(resource_type='credential',
+                        action='get',
+                        resource_id=id):
         credential['credential_pairs'] = cred.decrypted_credential_pairs
         log_line = "{0} get credential {1}".format(
             authnz.get_logged_in_user(),
@@ -113,9 +113,9 @@ def get_credential(id):
 )
 @authnz.require_auth
 def diff_credential(id, old_revision, new_revision):
-    if not acl_module_check('diff_credential',
-                            actions=['metadata'],
-                            resource=id):
+    if not acl_module_check(resource_type='credential',
+                            action='metadata',
+                            resource_id=id):
         msg = "{} does not have access to diff credential {}".format(
             authnz.get_logged_in_user(),
             id
@@ -226,7 +226,7 @@ def get_archive_credential_list():
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def create_credential():
-    if not acl_module_check('create_credential', actions=['create']):
+    if not acl_module_check(resource_type='credential', actions='create'):
         msg = "{} does not have access to create credentials".format(
             authnz.get_logged_in_user()
         )
@@ -319,9 +319,9 @@ def get_credential_dependencies(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def update_credential(id):
-    if not acl_module_check('update_credential',
-                            actions=['update'],
-                            resource=id):
+    if not acl_module_check(resource_type='credential',
+                            action='update',
+                            resource_id=id):
         msg = "{} does not have access to update credential {}".format(
             authnz.get_logged_in_user(),
             id
@@ -449,9 +449,9 @@ def update_credential(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def revert_credential_to_revision(id, to_revision):
-    if not acl_module_check('revert_credential_to_revision',
-                            actions=['revert'],
-                            resource=id):
+    if not acl_module_check(resource_type='credential',
+                            action='revert',
+                            resource_id=id):
         msg = "{} does not have access to revert credential {}".format(
             authnz.get_logged_in_user(),
             id
