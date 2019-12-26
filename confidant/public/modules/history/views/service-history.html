@@ -28,65 +28,53 @@
   <p>Please ensure credential pair keys are unique for the mapped services, then try again.</p>
 </div>
 </div>
-<div class="well">
-  <h3 class="has-margin-bottom-lg">Difference between revisions of {{ serviceId }}</h3>
+<div class="alert alert-warning" ng-show="getError">
+<p>{{ getError }}</p>
+</div>
+<div class="well" ng-show="isOnlyRevision">
+  <h3 class="has-margin-bottom-lg">Only revision of {{ currentService.name }}</h3>
+  <p ng-show="isOnlyRevision">This is the only revision of this service. You'll need to <a href="#/resources/services/{{ serviceId }}">edit the service</a> to make any changes.</p>
+</div>
+<div class="well" ng-hide="isOnlyRevision || !hasDiff">
+  <h3 class="has-margin-bottom-lg">Difference between revisions of {{ currentService.name }}</h3>
   <div class="row">
     <a ng-show="serviceRevision > 1" style="float: left" class="has-margin-bottom-lg" href="#/history/services/{{ serviceId }}-{{ serviceRevision - 1 }}"><span class="glyphicon glyphicon-menu-left"></span> previous revision</a>
-    <a ng-show="serviceRevision < currentRevision" style="float: right" class="has-margin-bottom-lg" href="#/history/services/{{ serviceId }}-{{ serviceRevision + 1 }}">next revision <span class="glyphicon glyphicon-menu-right"></span></a>
+    <a ng-show="serviceRevision < currentRevision - 1" style="float: right" class="has-margin-bottom-lg" href="#/history/services/{{ serviceId }}-{{ serviceRevision + 1 }}">next revision <span class="glyphicon glyphicon-menu-right"></span></a>
   </div>
-  <div class="row">
-    <div class="col-md-6">
-      <div ng-hide="isOnlyRevision">
-        <h5>Revision {{ diffRevision }}</h5>
-        <h6>Enabled</h6>
-        <div class="well well-sm">
-          <p>{{ getServiceByRevision(diffRevision).enabled }}</p>
-        </div>
-        <h6>Credentials</h6>
-        <div class="well">
-          <ul class="list-unstyled" style="overflow: scroll">
-            <li ng-repeat="credential in getServiceByRevision(diffRevision).credentials">{{ getCredentialName(credential) }}</li>
-          </ul>
-        </div>
-        <h6>Blind Credentials</h6>
-        <div class="well">
-          <ul class="list-unstyled" style="overflow: scroll">
-            <li ng-repeat="blind_credential in getServiceByRevision(diffRevision).blind_credentials">{{ getBlindCredentialName(blind_credential) }}</li>
-          </ul>
-        </div>
-      </div>
-      <div ng-show="isOnlyRevision">
-        <h5>No other revision.</h5>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <h5>Current revision</h5>
-      <h6>Enabled</h6>
-      <div class="well well-sm">
-        <p>{{ getServiceByRevision(currentRevision).enabled }}</p>
-      </div>
-      <h6>Credentials</h6>
-      <div class="well">
-        <ul class="list-unstyled" style="overflow: scroll">
-          <li ng-repeat="credential in getServiceByRevision(currentRevision).credentials">{{ getCredentialName(credential) }}</li>
-        </ul>
-      </div>
-      <h6>Blind Credentials</h6>
-      <div class="well">
-        <ul class="list-unstyled" style="overflow: scroll">
-          <li ng-repeat="blind_credential in getServiceByRevision(currentRevision).blind_credentials">{{ getBlindCredentialName(blind_credential) }}</li>
-        </ul>
-      </div>
-    </div>
+  <div ng-show="noDiff">
+    <p>No difference between revisions {{ diffRevision }} and {{ currentRevision }} for {{ currentService.name }}</p>
   </div>
-  <div ng-show="isCurrentRevision">
-    <p ng-show="isOnlyRevision">This is the only revision of this service. You'll need to <a href="#/resources/services/{{ serviceId }}">edit the service</a> to make any changes.</p>
-    <div ng-hide="isOnlyRevision">
-      <p class="has-margin-bottom-lg">This is the current revision of this service. The above diff is between the current revision and the previous revision.</p>
-      <button class="btn call-to-action" ng-click="revertToDiffRevision()">Revert to revision {{ diffRevision }}</button>
+  <div ng-hide="noDiff">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6 h3">Revision {{ diffRevision }}</div>
+      <div class="col-md-6 h3">Current revision</div>
+    </div>
+    <div class="has-margin-bottom-lg row" ng-repeat="(diffKey, diffValue) in diff">
+      <div class="has-margin-bottom-lg">
+        <div class="col-md-6 h4">{{ diffKey }}</div>
+        <div class="col-md-6 h4">{{ diffKey }}</div>
+      </div>
+      <div class="col-md-6 diff-removed">
+        <div>
+        <ul class="list-unstyled" ng-show="shouldDisplayList(diffValue.removed)">
+          <li class="diff-removed-item" ng-repeat="removed in diffValue.removed track by $index">{{ getResourceValue(diffKey, removed) }}</li>
+        </ul>
+        <p class="diff-removed-item" ng-hide="shouldDisplayList(diffValue.removed)">{{ diffValue.removed }}</p>
+        </div>
+      </div>
+      <div class="col-md-6 diff-added">
+        <div>
+        <ul class="list-unstyled" ng-show="shouldDisplayList(diffValue.added)">
+          <li class="diff-added-item" ng-repeat="added in diffValue.added track by $index">{{ getResourceValue(diffKey, added) }}</li>
+        </ul>
+        <p class="diff-added-item" ng-hide="shouldDisplayList(diffValue.added)">{{ diffValue.added }}</p>
+        </div>
+      </div>
     </div>
   </div>
   <div ng-hide="isCurrentRevision">
     <button class="btn call-to-action" ng-click="revertToDiffRevision()">Revert to revision {{ diffRevision }}</button>
   </div>
+  <div>
 </div>
