@@ -34,7 +34,7 @@ def get_iam_roles_list():
 @authnz.require_auth
 def get_service_list():
     if not acl_module_check(resource_type='service',
-                            actions='list'):
+                            action='list'):
         msg = "{} does not have access to list services".format(
             authnz.get_logged_in_user()
         )
@@ -226,7 +226,7 @@ def map_service_credentials(id):
         blind_credentials = data.get('blind_credentials', [])
         credentials = credentials + blind_credentials
         if not acl_module_check(resource_type='service',
-                                action='put',
+                                action='update',
                                 resource_id=id,
                                 kwargs={
                                     'credential_ids': credentials,

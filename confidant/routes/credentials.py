@@ -33,7 +33,7 @@ VALUE_LENGTH = 50
 @app.route('/v1/credentials', methods=['GET'])
 @authnz.require_auth
 def get_credential_list():
-    if not acl_module_check(resource_type='credential', actions='list'):
+    if not acl_module_check(resource_type='credential', action='list'):
         msg = "{} does not have access to list credentials".format(
             authnz.get_logged_in_user()
         )
@@ -226,7 +226,7 @@ def get_archive_credential_list():
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def create_credential():
-    if not acl_module_check(resource_type='credential', actions='create'):
+    if not acl_module_check(resource_type='credential', action='create'):
         msg = "{} does not have access to create credentials".format(
             authnz.get_logged_in_user()
         )
