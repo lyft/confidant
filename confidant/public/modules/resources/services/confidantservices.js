@@ -21,6 +21,10 @@
         });
     }])
 
+    .factory('services.serviceDiff', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
+        return $resource(CONFIDANT_URLS.SERVICE_DIFF, {id: '@id', old_revision: '@old_revision', new_revision: '@new_revision'});
+    }])
+
     .factory('services.grants', ['$resource', 'CONFIDANT_URLS', function($resource, CONFIDANT_URLS) {
         return $resource(CONFIDANT_URLS.GRANTS, {id: '@id'}, {
             update: {method: 'PUT', isArray: false}

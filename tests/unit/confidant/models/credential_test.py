@@ -1,5 +1,6 @@
 import unittest
 import mock
+from datetime import datetime
 
 from confidant.models.credential import Credential
 
@@ -49,12 +50,17 @@ class CredentialTest(unittest.TestCase):
         {},
     )
     def test_diff(self):
+        modified_by = 'test@example.com'
+        modified_date_old = datetime.now
+        modified_date_new = datetime.now
         old = Credential(
             name='test',
             revision=1,
             enabled=True,
             documentation='old',
             metadata={'hello': 'world'},
+            modified_by=modified_by,
+            modified_date=modified_date_old,
         )
         new = Credential(
             name='test2',
@@ -62,6 +68,8 @@ class CredentialTest(unittest.TestCase):
             enabled=True,
             documentation='',
             metadata={'foo': 'bar'},
+            modified_by=modified_by,
+            modified_date=modified_date_new,
         )
         # TODO: figure out how to test decrypted_credential_pairs. Mocking
         # it is turning out to be difficult.
@@ -77,6 +85,14 @@ class CredentialTest(unittest.TestCase):
             'documentation': {
                 'removed': 'old',
                 'added': '',
+            },
+            'modified_by': {
+                'removed': modified_by,
+                'added': modified_by,
+            },
+            'modified_date': {
+                'removed': modified_date_old,
+                'added': modified_date_new,
             },
         }
         self.assertEquals(old.diff(new), expectedDiff)

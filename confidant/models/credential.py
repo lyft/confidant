@@ -93,6 +93,14 @@ class Credential(Model):
                 'added': new.documentation,
                 'removed': old.documentation
             }
+        diff['modified_by'] = {
+            'added': new.modified_by,
+            'removed': old.modified_by,
+        }
+        diff['modified_date'] = {
+            'added': new.modified_date,
+            'removed': old.modified_date,
+        }
         return diff
 
     def _diff_dict(self, old, new):

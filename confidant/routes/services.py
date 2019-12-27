@@ -427,6 +427,42 @@ def revert_service_to_revision(id, to_revision):
     })
 
 
+@app.route(
+    '/v1/services/<id>/<old_revision>/<new_revision>',
+    methods=['GET']
+)
+@authnz.require_auth
+def diff_service(id, old_revision, new_revision):
+    if not acl_module_check(resource_type='service',
+                            action='metadata',
+                            resource_id=id):
+        msg = "{} does not have access to diff service {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
+    try:
+        old_service = Service.get('{}-{}'.format(id, old_revision))
+    except DoesNotExist:
+        return jsonify({'error': 'Service not found.'}), 404
+    if old_service.data_type != 'archive-service':
+        msg = 'id provided is not a service.'
+        return jsonify({'error': msg}), 400
+    try:
+        new_service = Service.get('{}-{}'.format(id, new_revision))
+    except DoesNotExist:
+        logging.warning(
+            'Item with id {0} does not exist.'.format(id)
+        )
+        return jsonify({}), 404
+    if new_service.data_type != 'archive-service':
+        msg = 'id provided is not a service.'
+        return jsonify({'error': msg}), 400
+    return jsonify(old_service.diff(new_service))
+
+
 @app.route('/v1/grants/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
