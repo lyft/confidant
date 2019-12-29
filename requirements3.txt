@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file=./requirements3.txt ./requirements.in
 #
+-e git+https://github.com/lyft/marshmallow@2.15.1#egg=marshmallow
 asn1crypto==0.24.0        # via cryptography
 attrs==19.3.0             # via toastedmarshmallow
 authomatic==0.1.0.post1
@@ -35,7 +36,6 @@ jmespath==0.9.4           # via boto3, botocore
 kmsauth==0.5.0
 lxml==4.4.1               # via xmlsec
 markupsafe==1.1.1         # via jinja2
-marshmallow==3.3.0        # via webargs
 mccabe==0.6.1             # via flake8
 mock==2.0.0
 ndg-httpsclient==0.5.1
