@@ -26,27 +26,6 @@ class ServiceResponse(object):
     modified_by = attr.ib()
 
     @classmethod
-    def from_service(
-        cls,
-        service,
-        include_credentials=False,
-        include_blind_credentials=False,
-    ):
-        ret = cls(
-            id=service.id,
-            account=service.account,
-            revision=service.revision,
-            enabled=service.enabled,
-            modified_date=service.modified_date,
-            modified_by=service.modified_by,
-        )
-        if include_credentials:
-            ret.credentials = service.credentials
-        if include_blind_credentials:
-            ret.blind_credentials = service.blind_credentials
-        return ret
-
-    @classmethod
     def from_service_expanded(
         cls,
         service,

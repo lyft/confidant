@@ -8,7 +8,7 @@ from confidant import authnz, settings
 from confidant.app import app
 from confidant.models.service import Service
 from confidant.schema.services import (
-    ServiceExpandedResponse,
+    ServiceResponse,
     ServicesResponse,
     service_expanded_response_schema,
     services_response_schema,
@@ -107,7 +107,7 @@ def get_service(id):
         service.blind_credentials,
     )
     return service_expanded_response_schema.dumps(
-        ServiceExpandedResponse.from_service(
+        ServiceResponse.from_service_expanded(
             service,
             credentials=credentials,
             blind_credentials=blind_credentials,
@@ -271,7 +271,7 @@ def map_service_credentials(id):
         service.blind_credentials,
     )
     return service_expanded_response_schema.dumps(
-        ServiceExpandedResponse.from_service(
+        ServiceResponse.from_service_expanded(
             service,
             credentials=credentials,
             blind_credentials=blind_credentials,
@@ -382,7 +382,7 @@ def revert_service_to_revision(id, to_revision):
         service.blind_credentials,
     )
     return service_expanded_response_schema.dumps(
-        ServiceExpandedResponse.from_service(
+        ServiceResponse.from_service_expanded(
             service,
             credentials=credentials,
             blind_credentials=blind_credentials,
