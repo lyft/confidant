@@ -44,9 +44,10 @@ def get_credential_list():
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
 
-    credentials_response = CredentialsResponse.from_credentials(
-        Credential.data_type_date_index.query('credential')
-    )
+    credentials_response = CredentialsResponse.from_credentials([
+        credential
+        for credential in Credential.data_type_date_index.query('credential')
+    ])
     return credentials_response_schema.dumps(credentials_response)
 
 

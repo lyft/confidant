@@ -189,12 +189,12 @@ def map_service_credentials(id):
     if data.get('credentials') or data.get('blind_credentials'):
         credentials = data.get('credentials', [])
         blind_credentials = data.get('blind_credentials', [])
-        credentials = credentials + blind_credentials
+        _all_credentials = credentials + blind_credentials
         if not acl_module_check(resource_type='service',
                                 action='update',
                                 resource_id=id,
                                 kwargs={
-                                    'credential_ids': credentials,
+                                    'credential_ids': _all_credentials,
                                 }):
             msg = "{} does not have access to map service credential {}".format(
                 authnz.get_logged_in_user(),

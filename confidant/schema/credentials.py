@@ -1,3 +1,4 @@
+import logging
 import attr
 import toastedmarshmallow
 from marshmallow import fields, post_load, Schema
@@ -10,13 +11,14 @@ from confidant.utils.dynamodb import encode_last_evaluated_key
 class CredentialResponse(object):
     id = attr.ib()
     name = attr.ib()
-    credential_keys = attr.ib()
-    credential_pairs = attr.ib()
     metadata = attr.ib()
     revision = attr.ib()
     enabled = attr.ib()
+    documentation = attr.ib()
     modified_date = attr.ib()
     modified_by = attr.ib()
+    credential_keys = attr.ib(default=None)
+    credential_pairs = attr.ib(default=None)
 
     @classmethod
     def from_credential(
@@ -31,6 +33,7 @@ class CredentialResponse(object):
             metadata=credential.metadata,
             revision=credential.revision,
             enabled=credential.enabled,
+            documentation=credential.documentation,
             modified_date=credential.modified_date,
             modified_by=credential.modified_by,
         )
@@ -54,6 +57,7 @@ class CredentialResponseSchema(AutobuildSchema):
     metadata = fields.Dict(keys=fields.Raw(), values=fields.Raw())
     revision = fields.Int(required=True)
     enabled = fields.Boolean(required=True)
+    documentation = fields.Str(required=True)
     modified_date = fields.DateTime(required=True)
     modified_by = fields.Str(required=True)
 
@@ -73,7 +77,7 @@ class CredentialsResponse(object):
     ):
         return cls(
             credentials=[
-                CredentialResponse(
+                CredentialResponse.from_credential(
                     credential,
                     include_credential_keys,
                     include_credential_pairs,
@@ -122,7 +126,7 @@ class RevisionsResponse(object):
     ):
         return cls(
             revisions=[
-                CredentialResponse(
+                CredentialResponse.from_credential(
                     credential,
                     include_credential_keys,
                     include_credential_pairs,

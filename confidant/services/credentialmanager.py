@@ -31,14 +31,10 @@ def pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
     credentials = get_credentials(credential_ids)
     credentials.extend(get_blind_credentials(blind_credential_ids))
     for credential in credentials:
-        if credential['data_type'] == 'credential':
-            keys = credential['credential_pairs']
-        elif credential['data_type'] == 'blind-credential':
-            keys = credential['credential_keys']
-        for key in keys:
+        for key in credential.credential_keys:
             data = {
-                'id': credential['id'],
-                'data_type': credential['data_type']
+                'id': credential.id,
+                'data_type': credential.data_type
             }
             if key in pair_keys:
                 pair_keys[key].append(data)

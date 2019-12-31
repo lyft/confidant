@@ -17,13 +17,34 @@ from confidant.utils.dynamodb import encode_last_evaluated_key
 @attr.s
 class ServiceResponse(object):
     id = attr.ib()
-    account = attr.ib()
-    credentials = attr.ib()
-    blind_credentials = attr.ib()
     revision = attr.ib()
     enabled = attr.ib()
     modified_date = attr.ib()
     modified_by = attr.ib()
+    account = attr.ib(default=None)
+    credentials = attr.ib(default=None)
+    blind_credentials = attr.ib(default=None)
+
+    @classmethod
+    def from_service(
+        cls,
+        service,
+        include_credentials=False,
+        include_blind_credentials=False,
+    ):
+        ret = cls(
+            id=service.id,
+            account=service.account,
+            revision=service.revision,
+            enabled=service.enabled,
+            modified_date=service.modified_date,
+            modified_by=service.modified_by,
+        )
+        if include_credentials:
+            ret.credentials = service.credentials
+        if include_blind_credentials:
+            ret.blind_credentials = service.blind_credentials
+        return ret
 
     @classmethod
     def from_service_expanded(
@@ -114,7 +135,7 @@ class ServicesResponse(object):
     ):
         return cls(
             services=[
-                ServiceResponse(
+                ServiceResponse.from_service(
                     service,
                     include_credentials=include_credentials,
                     include_blind_credentials=include_blind_credentials,
@@ -163,7 +184,7 @@ class RevisionsResponse(object):
     ):
         return cls(
             revisions=[
-                ServiceResponse(
+                ServiceResponse.from_service(
                     service,
                     include_credentials=include_credentials,
                     include_blind_credentials=include_blind_credentials,
