@@ -1,4 +1,3 @@
-import logging
 import attr
 import toastedmarshmallow
 from marshmallow import fields, post_load, Schema
