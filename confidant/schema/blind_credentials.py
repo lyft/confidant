@@ -9,16 +9,16 @@ from confidant.schema.auto_build_schema import AutobuildSchema
 class BlindCredentialResponse(object):
     id = attr.ib()
     name = attr.ib()
-    credential_keys = attr.ib()
-    credential_pairs = attr.ib()
-    data_key = attr.ib()
     cipher_version = attr.ib()
     cipher_type = attr.ib()
-    metadata = attr.ib()
+    data_key = attr.ib()
     revision = attr.ib()
     enabled = attr.ib()
     modified_date = attr.ib()
     modified_by = attr.ib()
+    metadata = attr.ib(default=dict)
+    credential_keys = attr.ib(default=list)
+    credential_pairs = attr.ib(default=dict)
 
     @classmethod
     def from_blind_credential(

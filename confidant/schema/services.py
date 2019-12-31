@@ -22,8 +22,8 @@ class ServiceResponse(object):
     modified_date = attr.ib()
     modified_by = attr.ib()
     account = attr.ib(default=None)
-    credentials = attr.ib(default=None)
-    blind_credentials = attr.ib(default=None)
+    credentials = attr.ib(default=list)
+    blind_credentials = attr.ib(default=list)
 
     @classmethod
     def from_service(

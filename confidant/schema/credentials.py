@@ -11,14 +11,14 @@ from confidant.utils.dynamodb import encode_last_evaluated_key
 class CredentialResponse(object):
     id = attr.ib()
     name = attr.ib()
-    metadata = attr.ib()
     revision = attr.ib()
     enabled = attr.ib()
-    documentation = attr.ib()
     modified_date = attr.ib()
     modified_by = attr.ib()
-    credential_keys = attr.ib(default=None)
-    credential_pairs = attr.ib(default=None)
+    documentation = attr.ib(default=None)
+    metadata = attr.ib(default=dict)
+    credential_keys = attr.ib(default=list)
+    credential_pairs = attr.ib(default=dict)
 
     @classmethod
     def from_credential(
