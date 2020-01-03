@@ -1,6 +1,4 @@
 from marshmallow import post_load, Schema
-from webargs import core
-from webargs.flaskparser import FlaskParser as FlaskParser_
 
 
 class StrictSchema(Schema):
@@ -59,30 +57,3 @@ class AutobuildSchema(StrictSchema):
             raise NotImplementedError('Subclass did not set "_class_to_load"')
 
         return self._class_to_load(**data)
-
-
-class FlaskParser(FlaskParser_):
-    """
-    This subclass of the webargs FlaskParser[1] propagates the marshmallow
-    ValidationError so we can format it nicely.
-
-    [1] https://github.com/sloria/webargs/blob/dev/webargs/flaskparser.py
-    """
-
-    def handle_error(self, error):
-        """
-        :type error: marshmallow.ValidationError
-        """
-        raise error
-
-    def parse_json(self, req, name, field):
-        """Pull a json value from the request."""
-
-        json_data = req.get_json(force=True, silent=True)
-        if json_data:
-            return core.get_value(json_data, name, field)
-        else:
-            return core.missing
-
-
-parser = FlaskParser()
