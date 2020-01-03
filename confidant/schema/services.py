@@ -1,6 +1,6 @@
 import attr
 import toastedmarshmallow
-from marshmallow import fields, post_load, Schema
+from marshmallow import fields, pre_dump, Schema
 
 from confidant.schema.auto_build_schema import AutobuildSchema
 from confidant.schema.blind_credentials import (
@@ -155,15 +155,15 @@ class ServicesResponseSchema(Schema):
     services = fields.Nested(ServiceResponseSchema, many=True)
     next_page = fields.Str()
 
-    @post_load
+    @pre_dump
     def encode_next_page(self, item):
-        item['next_page'] = encode_last_evaluated_key(item['next_page'])
+        item.next_page = encode_last_evaluated_key(item.next_page)
         return item
 
-    @post_load
+    @pre_dump
     def sort_services(self, item):
-        item['services'] = sorted(
-           item['services'],
+        item.services = sorted(
+           item.services,
            key=lambda k: k.id.lower(),
         )
         return item
@@ -204,15 +204,15 @@ class RevisionsResponseSchema(Schema):
     revisions = fields.Nested(ServiceResponseSchema, many=True)
     next_page = fields.Str()
 
-    @post_load
+    @pre_dump
     def encode_next_page(self, item):
-        item['next_page'] = encode_last_evaluated_key(item['next_page'])
+        item.next_page = encode_last_evaluated_key(item.next_page)
         return item
 
-    @post_load
+    @pre_dump
     def sort_revisions(self, item):
-        item['revisions'] = sorted(
-           item['revisions'],
+        item.revisions = sorted(
+           item.revisions,
            key=lambda k: k.revision,
         )
         return item
