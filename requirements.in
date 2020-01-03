@@ -161,17 +161,6 @@ statsd==3.2.1
 # Use: kmsauth support library
 kmsauth==0.5.0
 
-# License: MIT
-# Schemas for handling complex datatypes
--e git+https://github.com/lyft/marshmallow@2.15.1#egg=marshmallow
-
-# License: MIT
-# A friendly library for parsing HTTP request arguments, with built-in support
-# for popular web frameworks, including Flask, Django, Bottle, Tornado,
-# Pyramid, webapp2, Falcon, and aiohttp. http://webargs.readthedocs.io/
-# https://github.com/sloria/webargs
-webargs==1.8.1
-
 # License: Apache2
 # Upstream url: https://pypi.python.org/pypi/toasted-marshmallow
 # Use: input/output validation and json serialization
