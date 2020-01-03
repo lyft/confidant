@@ -11,14 +11,15 @@ class BlindCredentialResponse(object):
     name = attr.ib()
     cipher_version = attr.ib()
     cipher_type = attr.ib()
-    data_key = attr.ib()
     revision = attr.ib()
     enabled = attr.ib()
+    documentation = attr.ib()
     modified_date = attr.ib()
     modified_by = attr.ib()
     metadata = attr.ib(default=dict)
     credential_keys = attr.ib(default=list)
     credential_pairs = attr.ib(default=dict)
+    data_key = attr.ib(default=dict)
 
     @classmethod
     def from_blind_credential(
@@ -36,6 +37,7 @@ class BlindCredentialResponse(object):
             metadata=credential.metadata,
             revision=credential.revision,
             enabled=credential.enabled,
+            documentation=credential.documentation,
             modified_date=credential.modified_date,
             modified_by=credential.modified_by,
         )
@@ -58,14 +60,15 @@ class BlindCredentialResponseSchema(AutobuildSchema):
     name = fields.Str(required=True)
     credential_keys = fields.List(fields.Str())
     credential_pairs = fields.Dict(keys=fields.Raw(), values=fields.Raw())
-    data_key = fields.Str()
+    data_key = fields.Dict(keys=fields.Raw(), values=fields.Raw())
     cipher_type = fields.Str(required=True)
-    cipher_version = fields.Str(required=True)
+    cipher_version = fields.Int(required=True)
     metadata = fields.Dict(keys=fields.Raw(), values=fields.Raw())
     revision = fields.Int(required=True)
     enabled = fields.Boolean(required=True)
     modified_date = fields.DateTime(required=True)
     modified_by = fields.Str(required=True)
+    documentation = fields.Str()
 
 
 blind_credential_response_schema = BlindCredentialResponseSchema()
