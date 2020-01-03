@@ -7,6 +7,14 @@ from pynamodb.exceptions import DoesNotExist, PutError
 from confidant import authnz, settings
 from confidant.app import app
 from confidant.models.service import Service
+from confidant.schema.services import (
+    ServiceResponse,
+    ServicesResponse,
+    service_expanded_response_schema,
+    services_response_schema,
+    RevisionsResponse,
+    revisions_response_schema,
+)
 from confidant.services import (
     credentialmanager,
     iamrolemanager,
@@ -15,10 +23,7 @@ from confidant.services import (
     webhook,
 )
 from confidant.utils import maintenance, misc
-from confidant.utils.dynamodb import (
-    decode_last_evaluated_key,
-    encode_last_evaluated_key,
-)
+from confidant.utils.dynamodb import decode_last_evaluated_key
 
 acl_module_check = misc.load_module(settings.ACL_MODULE)
 
@@ -40,18 +45,10 @@ def get_service_list():
         )
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
-    services = []
-    for service in Service.data_type_date_index.query('service'):
-        services.append({
-            'id': service.id,
-            'account': service.account,
-            'enabled': service.enabled,
-            'revision': service.revision,
-            'modified_date': service.modified_date,
-            'modified_by': service.modified_by
-        })
-    services = sorted(services, key=lambda k: k['id'].lower())
-    return jsonify({'services': services})
+    services_response = ServicesResponse.from_services(
+        Service.data_type_date_index.query('service')
+    )
+    return services_response_schema.dumps(services_response)
 
 
 @app.route('/v1/services/<id>', methods=['GET'])
@@ -102,27 +99,21 @@ def get_service(id):
         return jsonify({}), 404
     logging.debug('Authz succeeded for service {0}.'.format(id))
     try:
-        credentials = credentialmanager.get_credentials(
-            service.credentials,
-            metadata_only=metadata_only,
-        )
+        credentials = credentialmanager.get_credentials(service.credentials)
     except KeyError:
         logging.exception('KeyError occurred in getting credentials')
         return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = credentialmanager.get_blind_credentials(
         service.blind_credentials,
-        metadata_only=metadata_only,
     )
-    return jsonify({
-        'id': service.id,
-        'account': service.account,
-        'credentials': credentials,
-        'blind_credentials': blind_credentials,
-        'enabled': service.enabled,
-        'revision': service.revision,
-        'modified_date': service.modified_date,
-        'modified_by': service.modified_by
-    })
+    return service_expanded_response_schema.dumps(
+        ServiceResponse.from_service_expanded(
+            service,
+            credentials=credentials,
+            blind_credentials=blind_credentials,
+            metadata_only=metadata_only,
+        )
+    )
 
 
 @app.route('/v1/archive/services/<id>', methods=['GET'])
@@ -138,29 +129,14 @@ def get_archive_service_revisions(id):
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
         return jsonify({}), 404
-    revisions = []
     _range = range(1, service.revision + 1)
     ids = []
     for i in _range:
         ids.append("{0}-{1}".format(id, i))
-    for revision in Service.batch_get(ids):
-        revisions.append({
-            'id': revision.id,
-            'account': revision.account,
-            'revision': revision.revision,
-            'enabled': revision.enabled,
-            'credentials': list(revision.credentials),
-            'blind_credentials': list(revision.blind_credentials),
-            'modified_date': revision.modified_date,
-            'modified_by': revision.modified_by
-        })
-    return jsonify({
-        'revisions': sorted(
-            revisions,
-            key=lambda k: k['revision'],
-            reverse=True
-        )
-    })
+    revisions_response = RevisionsResponse.from_services(
+        Service.batch_get(ids)
+    )
+    return revisions_response_schema.dumps(revisions_response)
 
 
 @app.route('/v1/archive/services', methods=['GET'])
@@ -178,28 +154,17 @@ def get_archive_service_list():
         except Exception:
             logging.exception('Failed to parse provided page')
             return jsonify({'error': 'Failed to parse page'}), 400
-    services = []
     results = Service.data_type_date_index.query(
         'archive-service',
         scan_index_forward=False,
         limit=limit,
         last_evaluated_key=page,
     )
-    for service in results:
-        services.append({
-            'id': service.id,
-            'account': service.account,
-            'revision': service.revision,
-            'enabled': service.enabled,
-            'credentials': list(service.credentials),
-            'modified_date': service.modified_date,
-            'modified_by': service.modified_by
-        })
-    service_list = {'services': services}
-    service_list['next_page'] = encode_last_evaluated_key(
-        results.last_evaluated_key
+    services_response = ServicesResponse.from_services(
+        [service for service in results],
+        next_page=results.last_evaluated_key,
     )
-    return jsonify(service_list)
+    return services_response_schema.dumps(services_response)
 
 
 @app.route('/v1/services/<id>', methods=['PUT'])
@@ -223,13 +188,15 @@ def map_service_credentials(id):
     data = request.get_json()
     credentials = data.get('credentials', [])
     blind_credentials = data.get('blind_credentials', [])
-    credentials = credentials + blind_credentials
-    if not acl_module_check(resource_type='service',
-                            action='update',
-                            resource_id=id,
-                            kwargs={
-                                'credential_ids': credentials,
-                            }):
+    combined_credentials = credentials + blind_credentials
+    if not acl_module_check(
+          resource_type='service',
+          action='update',
+          resource_id=id,
+          kwargs={
+              'credential_ids': combined_credentials,
+          }
+    ):
         msg = "{} does not have access to map service credential {}".format(
             authnz.get_logged_in_user(),
             id
@@ -294,24 +261,23 @@ def map_service_credentials(id):
         return jsonify({'error': 'Failed to update active service.'}), 500
     servicemanager.send_service_mapping_graphite_event(service, _service)
     webhook.send_event('service_update', [service.id], service.credentials)
-    credentials = credentialmanager.get_credentials(
-        service.credentials,
-        metadata_only=True,
-    )
+    try:
+        credentials = credentialmanager.get_credentials(
+            service.credentials,
+        )
+    except KeyError:
+        logging.exception('KeyError occurred in getting credentials')
+        return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = credentialmanager.get_blind_credentials(
         service.blind_credentials,
-        metadata_only=True,
     )
-    return jsonify({
-        'id': service.id,
-        'account': service.account,
-        'credentials': credentials,
-        'blind_credentials': blind_credentials,
-        'revision': service.revision,
-        'enabled': service.enabled,
-        'modified_date': service.modified_date,
-        'modified_by': service.modified_by
-    })
+    return service_expanded_response_schema.dumps(
+        ServiceResponse.from_service_expanded(
+            service,
+            credentials=credentials,
+            blind_credentials=blind_credentials,
+        )
+    )
 
 
 @app.route('/v1/services/<id>/<to_revision>', methods=['PUT'])
@@ -406,24 +372,23 @@ def revert_service_to_revision(id, to_revision):
         [service.id],
         service.credentials,
     )
-    credentials = credentialmanager.get_credentials(
-        service.credentials,
-        metadata_only=True,
-    )
+    try:
+        credentials = credentialmanager.get_credentials(
+            service.credentials,
+        )
+    except KeyError:
+        logging.exception('KeyError occurred in getting credentials')
+        return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = credentialmanager.get_blind_credentials(
         service.blind_credentials,
-        metadata_only=True,
     )
-    return jsonify({
-        'id': service.id,
-        'account': service.account,
-        'credentials': credentials,
-        'blind_credentials': blind_credentials,
-        'revision': service.revision,
-        'enabled': service.enabled,
-        'modified_date': service.modified_date,
-        'modified_by': service.modified_by
-    })
+    return service_expanded_response_schema.dumps(
+        ServiceResponse.from_service_expanded(
+            service,
+            credentials=credentials,
+            blind_credentials=blind_credentials,
+        )
+    )
 
 
 @app.route(

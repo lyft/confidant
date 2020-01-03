@@ -1,64 +1,23 @@
 import copy
-import json
 
 from pynamodb.exceptions import DoesNotExist
 
 from confidant.app import app
-from confidant.services import keymanager
-from confidant.services.ciphermanager import CipherManager
 from confidant.utils import stats
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
 
 
-def get_credentials(credential_ids, metadata_only=False):
-    credentials = []
+def get_credentials(credential_ids):
     with stats.timer('service_batch_get_credentials'):
-        for cred in Credential.batch_get(copy.deepcopy(credential_ids)):
-            item = {
-                'id': cred.id,
-                'data_type': 'credential',
-                'name': cred.name,
-                'enabled': cred.enabled,
-                'revision': cred.revision,
-                'metadata': cred.metadata,
-                'documentation': cred.documentation
-            }
-            if not metadata_only:
-                data_key = keymanager.decrypt_datakey(
-                    cred.data_key,
-                    encryption_context={'id': cred.id}
-                )
-                cipher_version = cred.cipher_version
-                cipher = CipherManager(data_key, cipher_version)
-                _credential_pairs = cipher.decrypt(cred.credential_pairs)
-                _credential_pairs = json.loads(_credential_pairs)
-                item['credential_pairs'] = _credential_pairs
-            credentials.append(item)
-    return credentials
+        _credential_ids = copy.deepcopy(credential_ids)
+        return [cred for cred in Credential.batch_get(_credential_ids)]
 
 
 def get_blind_credentials(credential_ids, metadata_only=False):
-    credentials = []
     with stats.timer('service_batch_get_blind_credentials'):
-        for cred in BlindCredential.batch_get(copy.deepcopy(credential_ids)):
-            item = {
-                'id': cred.id,
-                'data_type': 'blind-credential',
-                'name': cred.name,
-                'enabled': cred.enabled,
-                'revision': cred.revision,
-                'credential_keys': list(cred.credential_keys),
-                'metadata': cred.metadata,
-                'data_key': cred.data_key,
-                'cipher_version': cred.cipher_version,
-                'cipher_type': cred.cipher_type,
-                'documentation': cred.documentation
-            }
-            if not metadata_only:
-                item['credential_pairs'] = cred.credential_pairs
-            credentials.append(item)
-    return credentials
+        _credential_ids = copy.deepcopy(credential_ids)
+        return [cred for cred in BlindCredential.batch_get(_credential_ids)]
 
 
 def pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
@@ -72,14 +31,10 @@ def pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
     credentials = get_credentials(credential_ids)
     credentials.extend(get_blind_credentials(blind_credential_ids))
     for credential in credentials:
-        if credential['data_type'] == 'credential':
-            keys = credential['credential_pairs']
-        elif credential['data_type'] == 'blind-credential':
-            keys = credential['credential_keys']
-        for key in keys:
+        for key in credential.credential_keys:
             data = {
-                'id': credential['id'],
-                'data_type': credential['data_type']
+                'id': credential.id,
+                'data_type': credential.data_type
             }
             if key in pair_keys:
                 pair_keys[key].append(data)

@@ -64,23 +64,21 @@ def pair_key_conflicts_for_services(_id, credential_keys, services):
         credentialmanager.get_blind_credentials(blind_credential_ids)
     )
     for credential in credentials:
-        services = service_map[credential['id']]['service_ids']
-        if credential['data_type'] == 'credential':
+        services = service_map[credential.id]['service_ids']
+        if credential.data_type == 'credential':
             data_type = 'credentials'
-            lookup = 'credential_pairs'
-        elif credential['data_type'] == 'blind-credential':
+        elif credential.data_type == 'blind-credential':
             data_type = 'blind_credentials'
-            lookup = 'credential_keys'
         for key in credential_keys:
-            if key in credential[lookup]:
+            if key in credential.credential_keys:
                 if key not in conflicts:
                     conflicts[key] = {
-                        data_type: [credential['id']],
+                        data_type: [credential.id],
                         'services': services
                     }
                 else:
                     conflicts[key]['services'].extend(services)
-                    conflicts[key][data_type].append(credential['id'])
+                    conflicts[key][data_type].append(credential.id)
                 conflicts[key]['services'] = list(
                     set(conflicts[key]['services'])
                 )
