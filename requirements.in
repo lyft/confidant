@@ -106,31 +106,6 @@ pyOpenSSL>16.2.0
 # Upstream url: https://github.com/dstufft/guard
 guard==1.0.1
 
-# The modular source code checker: pep8, pyflakes and co
-# License: MIT
-# Upstream url: http://bitbucket.org/tarek/flake8
-flake8>3
-
-# Measures code coverage and emits coverage reports
-# Licence: BSD
-# Upstream url: https://pypi.python.org/pypi/coverage
-coverage>4
-
-# nose makes testing easier
-# License: GNU Library or Lesser General Public License (LGPL)
-# Upstream url: http://readthedocs.org/docs/nose
-nose==1.3.3
-
-# Add additional directories to sys.path for nose.
-# License: Apache2
-# Upstream url: http://bitbucket.org/jnoller/nose-pathmunge/
-nose-pathmunge==0.1.2
-
-# Mocking and Patching Library for Testing
-# License: BSD
-# Upstream url: http://www.voidspace.org.uk/python/mock
-mock==2.0.0
-
 # License: MIT
 # Upstream url: http://pyyaml.org/wiki/PyYAML
 # Use: For parsing users.yaml
@@ -165,3 +140,28 @@ kmsauth==0.5.0
 # Upstream url: https://pypi.python.org/pypi/toasted-marshmallow
 # Use: input/output validation and json serialization
 toastedmarshmallow==2.15.2.post1
+
+# Testing library
+# License: MIT
+# Upstream url: https://github.com/pytest-dev/pytest
+pytest==5.2.1
+
+# Thin-wrapper around the mock package for easier use with py.test
+# License: MIT
+# Upstream url: https://github.com/pytest-dev/pytest-mock/
+pytest-mock==1.11.2
+
+# Code coverage plugin for py.test
+# License: MIT
+# Upstream url: https://github.com/pytest-dev/pytest-cov
+pytest-cov==2.8.1
+
+# Pytest plugin for using fixtures in pytest.mark.parametrize
+# License: MIT
+# Upstream url: https://github.com/tvorog/pytest-lazy-fixture
+pytest-lazy-fixture==0.6.1
+
+# Environment Variable plugin for py.test
+# License: MIT
+# Upstream url: https://github.com/MobileDynasty/pytest-env/
+pytest-env==0.6.2
