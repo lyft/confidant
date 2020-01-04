@@ -61,14 +61,14 @@
                 Credential.get({'id': $stateParams.credentialId}).$promise.then(function(credential) {
                     var _credentialPairs = [],
                         _metadata = [];
-                    if (credential.credential_pairs) {
+                    if (Object.entries(credential.credential_pairs).length) {
                         angular.forEach(credential.credential_pairs, function(value, key) {
                             this.push({'key': key, 'value': value});
                         }, _credentialPairs);
                         credential.credentialPairs = _credentialPairs;
                         $scope.hasView = true;
                     }
-                    if (credential.credential_keys) {
+                    if (credential.credential_keys.length) {
                         $scope.hasMetadata = true;
                     }
                     angular.forEach(credential.metadata, function(value, key) {
