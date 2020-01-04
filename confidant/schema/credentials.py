@@ -1,6 +1,6 @@
 import attr
 import toastedmarshmallow
-from marshmallow import fields, post_load, Schema
+from marshmallow import fields, pre_dump, Schema
 
 from confidant.schema.auto_build_schema import AutobuildSchema
 from confidant.utils.dynamodb import encode_last_evaluated_key
@@ -96,15 +96,15 @@ class CredentialsResponseSchema(Schema):
     credentials = fields.Nested(CredentialResponseSchema, many=True)
     next_page = fields.Str()
 
-    @post_load
+    @pre_dump
     def encode_next_page(self, item):
-        item['next_page'] = encode_last_evaluated_key(item['next_page'])
+        item.next_page = encode_last_evaluated_key(item.next_page)
         return item
 
-    @post_load
+    @pre_dump
     def sort_credentials(self, item):
-        item['credentials'] = sorted(
-           item['credentials'],
+        item.credentials = sorted(
+           item.credentials,
            key=lambda k: k.name.lower(),
         )
         return item
@@ -145,15 +145,15 @@ class RevisionsResponseSchema(Schema):
     revisions = fields.Nested(CredentialResponseSchema, many=True)
     next_page = fields.Str()
 
-    @post_load
+    @pre_dump
     def encode_next_page(self, item):
-        item['next_page'] = encode_last_evaluated_key(item['next_page'])
+        item.next_page = encode_last_evaluated_key(item.next_page)
         return item
 
-    @post_load
+    @pre_dump
     def sort_revisions(self, item):
-        item['revisions'] = sorted(
-           item['revisions'],
+        item.revisions = sorted(
+           item.revisions,
            key=lambda k: k.revision,
         )
         return item
