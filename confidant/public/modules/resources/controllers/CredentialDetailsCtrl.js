@@ -61,7 +61,7 @@
                 Credential.get({'id': $stateParams.credentialId}).$promise.then(function(credential) {
                     var _credentialPairs = [],
                         _metadata = [];
-                    if (angular.equals({}, credential.credential_pairs)) {
+                    if (!angular.equals({}, credential.credential_pairs)) {
                         angular.forEach(credential.credential_pairs, function(value, key) {
                             this.push({'key': key, 'value': value});
                         }, _credentialPairs);
