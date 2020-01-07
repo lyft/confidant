@@ -38,7 +38,7 @@ def create_app():
     app.debug = settings.DEBUG
 
     if settings.SSLIFY:
-        sslify = SSLify(app, skips=['healthcheck'])  # noqa
+        SSLify(app, skips=['healthcheck'])
 
     app.wsgi_app = guard.ContentSecurityPolicy(app.wsgi_app, CSP_POLICY)
 
