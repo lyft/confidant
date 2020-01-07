@@ -1,13 +1,14 @@
 import logging
 
 import flask
-from flask import jsonify, request, session
+from flask import blueprints, jsonify, request, session
 
-from confidant import authnz
-from confidant.app import app
+from confidant import authnz, settings
+
+blueprint = blueprints.Blueprint('saml', __name__)
 
 
-@app.route('/v1/saml/metadata', methods=['GET'])
+@blueprint.route('/v1/saml/metadata', methods=['GET'])
 def get_saml_metadata():
     """
     Generate SAML metadata XML describing the service endpoints.
@@ -15,7 +16,7 @@ def get_saml_metadata():
     return authnz.user_mod.generate_metadata()
 
 
-@app.route('/v1/saml/consume', methods=['POST'])
+@blueprint.route('/v1/saml/consume', methods=['POST'])
 def consume_saml_assertion():
     """
     The SAML attribute consumer service receives POST callbacks from the IdP.
@@ -23,7 +24,7 @@ def consume_saml_assertion():
     return authnz.user_mod.consume_saml_assertion()
 
 
-@app.route('/v1/saml/login', methods=['GET'])
+@blueprint.route('/v1/saml/login', methods=['GET'])
 def generate_saml_login_redirect():
     """
     Redirect to the SAML login page. You don't normally need to hit this
@@ -33,7 +34,7 @@ def generate_saml_login_redirect():
         authnz.user_mod.login_redirect_url(return_to='/v1/saml/debug'))
 
 
-@app.route('/v1/saml/logout', methods=['GET'])
+@blueprint.route('/v1/saml/logout', methods=['GET'])
 def saml_logout():
     """
     This dual purpose route both initiates SingleLogOut redirects to the IdP
@@ -49,11 +50,11 @@ def saml_logout():
         return authnz.user_mod.log_out()
 
 
-@app.route('/v1/saml/debug', methods=['GET'])
+@blueprint.route('/v1/saml/debug', methods=['GET'])
 def dump_session_info():
     """Debug endpoint to show SAML attributes."""
 
-    if not app.debug:
+    if not settings.SAML_DEBUG:
         msg = "Cannot display /debug, not in DEBUG mode."
         logging.info(msg)
         return flask.make_response(msg, 403)

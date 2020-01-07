@@ -22,6 +22,7 @@ class EncryptedSettings(object):
         if name not in self.secret_names:
             self.secret_names.append(name)
             self.secret_defaults[name] = default
+        return self.get_secret(name)
 
     def registered(self, name):
         return name in self.secret_names

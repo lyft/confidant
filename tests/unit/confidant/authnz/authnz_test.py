@@ -9,17 +9,17 @@ settings.encrypted_settings.secret_string = {}
 settings.encrypted_settings.decrypted_secrets = {'SESSION_SECRET': 'TEST_KEY'}
 
 import confidant.routes  # noqa:E402,F401
-from confidant.app import app  # noqa:E402
+from confidant.wsgi import app  # noqa:E402
 from confidant import authnz  # noqa:E402
 
 
 class AuthnzTest(unittest.TestCase):
 
     def setUp(self):
-        self.use_auth = app.config['USE_AUTH']
+        self.use_auth = settings.USE_AUTH
 
     def tearDown(self):
-        app.config['USE_AUTH'] = self.use_auth
+        settings.USE_AUTH = self.use_auth
 
     def test_get_logged_in_user(self):
         with app.test_request_context('/v1/user/email'):
@@ -38,9 +38,9 @@ class AuthnzTest(unittest.TestCase):
                 )
 
     def test_user_is_user_type(self):
-        app.config['USE_AUTH'] = False
+        settings.USE_AUTH = False
         self.assertTrue(authnz.user_is_user_type('anything'))
-        app.config['USE_AUTH'] = True
+        settings.USE_AUTH = True
         with patch('confidant.authnz.g') as g_mock:
             g_mock.user_type = 'user'
             self.assertTrue(authnz.user_is_user_type('user'))
@@ -72,9 +72,9 @@ class AuthnzTest(unittest.TestCase):
 
         wrapped = authnz.require_csrf_token(mock_fn)
 
-        app.config['USE_AUTH'] = False
+        settings.USE_AUTH = False
         self.assertEqual(wrapped(), 'unittestval')
-        app.config['USE_AUTH'] = True
+        settings.USE_AUTH = True
         with patch('confidant.authnz.g') as g_mock:
             g_mock.auth_type = 'kms'
             self.assertEqual(wrapped(), 'unittestval')
@@ -90,9 +90,9 @@ class AuthnzTest(unittest.TestCase):
                 self.assertRaises(Unauthorized, wrapped)
 
     def test_user_is_service(self):
-        app.config['USE_AUTH'] = False
+        settings.USE_AUTH = False
         self.assertTrue(authnz.user_is_service('anything'))
-        app.config['USE_AUTH'] = True
+        settings.USE_AUTH = True
         with patch('confidant.authnz.g') as g_mock:
             g_mock.username = 'confidant-unitttest'
             self.assertTrue(authnz.user_is_service('confidant-unitttest'))
@@ -126,26 +126,26 @@ class HeaderAuthenticatorTest(unittest.TestCase):
 
     def setUp(self):
         # Save old values
-        self.username_header = app.config['HEADER_AUTH_USERNAME_HEADER']
-        self.email_header = app.config['HEADER_AUTH_EMAIL_HEADER']
-        self.first_name_header = app.config['HEADER_AUTH_FIRST_NAME_HEADER']
-        self.last_name_header = app.config['HEADER_AUTH_LAST_NAME_HEADER']
+        self.username_header = settings.HEADER_AUTH_USERNAME_HEADER
+        self.email_header = settings.HEADER_AUTH_EMAIL_HEADER
+        self.first_name_header = settings.HEADER_AUTH_FIRST_NAME_HEADER
+        self.last_name_header = settings.HEADER_AUTH_LAST_NAME_HEADER
         self.user_mod = authnz.user_mod
 
         # Update config
-        app.config['USE_AUTH'] = True
-        app.config['USER_AUTH_MODULE'] = 'header'
-        app.config['HEADER_AUTH_USERNAME_HEADER'] = 'X-Confidant-Username'
-        app.config['HEADER_AUTH_EMAIL_HEADER'] = 'X-Confidant-Email'
+        settings.USE_AUTH = True
+        settings.USER_AUTH_MODULE = 'header'
+        settings.HEADER_AUTH_USERNAME_HEADER = 'X-Confidant-Username'
+        settings.HEADER_AUTH_EMAIL_HEADER = 'X-Confidant-Email'
 
         # Reset the user module in use
         authnz.user_mod = authnz.userauth.init_user_auth_class()
 
     def tearDown(self):
-        app.config['HEADER_AUTH_USERNAME_HEADER'] = self.username_header
-        app.config['HEADER_AUTH_EMAIL_HEADER'] = self.email_header
-        app.config['HEADER_AUTH_FIRST_NAME_HEADER'] = self.first_name_header
-        app.config['HEADER_AUTH_LAST_NAME_HEADER'] = self.last_name_header
+        settings.HEADER_AUTH_USERNAME_HEADER = self.username_header
+        settings.HEADER_AUTH_EMAIL_HEADER = self.email_header
+        settings.HEADER_AUTH_FIRST_NAME_HEADER = self.first_name_header
+        settings.HEADER_AUTH_LAST_NAME_HEADER = self.last_name_header
 
         authnz.user_mod = self.user_mod
 
@@ -158,8 +158,8 @@ class HeaderAuthenticatorTest(unittest.TestCase):
             # Both headers given: success
             with patch('confidant.authnz.userauth.request') as request_mock:
                 request_mock.headers = {
-                    app.config['HEADER_AUTH_USERNAME_HEADER']: 'unittestuser',
-                    app.config['HEADER_AUTH_EMAIL_HEADER']: 'unittestuser@example.com',  # noqa:E501
+                    settings.HEADER_AUTH_USERNAME_HEADER: 'unittestuser',
+                    settings.HEADER_AUTH_EMAIL_HEADER: 'unittestuser@example.com',  # noqa:E501
                 }
                 self.assertEqual(
                     authnz.get_logged_in_user(),
@@ -170,8 +170,8 @@ class HeaderAuthenticatorTest(unittest.TestCase):
         with app.test_request_context('/fake'):
             with patch('confidant.authnz.userauth.request') as request_mock:
                 request_mock.headers = {
-                    app.config['HEADER_AUTH_USERNAME_HEADER']: 'unittestuser',
-                    app.config['HEADER_AUTH_EMAIL_HEADER']: 'unittestuser@example.com',  # noqa:E501
+                    settings.HEADER_AUTH_USERNAME_HEADER: 'unittestuser',
+                    settings.HEADER_AUTH_EMAIL_HEADER: 'unittestuser@example.com',  # noqa:E501
                 }
                 resp = authnz.user_mod.log_in()
 

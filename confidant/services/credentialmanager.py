@@ -2,7 +2,7 @@ import copy
 
 from pynamodb.exceptions import DoesNotExist
 
-from confidant.app import app
+from confidant import settings
 from confidant.utils import stats
 from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
@@ -24,7 +24,7 @@ def pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
     conflicts = {}
     pair_keys = {}
     # If we don't care about conflicts, return immediately
-    if app.config['IGNORE_CONFLICTS']:
+    if settings.IGNORE_CONFLICTS:
         return conflicts
     # For all credentials, get their credential pairs and track which
     # credentials have which keys

@@ -2,16 +2,16 @@ import requests
 import json
 import logging
 
-from confidant.app import app
+from confidant import settings
 
 
 def send_event(services, msg):
     try:
-        graphite_url = app.config.get('GRAPHITE_EVENT_URL')
+        graphite_url = settings.GRAPHITE_EVENT_URL
         if not graphite_url:
             return
-        username = app.config.get('GRAPHITE_USERNAME')
-        password = app.config.get('GRAPHITE_PASSWORD')
+        username = settings.GRAPHITE_USERNAME
+        password = settings.GRAPHITE_PASSWORD
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         prefixed_services = ['confidant-{0}'.format(service)
                              for service in services]

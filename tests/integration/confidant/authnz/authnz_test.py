@@ -3,7 +3,7 @@ import base64
 from mock import patch
 from mock import PropertyMock
 
-from confidant.app import app
+from confidant.wsgi import app
 from confidant.authnz import userauth
 from confidant import routes  # noqa
 

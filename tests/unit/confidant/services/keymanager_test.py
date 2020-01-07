@@ -6,20 +6,21 @@ from mock import patch
 from confidant import settings
 settings.encrypted_settings.secret_string = {}
 
+from confidant import settings  # noqa:E402
 from confidant.services import keymanager  # noqa:E402
-from confidant.app import app  # noqa:E402
+from confidant.wsgi import app  # noqa:E402
 
 
 class KeyManagerTest(unittest.TestCase):
     def setUp(self):
-        self.use_auth = app.config['USE_AUTH']
-        self.use_encryption = app.config['USE_ENCRYPTION']
-        self.scoped_auth_keys = app.config['SCOPED_AUTH_KEYS']
+        self.use_auth = settings.USE_AUTH
+        self.use_encryption = settings.USE_ENCRYPTION
+        self.scoped_auth_keys = settings.SCOPED_AUTH_KEYS
 
     def tearDown(self):
-        app.config['USE_AUTH'] = self.use_auth
-        app.config['USE_ENCRYPTION'] = self.use_encryption
-        app.config['SCOPED_AUTH_KEYS'] = self.scoped_auth_keys
+        settings.USE_AUTH = self.use_auth
+        settings.USE_ENCRYPTION = self.use_encryption
+        settings.SCOPED_AUTH_KEYS = self.scoped_auth_keys
 
     @patch('confidant.services.keymanager.KEY_METADATA', {})
     @patch('confidant.services.keymanager.auth_kms_client.describe_key')
@@ -43,7 +44,7 @@ class KeyManagerTest(unittest.TestCase):
 
     @patch('cryptography.fernet.Fernet.generate_key')
     def test_create_datakey_mocked(self, fernet_mock):
-        app.config['USE_ENCRYPTION'] = False
+        settings.USE_ENCRYPTION = False
         fernet_mock.return_value = 'mocked_fernet_key'
 
         ret = keymanager.create_datakey({})
@@ -58,7 +59,7 @@ class KeyManagerTest(unittest.TestCase):
         self.assertEquals(ret['ciphertext'], 'mocked_fernet_key')
 
     def test_decrypt_datakey_mocked(self):
-        app.config['USE_ENCRYPTION'] = False
+        settings.USE_ENCRYPTION = False
         ret = keymanager.decrypt_datakey('mocked_fernet_key')
 
         # Ensure we get the same value out that we sent in.
@@ -71,7 +72,7 @@ class KeyManagerTest(unittest.TestCase):
         'confidant.services.keymanager.cryptolib.create_mock_datakey'
     )
     def test_create_datakey_with_encryption(self, cmd_mock, cd_mock):
-        app.config['USE_ENCRYPTION'] = True
+        settings.USE_ENCRYPTION = True
         context = {'from': 'confidant-development',
                    'to': 'confidant-development'}
         keymanager.create_datakey(context)
@@ -88,7 +89,7 @@ class KeyManagerTest(unittest.TestCase):
         'confidant.services.keymanager.cryptolib.decrypt_mock_datakey'
     )
     def test_decrypt_datakey_with_encryption(self, dmd_mock, dd_mock):
-        app.config['USE_ENCRYPTION'] = True
+        settings.USE_ENCRYPTION = True
         context = {'from': 'confidant-development',
                    'to': 'confidant-development'}
         keymanager.decrypt_datakey(b'encrypted', context)

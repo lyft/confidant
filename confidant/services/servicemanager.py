@@ -1,6 +1,6 @@
 from pynamodb.exceptions import DoesNotExist
 
-from confidant.app import app
+from confidant import settings
 from confidant.services import credentialmanager
 from confidant.services import graphite
 from confidant.models.service import Service
@@ -47,7 +47,7 @@ def get_service_map(services):
 def pair_key_conflicts_for_services(_id, credential_keys, services):
     conflicts = {}
     # If we don't care about conflicts, return immediately
-    if app.config['IGNORE_CONFLICTS']:
+    if settings.IGNORE_CONFLICTS:
         return conflicts
     service_map = get_service_map(services)
     credential_ids = []

@@ -4,11 +4,10 @@ import logging
 import re
 import uuid
 
-from flask import jsonify, request
+from flask import blueprints, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, clients, settings
-from confidant.app import app
 from confidant.models.credential import Credential
 from confidant.schema.credentials import (
     CredentialResponse,
@@ -30,11 +29,13 @@ from confidant.utils import maintenance, misc
 from confidant.utils.dynamodb import decode_last_evaluated_key
 
 
+blueprint = blueprints.Blueprint('credentials', __name__)
+
 acl_module_check = misc.load_module(settings.ACL_MODULE)
 VALUE_LENGTH = 50
 
 
-@app.route('/v1/credentials', methods=['GET'])
+@blueprint.route('/v1/credentials', methods=['GET'])
 @authnz.require_auth
 def get_credential_list():
     if not acl_module_check(resource_type='credential', action='list'):
@@ -51,7 +52,7 @@ def get_credential_list():
     return credentials_response_schema.dumps(credentials_response)
 
 
-@app.route('/v1/credentials/<id>', methods=['GET'])
+@blueprint.route('/v1/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_credential(id):
     if not acl_module_check(resource_type='credential',
@@ -94,7 +95,7 @@ def get_credential(id):
     )
 
 
-@app.route(
+@blueprint.route(
     '/v1/credentials/<id>/<old_revision>/<new_revision>',
     methods=['GET']
 )
@@ -130,7 +131,7 @@ def diff_credential(id, old_revision, new_revision):
     return jsonify(old_credential.diff(new_credential))
 
 
-@app.route('/v1/archive/credentials/<id>', methods=['GET'])
+@blueprint.route('/v1/archive/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_archive_credential_revisions(id):
     try:
@@ -153,7 +154,7 @@ def get_archive_credential_revisions(id):
     return revisions_response_schema.dumps(revisions_response)
 
 
-@app.route('/v1/archive/credentials', methods=['GET'])
+@blueprint.route('/v1/archive/credentials', methods=['GET'])
 @authnz.require_auth
 def get_archive_credential_list():
     limit = request.args.get(
@@ -181,7 +182,7 @@ def get_archive_credential_list():
     return credentials_response_schema.dumps(credentials_response)
 
 
-@app.route('/v1/credentials', methods=['POST'])
+@blueprint.route('/v1/credentials', methods=['POST'])
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -259,7 +260,7 @@ def create_credential():
     )
 
 
-@app.route('/v1/credentials/<id>/services', methods=['GET'])
+@blueprint.route('/v1/credentials/<id>/services', methods=['GET'])
 @authnz.require_auth
 def get_credential_dependencies(id):
     services = servicemanager.get_services_for_credential(id)
@@ -267,7 +268,7 @@ def get_credential_dependencies(id):
     return jsonify({'services': _services})
 
 
-@app.route('/v1/credentials/<id>', methods=['PUT'])
+@blueprint.route('/v1/credentials/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -392,7 +393,7 @@ def update_credential(id):
     )
 
 
-@app.route('/v1/credentials/<id>/<to_revision>', methods=['PUT'])
+@blueprint.route('/v1/credentials/<id>/<to_revision>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -501,7 +502,7 @@ def revert_credential_to_revision(id, to_revision):
     )
 
 
-@app.route('/v1/value_generator', methods=['GET'])
+@blueprint.route('/v1/value_generator', methods=['GET'])
 def generate_value():
     kms_client = clients.get_boto_client('kms')
     value = kms_client.generate_random(NumberOfBytes=128)['Plaintext']

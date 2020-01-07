@@ -1,10 +1,11 @@
-from flask import jsonify
+from flask import blueprints, jsonify
 
 from confidant import authnz, settings
-from confidant.app import app
+
+blueprint = blueprints.Blueprint('identity', __name__)
 
 
-@app.route('/v1/login', methods=['GET', 'POST'])
+@blueprint.route('/v1/login', methods=['GET', 'POST'])
 def login():
     '''
     Send user through login flow.
@@ -12,7 +13,7 @@ def login():
     return authnz.log_in()
 
 
-@app.route('/v1/user/email', methods=['GET', 'POST'])
+@blueprint.route('/v1/user/email', methods=['GET', 'POST'])
 @authnz.require_auth
 def get_user_info():
     '''
@@ -25,7 +26,7 @@ def get_user_info():
     return response
 
 
-@app.route('/v1/client_config', methods=['GET'])
+@blueprint.route('/v1/client_config', methods=['GET'])
 @authnz.require_auth
 def get_client_config():
     '''

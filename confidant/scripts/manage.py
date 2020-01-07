@@ -1,6 +1,6 @@
 from flask_script import Manager
 
-from confidant import app
+from confidant.app import create_app
 from confidant.scripts.utils import ManageGrants
 from confidant.scripts.utils import RevokeGrants
 from confidant.scripts.utils import CreateDynamoTables
@@ -12,7 +12,8 @@ from confidant.scripts.migrate import (
 )
 from confidant.scripts.migrate_bool import MigrateBooleanAttribute
 
-manager = Manager(app.app)
+app = create_app()
+manager = Manager(app)
 
 # Ensure KMS grants are setup for services
 manager.add_command("manage_kms_auth_grants", ManageGrants)

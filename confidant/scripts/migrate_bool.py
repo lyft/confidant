@@ -1,8 +1,8 @@
-from confidant.app import app
+import logging
+import time
+import sys
 
 from flask_script import Command, Option
-import time
-
 from botocore.exceptions import ClientError
 from pynamodb.exceptions import UpdateError
 from pynamodb.expressions.operand import Path
@@ -11,16 +11,22 @@ from pynamodb.attributes import (
     BooleanAttribute,
 )
 from pynamodb.models import Model
+
+from confidant import settings
 from confidant.models.session_cls import DDBSession
 from confidant.models.connection_cls import DDBConnection
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler(sys.stdout))
+logger.setLevel(logging.INFO)
 
 
 class GenericCredential(Model):
     class Meta:
-        table_name = app.config.get('DYNAMODB_TABLE')
-        if app.config.get('DYNAMODB_URL'):
-            host = app.config.get('DYNAMODB_URL')
-        region = app.config.get('AWS_DEFAULT_REGION')
+        table_name = settings.DYNAMODB_TABLE
+        if settings.DYNAMODB_URL:
+            host = settings.DYNAMODB_URL
+        region = settings.AWS_DEFAULT_REGION
         connection_cls = DDBConnection
         session_cls = DDBSession
     id = UnicodeAttribute(hash_key=True)
@@ -82,14 +88,16 @@ def _handle_update_exception(e, item):
         raise e
     code = e.cause.response['Error'].get('Code')
     if code == 'ConditionalCheckFailedException':
-        app.logger.warn(
+        logger.warn(
             'conditional update failed (concurrent writes?) for object:'
             ' (you will need to re-run migration)'
         )
         return True
     if code == 'ProvisionedThroughputExceededException':
-        app.logger.warn('provisioned write capacity exceeded at object:'
-                        ' backing off (you will need to re-run migration)')
+        logger.warn(
+            'provisioned write capacity exceeded at object:'
+            ' backing off (you will need to re-run migration)'
+        )
         return True
     raise e
 
@@ -162,8 +170,10 @@ def migrate_boolean_attributes(model_class,
     :return: (number_of_items_in_need_of_update,
               number_of_them_that_failed_due_to_conditional_update)
     """
-    app.logger.info('migrating items; no progress will be reported until '
-                    'completed; this may take a while')
+    logger.info(
+        'migrating items; no progress will be reported until '
+        'completed; this may take a while'
+    )
     num_items_with_actions = 0
     num_update_failures = 0
     items_processed = 0
@@ -185,7 +195,7 @@ def migrate_boolean_attributes(model_class,
             )):
         items_processed += 1
         if items_processed % 1000 == 0:
-            app.logger.info(
+            logger.info(
                 'processed items: {} Thousand'.format(items_processed/1000)
             )
 
@@ -215,12 +225,12 @@ def migrate_boolean_attributes(model_class,
                 # continuing
                 time.sleep(number_of_secs_to_back_off)
 
-    app.logger.info(
+    logger.info(
         'finished migrating; {} items required updates'.format(
             num_items_with_actions
         )
     )
-    app.logger.info(
+    logger.info(
         '{} items failed due to racing writes and/or exceeding capacity and '
         'require re-running migration'.format(num_update_failures)
     )
@@ -283,11 +293,13 @@ class MigrateBooleanAttribute(Command):
     def run(self, RCU, page_size, limit, back_off, update_rate,
             scan_without_rcu):
         attributes = ['enabled']
-        app.logger.info('RCU: {}, Page Size: {}, Limit: {}, Back off: {}, '
-                        'Max update rate: {}, Attributes: {}'.format(
-                            RCU, page_size, limit, back_off, update_rate,
-                            attributes
-                        ))
+        logger.info(
+            'RCU: {}, Page Size: {}, Limit: {}, Back off: {}, '
+            'Max update rate: {}, Attributes: {}'.format(
+                RCU, page_size, limit, back_off, update_rate,
+                attributes
+            )
+        )
         model = GenericCredential
         res = migrate_boolean_attributes(
             model,
@@ -299,4 +311,4 @@ class MigrateBooleanAttribute(Command):
             max_items_updated_per_second=update_rate,
             allow_scan_without_rcu=scan_without_rcu
         )
-        app.logger.info(res)
+        logger.info(res)
