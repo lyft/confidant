@@ -6,7 +6,7 @@ from flask import abort, request, g, make_response
 from flask import url_for
 from functools import wraps
 
-from confidant.app import app
+from confidant import settings
 from confidant.utils import stats
 
 from confidant.authnz.errors import (
@@ -29,15 +29,15 @@ def _get_validator():
     global _VALIDATOR
     if _VALIDATOR is None:
         _VALIDATOR = kmsauth.KMSTokenValidator(
-            app.config['AUTH_KEY'],
-            app.config['USER_AUTH_KEY'],
-            app.config['AUTH_CONTEXT'],
-            app.config['AWS_DEFAULT_REGION'],
-            auth_token_max_lifetime=app.config['AUTH_TOKEN_MAX_LIFETIME'],
-            minimum_token_version=app.config['KMS_MINIMUM_TOKEN_VERSION'],
-            maximum_token_version=app.config['KMS_MAXIMUM_TOKEN_VERSION'],
-            scoped_auth_keys=app.config['SCOPED_AUTH_KEYS'],
-            token_cache_size=app.config['KMS_AUTH_TOKEN_CACHE_SIZE'],
+            settings.AUTH_KEY,
+            settings.USER_AUTH_KEY,
+            settings.AUTH_CONTEXT,
+            settings.AWS_DEFAULT_REGION,
+            auth_token_max_lifetime=settings.AUTH_TOKEN_MAX_LIFETIME,
+            minimum_token_version=settings.KMS_MINIMUM_TOKEN_VERSION,
+            maximum_token_version=settings.KMS_MAXIMUM_TOKEN_VERSION,
+            scoped_auth_keys=settings.SCOPED_AUTH_KEYS,
+            token_cache_size=settings.KMS_AUTH_TOKEN_CACHE_SIZE,
             stats=stats,
         )
     return _VALIDATOR
@@ -55,7 +55,7 @@ def get_logged_in_user():
 
 
 def user_is_user_type(user_type):
-    if not app.config.get('USE_AUTH'):
+    if not settings.USE_AUTH:
         return True
     if user_type == g.user_type:
         return True
@@ -63,7 +63,7 @@ def user_is_user_type(user_type):
 
 
 def user_is_service(service):
-    if not app.config.get('USE_AUTH'):
+    if not settings.USE_AUTH:
         return True
     if g.username == service:
         return True
@@ -80,7 +80,7 @@ def service_in_account(account):
 
 
 def account_for_key_alias(key_alias):
-    return app.config['SCOPED_AUTH_KEYS'].get(key_alias)
+    return settings.SCOPED_AUTH_KEYS.get(key_alias)
 
 
 def user_type_has_privilege(user_type, privilege):
@@ -94,7 +94,7 @@ def require_csrf_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         # If we're not using auth, there's no point in checking csrf tokens.
-        if not app.config.get('USE_AUTH'):
+        if not settings.USE_AUTH:
             return f(*args, **kwargs)
         # KMS is username/password or header auth, so we don't need to check
         # for csrf tokens.
@@ -149,7 +149,7 @@ def redirect_to_logout_if_no_auth(f):
 def require_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not app.config.get('USE_AUTH'):
+        if not settings.USE_AUTH:
             return f(*args, **kwargs)
 
         # User suppplied basic auth info
@@ -169,7 +169,7 @@ def require_auth(f):
                     'user_type',
             )
             try:
-                if _user_type not in app.config['KMS_AUTH_USER_TYPES']:
+                if _user_type not in settings.KMS_AUTH_USER_TYPES:
                     msg = '{0} is not an allowed user type for KMS auth.'
                     msg = msg.format(_user_type)
                     logging.warning(msg)
@@ -240,7 +240,7 @@ def require_auth(f):
 def require_logout_for_goodbye(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not app.config.get('USE_AUTH'):
+        if not settings.USE_AUTH:
             return f(*args, **kwargs)
 
         # ideally we would call check_csrf_token, but I don't think logout CSRF
@@ -255,7 +255,7 @@ def require_logout_for_goodbye(f):
         logging.warning('require_logout(): calling log_out()')
         resp = user_mod.log_out()
 
-        if resp.headers.get('Location') == url_for('goodbye'):
+        if resp.headers.get('Location') == url_for('static_files.goodbye'):
             # avoid redirect loop and just render the page
             return f(*args, **kwargs)
         else:

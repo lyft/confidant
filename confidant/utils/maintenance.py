@@ -5,14 +5,14 @@ from functools import wraps
 
 from flask import make_response
 
-from confidant.app import app
+from confidant import settings
 
 
 def in_maintenance_mode():
     # We're in maintenance mode if the config option is explicitly set, or if
     # the touch file exists.
-    maintenance_mode = app.config['MAINTENANCE_MODE']
-    _maintenance_touch_file = app.config['MAINTENANCE_MODE_TOUCH_FILE']
+    maintenance_mode = settings.MAINTENANCE_MODE
+    _maintenance_touch_file = settings.MAINTENANCE_MODE_TOUCH_FILE
     if _maintenance_touch_file and os.path.exists(_maintenance_touch_file):
         maintenance_mode = True
     return maintenance_mode

@@ -1,11 +1,10 @@
 import logging
 import uuid
 
-from flask import jsonify, request
+from flask import blueprints, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, settings
-from confidant.app import app
 from confidant.services import (
     credentialmanager,
     graphite,
@@ -19,11 +18,12 @@ from confidant.utils.dynamodb import (
 )
 from confidant.models.blind_credential import BlindCredential
 
+blueprint = blueprints.Blueprint('blind_credentials', __name__)
 
 acl_module_check = misc.load_module(settings.ACL_MODULE)
 
 
-@app.route('/v1/blind_credentials', methods=['GET'])
+@blueprint.route('/v1/blind_credentials', methods=['GET'])
 @authnz.require_auth
 def get_blind_credential_list():
     blind_credentials = []
@@ -40,7 +40,7 @@ def get_blind_credential_list():
     return jsonify({'blind_credentials': blind_credentials})
 
 
-@app.route('/v1/blind_credentials/<id>', methods=['GET'])
+@blueprint.route('/v1/blind_credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_blind_credential(id):
     try:
@@ -70,7 +70,7 @@ def get_blind_credential(id):
     })
 
 
-@app.route('/v1/archive/blind_credentials/<id>', methods=['GET'])
+@blueprint.route('/v1/archive/blind_credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_archive_blind_credential_revisions(id):
     try:
@@ -113,7 +113,7 @@ def get_archive_blind_credential_revisions(id):
     })
 
 
-@app.route('/v1/archive/blind_credentials', methods=['GET'])
+@blueprint.route('/v1/archive/blind_credentials', methods=['GET'])
 @authnz.require_auth
 def get_archive_blind_credential_list():
     limit = request.args.get(
@@ -158,7 +158,7 @@ def get_archive_blind_credential_list():
     return jsonify(credential_list)
 
 
-@app.route('/v1/blind_credentials', methods=['POST'])
+@blueprint.route('/v1/blind_credentials', methods=['POST'])
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -244,7 +244,7 @@ def create_blind_credential():
     })
 
 
-@app.route('/v1/blind_credentials/<id>/services', methods=['GET'])
+@blueprint.route('/v1/blind_credentials/<id>/services', methods=['GET'])
 @authnz.require_auth
 def get_blind_credential_dependencies(id):
     services = servicemanager.get_services_for_blind_credential(id)
@@ -254,7 +254,7 @@ def get_blind_credential_dependencies(id):
     })
 
 
-@app.route('/v1/blind_credentials/<id>', methods=['PUT'])
+@blueprint.route('/v1/blind_credentials/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -394,7 +394,7 @@ def update_blind_credential(id):
     })
 
 
-@app.route('/v1/blind_credentials/<id>/<to_revision>', methods=['PUT'])
+@blueprint.route('/v1/blind_credentials/<id>/<to_revision>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode

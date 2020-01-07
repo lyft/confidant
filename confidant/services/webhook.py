@@ -2,17 +2,17 @@ import requests
 import json
 import logging
 
-from confidant.app import app
+from confidant import settings
 
 
 def send_event(event_type, services, credential_ids):
     try:
-        webhook_url = app.config.get('WEBHOOK_URL')
+        webhook_url = settings.WEBHOOK_URL
         if not webhook_url:
             logging.debug('Failed to find a WEBHOOK_URL in config')
             return
-        username = app.config.get('WEBHOOK_USERNAME')
-        password = app.config.get('WEBHOOK_PASSWORD')
+        username = settings.WEBHOOK_USERNAME
+        password = settings.WEBHOOK_PASSWORD
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
         event = {

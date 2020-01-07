@@ -4,7 +4,7 @@ import logging
 
 from cryptography.fernet import Fernet
 
-from confidant.app import app
+from confidant import settings
 
 
 class CipherManager:
@@ -21,7 +21,7 @@ class CipherManager:
 
     def encrypt(self, raw):
         # Disabled encryption is dangerous, so we don't use falsiness here.
-        if app.config['USE_ENCRYPTION'] is False:
+        if settings.USE_ENCRYPTION is False:
             logging.warning('Not using encryption in CipherManager.encrypt'
                             ' If you are not running in a development or test'
                             ' environment, this should not be happening!')
@@ -36,7 +36,7 @@ class CipherManager:
 
     def decrypt(self, enc):
         # Disabled encryption is dangerous, so we don't use falsiness here.
-        if app.config['USE_ENCRYPTION'] is False:
+        if settings.USE_ENCRYPTION is False:
             logging.warning('Not using encryption in CipherManager.decrypt'
                             ' If you are not running in a development or test'
                             ' environment, this should not be happening!')

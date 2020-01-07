@@ -1,79 +1,80 @@
 import os
 import logging
 
-from flask import send_from_directory
+from flask import blueprints, current_app, send_from_directory
 from werkzeug.exceptions import NotFound
 
-from confidant import authnz
-from confidant.app import app
+from confidant import authnz, settings
+
+blueprint = blueprints.Blueprint('static_files', __name__)
 
 
-@app.route('/')
+@blueprint.route('/')
 @authnz.redirect_to_logout_if_no_auth
 def index():
-    return app.send_static_file('index.html')
+    return current_app.send_static_file('index.html')
 
 
-@app.route('/loggedout')
+@blueprint.route('/loggedout')
 @authnz.require_logout_for_goodbye
 def goodbye():
-    return app.send_static_file('goodbye.html')
+    return current_app.send_static_file('goodbye.html')
 
 
-@app.route('/healthcheck')
+@blueprint.route('/healthcheck')
 def healthcheck():
     return '', 200
 
 
-@app.route('/favicon.ico')
+@blueprint.route('/favicon.ico')
 def favicon():
-    return app.send_static_file('favicon.ico')
+    return current_app.send_static_file('favicon.ico')
 
 
-@app.route('/404.html')
+@blueprint.route('/404.html')
 def not_found():
-    return app.send_static_file('404.html')
+    return current_app.send_static_file('404.html')
 
 
-@app.route('/robots.txt')
+@blueprint.route('/robots.txt')
 def robots():
-    return app.send_static_file('robots.txt')
+    return current_app.send_static_file('robots.txt')
 
 
-@app.route('/components/<path:path>')
-@app.route('/bower_components/<path:path>')
+@blueprint.route('/components/<path:path>')
+@blueprint.route('/bower_components/<path:path>')
 def components(path):
-    return app.send_static_file(os.path.join('components', path))
+    return current_app.send_static_file(os.path.join('components', path))
 
 
-@app.route('/modules/<path:path>')
+@blueprint.route('/modules/<path:path>')
 def modules(path):
-    return app.send_static_file(os.path.join('modules', path))
+    return current_app.send_static_file(os.path.join('modules', path))
 
 
-@app.route('/styles/<path:path>')
+@blueprint.route('/styles/<path:path>')
 def static_proxy(path):
-    return app.send_static_file(os.path.join('styles', path))
+    return current_app.send_static_file(os.path.join('styles', path))
 
 
-@app.route('/scripts/<path:path>')
+@blueprint.route('/scripts/<path:path>')
 def scripts(path):
-    return app.send_static_file(os.path.join('scripts', path))
+    return current_app.send_static_file(os.path.join('scripts', path))
 
 
-@app.route('/fonts/<path:path>')
+@blueprint.route('/fonts/<path:path>')
 def fonts(path):
-    return app.send_static_file(os.path.join('fonts', path))
+    return current_app.send_static_file(os.path.join('fonts', path))
 
 
-@app.route('/custom/modules/<path:path>')
+@blueprint.route('/custom/modules/<path:path>')
 @authnz.require_auth
 def custom_modules(path):
-    if not app.config['CUSTOM_FRONTEND_DIRECTORY']:
+    if not settings.CUSTOM_FRONTEND_DIRECTORY:
         return '', 200
     try:
         return send_from_directory(
-            os.path.join(app.config['CUSTOM_FRONTEND_DIRECTORY'], 'modules'),
+            os.path.join(settings.CUSTOM_FRONTEND_DIRECTORY, 'modules'),
             path
         )
     except NotFound:
@@ -83,23 +84,23 @@ def custom_modules(path):
         return '', 200
 
 
-@app.route('/custom/styles/<path:path>')
+@blueprint.route('/custom/styles/<path:path>')
 @authnz.require_auth
 def custom_styles(path):
-    if not app.config['CUSTOM_FRONTEND_DIRECTORY']:
+    if not settings.CUSTOM_FRONTEND_DIRECTORY:
         return '', 404
     return send_from_directory(
-        os.path.join(app.config['CUSTOM_FRONTEND_DIRECTORY'], 'styles'),
+        os.path.join(settings.CUSTOM_FRONTEND_DIRECTORY, 'styles'),
         path
     )
 
 
-@app.route('/custom/images/<path:path>')
+@blueprint.route('/custom/images/<path:path>')
 @authnz.require_auth
 def custom_images(path):
-    if not app.config['CUSTOM_FRONTEND_DIRECTORY']:
+    if not settings.CUSTOM_FRONTEND_DIRECTORY:
         return '', 404
     return send_from_directory(
-        os.path.join(app.config['CUSTOM_FRONTEND_DIRECTORY'], 'images'),
+        os.path.join(settings.CUSTOM_FRONTEND_DIRECTORY, 'images'),
         path
     )

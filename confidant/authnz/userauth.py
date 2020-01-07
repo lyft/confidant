@@ -7,7 +7,7 @@ import yaml
 from six.moves.urllib.parse import urlparse
 
 import flask
-from flask import request, session
+from flask import current_app, request, session
 from flask import abort, jsonify, redirect
 from werkzeug.security import safe_str_cmp
 
@@ -18,20 +18,19 @@ from authomatic.adapters import WerkzeugAdapter
 
 # saml auth imports
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
+
+from confidant import settings
 from confidant.lib import cryptolib
 from confidant.utils.misc import dict_deep_update
-
-from confidant.app import app
-
 from confidant.authnz import errors
 
 
 def init_user_auth_class(*args, **kwargs):
-    if not app.config['USE_AUTH']:
+    if not settings.USE_AUTH:
         module = NullUserAuthenticator
 
     else:
-        module_name = app.config['USER_AUTH_MODULE'].lower()
+        module_name = settings.USER_AUTH_MODULE.lower()
         if module_name == 'google':
             module = GoogleOauthAuthenticator
         elif module_name == 'saml':
@@ -80,10 +79,10 @@ class AbstractUserAuthenticator(object):
         return session['user']
 
     def get_csrf_token(self):
-        return session.get(app.config['XSRF_COOKIE_NAME'])
+        return session.get(settings.XSRF_COOKIE_NAME)
 
     def set_csrf_token(self, resp):
-        cookie_name = app.config['XSRF_COOKIE_NAME']
+        cookie_name = settings.XSRF_COOKIE_NAME
         if cookie_name not in session:
             session[cookie_name] = '{0:x}'.format(
                 random.SystemRandom().getrandbits(160)
@@ -91,23 +90,23 @@ class AbstractUserAuthenticator(object):
         resp.set_cookie(cookie_name, session[cookie_name])
 
     def check_csrf_token(self):
-        cookie_name = app.config['XSRF_COOKIE_NAME']
+        cookie_name = settings.XSRF_COOKIE_NAME
         token = request.headers.get('X-XSRF-TOKEN', '')
         if not token:
             return False
         return safe_str_cmp(token, session.get(cookie_name, ''))
 
     def set_expiration(self):
-        if app.config['PERMANENT_SESSION_LIFETIME']:
+        if settings.PERMANENT_SESSION_LIFETIME:
             session.permanent = True
             now = datetime.datetime.utcnow()
-            lifetime = app.config['PERMANENT_SESSION_LIFETIME']
+            lifetime = settings.PERMANENT_SESSION_LIFETIME
             expiration = now + datetime.timedelta(seconds=lifetime)
             session['expiration'] = expiration
             # We want the max_expiration initially set, but we don't want it to
             # be extended.
             if not session.get('max_expiration'):
-                max_lifetime = app.config['MAX_PERMANENT_SESSION_LIFETIME']
+                max_lifetime = settings.MAX_PERMANENT_SESSION_LIFETIME
                 if not max_lifetime:
                     max_lifetime = lifetime
                 max_expiration = now + datetime.timedelta(seconds=max_lifetime)
@@ -132,10 +131,10 @@ class AbstractUserAuthenticator(object):
         return self.current_user()['last_name']
 
     def redirect_to_index(self):
-        return redirect(flask.url_for('index'))
+        return redirect(flask.url_for('static_files.index'))
 
     def redirect_to_goodbye(self):
-        return redirect(flask.url_for('goodbye'))
+        return redirect(flask.url_for('static_files.goodbye'))
 
     @abc.abstractmethod
     def log_in(self):
@@ -188,8 +187,8 @@ class AbstractUserAuthenticator(object):
         # TODO: cache the _email_whitelist in memory, and check the file mtime
         # to determine if the cache needs to be refreshed.
         _email_whitelist = None
-        if app.config['USERS_FILE']:
-            with open(app.config['USERS_FILE'], 'r') as f:
+        if settings.USERS_FILE:
+            with open(settings.USERS_FILE, 'r') as f:
                 _email_whitelist = yaml.safe_load(f.read())
 
         return _email_whitelist
@@ -203,7 +202,7 @@ class AbstractUserAuthenticator(object):
         Returns either a string or None.
         """
 
-        return app.config['USER_EMAIL_SUFFIX']
+        return settings.USER_EMAIL_SUFFIX
 
     def check_authorization(self):
         email = self.current_email()
@@ -240,7 +239,7 @@ class NullUserAuthenticator(AbstractUserAuthenticator):
 
     def __init__(self):
         # guard against using this when you think auth is in use
-        assert not app.config['USE_AUTH']
+        assert not settings.USE_AUTH
 
     @property
     def auth_type(self):
@@ -279,10 +278,10 @@ class HeaderAuthenticator(AbstractUserAuthenticator):
     """
 
     def __init__(self):
-        self.username_header = app.config['HEADER_AUTH_USERNAME_HEADER']
-        self.email_header = app.config['HEADER_AUTH_EMAIL_HEADER']
-        self.first_name_header = app.config.get('HEADER_AUTH_FIRST_NAME_HEADER')
-        self.last_name_header = app.config.get('HEADER_AUTH_LAST_NAME_HEADER')
+        self.username_header = settings.HEADER_AUTH_USERNAME_HEADER
+        self.email_header = settings.HEADER_AUTH_EMAIL_HEADER
+        self.first_name_header = settings.get('HEADER_AUTH_FIRST_NAME_HEADER')
+        self.last_name_header = settings.get('HEADER_AUTH_LAST_NAME_HEADER')
 
     @property
     def auth_type(self):
@@ -349,8 +348,8 @@ class GoogleOauthAuthenticator(AbstractUserAuthenticator):
         self.authomatic_config = {
             'google': {
                 'class_': oauth2.Google,
-                'consumer_key': app.config['GOOGLE_OAUTH_CLIENT_ID'],
-                'consumer_secret': app.config['GOOGLE_OAUTH_CONSUMER_SECRET'],
+                'consumer_key': settings.GOOGLE_OAUTH_CLIENT_ID,
+                'consumer_secret': settings.GOOGLE_OAUTH_CONSUMER_SECRET,
                 'scope': [
                     'profile',
                     'email'
@@ -360,7 +359,7 @@ class GoogleOauthAuthenticator(AbstractUserAuthenticator):
 
         self.authomatic = Authomatic(
             self.authomatic_config,
-            app.config['AUTHOMATIC_SALT']
+            settings.AUTHOMATIC_SALT
         )
 
     @property
@@ -373,7 +372,7 @@ class GoogleOauthAuthenticator(AbstractUserAuthenticator):
             WerkzeugAdapter(request, response),
             'google',
             session=session,
-            session_saver=lambda: app.save_session(session, response),
+            session_saver=lambda: current_app.save_session(session, response),
             secure_cookie=(True if request.is_secure else False)
         )
         if result:
@@ -425,15 +424,16 @@ class SamlAuthenticator(AbstractUserAuthenticator):
 
     def _render_saml_settings_dict(self):
         """
-        Given the configuration present in app.config, render a settings dict
-        suitable for passing to OneLogin_Saml2_Auth() in initialization.
+        Given the configuration present in current_app.config, render a
+        settings dict suitable for passing to OneLogin_Saml2_Auth() in
+        initialization.
         """
 
-        debug = app.config['SAML_DEBUG']
+        debug = settings.SAML_DEBUG
         if debug is None:
-            debug = app.debug
+            debug = current_app.debug
 
-        root_url = app.config['SAML_CONFIDANT_URL_ROOT']
+        root_url = settings.SAML_CONFIDANT_URL_ROOT
         if not root_url:
             raise ValueError("Must provide SAML_CONFIDANT_URL_ROOT")
         root_url = root_url.rstrip('/')
@@ -456,20 +456,20 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         }
 
         sp_has_key = False
-        if app.config['SAML_SP_KEY_FILE']:
+        if settings.SAML_SP_KEY_FILE:
             sp_has_key = True
             sp_data['privateKey'] = self._load_rsa_for_saml(
-                app.config['SAML_SP_KEY_FILE'],
-                password=app.config.get('SAML_SP_KEY_FILE_PASSWORD'))
-        if app.config['SAML_SP_KEY']:
+                settings.SAML_SP_KEY_FILE,
+                password=settings.get('SAML_SP_KEY_FILE_PASSWORD'))
+        if settings.SAML_SP_KEY:
             sp_has_key = True
-            sp_data['privateKey'] = app.config['SAML_SP_KEY']
+            sp_data['privateKey'] = settings.SAML_SP_KEY
 
-        if app.config['SAML_SP_CERT_FILE']:
+        if settings.SAML_SP_CERT_FILE:
             sp_data['x509cert'] = self._load_x509_for_saml(
-                app.config['SAML_SP_CERT_FILE'])
-        if app.config['SAML_SP_CERT']:
-            sp_data['x509cert'] = app.config['SAML_SP_CERT']
+                settings.SAML_SP_CERT_FILE)
+        if settings.SAML_SP_CERT:
+            sp_data['x509cert'] = settings.SAML_SP_CERT
 
         # security defaults: sign everything if SP key was provided
         security_data = {
@@ -477,38 +477,38 @@ class SamlAuthenticator(AbstractUserAuthenticator):
             'authnRequestsSigned': sp_has_key,
             'logoutRequestsSigned': sp_has_key,
             'logoutResponsesSigned':
-                app.config['SAML_SECURITY_SLO_RESP_SIGNED'],
+                settings.SAML_SECURITY_SLO_RESP_SIGNED,
             'signMetadata': sp_has_key,
             'wantMessagesSigned':
-                app.config['SAML_SECURITY_MESSAGES_SIGNED'],
+                settings.SAML_SECURITY_MESSAGES_SIGNED,
             'wantAssertionsSigned':
-                app.config['SAML_SECURITY_ASSERTIONS_SIGNED'],
+                settings.SAML_SECURITY_ASSERTIONS_SIGNED,
             'wantNameIdEncrypted': False,
             'wantAttributeStatement':
-                app.config['SAML_WANT_ATTRIBUTE_STATEMENT'],
-            "signatureAlgorithm": app.config['SAML_SECURITY_SIG_ALGO'],
+                settings.SAML_WANT_ATTRIBUTE_STATEMENT,
+            "signatureAlgorithm": settings.SAML_SECURITY_SIG_ALGO,
         }
 
         # Identity provider section
         idp_data = {
-            'entityId': app.config['SAML_IDP_ENTITY_ID'],
+            'entityId': settings.SAML_IDP_ENTITY_ID,
             'singleSignOnService': {
-                'url': app.config['SAML_IDP_SIGNON_URL'],
+                'url': settings.SAML_IDP_SIGNON_URL,
                 'binding': 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
             },
         }
 
-        if app.config['SAML_IDP_LOGOUT_URL']:
+        if settings.SAML_IDP_LOGOUT_URL:
             idp_data['singleLogoutService'] = {
-                'url': app.config['SAML_IDP_LOGOUT_URL'],
+                'url': settings.SAML_IDP_LOGOUT_URL,
                 'binding': 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
             }
 
-        if app.config['SAML_IDP_CERT_FILE']:
+        if settings.SAML_IDP_CERT_FILE:
             idp_data['x509cert'] = self._load_x509_for_saml(
-                app.config['SAML_IDP_CERT_FILE'])
-        if app.config['SAML_IDP_CERT']:
-            idp_data['x509cert'] = app.config['SAML_IDP_CERT']
+                settings.SAML_IDP_CERT_FILE)
+        if settings.SAML_IDP_CERT:
+            idp_data['x509cert'] = settings.SAML_IDP_CERT
 
         # put it all together into the settings
         data = {
@@ -521,9 +521,9 @@ class SamlAuthenticator(AbstractUserAuthenticator):
 
         # if SAML_RAW_JSON_SETTINGS is set, merge the settings in, doing one
         # level of deep merging.
-        if app.config['SAML_RAW_JSON_SETTINGS']:
+        if settings.SAML_RAW_JSON_SETTINGS:
             logging.debug('overriding SAML settings from JSON')
-            dict_deep_update(data, app.config['SAML_RAW_JSON_SETTINGS'])
+            dict_deep_update(data, settings.SAML_RAW_JSON_SETTINGS)
 
         logging.debug('Rendered SAML settings: {!r}'.format(data))
 
@@ -614,7 +614,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         self.set_current_user(**kwargs)
 
         # success, redirect to RelayState if present or to /
-        default_redirect = flask.url_for('index')
+        default_redirect = flask.url_for('static_files.index')
         redirect_url = request.form.get('RelayState', default_redirect)
 
         # avoid redirect loop
@@ -723,7 +723,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
 
         if flask_request.scheme == 'https':
             https = 'on'
-        elif app.debug and app.config['SAML_FAKE_HTTPS']:
+        elif current_app.debug and settings.SAML_FAKE_HTTPS:
             https = 'on'
         else:
             https = 'off'

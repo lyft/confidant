@@ -9,7 +9,7 @@ from pynamodb.attributes import (
 )
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
-from confidant.app import app
+from confidant import settings
 from confidant.models.session_cls import DDBSession
 from confidant.models.connection_cls import DDBConnection
 from confidant.models.non_null_unicode_set_attribute import (
@@ -28,10 +28,10 @@ class DataTypeDateIndex(GlobalSecondaryIndex):
 
 class Service(Model):
     class Meta:
-        table_name = app.config.get('DYNAMODB_TABLE')
-        if app.config.get('DYNAMODB_URL'):
-            host = app.config.get('DYNAMODB_URL')
-        region = app.config.get('AWS_DEFAULT_REGION')
+        table_name = settings.DYNAMODB_TABLE
+        if settings.DYNAMODB_URL:
+            host = settings.DYNAMODB_URL
+        region = settings.AWS_DEFAULT_REGION
         connection_cls = DDBConnection
         session_cls = DDBSession
 

@@ -9,11 +9,11 @@ from cryptography.fernet import Fernet
 from flask_script import Command, Option
 
 from confidant import settings
-from confidant.app import app
 from confidant.lib import cryptolib
 
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.logger.setLevel(logging.INFO)
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler(sys.stdout))
+logger.setLevel(logging.INFO)
 
 
 class GenerateSecretsBootstrap(Command):
@@ -31,7 +31,7 @@ class GenerateSecretsBootstrap(Command):
                 secrets = f.read()
         data_key = cryptolib.create_datakey(
             {'type': 'bootstrap'},
-            app.config['KMS_MASTER_KEY'],
+            settings.KMS_MASTER_KEY,
         )
         f = Fernet(data_key['plaintext'])
         data = {

@@ -2,7 +2,6 @@ import sys
 import logging
 from flask_script import Command
 
-from confidant.app import app
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
 
@@ -12,9 +11,9 @@ from pynamodb.attributes import Attribute, UnicodeAttribute
 from pynamodb.constants import STRING_SET
 from pynamodb.models import Model
 
-
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.logger.setLevel(logging.INFO)
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler(sys.stdout))
+logger.setLevel(logging.INFO)
 
 
 def is_old_unicode_set(values):
@@ -109,7 +108,7 @@ class MigrateBlindCredentialSetAttribute(Command):
     def run(self):
         total = 0
         fail = 0
-        app.logger.info('Migrating UnicodeSetAttribute in BlindCredential')
+        logger.info('Migrating UnicodeSetAttribute in BlindCredential')
         for cred in BlindCredential.data_type_date_index.query(
                 'blind-credential'):
             cred.save()
@@ -125,7 +124,7 @@ class MigrateServiceSetAttribute(Command):
     def run(self):
         total = 0
         fail = 0
-        app.logger.info('Migrating UnicodeSetAttribute in Service')
+        logger.info('Migrating UnicodeSetAttribute in Service')
         for service in Service.data_type_date_index.query(
                 'service'):
             service.save()

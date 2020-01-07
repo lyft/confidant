@@ -1,11 +1,9 @@
 import logging
 
-from flask import jsonify
-from flask import request
+from flask import blueprints, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, settings
-from confidant.app import app
 from confidant.models.service import Service
 from confidant.schema.services import (
     ServiceResponse,
@@ -25,17 +23,19 @@ from confidant.services import (
 from confidant.utils import maintenance, misc
 from confidant.utils.dynamodb import decode_last_evaluated_key
 
+blueprint = blueprints.Blueprint('services', __name__)
+
 acl_module_check = misc.load_module(settings.ACL_MODULE)
 
 
-@app.route('/v1/roles', methods=['GET'])
+@blueprint.route('/v1/roles', methods=['GET'])
 @authnz.require_auth
 def get_iam_roles_list():
     roles = iamrolemanager.get_iam_roles()
     return jsonify({'roles': roles})
 
 
-@app.route('/v1/services', methods=['GET'])
+@blueprint.route('/v1/services', methods=['GET'])
 @authnz.require_auth
 def get_service_list():
     if not acl_module_check(resource_type='service',
@@ -51,7 +51,7 @@ def get_service_list():
     return services_response_schema.dumps(services_response)
 
 
-@app.route('/v1/services/<id>', methods=['GET'])
+@blueprint.route('/v1/services/<id>', methods=['GET'])
 @authnz.require_auth
 def get_service(id):
     '''
@@ -116,7 +116,7 @@ def get_service(id):
     )
 
 
-@app.route('/v1/archive/services/<id>', methods=['GET'])
+@blueprint.route('/v1/archive/services/<id>', methods=['GET'])
 @authnz.require_auth
 def get_archive_service_revisions(id):
     try:
@@ -139,7 +139,7 @@ def get_archive_service_revisions(id):
     return revisions_response_schema.dumps(revisions_response)
 
 
-@app.route('/v1/archive/services', methods=['GET'])
+@blueprint.route('/v1/archive/services', methods=['GET'])
 @authnz.require_auth
 def get_archive_service_list():
     limit = request.args.get(
@@ -167,7 +167,7 @@ def get_archive_service_list():
     return services_response_schema.dumps(services_response)
 
 
-@app.route('/v1/services/<id>', methods=['PUT'])
+@blueprint.route('/v1/services/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -215,7 +215,7 @@ def map_service_credentials(id):
         }
         return jsonify(ret), 400
 
-    accounts = list(app.config['SCOPED_AUTH_KEYS'].values())
+    accounts = list(settings.SCOPED_AUTH_KEYS.values())
     if data.get('account') and data['account'] not in accounts:
         ret = {'error': '{0} is not a valid account.'}
         return jsonify(ret), 400
@@ -280,7 +280,7 @@ def map_service_credentials(id):
     )
 
 
-@app.route('/v1/services/<id>/<to_revision>', methods=['PUT'])
+@blueprint.route('/v1/services/<id>/<to_revision>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -391,7 +391,7 @@ def revert_service_to_revision(id, to_revision):
     )
 
 
-@app.route(
+@blueprint.route(
     '/v1/services/<id>/<old_revision>/<new_revision>',
     methods=['GET']
 )
@@ -427,7 +427,7 @@ def diff_service(id, old_revision, new_revision):
     return jsonify(old_service.diff(new_service))
 
 
-@app.route('/v1/grants/<id>', methods=['PUT'])
+@blueprint.route('/v1/grants/<id>', methods=['PUT'])
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -457,7 +457,7 @@ def ensure_grants(id):
     })
 
 
-@app.route('/v1/grants/<id>', methods=['GET'])
+@blueprint.route('/v1/grants/<id>', methods=['GET'])
 @authnz.require_auth
 def get_grants(id):
     try:

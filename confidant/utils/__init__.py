@@ -1,9 +1,9 @@
 import statsd
 
-from confidant.app import app
+from confidant import settings
 
 stats = statsd.StatsClient(
-    app.config['STATSD_HOST'],
-    app.config['STATSD_PORT'],
+    settings.STATSD_HOST,
+    settings.STATSD_PORT,
     prefix='confidant'
 )
