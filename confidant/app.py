@@ -1,6 +1,7 @@
 import logging
 
 import boto3
+import guard
 from flask import Flask
 from flask_sslify import SSLify
 
@@ -14,11 +15,18 @@ from confidant.routes import (
     static_files,
 )
 
-
 if not settings.get('DEBUG'):
     boto3.set_stream_logger(level=logging.CRITICAL)
     logging.getLogger('botocore').setLevel(logging.CRITICAL)
     logging.getLogger('pynamodb').setLevel(logging.WARNING)
+
+CSP_POLICY = {
+    'default-src': ["'self'"],
+    'style-src': [
+        "'self'",
+        "'unsafe-inline'"  # for spin.js
+    ]
+}
 
 
 def create_app():
@@ -31,6 +39,8 @@ def create_app():
 
     if settings.SSLIFY:
         sslify = SSLify(app, skips=['healthcheck'])  # noqa
+
+    app.wsgi_app = guard.ContentSecurityPolicy(app.wsgi_app, CSP_POLICY)
 
     if settings.REDIS_URL:
         import redis
