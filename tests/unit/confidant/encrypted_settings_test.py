@@ -25,11 +25,11 @@ def test_get_registered_default():
 def test_bootstrap(mocker):
     mocker.patch(
         'confidant.encrypted_settings.cryptolib.decrypt_datakey',
-        return_value='1cVUbJT58SbMt4Wk4xmEZoNhZGdWO_vg1IJiXwc6HGs'
+        return_value=b'1cVUbJT58SbMt4Wk4xmEZoNhZGdWO_vg1IJiXwc6HGs==',
     )
     mocker.patch(
         'confidant.encrypted_settings.Fernet.decrypt',
-        return_value='{secret: value, secret2: value2}\n'
+        return_value='{secret: value, secret2: value2}\n',
     )
     enc_set = EncryptedSettings(None)
     decrypted = enc_set._bootstrap(

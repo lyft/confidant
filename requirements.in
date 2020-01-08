@@ -75,7 +75,7 @@ Authomatic==0.1.0.post1
 # License: MIT
 # Upstream url: https://github.com/onelogin/python3-saml
 # Use: For user authentication via SAML
-python3-saml>1.4.0
+python3-saml>=1.9.0
 
 # Python HTTP for Humans.
 # License: Apache2
@@ -144,7 +144,7 @@ toastedmarshmallow==2.15.2.post1
 # Testing library
 # License: MIT
 # Upstream url: https://github.com/pytest-dev/pytest
-pytest==5.2.1
+pytest==5.3.2
 
 # Thin-wrapper around the mock package for easier use with py.test
 # License: MIT
