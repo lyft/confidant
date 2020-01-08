@@ -1,7 +1,5 @@
 import base64
 
-from mock import PropertyMock
-
 from confidant.app import create_app
 from confidant.authnz import userauth
 
@@ -39,7 +37,7 @@ def test_auth_with_email_session_in_users(mocker):
     app.debug = True
     to_patch = ('confidant.authnz.userauth.AbstractUserAuthenticator.'
                 'allowed_email_whitelist')
-    mock_whitelist = mocker.patch(to_patch, new_callable=PropertyMock)
+    mock_whitelist = mocker.patch(to_patch, new_callable=mocker.PropertyMock)
     mock_whitelist.return_value = ['example@example.com']
     with app.test_client() as c:
         with c.session_transaction() as session:
@@ -71,7 +69,7 @@ def test_auth_with_email_session_not_in_users(mocker):
     app.debug = True
     to_patch = ('confidant.authnz.userauth.AbstractUserAuthenticator.'
                 'allowed_email_whitelist')
-    mock_whitelist = mocker.patch(to_patch, new_callable=PropertyMock)
+    mock_whitelist = mocker.patch(to_patch, new_callable=mocker.PropertyMock)
     mock_whitelist.return_value = ['example@example.com']
     with app.test_client() as c:
         with c.session_transaction() as session:
@@ -88,7 +86,7 @@ def test_auth_with_email_session(mocker):
     app.debug = True
     to_patch = ('confidant.authnz.userauth.AbstractUserAuthenticator.'
                 'allowed_email_whitelist')
-    mock_whitelist = mocker.patch(to_patch, new_callable=PropertyMock)
+    mock_whitelist = mocker.patch(to_patch, new_callable=mocker.PropertyMock)
     mock_whitelist.return_value = None
     with app.test_client() as c:
         with c.session_transaction() as session:

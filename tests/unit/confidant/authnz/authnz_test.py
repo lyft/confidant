@@ -1,5 +1,4 @@
 import pytest
-from mock import Mock
 from werkzeug.exceptions import Unauthorized
 
 from confidant.app import create_app
@@ -62,7 +61,7 @@ def test_user_type_has_privilege():
 
 
 def test_require_csrf_token(mocker):
-    mock_fn = Mock()
+    mock_fn = mocker.Mock()
     mock_fn.__name__ = 'mock_fn'
     mock_fn.return_value = 'unittestval'
 
@@ -79,13 +78,13 @@ def test_require_csrf_token(mocker):
     g_mock = mocker.patch('confidant.authnz.g')
     g_mock.auth_type = 'google oauth'
     u_mock = mocker.patch('confidant.authnz.user_mod')
-    u_mock.check_csrf_token = Mock(return_value=True)
+    u_mock.check_csrf_token = mocker.Mock(return_value=True)
     assert wrapped() == 'unittestval'
 
     g_mock = mocker.patch('confidant.authnz.g')
     g_mock.auth_type = 'google oauth'
     u_mock = mocker.patch('confidant.authnz.user_mod')
-    u_mock.check_csrf_token = Mock(return_value=False)
+    u_mock.check_csrf_token = mocker.Mock(return_value=False)
     with pytest.raises(Unauthorized):
         wrapped()
 
@@ -105,26 +104,26 @@ def test_user_is_service(mocker):
 
 
 def test_redirect_to_logout_if_no_auth(mocker):
-    mock_fn = Mock()
+    mock_fn = mocker.Mock()
     mock_fn.__name__ = 'mock_fn'
     mock_fn.return_value = 'unittestval'
 
     wrapped = authnz.redirect_to_logout_if_no_auth(mock_fn)
 
     u_mock = mocker.patch('confidant.authnz.user_mod')
-    u_mock.is_expired = Mock(return_value=False)
-    u_mock.is_authenticated = Mock(return_value=True)
+    u_mock.is_expired = mocker.Mock(return_value=False)
+    u_mock.is_authenticated = mocker.Mock(return_value=True)
     assert wrapped() == 'unittestval'
 
     u_mock = mocker.patch('confidant.authnz.user_mod')
-    u_mock.is_expired = Mock(return_value=True)
-    u_mock.redirect_to_goodbye = Mock(return_value='redirect_return')
+    u_mock.is_expired = mocker.Mock(return_value=True)
+    u_mock.redirect_to_goodbye = mocker.Mock(return_value='redirect_return')
     assert wrapped() == 'redirect_return'
 
     u_mock = mocker.patch('confidant.authnz.user_mod')
-    u_mock.is_expired = Mock(return_value=False)
-    u_mock.is_authenticated = Mock(return_value=False)
-    u_mock.redirect_to_goodbye = Mock(return_value='redirect_return')
+    u_mock.is_expired = mocker.Mock(return_value=False)
+    u_mock.is_authenticated = mocker.Mock(return_value=False)
+    u_mock.redirect_to_goodbye = mocker.Mock(return_value='redirect_return')
     assert wrapped() == 'redirect_return'
 
 
