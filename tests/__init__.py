@@ -3,3 +3,9 @@
 import gevent.monkey
 
 gevent.monkey.patch_all()
+
+import os  # noqa:E402
+
+# pytest-env can't unset variables, and we want to avoid calling KMS when
+# loading the settings.
+os.environ['SECRETS_BOOTSTRAP'] = ''
