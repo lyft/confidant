@@ -1,25 +1,13 @@
-# Make the tests directory a python module
-# so that all unit tests are reported as part of the tests package.
+from __future__ import absolute_import
 
-import os
+# Load before anything to prevent infinite loop on requests
+#   See: https://github.com/gevent/gevent/issues/941
+import gevent.monkey
 
-# Inject mandatory environment variables
+gevent.monkey.patch_all()
 
-env_settings = [
-    ('SESSION_SECRET', 'secret'),
-    ('DYNAMODB_TABLE', 'confidant-testing'),
-    ('DYNAMODB_URL', 'http://dynamo:7777'),
-    ('DYNAMODB_CREATE_TABLE', 'false'),
-    ('GEVENT_RESOLVER', 'ares'),
-    ('AWS_DEFAULT_REGION', 'us-east-1'),
-    ('USER_AUTH_KEY', 'authnz-usertesting'),
-    ('AUTH_KEY', 'authnz-testing'),
-    ('SCOPED_AUTH_KEYS',
-     '{"sandbox-auth-key":"sandbox","primary-auth-key":"primary"}'),
-    ('KMS_MASTER_KEY', 'confidant-mastertesting'),
-    ('DEBUG', 'true'),
-    ('STATIC_FOLDER', 'public')
-]
+import os  # noqa:E402
 
-for env_setting in env_settings:
-    os.environ[env_setting[0]] = os.getenv(env_setting[0], env_setting[1])
+# pytest-env can't unset variables, and we want to avoid calling KMS when
+# loading the settings.
+os.environ['SECRETS_BOOTSTRAP'] = ''

@@ -1,100 +1,83 @@
-import unittest
-
-from mock import patch
-
-# Prevent call to KMS during tests
-from confidant import settings
-settings.encrypted_settings.secret_string = {}
-
-from confidant import settings  # noqa:E402
-from confidant.services import keymanager  # noqa:E402
-from confidant.wsgi import app  # noqa:E402
+from confidant.services import keymanager
 
 
-class KeyManagerTest(unittest.TestCase):
-    def setUp(self):
-        self.use_auth = settings.USE_AUTH
-        self.use_encryption = settings.USE_ENCRYPTION
-        self.scoped_auth_keys = settings.SCOPED_AUTH_KEYS
+def test_get_key_id(mocker):
+    mocker.patch('confidant.services.keymanager.KEY_METADATA', {})
+    kms_mock = mocker.patch(
+        'confidant.services.keymanager.auth_kms_client.describe_key'
+    )
+    kms_mock.return_value = {'KeyMetadata': {'KeyId': 'mockid'}}
+    assert keymanager.get_key_id('mockalias') == 'mockid'
 
-    def tearDown(self):
-        settings.USE_AUTH = self.use_auth
-        settings.USE_ENCRYPTION = self.use_encryption
-        settings.SCOPED_AUTH_KEYS = self.scoped_auth_keys
 
-    @patch('confidant.services.keymanager.KEY_METADATA', {})
-    @patch('confidant.services.keymanager.auth_kms_client.describe_key')
-    def test_get_key_id(self, kms_mock):
-        kms_mock.return_value = {'KeyMetadata': {'KeyId': 'mockid'}}
-        self.assertEqual(
-            keymanager.get_key_id('mockalias'),
-            'mockid'
-        )
-
-    @patch(
+def test_get_key_id_cached(mocker):
+    mocker.patch(
         'confidant.services.keymanager.KEY_METADATA',
         {'mockalias': {'KeyMetadata': {'KeyId': 'mockid'}}}
     )
-    @patch('confidant.services.keymanager.auth_kms_client.describe_key')
-    def test_get_key_id_cached(self, kms_mock):
-        self.assertEqual(
-            keymanager.get_key_id('mockalias'),
-            'mockid'
-        )
+    mocker.patch(
+        'confidant.services.keymanager.auth_kms_client.describe_key'
+    )
+    assert keymanager.get_key_id('mockalias') == 'mockid'
 
-    @patch('cryptography.fernet.Fernet.generate_key')
-    def test_create_datakey_mocked(self, fernet_mock):
-        settings.USE_ENCRYPTION = False
-        fernet_mock.return_value = 'mocked_fernet_key'
 
-        ret = keymanager.create_datakey({})
+def test_create_datakey_mocked(mocker):
+    fernet_mock = mocker.patch('cryptography.fernet.Fernet.generate_key')
+    fernet_mock.return_value = 'mocked_fernet_key'
+    mocker.patch('confidant.services.keymanager.settings.USE_ENCRYPTION', False)
 
-        self.assertTrue(fernet_mock.called)
+    ret = keymanager.create_datakey({})
 
-        # Assert that we got a dict returned where the ciphertext and plaintext
-        # keys are equal
-        self.assertEquals(ret['ciphertext'], ret['plaintext'])
+    assert fernet_mock.called is True
 
-        # Assert ciphertext is mocked_fernet_key
-        self.assertEquals(ret['ciphertext'], 'mocked_fernet_key')
+    # Assert that we got a dict returned where the ciphertext and plaintext
+    # keys are equal
+    assert ret['ciphertext'] == ret['plaintext']
 
-    def test_decrypt_datakey_mocked(self):
-        settings.USE_ENCRYPTION = False
-        ret = keymanager.decrypt_datakey('mocked_fernet_key')
+    # Assert ciphertext is mocked_fernet_key
+    assert ret['ciphertext'] == 'mocked_fernet_key'
 
-        # Ensure we get the same value out that we sent in.
-        self.assertEquals(ret, 'mocked_fernet_key')
 
-    @patch(
+def test_decrypt_datakey_mocked(mocker):
+    mocker.patch('confidant.services.keymanager.settings.USE_ENCRYPTION', False)
+    ret = keymanager.decrypt_datakey('mocked_fernet_key')
+
+    # Ensure we get the same value out that we sent in.
+    assert ret == 'mocked_fernet_key'
+
+
+def test_create_datakey_with_encryption(mocker):
+    cd_mock = mocker.patch(
         'confidant.services.keymanager.cryptolib.create_datakey'
     )
-    @patch(
+    cmd_mock = mocker.patch(
         'confidant.services.keymanager.cryptolib.create_mock_datakey'
     )
-    def test_create_datakey_with_encryption(self, cmd_mock, cd_mock):
-        settings.USE_ENCRYPTION = True
-        context = {'from': 'confidant-development',
-                   'to': 'confidant-development'}
-        keymanager.create_datakey(context)
+    mocker.patch('confidant.services.keymanager.settings.USE_ENCRYPTION', True)
+    context = {'from': 'confidant-development',
+               'to': 'confidant-development'}
+    keymanager.create_datakey(context)
 
-        # Assert that create_datakey was called and create_mock_datakey was
-        # not called.
-        self.assertTrue(cd_mock.called)
-        self.assertFalse(cmd_mock.called)
+    # Assert that create_datakey was called and create_mock_datakey was
+    # not called.
+    assert cd_mock.called is True
+    assert cmd_mock.called is False
 
-    @patch(
+
+def test_decrypt_datakey_with_encryption(mocker):
+    dd_mock = mocker.patch(
         'confidant.services.keymanager.cryptolib.decrypt_datakey'
     )
-    @patch(
+    dmd_mock = mocker.patch(
         'confidant.services.keymanager.cryptolib.decrypt_mock_datakey'
     )
-    def test_decrypt_datakey_with_encryption(self, dmd_mock, dd_mock):
-        settings.USE_ENCRYPTION = True
-        context = {'from': 'confidant-development',
-                   'to': 'confidant-development'}
-        keymanager.decrypt_datakey(b'encrypted', context)
 
-        # Assert that decrypt_datakey was called and decrypt_mock_datakey was
-        # not called.
-        self.assertTrue(dd_mock.called)
-        self.assertFalse(dmd_mock.called)
+    mocker.patch('confidant.services.keymanager.settings.USE_ENCRYPTION', True)
+    context = {'from': 'confidant-development',
+               'to': 'confidant-development'}
+    keymanager.decrypt_datakey(b'encrypted', context)
+
+    # Assert that decrypt_datakey was called and decrypt_mock_datakey was
+    # not called.
+    assert dd_mock.called is True
+    assert dmd_mock.called is False
