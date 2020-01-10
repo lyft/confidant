@@ -22,6 +22,24 @@ def test_get_latest_credential_revision(mocker):
     assert res == 2
 
 
+def test_check_credential_pair_values(mocker):
+    cred_pairs_success = {
+        'A': '1'
+    }
+    cred_pairs_fail = {
+        'A': ['1', '2', '3']
+    }
+    cred_pair_fail_2 = {
+        'A': {'1': '2'}
+    }
+    result = credentialmanager.check_credential_pair_values(cred_pairs_fail)
+    assert result[0] is False
+    result = credentialmanager.check_credential_pair_values(cred_pair_fail_2)
+    assert result[0] is False
+    result = credentialmanager.check_credential_pair_values(cred_pairs_success)
+    assert result[0] is True
+
+
 def test_lowercase_credential_pairs():
     test = {
         'A': '123',
