@@ -27,7 +27,7 @@
 
         // Load the clientconfig prior to transitioning to any module, as most modules require
         // the clientconfig to load, and will fail otherwise.
-        $transitions.onBefore({}, function(transition) {
+        $transitions.onBefore({}, function() {
           $scope.user = userinfo.get();
           return clientconfig.get().$promise.then(function(clientConfig) {
               $scope.clientconfig = clientConfig;
