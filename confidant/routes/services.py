@@ -58,18 +58,33 @@ def get_service(id):
     Get service metadata and all credentials for this service. This endpoint
     allows basic authentication.
     '''
+    permissions = {
+        'metadata': False,
+        'get': False,
+        'update': False,
+    }
     metadata_only = request.args.get('metadata_only', default=False, type=bool)
     if authnz.user_is_user_type('service'):
         if not authnz.user_is_service(id):
             logging.warning('Authz failed for service {0}.'.format(id))
             msg = 'Service is not authorized.'
             return jsonify({'error': msg}), 401
+        permissions['metadata'] = True
+        permissions['get'] = True
     else:
         logged_in_user = authnz.get_logged_in_user()
         action = 'metadata' if metadata_only else 'get'
-        if not acl_module_check(resource_type='service',
-                                action=action,
-                                resource_id=id):
+        permissions['metadata'] = acl_module_check(
+            resource_type='service',
+            action=action,
+            resource_id=id,
+        )
+        permissions['get'] = acl_module_check(
+            resource_type='service',
+            action=action,
+            resource_id=id,
+        )
+        if not permissions[action]:
             msg = "{} does not have access to get service {}".format(
                 authnz.get_logged_in_user(),
                 id
@@ -106,14 +121,29 @@ def get_service(id):
     blind_credentials = credentialmanager.get_blind_credentials(
         service.blind_credentials,
     )
-    return service_expanded_response_schema.dumps(
-        ServiceResponse.from_service_expanded(
-            service,
-            credentials=credentials,
-            blind_credentials=blind_credentials,
-            metadata_only=metadata_only,
+    # TODO: this check can be expensive, so we're gating only to user auth.
+    # We should probably add an argument that opts in for permission hints,
+    # rather than always checking them.
+    if authnz.user_is_user_type('user'):
+        combined_cred_ids = (
+            list(service.credentials) + list(service.blind_credentials)
         )
+        permissions['update'] = acl_module_check(
+            resource_type='service',
+            action='update',
+            resource_id=id,
+            kwargs={
+                'credential_ids': combined_cred_ids,
+            },
+        )
+    service_response = ServiceResponse.from_service_expanded(
+        service,
+        credentials=credentials,
+        blind_credentials=blind_credentials,
+        metadata_only=metadata_only,
     )
+    service_response.permissions = permissions
+    return service_expanded_response_schema.dumps(service_response)
 
 
 @blueprint.route('/v1/archive/services/<id>', methods=['GET'])
@@ -271,13 +301,18 @@ def map_service_credentials(id):
     blind_credentials = credentialmanager.get_blind_credentials(
         service.blind_credentials,
     )
-    return service_expanded_response_schema.dumps(
-        ServiceResponse.from_service_expanded(
-            service,
-            credentials=credentials,
-            blind_credentials=blind_credentials,
-        )
+    permissions = {
+        'metadata': True,
+        'get': True,
+        'update': True,
+    }
+    service_response = ServiceResponse.from_service_expanded(
+        service,
+        credentials=credentials,
+        blind_credentials=blind_credentials,
     )
+    service_response.permissions = permissions
+    return service_expanded_response_schema.dumps(service_response)
 
 
 @blueprint.route('/v1/services/<id>/<to_revision>', methods=['PUT'])

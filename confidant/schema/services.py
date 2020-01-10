@@ -24,6 +24,7 @@ class ServiceResponse(object):
     account = attr.ib(default=None)
     credentials = attr.ib(default=list)
     blind_credentials = attr.ib(default=list)
+    permissions = attr.ib(default=dict)
 
     @classmethod
     def from_service(
@@ -100,6 +101,7 @@ class ServiceResponseSchema(AutobuildSchema):
     enabled = fields.Boolean(required=True)
     modified_date = fields.DateTime(required=True)
     modified_by = fields.Str(required=True)
+    permissions = fields.Dict(keys=fields.Str(), values=fields.Boolean())
 
 
 class ServiceExpandedResponseSchema(AutobuildSchema):
@@ -118,6 +120,7 @@ class ServiceExpandedResponseSchema(AutobuildSchema):
     enabled = fields.Boolean(required=True)
     modified_date = fields.DateTime(required=True)
     modified_by = fields.Str(required=True)
+    permissions = fields.Dict(keys=fields.Str(), values=fields.Boolean())
 
 
 @attr.s
@@ -152,7 +155,10 @@ class ServicesResponseSchema(Schema):
 
     _class_to_load = ServicesResponse
 
-    services = fields.Nested(ServiceResponseSchema, many=True)
+    services = fields.Nested(
+        ServiceResponseSchema,
+        many=True,
+    )
     next_page = fields.Str()
 
     @pre_dump
@@ -201,7 +207,10 @@ class RevisionsResponseSchema(Schema):
 
     _class_to_load = RevisionsResponse
 
-    revisions = fields.Nested(ServiceResponseSchema, many=True)
+    revisions = fields.Nested(
+        ServiceResponseSchema,
+        many=True,
+    )
     next_page = fields.Str()
 
     @pre_dump

@@ -76,23 +76,33 @@ def get_credential(id):
             credential.data_type != 'archive-credential'):
         return jsonify({}), 404
 
+    permissions = {
+        'metadata': True,
+        'get': False,
+        'update': acl_module_check(
+            resource_type='credential',
+            action='update',
+            resource_id=id
+        ),
+    }
     include_credential_pairs = False
     if acl_module_check(resource_type='credential',
                         action='get',
                         resource_id=id):
+        permissions['get'] = True
         include_credential_pairs = True
         log_line = "{0} get credential {1}".format(
             authnz.get_logged_in_user(),
             id
         )
         logging.info(log_line)
-    return credential_response_schema.dumps(
-        CredentialResponse.from_credential(
-            credential,
-            include_credential_keys=True,
-            include_credential_pairs=include_credential_pairs,
-        )
+    credential_response = CredentialResponse.from_credential(
+        credential,
+        include_credential_keys=True,
+        include_credential_pairs=include_credential_pairs,
     )
+    credential_response.permissions = permissions
+    return credential_response_schema.dumps(credential_response)
 
 
 @blueprint.route(
@@ -251,13 +261,18 @@ def create_credential():
         documentation=data.get('documentation')
     )
     cred.save()
-    return credential_response_schema.dumps(
-        CredentialResponse.from_credential(
-            cred,
-            include_credential_keys=True,
-            include_credential_pairs=True,
-        )
+    permissions = {
+        'metadata': True,
+        'get': True,
+        'update': True,
+    }
+    credential_response = CredentialResponse.from_credential(
+        cred,
+        include_credential_keys=True,
+        include_credential_pairs=True,
     )
+    credential_response.permissions = permissions
+    return credential_response_schema.dumps(credential_response)
 
 
 @blueprint.route('/v1/credentials/<id>/services', methods=['GET'])
@@ -384,13 +399,18 @@ def update_credential(id):
         msg = msg.format(cred.name, cred.id, cred.revision)
         graphite.send_event(service_names, msg)
         webhook.send_event('credential_update', service_names, [cred.id])
-    return credential_response_schema.dumps(
-        CredentialResponse.from_credential(
-            cred,
-            include_credential_keys=True,
-            include_credential_pairs=True,
-        )
+    permissions = {
+        'metadata': True,
+        'get': True,
+        'update': True,
+    }
+    credential_response = CredentialResponse.from_credential(
+        cred,
+        include_credential_keys=True,
+        include_credential_pairs=True,
     )
+    credential_response.permissions = permissions
+    return credential_response_schema.dumps(permissions)
 
 
 @blueprint.route('/v1/credentials/<id>/<to_revision>', methods=['PUT'])
