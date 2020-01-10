@@ -22,6 +22,7 @@
             $scope.$log = $log;
             $scope.typeFilter = 'credentials';
             $scope.showDisabled = false;
+            $scope.globalPermissions = $scope.clientconfig.generated.permissions;
 
             $scope.getCredentialList = CredentialListService.getCredentialList;
             $scope.$watch('getCredentialList()', function(newCredentialList, oldCredentialList) {

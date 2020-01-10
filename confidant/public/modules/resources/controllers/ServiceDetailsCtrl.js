@@ -28,6 +28,7 @@
             $scope.newService = false;
             $scope.credentialPairConflicts = null;
             $scope.aws_account_options = $scope.clientconfig.generated.aws_accounts;
+            $scope.permissions = $scope.clientconfig.generated.permissions;
 
             Roles.get().$promise.then(function(roles) {
                 $scope.roles = roles.roles;

@@ -49,6 +49,7 @@
             $scope.getError = '';
             $scope.credentialPairConflicts = null;
             $scope.hasMetadata = false;
+            $scope.permissions = $scope.clientconfig.generated.permissions;
 
             if ($stateParams.credentialId) {
                 CredentialServices.get({'id': $stateParams.credentialId}).$promise.then(function(credentialServices) {
@@ -94,8 +95,6 @@
                 };
                 credentialCopy = angular.copy($scope.credential);
                 $scope.shown = true;
-                // TODO: need a hasCreate here, which we'd get determine
-                // based on config endpoint.
             }
 
             $scope.showValue = function(credentialPair) {
