@@ -108,7 +108,8 @@
     </ul>
   </div>
   <div class="buttons">
-    <button type="button" class="btn btn-default call-to-action" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">Edit</button>
+    <button type="button" class="btn btn-default call-to-action" ng-click="editableForm.$show()" ng-show="!editableForm.$visible && service.permissions.update">Edit</button>
+    <button type="button" class="btn btn-default" ng-click="editableForm.$show()" ng-show="!editableForm.$visible && !service.permissions.update" disabled data-toggle="tooltip" title="You do not have edit permission for this service.">Edit</button>
     <span ng-show="editableForm.$visible">
       <button type="submit" class="btn call-to-action" ng-disabled="editableForm.$waiting">Save</button>
       <button type="button" class="btn btn-alternate" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">Cancel</button>

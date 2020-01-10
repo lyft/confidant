@@ -1,8 +1,11 @@
 from flask import blueprints, jsonify
 
 from confidant import authnz, settings
+from confidant.utils import misc
 
 blueprint = blueprints.Blueprint('identity', __name__)
+
+acl_module_check = misc.load_module(settings.ACL_MODULE)
 
 
 @blueprint.route('/v1/login', methods=['GET', 'POST'])
@@ -32,6 +35,26 @@ def get_client_config():
     '''
     Get configuration to help clients bootstrap themselves.
     '''
+    permissions = {
+        'credentials': {
+            'list': acl_module_check(resource_type='credential', action='list'),
+            'create': acl_module_check(
+                resource_type='credential',
+                action='create',
+            ),
+        },
+        'blind_credentials': {
+            'list': True,
+            'create': True,
+        },
+        'services': {
+            'list': acl_module_check(resource_type='service', action='list'),
+            'create': acl_module_check(
+                resource_type='service',
+                action='create',
+            ),
+        },
+    }
     # TODO: add more config in here.
     response = jsonify({
         'defined': settings.CLIENT_CONFIG,
@@ -41,6 +64,7 @@ def get_client_config():
             'xsrf_cookie_name': settings.XSRF_COOKIE_NAME,
             'maintenance_mode': settings.MAINTENANCE_MODE,
             'history_page_limit': settings.HISTORY_PAGE_LIMIT,
+            'permissions': permissions,
         }
     })
     return response

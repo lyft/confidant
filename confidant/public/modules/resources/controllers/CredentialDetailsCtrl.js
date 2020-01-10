@@ -49,9 +49,6 @@
             $scope.getError = '';
             $scope.credentialPairConflicts = null;
             $scope.hasMetadata = false;
-            $scope.hasView = false;
-            // TODO: get this from the credential return
-            $scope.hasModify = true;
 
             if ($stateParams.credentialId) {
                 CredentialServices.get({'id': $stateParams.credentialId}).$promise.then(function(credentialServices) {
@@ -66,7 +63,6 @@
                             this.push({'key': key, 'value': value});
                         }, _credentialPairs);
                         credential.credentialPairs = _credentialPairs;
-                        $scope.hasView = true;
                     }
                     if (credential.credential_keys.length) {
                         $scope.hasMetadata = true;
@@ -98,8 +94,6 @@
                 };
                 credentialCopy = angular.copy($scope.credential);
                 $scope.shown = true;
-                $scope.hasView = true;
-                $scope.hasModify = true;
                 // TODO: need a hasCreate here, which we'd get determine
                 // based on config endpoint.
             }

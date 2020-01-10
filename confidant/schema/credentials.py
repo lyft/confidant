@@ -18,6 +18,7 @@ class CredentialResponse(object):
     metadata = attr.ib(default=dict)
     credential_keys = attr.ib(default=list)
     credential_pairs = attr.ib(default=dict)
+    permissions = attr.ib(default=dict)
 
     @classmethod
     def from_credential(
@@ -59,6 +60,7 @@ class CredentialResponseSchema(AutobuildSchema):
     documentation = fields.Str(required=True)
     modified_date = fields.DateTime(required=True)
     modified_by = fields.Str(required=True)
+    permissions = fields.Dict(keys=fields.Str(), values=fields.Boolean())
 
 
 @attr.s
@@ -93,7 +95,10 @@ class CredentialsResponseSchema(Schema):
 
     _class_to_load = CredentialsResponse
 
-    credentials = fields.Nested(CredentialResponseSchema, many=True)
+    credentials = fields.Nested(
+        CredentialResponseSchema,
+        many=True,
+    )
     next_page = fields.Str()
 
     @pre_dump
@@ -142,7 +147,10 @@ class RevisionsResponseSchema(Schema):
 
     _class_to_load = RevisionsResponse
 
-    revisions = fields.Nested(CredentialResponseSchema, many=True)
+    revisions = fields.Nested(
+        CredentialResponseSchema,
+        many=True,
+    )
     next_page = fields.Str()
 
     @pre_dump
