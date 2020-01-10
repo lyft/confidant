@@ -16,8 +16,8 @@
       <div class="btn-group dropdown col-md-3">
         <button type="button" class="btn dropdown-toggle call-to-action" data-toggle="dropdown" aria-expanded="false">Create <span class="glyphicon glyphicon-chevron-down glyphicon-xs"></span></small></span></button>
         <ul class="dropdown-menu" role="menu">
-          <li><a href="#/resources/new/credential">Create credential</a></li>
-          <li><a href="#/resources/new/service">Create service</a></li>
+          <li ng-show="globalPermissions.credentials.create"><a href="#/resources/new/credential">Create credential</a></li>
+          <li ng-show="globalPermissions.services.create"><a href="#/resources/new/service">Create service</a></li>
         </ul>
       </div>
     </div>

@@ -25,14 +25,19 @@
         '$scope', '$http', 'common.userinfo', 'common.clientconfig', '$log', '$transitions',
         function ConfidantMainCtrl($scope, $http, userinfo, clientconfig, $log, $transitions) {
 
-        $transitions.onSuccess({}, function(transition) {
-          $scope.viewLocation = transition.to().data.viewLocation;
+        // Load the clientconfig prior to transitioning to any module, as most modules require
+        // the clientconfig to load, and will fail otherwise.
+        $transitions.onBefore({}, function(transition) {
+          $scope.user = userinfo.get();
+          return clientconfig.get().$promise.then(function(clientConfig) {
+              $scope.clientconfig = clientConfig;
+              $http.defaults.xsrfCookieName = clientConfig.generated.xsrf_cookie_name;
+          });
         });
 
-        $scope.user = userinfo.get();
-        clientconfig.get().$promise.then(function(clientConfig) {
-            $scope.clientconfig = clientConfig;
-            $http.defaults.xsrfCookieName = clientConfig.generated.xsrf_cookie_name;
+        // Update the view location after a successful move between modules
+        $transitions.onSuccess({}, function(transition) {
+          $scope.viewLocation = transition.to().data.viewLocation;
         });
 
     }])

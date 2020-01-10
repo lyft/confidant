@@ -83,25 +83,12 @@
                     $scope.resourceArchive = ResourceArchiveService.getResourceArchive();
                 }
             });
-            // TODO: There's a race condition here, for some reason. We need to figure out how to
-            // wait until the clientconfig is loaded before calling this. For now we're using a gross
-            // timeout hack. client_config endpoint is fast, so it's very likely it'll be loaded within
-            // the time period
-            if (angular.isUndefined($scope.clientconfig)) {
-                $timeout(function() {
-                    ResourceArchiveService.setLimit($scope.clientconfig.generated.history_page_limit);
-                    ResourceArchiveService.initResourceArchive('credentials');
-                    ResourceArchiveService.initResourceArchive('blind_credentials');
-                    ResourceArchiveService.initResourceArchive('services');
-                }, 1000);
-            } else {
-                // When moving between resources and history, the client config already exists, so we
-                // can avoid the timeout.
-                ResourceArchiveService.setLimit($scope.clientconfig.generated.history_page_limit);
-                ResourceArchiveService.initResourceArchive('credentials');
-                ResourceArchiveService.initResourceArchive('blind_credentials');
-                ResourceArchiveService.initResourceArchive('services');
-            }
+            // When moving between resources and history, the client config already exists, so we
+            // can avoid the timeout.
+            ResourceArchiveService.setLimit($scope.clientconfig.generated.history_page_limit);
+            ResourceArchiveService.initResourceArchive('credentials');
+            ResourceArchiveService.initResourceArchive('blind_credentials');
+            ResourceArchiveService.initResourceArchive('services');
 
         }])
 
