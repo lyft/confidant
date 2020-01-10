@@ -215,6 +215,18 @@ def map_service_credentials(id):
         revision = 1
         _service = None
 
+    if revision == 1 and not acl_module_check(
+          resource_type='service',
+          action='create',
+          resource_id=id,
+    ):
+        msg = "{} does not have access to create service {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     data = request.get_json()
     credentials = data.get('credentials', [])
     blind_credentials = data.get('blind_credentials', [])
@@ -227,10 +239,9 @@ def map_service_credentials(id):
               'credential_ids': combined_credentials,
           }
     ):
-        msg = "{} does not have access to map service credential {}".format(
-            authnz.get_logged_in_user(),
-            id
-        )
+        msg = "{} does not have access to map the credentials " \
+              "because they do not own the credentials being added"\
+            .format(authnz.get_logged_in_user())
         error_msg = {'error': msg, 'reference': id}
         return jsonify(error_msg), 403
 
