@@ -313,6 +313,7 @@ def map_service_credentials(id):
         service.blind_credentials,
     )
     permissions = {
+        'create': True,
         'metadata': True,
         'get': True,
         'update': True,
