@@ -127,8 +127,7 @@ class Credential(Model):
     def credential_keys(self):
         return list(self.decrypted_credential_pairs)
 
-    @property
-    def decrypted_credential_pairs(self):
+    def _get_decrypted_credential_pairs(self):
         if self.data_type == 'credential':
             context = self.id
         else:
@@ -142,3 +141,7 @@ class Credential(Model):
         _credential_pairs = cipher.decrypt(self.credential_pairs)
         _credential_pairs = json.loads(_credential_pairs)
         return _credential_pairs
+
+    @property
+    def decrypted_credential_pairs(self):
+        return(self._get_decrypted_credential_pairs())
