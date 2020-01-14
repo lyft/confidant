@@ -410,7 +410,7 @@ def update_credential(id):
         include_credential_pairs=True,
     )
     credential_response.permissions = permissions
-    return credential_response_schema.dumps(permissions)
+    return credential_response_schema.dumps(credential_response)
 
 
 @blueprint.route('/v1/credentials/<id>/<to_revision>', methods=['PUT'])
