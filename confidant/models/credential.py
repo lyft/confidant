@@ -140,6 +140,7 @@ class Credential(Model):
         cipher = CipherManager(data_key, cipher_version)
         _credential_pairs = cipher.decrypt(self.credential_pairs)
         _credential_pairs = json.loads(_credential_pairs)
+        return _credential_pairs
 
     @property
     def decrypted_credential_pairs(self):
