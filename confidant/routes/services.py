@@ -158,9 +158,11 @@ def get_service(id):
 @authnz.require_auth
 def get_archive_service_revisions(id):
     if not acl_module_check(resource_type='service',
-                            action='list'):
-        msg = "{} does not have access to list services".format(
-            authnz.get_logged_in_user()
+                            action='metadata',
+                            resource_id=id):
+        msg = "{} does not have access to service {} revisions".format(
+            authnz.get_logged_in_user(),
+            id
         )
         error_msg = {'error': msg}
         return jsonify(error_msg), 403

@@ -144,9 +144,12 @@ def diff_credential(id, old_revision, new_revision):
 @blueprint.route('/v1/archive/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_archive_credential_revisions(id):
-    if not acl_module_check(resource_type='credential', action='list'):
-        msg = "{} does not have access to list credentials".format(
-            authnz.get_logged_in_user()
+    if not acl_module_check(resource_type='credential',
+                            action='metadata',
+                            resource_id=id):
+        msg = "{} does not have access to credential {} revisions".format(
+            authnz.get_logged_in_user(),
+            id
         )
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
