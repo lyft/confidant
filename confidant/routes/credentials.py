@@ -144,6 +144,13 @@ def diff_credential(id, old_revision, new_revision):
 @blueprint.route('/v1/archive/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_archive_credential_revisions(id):
+    if not acl_module_check(resource_type='credential', action='list'):
+        msg = "{} does not have access to list credentials".format(
+            authnz.get_logged_in_user()
+        )
+        error_msg = {'error': msg}
+        return jsonify(error_msg), 403
+
     try:
         cred = Credential.get(id)
     except DoesNotExist:
@@ -167,6 +174,13 @@ def get_archive_credential_revisions(id):
 @blueprint.route('/v1/archive/credentials', methods=['GET'])
 @authnz.require_auth
 def get_archive_credential_list():
+    if not acl_module_check(resource_type='credential', action='list'):
+        msg = "{} does not have access to list credentials".format(
+            authnz.get_logged_in_user()
+        )
+        error_msg = {'error': msg}
+        return jsonify(error_msg), 403
+
     limit = request.args.get(
         'limit',
         default=settings.HISTORY_PAGE_LIMIT,
@@ -278,6 +292,14 @@ def create_credential():
 @blueprint.route('/v1/credentials/<id>/services', methods=['GET'])
 @authnz.require_auth
 def get_credential_dependencies(id):
+    if not acl_module_check(resource_type='credential',
+                            action='metadata',
+                            resource_id=id):
+        msg = "{} does not have access to get dependencies for credential {}"
+        msg = msg.format(authnz.get_logged_in_user(), id)
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
     services = servicemanager.get_services_for_credential(id)
     _services = [{'id': x.id, 'enabled': x.enabled} for x in services]
     return jsonify({'services': _services})
