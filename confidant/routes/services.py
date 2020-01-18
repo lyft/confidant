@@ -31,6 +31,14 @@ acl_module_check = misc.load_module(settings.ACL_MODULE)
 @blueprint.route('/v1/roles', methods=['GET'])
 @authnz.require_auth
 def get_iam_roles_list():
+    if not acl_module_check(resource_type='service',
+                            action='list'):
+        msg = "{} does not have access to list services".format(
+            authnz.get_logged_in_user()
+        )
+        error_msg = {'error': msg}
+        return jsonify(error_msg), 403
+
     roles = iamrolemanager.get_iam_roles()
     return jsonify({'roles': roles})
 
@@ -149,6 +157,15 @@ def get_service(id):
 @blueprint.route('/v1/archive/services/<id>', methods=['GET'])
 @authnz.require_auth
 def get_archive_service_revisions(id):
+    if not acl_module_check(resource_type='service',
+                            action='metadata',
+                            resource_id=id):
+        msg = "{} does not have access to service {} revisions".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg}
+        return jsonify(error_msg), 403
     try:
         service = Service.get(id)
     except DoesNotExist:
@@ -172,6 +189,13 @@ def get_archive_service_revisions(id):
 @blueprint.route('/v1/archive/services', methods=['GET'])
 @authnz.require_auth
 def get_archive_service_list():
+    if not acl_module_check(resource_type='service',
+                            action='list'):
+        msg = "{} does not have access to list services".format(
+            authnz.get_logged_in_user()
+        )
+        error_msg = {'error': msg}
+        return jsonify(error_msg), 403
     limit = request.args.get(
         'limit',
         default=settings.HISTORY_PAGE_LIMIT,
@@ -239,9 +263,9 @@ def map_service_credentials(id):
               'credential_ids': combined_credentials,
           }
     ):
-        msg = "{} does not have access to map the credentials " \
-              "because they do not own the credentials being added"\
-            .format(authnz.get_logged_in_user())
+        msg = ("{} does not have access to map the credentials "
+               "because they do not own the credentials being added")
+        msg = msg.format(authnz.get_logged_in_user())
         error_msg = {'error': msg, 'reference': id}
         return jsonify(error_msg), 403
 
@@ -479,6 +503,21 @@ def diff_service(id, old_revision, new_revision):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def ensure_grants(id):
+    # we pass [] in for the credential IDs, because this action isn't related
+    # to adding or removing credentials, but just a generic update of a
+    # service.
+    if not acl_module_check(
+          resource_type='service',
+          action='update',
+          resource_id=id,
+          kwargs={
+              'credential_ids': [],
+          }
+    ):
+        msg = "{} does not have access to ensure grants for service {}"
+        msg = msg.format(authnz.get_logged_in_user(), id)
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
     try:
         _service = Service.get(id)
         if _service.data_type != 'service':
@@ -507,6 +546,15 @@ def ensure_grants(id):
 @blueprint.route('/v1/grants/<id>', methods=['GET'])
 @authnz.require_auth
 def get_grants(id):
+    if not acl_module_check(
+          resource_type='service',
+          action='metadata',
+          resource_id=id,
+    ):
+        msg = "{} does not have access to get grants for service {}"
+        msg = msg.format(authnz.get_logged_in_user(), id)
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
     try:
         _service = Service.get(id)
         if _service.data_type != 'service':
