@@ -7,7 +7,6 @@ from confidant.schema.auto_build_schema import AutobuildSchema
 
 @attr.s
 class CertificateResponse(object):
-    id = attr.ib()
     certificate = attr.ib()
     certificate_chain = attr.ib()
     key = attr.ib(default=None)

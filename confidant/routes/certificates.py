@@ -26,7 +26,7 @@ def get_certificate(cn):
         default=settings.ACM_PRIVATE_CA_MAX_VALIDITY_DAYS,
         type=int,
     )
-    san = request.args.getlist('san', default=[])
+    san = request.args.getlist('san')
     if authnz.user_is_user_type('service'):
         # TODO: acl check this, rather than checking service name matches
         if not authnz.user_is_service(cn):

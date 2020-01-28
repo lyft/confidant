@@ -29,6 +29,7 @@ def encode_key(key):
     return key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,
+        encryption_algorithm=serialization.NoEncryption(),
     )
 
 
@@ -116,7 +117,7 @@ def generate_self_signed_certificate(key, cn, validity, san=None):
     ).issuer_name(
         issuer,
     ).public_key(
-        key,
+        key.public_key(),
     ).serial_number(
         x509.random_serial_number(),
     ).not_valid_before(
@@ -142,7 +143,7 @@ def encode_certificate(cert):
 def issue_certificate(csr, validity):
     client = confidant.clients.get_boto_client('acm-pca')
     if csr not in TOKENS:
-        TOKENS[csr] = uuid.uuid4()
+        TOKENS[csr] = str(uuid.uuid4())
     response = client.issue_certificate(
         CertificateAuthorityArn=settings.ACM_PRIVATE_CA_ARN,
         Csr=csr,
@@ -177,7 +178,7 @@ def issue_certificate_with_key(cn, validity, san=None):
             'key': encoded_key,
         }
     csr = generate_csr(key, cn, san)
-    response = issue_and_get_certificate(csr, validity)
+    response = issue_and_get_certificate(encode_csr(csr), validity)
     response['key'] = encoded_key
     return response
 

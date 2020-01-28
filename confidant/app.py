@@ -8,6 +8,7 @@ from flask_sslify import SSLify
 from confidant import settings
 from confidant.routes import (
     blind_credentials,
+    certificates,
     credentials,
     identity,
     saml,
@@ -54,6 +55,7 @@ def create_app():
 
     app.register_blueprint(blind_credentials.blueprint)
     app.register_blueprint(credentials.blueprint)
+    app.register_blueprint(certificates.blueprint)
     app.register_blueprint(identity.blueprint)
     app.register_blueprint(saml.blueprint)
     app.register_blueprint(services.blueprint)
