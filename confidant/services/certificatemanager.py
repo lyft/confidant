@@ -1,4 +1,5 @@
 import hashlib
+import time
 
 import datetime
 
@@ -199,10 +200,11 @@ def issue_certificate(csr, validity):
             'Value': min(validity, settings.ACM_PRIVATE_CA_MAX_VALIDITY_DAYS),
             'Type': 'DAYS',
         },
-        # Quick/easy idempotent token is just a hash of the csr itself.
-        IdempotencyToken=hashlib.sha256(csr).hexdigest(),
+        # Quick/easy idempotent token is just a hash of the csr itself. The
+        # token must be 36 chars or less.
+        IdempotencyToken=hashlib.sha256(csr).hexdigest()[:36],
     )
-    return get_certificate_from_arn(response['CertificateArn'])
+    return response['CertificateArn']
 
 
 def issue_and_get_certificate(csr, validity):
@@ -246,10 +248,17 @@ def get_certificate_from_arn(certificate_arn):
     Get the PEM encoded certificate from the provided ARN.
     """
     client = confidant.clients.get_boto_client('acm-pca')
-    response = client.get_certificate(
-        CertificateAuthorityArn=settings.ACM_PRIVATE_CA_ARN,
-        CertificateArn=certificate_arn,
-    )
+    # When a certificate is issued, it may take a while before it's available
+    # via get_certificate. We need to keep retrying until it's fully issued.
+    while True:
+        try:
+            response = client.get_certificate(
+                CertificateAuthorityArn=settings.ACM_PRIVATE_CA_ARN,
+                CertificateArn=certificate_arn,
+            )
+            break
+        except client.exceptions.RequestInProgressException:
+            time.sleep(.200)
     return response
 
 
