@@ -94,6 +94,8 @@ def get_certificate_from_csr():
         default=settings.ACM_PRIVATE_CA_MAX_VALIDITY_DAYS,
         type=int,
     )
+    # Get the cn and san values from the csr object, so that we can use them
+    # for the ACL check.
     cn = certificatemanager.get_csr_common_name(csr)
     san = certificatemanager.get_csr_san(csr)
     if authnz.user_is_user_type('service'):
@@ -126,7 +128,10 @@ def get_certificate_from_csr():
                 logged_in_user,
             )
         )
-    certificate = certificatemanager.issue_certificate(cn, validity)
+    certificate = certificatemanager.issue_and_get_certificate(
+        data['csr'],
+        validity,
+    )
     certificate_response = CertificateResponse(
         certificate=certificate['certificate'],
         certificate_chain=certificate['certificate_chain'],

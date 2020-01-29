@@ -1,3 +1,4 @@
+import hashlib
 import uuid
 
 import datetime
@@ -12,10 +13,11 @@ from cryptography.x509.oid import NameOID
 import confidant.clients
 from confidant import settings
 
-TOKENS = {}
-
 
 def generate_key():
+    """
+    Generate and return a private RSA key object
+    """
     key = rsa.generate_private_key(
         public_exponent=settings.ACM_PRIVATE_CA_KEY_PUBLIC_EXPONENT_SIZE,
         key_size=settings.ACM_PRIVATE_CA_KEY_SIZE,
@@ -25,6 +27,9 @@ def generate_key():
 
 
 def encode_key(key):
+    """
+    Return the PEM encoded version of the provided private RSA key object
+    """
     return key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,
@@ -33,6 +38,10 @@ def encode_key(key):
 
 
 def generate_x509_name(cn):
+    """
+    For the given common name string, generate and return an x509.Name, with
+    attributes configured in the settings.
+    """
     name_attributes = [
         x509.NameAttribute(NameOID.COMMON_NAME, cn),
     ]
@@ -40,41 +49,43 @@ def generate_x509_name(cn):
         name_attributes.append(
             x509.NameAttribute(
                 NameOID.COUNTRY_NAME,
-                settings.ACM_PRIVATE_CA_CSR_COUNTRY_NAME
+                settings.ACM_PRIVATE_CA_CSR_COUNTRY_NAME,
             )
         )
     if settings.ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME:
         name_attributes.append(
             x509.NameAttribute(
                 NameOID.STATE_OR_PROVINCE_NAME,
-                settings.ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME
+                settings.ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME,
             )
         )
     if settings.ACM_PRIVATE_CA_CSR_LOCALITY_NAME:
         name_attributes.append(
             x509.NameAttribute(
                 NameOID.LOCALITY_NAME,
-                settings.LOCALITY_NAME
+                settings.ACM_PRIVATE_CA_CSR_LOCALITY_NAME,
             )
         )
     if settings.ACM_PRIVATE_CA_CSR_ORGANIZATION_NAME:
         name_attributes.append(
             x509.NameAttribute(
                 NameOID.ORGANIZATION_NAME,
-                settings.ORGANIZATION_NAME
+                settings.ACM_PRIVATE_CA_CSR_ORGANIZATION_NAME,
             )
         )
     return x509.Name(name_attributes)
 
 
 def generate_csr(key, cn, san=None):
+    """
+    Using the provided rsa key object, a string common name, and a list of
+    string subject alternative names, generate and return a csr object.
+    """
     csr = x509.CertificateSigningRequestBuilder().subject_name(
         generate_x509_name(cn)
     )
     if san:
-        dns_names = []
-        for dns_name in san:
-            dns_names.append(x509.DNSName(dns_name))
+        dns_names = encode_san_dns_names(san)
         csr = csr.add_extension(
             x509.SubjectAlternativeName(dns_names),
             critical=False,
@@ -83,21 +94,37 @@ def generate_csr(key, cn, san=None):
 
 
 def encode_csr(csr):
+    """
+    Return a PEM string encoded version of the csr object.
+    """
     return csr.public_bytes(serialization.Encoding.PEM)
 
 
 def decode_csr(pem_csr):
+    """
+    Return a csr object from the pem encoded csr.
+    """
     return x509.load_pem_x509_csr(pem_csr, default_backend())
 
 
 def get_csr_common_name(csr):
+    """
+    From the provided csr object, return the string value of the common
+    name attribute.
+    """
     cns = csr.subject.get_attributes_for_oid(NameOID.COMMON_NAME)
     if cns:
+        # get_attributes_for_oid returns a list, but there should only be a
+        # single cn attribute, so just return the first item.
         return cns[0].value
     return None
 
 
 def get_csr_san(csr):
+    """
+    From the provided csr object, return a list of the string values of the
+    subjust alternative name extension.
+    """
     san = csr.extensions.get_extension_for_class(x509.SubjectAlternativeName)
     dns_names = []
     if san:
@@ -106,10 +133,28 @@ def get_csr_san(csr):
     return dns_names
 
 
+def encode_san_dns_names(san):
+    """
+    Return a list of x509.DNSName attributes from a list of strings.
+    """
+    dns_names = []
+    for dns_name in san:
+        dns_names.append(x509.DNSName(dns_name))
+    return dns_names
+
+
 def generate_self_signed_certificate(key, cn, validity, san=None):
+    """
+    Using the provided rsa key, a string common name, a validity (in number
+    of days), and a list of subject alternative names (as strings), generate
+    and return a signed certificate object.
+    """
     _validity = min(validity, settings.ACM_PRIVATE_CA_MAX_VALIDITY_DAYS)
     subject = generate_x509_name(cn)
     issuer = subject
+    # x509.CertificateBuilder functions return modified versions of the object,
+    # so it's weirdly meant to be chained as function calls, making this look
+    # weirdly javascript-like.
     cert = x509.CertificateBuilder(
     ).subject_name(
         subject,
@@ -125,9 +170,7 @@ def generate_self_signed_certificate(key, cn, validity, san=None):
         datetime.datetime.utcnow() + datetime.timedelta(days=_validity),
     )
     if san:
-        dns_names = []
-        for dns_name in san:
-            dns_names.append(x509.DNSName(dns_name))
+        dns_names = encode_san_dns_names(san)
         cert = cert.add_extension(
             x509.SubjectAlternativeName(dns_names),
             critical=False,
@@ -136,13 +179,19 @@ def generate_self_signed_certificate(key, cn, validity, san=None):
 
 
 def encode_certificate(cert):
+    """
+    Return the PEM string encoded version of the certificate object.
+    """
     return cert.public_bytes(serialization.Encoding.PEM)
 
 
 def issue_certificate(csr, validity):
+    """
+    Given a PEM encoded csr, and a validity for the certificate (in number of
+    days), issue a certificate from ACM Private CA, and return the ARN
+    of the issued certificate.
+    """
     client = confidant.clients.get_boto_client('acm-pca')
-    if csr not in TOKENS:
-        TOKENS[csr] = str(uuid.uuid4())
     response = client.issue_certificate(
         CertificateAuthorityArn=settings.ACM_PRIVATE_CA_ARN,
         Csr=csr,
@@ -151,12 +200,18 @@ def issue_certificate(csr, validity):
             'Value': min(validity, settings.ACM_PRIVATE_CA_MAX_VALIDITY_DAYS),
             'Type': 'DAYS',
         },
-        IdempotencyToken=TOKENS[csr],
+        # Quick/easy idempotent token is just a hash of the csr itself.
+        IdempotencyToken=hashlib.sha256(csr).hexdigest(),
     )
     return get_certificate_from_arn(response['CertificateArn'])
 
 
 def issue_and_get_certificate(csr, validity):
+    """
+    Given a PEM encoded csr, and a validity for the certificate (in number of
+    days), issue a certificate from ACM Private CA, and return a dict with
+    the PEM encoded certificate and certificate_chain.
+    """
     response = get_certificate_from_arn(issue_certificate(csr, validity))
     return {
         'certificate': response['Certificate'],
@@ -165,6 +220,11 @@ def issue_and_get_certificate(csr, validity):
 
 
 def issue_certificate_with_key(cn, validity, san=None):
+    """
+    Given the string common name, the validity length of the certificate (in
+    number of days), and a list of subject alternative names, return a dict
+    with the PEM encoded certificate, certificate chain, and private RSA key.
+    """
     key = generate_key()
     encoded_key = encode_key(key)
     if settings.ACM_PRIVATE_CA_SELF_SIGN:
@@ -183,6 +243,9 @@ def issue_certificate_with_key(cn, validity, san=None):
 
 
 def get_certificate_from_arn(certificate_arn):
+    """
+    Get the PEM encoded certificate from the provided ARN.
+    """
     client = confidant.clients.get_boto_client('acm-pca')
     response = client.get_certificate(
         CertificateAuthorityArn=settings.ACM_PRIVATE_CA_ARN,
@@ -192,6 +255,10 @@ def get_certificate_from_arn(certificate_arn):
 
 
 def get_certificate_authority_certificate():
+    """
+    Return the PEM encoded CA certificate and certificate chain from the CA
+    ARN.
+    """
     client = confidant.clients.get_boto_client('acm-pca')
     response = client.get_certificate_authority_certificate(
         CertificateAuthorityArn=settings.ACM_PRIVATE_CA_ARN,
