@@ -78,12 +78,12 @@ def get_certificate_from_csr():
     Get a certificate for the provided csr
     '''
     data = request.get_json()
-    if not data.get('csr'):
+    if not data or not data.get('csr'):
         return jsonify(
             {'error': 'csr must be provided in the POST body.'},
         ), 400
     try:
-        csr = certificatemanager.decode_csr(data['csr'])
+        csr = certificatemanager.decode_csr(data['csr'].encode('utf-8'))
     except Exception:
         logging.exception('Failed to decode PEM csr')
         return jsonify(
@@ -91,8 +91,7 @@ def get_certificate_from_csr():
         ), 400
     validity = data.get(
         'validity',
-        default=settings.ACM_PRIVATE_CA_MAX_VALIDITY_DAYS,
-        type=int,
+        settings.ACM_PRIVATE_CA_MAX_VALIDITY_DAYS,
     )
     # Get the cn and san values from the csr object, so that we can use them
     # for the ACL check.

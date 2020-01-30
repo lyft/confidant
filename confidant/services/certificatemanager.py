@@ -4,6 +4,7 @@ import time
 import datetime
 
 from cryptography import x509
+from cryptography.x509.extensions import ExtensionNotFound
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -125,8 +126,13 @@ def get_csr_san(csr):
     From the provided csr object, return a list of the string values of the
     subjust alternative name extension.
     """
-    san = csr.extensions.get_extension_for_class(x509.SubjectAlternativeName)
     dns_names = []
+    try:
+        san = csr.extensions.get_extension_for_class(
+            x509.SubjectAlternativeName
+        )
+    except ExtensionNotFound:
+        san = []
     if san:
         for dns_name in san.value:
             dns_names.append(dns_name.value)
