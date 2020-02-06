@@ -127,10 +127,8 @@ def get_certificate_from_csr():
                 logged_in_user,
             )
         )
-    certificate = certificatemanager.issue_and_get_certificate(
-        data['csr'],
-        validity,
-    )
+    arn = certificatemanager.issue_certificate(data['csr'], validity)
+    certificate = certificatemanager.get_certificate_from_arn(arn)
     certificate_response = CertificateResponse(
         certificate=certificate['certificate'],
         certificate_chain=certificate['certificate_chain'],

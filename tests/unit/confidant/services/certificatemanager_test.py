@@ -5,6 +5,26 @@ from cryptography.hazmat.primitives import hashes
 from confidant.services import certificatemanager
 
 
+def test_certificate_cache():
+    cache = certificatemanager.CertificateCache(5)
+    cache_id = cache.get_cache_id('test.example.com', 7, [])
+    cache.lock(cache_id)
+    item = cache.get(cache_id)
+    assert item.lock is True
+    cache.set_response(cache_id, {'test': 'me'})
+    assert item.response
+    cache.release(cache_id)
+    assert item.lock is False
+    # Cache size is 5, make sure if we stuff the cache, that the intial
+    # item is gone.
+    cache.lock(cache.get_cache_id('test1.example.com', 7, []))
+    cache.lock(cache.get_cache_id('test2.example.com', 7, []))
+    cache.lock(cache.get_cache_id('test3.example.com', 7, []))
+    cache.lock(cache.get_cache_id('test4.example.com', 7, []))
+    cache.lock(cache.get_cache_id('test5.example.com', 7, []))
+    assert cache.get(cache_id) is None
+
+
 def test_generate_key(mocker):
     mocker.patch('confidant.settings.ACM_PRIVATE_CA_KEY_SIZE', 1024)
     key = certificatemanager.generate_key()
@@ -160,20 +180,33 @@ def test_issue_certificate(mocker):
     assert certificatemanager.issue_certificate(encoded_csr, 7) == 'test'
 
 
-def test_issue_and_get_certificate(mocker):
+def test__get_cached_certificate_with_key(mocker):
     mocker.patch(
-        'confidant.services.certificatemanager.get_certificate_from_arn',
-        return_value={
-            'Certificate': 'test_certificate',
-            'CertificateChain': 'test_certificate_chain',
-        },
+        'confidant.settings.ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE',
+        False,
     )
-    mocker.patch('confidant.services.certificatemanager.issue_certificate')
-    key = certificatemanager.generate_key()
-    csr = certificatemanager.generate_csr(key, 'test.example.com', [])
-    data = certificatemanager.issue_and_get_certificate(csr, 7)
-    assert data['certificate'] == 'test_certificate'
-    assert data['certificate_chain'] == 'test_certificate_chain'
+    assert certificatemanager._get_cached_certificate_with_key('test') == {}
+    mocker.patch(
+        'confidant.settings.ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE',
+        True,
+    )
+    cache = certificatemanager.CertificateCache(10)
+    mocker.patch('confidant.services.certificatemanager.CERTIFICATES', cache)
+    assert certificatemanager._get_cached_certificate_with_key('test') == {}
+    cache.lock('test')
+    cache.set_response('test', {'hello': 'world'})
+    assert certificatemanager._get_cached_certificate_with_key('test') == {'hello': 'world'}  # noqa:E501
+    # test lock loop
+    cache.lock('test1')
+    item = mocker.MagicMock()
+    type(item).lock = mocker.PropertyMock(side_effect=[True, False])
+    type(item).response = mocker.PropertyMock(
+        side_effect=[None, {'hello': 'world'}]
+    )
+    cache.get = mocker.MagicMock(return_value=item)
+    time_mock = mocker.patch('time.sleep')
+    assert certificatemanager._get_cached_certificate_with_key('test1') == {'hello': 'world'}  # noqa:E501
+    assert time_mock.called is True
 
 
 def test_issue_certificate_with_key(mocker):
@@ -183,9 +216,26 @@ def test_issue_certificate_with_key(mocker):
     assert data['certificate_chain'].startswith(b'-----BEGIN CERTIFICATE-----')
     assert data['key'].startswith(b'-----BEGIN RSA PRIVATE KEY-----')
 
+    mocker.patch(
+        'confidant.services.certificatemanager.'
+        '_get_cached_certificate_with_key',
+        return_value={'hello': 'world'},
+    )
+    data = certificatemanager.issue_certificate_with_key('test.example.com', 7)
+    assert data == {'hello': 'world'}
+    mocker.patch(
+        'confidant.services.certificatemanager.'
+        '_get_cached_certificate_with_key',
+        return_value={},
+    )
+
     mocker.patch('confidant.settings.ACM_PRIVATE_CA_SELF_SIGN', False)
     mocker.patch(
-        'confidant.services.certificatemanager.issue_and_get_certificate',
+        'confidant.services.certificatemanager.issue_certificate',
+        return_value='test-arn',
+    )
+    mocker.patch(
+        'confidant.services.certificatemanager.get_certificate_from_arn',
         return_value={
             'certificate': 'test_certificate',
             'certificate_chain': 'test_certificate_chain',
@@ -204,11 +254,14 @@ def test_get_certificate_from_arn_no_exception(mocker):
         autospec=True,
     )
     get_certificate_mock = mocker.MagicMock()
-    get_certificate_mock.get_certificate.return_value = 'test'
+    get_certificate_mock.get_certificate.return_value = {
+        'Certificate': 'test',
+        'CertificateChain': 'test_chain',
+    }
     client_mock.return_value = get_certificate_mock
     data = certificatemanager.get_certificate_from_arn('test_arn')
     assert time_mock.called is False
-    assert data == 'test'
+    assert data == {'certificate': 'test', 'certificate_chain': 'test_chain'}
 
 
 def test_get_certificate_from_arn_with_exception(mocker):
@@ -224,12 +277,12 @@ def test_get_certificate_from_arn_with_exception(mocker):
     get_certificate_mock.exceptions.RequestInProgressException = RequestInProgressException  # noqa:E501
     get_certificate_mock.get_certificate.side_effect = [
         RequestInProgressException(),
-        'test',
+        {'Certificate': 'test', 'CertificateChain': 'test_chain'},
     ]
     client_mock.return_value = get_certificate_mock
     data = certificatemanager.get_certificate_from_arn('test_arn')
     assert time_mock.called is True
-    assert data == 'test'
+    assert data == {'certificate': 'test', 'certificate_chain': 'test_chain'}
 
 
 def test_get_certificate_authority_certificate(mocker):

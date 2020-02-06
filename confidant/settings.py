@@ -518,6 +518,19 @@ ACM_PRIVATE_CA_KEY_PUBLIC_EXPONENT_SIZE = int_env(
     'ACM_PRIVATE_CA_KEY_PUBLIC_EXPONENT_SIZE',
     65537,
 )
+# Whether or not to cache certificates, when generating key/csr/certificates
+# and calling into ACM private CA to issue certificates.
+ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE = bool_env(
+    'ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE',
+    True,
+)
+# Number of certificates to cache, when generating key/csr/certificates and
+# calling into ACM private CA to issue certificates. This should be high
+# enough to cache all concurrent certificates being issued at one time.
+ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE = int_env(
+    'ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE',
+    1028,
+)
 
 
 # Configuration validation

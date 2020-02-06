@@ -1,7 +1,7 @@
-import hashlib
-import time
-
 import datetime
+import hashlib
+import logging
+import time
 
 from cryptography import x509
 from cryptography.x509.extensions import ExtensionNotFound
@@ -9,10 +9,81 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
-
+from lru import LRU
 
 import confidant.clients
 from confidant import settings
+
+
+class CachedCertificate(object):
+    def __init__(self, lock=False, response=None):
+        self._lock = lock
+        self._response = response
+
+    @property
+    def lock(self):
+        return self._lock
+
+    @lock.setter
+    def lock(self, value):
+        self._lock = value
+
+    @property
+    def response(self):
+        return self._response
+
+    @response.setter
+    def response(self, value):
+        self._response = value
+
+
+class CertificateCache(object):
+    def __init__(self, cache_size):
+        self.certificates = LRU(cache_size)
+
+    def get(self, cache_id):
+        """
+        Get the CachedCertificate for the given cache_id.
+        """
+        return self.certificates.get(cache_id)
+
+    def lock(self, cache_id):
+        """
+        Lock the CachedCertificate for the given cache_id. If the id is not in
+        the cache, create a CachedCertificate for the cache_id, add it to the
+        cache, and lock it.
+        """
+        if cache_id in self.certificates:
+            self.certificates[cache_id].lock = True
+        else:
+            self.certificates[cache_id] = CachedCertificate(
+                lock=True,
+                response=None,
+            )
+
+    def release(self, cache_id):
+        if cache_id in self.certificates:
+            self.certificates[cache_id].lock = False
+        else:
+            logging.warning(
+                'Attempting to release a non-existent lock in the certificate'
+                ' cache.'
+            )
+
+    def set_response(self, cache_id, response):
+        self.certificates[cache_id].response = response
+
+    def get_cache_id(self, cn, validity, san):
+        """
+        Return a unique string from the provided arguments, for use in the
+        certificate cache. The current day is included in the id, to ensure
+        cache invalidation (minumum validity is 1 day).
+        """
+        date = datetime.datetime.today().strftime('%Y-%m-%d')
+        return '{}{}{}{}'.format(cn, validity, san, date)
+
+
+CERTIFICATES = CertificateCache(settings.ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE)
 
 
 def generate_key():
@@ -213,17 +284,35 @@ def issue_certificate(csr, validity):
     return response['CertificateArn']
 
 
-def issue_and_get_certificate(csr, validity):
+def _get_cached_certificate_with_key(cache_id):
     """
-    Given a PEM encoded csr, and a validity for the certificate (in number of
-    days), issue a certificate from ACM Private CA, and return a dict with
-    the PEM encoded certificate and certificate_chain.
+    For the cache id, get the cached response, or, if another thread is in the
+    process of issuing the same certificate, wait for the other thread to
+    populate the cache.
     """
-    response = get_certificate_from_arn(issue_certificate(csr, validity))
-    return {
-        'certificate': response['Certificate'],
-        'certificate_chain': response['CertificateChain'],
-    }
+    if not settings.ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE:
+        return {}
+    cache = CERTIFICATES.get(cache_id)
+    # We're the first thread attempting to get this certificate
+    if not cache:
+        return {}
+    # A certificate hasn't been issued yet, but since the cache id exists,
+    # another thread has requested the certificate.
+    if not cache.response:
+        # Wait for response
+        while True:
+            # keep waiting while the lock is held.
+            if cache.lock:
+                logging.debug(
+                    'Sleeping in _get_cached_certificate_with_key'
+                    ' for {}'.format(cache_id)
+                )
+                time.sleep(.100)
+            else:
+                break
+    # If the other thread failed to get the certificate, we need to ensure
+    # that this thread attempts to fetch a certificate.
+    return cache.response
 
 
 def issue_certificate_with_key(cn, validity, san=None):
@@ -232,6 +321,11 @@ def issue_certificate_with_key(cn, validity, san=None):
     number of days), and a list of subject alternative names, return a dict
     with the PEM encoded certificate, certificate chain, and private RSA key.
     """
+    cache_id = CERTIFICATES.get_cache_id(cn, validity, san)
+    cached_response = _get_cached_certificate_with_key(cache_id)
+    if cached_response:
+        logging.debug('Used cached response for {}'.format(cache_id))
+        return cached_response
     key = generate_key()
     encoded_key = encode_key(key)
     if settings.ACM_PRIVATE_CA_SELF_SIGN:
@@ -244,8 +338,16 @@ def issue_certificate_with_key(cn, validity, san=None):
             'key': encoded_key,
         }
     csr = generate_csr(key, cn, san)
-    response = issue_and_get_certificate(encode_csr(csr), validity)
-    response['key'] = encoded_key
+    try:
+        # set a lock
+        CERTIFICATES.lock(cache_id)
+        arn = issue_certificate(encode_csr(csr), validity)
+        response = get_certificate_from_arn(arn)
+        response['key'] = encoded_key
+        CERTIFICATES.set_response(cache_id, response)
+    finally:
+        # release the lock
+        CERTIFICATES.release(cache_id)
     return response
 
 
@@ -264,8 +366,16 @@ def get_certificate_from_arn(certificate_arn):
             )
             break
         except client.exceptions.RequestInProgressException:
+            logging.debug(
+                'Sleeping in get_certificate_from_arn for {}'.format(
+                    certificate_arn,
+                )
+            )
             time.sleep(.200)
-    return response
+    return {
+        'certificate': response['Certificate'],
+        'certificate_chain': response['CertificateChain'],
+    }
 
 
 def get_certificate_authority_certificate():
