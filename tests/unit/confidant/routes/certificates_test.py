@@ -146,7 +146,12 @@ def test_get_certificate_from_csr(mocker):
     )
     mocker.patch(
         ('confidant.routes.certificates.certificatemanager'
-         '.issue_and_get_certificate'),
+         '.issue_certificate'),
+        return_value='test-arn',
+    )
+    mocker.patch(
+        ('confidant.routes.certificates.certificatemanager'
+         '.get_certificate_from_arn'),
         return_value={
             'certificate': 'test_certificate',
             'certificate_chain': 'test_certificate_chain',
