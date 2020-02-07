@@ -134,12 +134,18 @@ statsd==3.2.1
 # License: Apache2
 # Upstream url: https://github.com/lyft/python-kmsauth
 # Use: kmsauth support library
-kmsauth==0.5.0
+kmsauth==0.6.0
 
 # License: Apache2
 # Upstream url: https://pypi.python.org/pypi/toasted-marshmallow
 # Use: input/output validation and json serialization
 toastedmarshmallow==2.15.2.post1
+
+# A fixed size dict like container which evicts Least Recently Used (LRU)
+# items once size limit is exceeded.
+# License: MIT
+# Use: more-efficient LRU dictionary implementation
+lru-dict==1.1.6
 
 # Testing library
 # License: MIT

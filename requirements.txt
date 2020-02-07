@@ -38,7 +38,8 @@ isodate==0.6.0            # via python3-saml
 itsdangerous==1.1.0       # via flask
 jinja2==2.10.1            # via flask
 jmespath==0.9.4           # via boto3, botocore
-kmsauth==0.5.0
+kmsauth==0.6.0
+lru-dict==1.1.6
 lxml==4.4.1               # via xmlsec
 markupsafe==1.1.1         # via jinja2
 mock==2.0.0               # via pytest-mock
