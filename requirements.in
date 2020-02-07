@@ -48,7 +48,7 @@ cffi>1.10.0
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
 # Use: For shared sessions
-Flask-Session==0.2.1
+Flask-Session==0.2.3
 
 # Redis
 # License: MIT

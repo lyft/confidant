@@ -19,7 +19,7 @@ cryptography==2.7
 defusedxml==0.6.0         # via python3-saml
 docutils==0.15.2          # via botocore
 flask-script==2.0.5
-flask-session==0.2.1
+flask-session==0.2.3
 flask-sslify==0.1.5
 flask==1.1.1
 gevent==1.2.1
