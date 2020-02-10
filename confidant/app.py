@@ -44,7 +44,7 @@ def create_app():
 
     if settings.REDIS_URL:
         import redis
-        from flask.ext.session import Session
+        from flask_session import Session
         app.config['SESSION_REDIS'] = redis.Redis.from_url(
             settings.REDIS_URL
         )

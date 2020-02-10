@@ -22,7 +22,7 @@ defusedxml==0.6.0         # via python3-saml
 docutils==0.15.2          # via botocore
 enum34==1.1.6             # via cryptography
 flask-script==2.0.5
-flask-session==0.2.1
+flask-session==0.2.3
 flask-sslify==0.1.5
 flask==1.1.1
 funcsigs==1.0.2           # via mock, pytest
