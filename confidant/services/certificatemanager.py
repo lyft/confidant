@@ -83,308 +83,315 @@ class CertificateCache(object):
         return '{}{}{}{}'.format(cn, validity, san, date)
 
 
-CERTIFICATES = CertificateCache(settings.ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE)
+class CertificateAuthorityNotFoundError(Exception):
+    pass
 
 
-def generate_key():
-    """
-    Generate and return a private RSA key object
-    """
-    key = rsa.generate_private_key(
-        public_exponent=settings.ACM_PRIVATE_CA_KEY_PUBLIC_EXPONENT_SIZE,
-        key_size=settings.ACM_PRIVATE_CA_KEY_SIZE,
-        backend=default_backend()
-    )
-    return key
-
-
-def encode_key(key):
-    """
-    Return the PEM encoded version of the provided private RSA key object
-    """
-    return key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption(),
-    )
-
-
-def generate_x509_name(cn):
-    """
-    For the given common name string, generate and return an x509.Name, with
-    attributes configured in the settings.
-    """
-    name_attributes = [
-        x509.NameAttribute(NameOID.COMMON_NAME, cn),
-    ]
-    if settings.ACM_PRIVATE_CA_CSR_COUNTRY_NAME:
-        name_attributes.append(
-            x509.NameAttribute(
-                NameOID.COUNTRY_NAME,
-                settings.ACM_PRIVATE_CA_CSR_COUNTRY_NAME,
-            )
-        )
-    if settings.ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME:
-        name_attributes.append(
-            x509.NameAttribute(
-                NameOID.STATE_OR_PROVINCE_NAME,
-                settings.ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME,
-            )
-        )
-    if settings.ACM_PRIVATE_CA_CSR_LOCALITY_NAME:
-        name_attributes.append(
-            x509.NameAttribute(
-                NameOID.LOCALITY_NAME,
-                settings.ACM_PRIVATE_CA_CSR_LOCALITY_NAME,
-            )
-        )
-    if settings.ACM_PRIVATE_CA_CSR_ORGANIZATION_NAME:
-        name_attributes.append(
-            x509.NameAttribute(
-                NameOID.ORGANIZATION_NAME,
-                settings.ACM_PRIVATE_CA_CSR_ORGANIZATION_NAME,
-            )
-        )
-    return x509.Name(name_attributes)
-
-
-def generate_csr(key, cn, san=None):
-    """
-    Using the provided rsa key object, a string common name, and a list of
-    string subject alternative names, generate and return a csr object.
-    """
-    csr = x509.CertificateSigningRequestBuilder().subject_name(
-        generate_x509_name(cn)
-    )
-    if san:
-        dns_names = encode_san_dns_names(san)
-        csr = csr.add_extension(
-            x509.SubjectAlternativeName(dns_names),
-            critical=False,
-        )
-    return csr.sign(key, hashes.SHA256(), default_backend())
-
-
-def encode_csr(csr):
-    """
-    Return a PEM string encoded version of the csr object.
-    """
-    return csr.public_bytes(serialization.Encoding.PEM)
-
-
-def decode_csr(pem_csr):
-    """
-    Return a csr object from the pem encoded csr.
-    """
-    return x509.load_pem_x509_csr(pem_csr, default_backend())
-
-
-def get_csr_common_name(csr):
-    """
-    From the provided csr object, return the string value of the common
-    name attribute.
-    """
-    cns = csr.subject.get_attributes_for_oid(NameOID.COMMON_NAME)
-    if cns:
-        # get_attributes_for_oid returns a list, but there should only be a
-        # single cn attribute, so just return the first item.
-        return cns[0].value
-    return None
-
-
-def get_csr_san(csr):
-    """
-    From the provided csr object, return a list of the string values of the
-    subjust alternative name extension.
-    """
-    dns_names = []
-    try:
-        san = csr.extensions.get_extension_for_class(
-            x509.SubjectAlternativeName
-        )
-    except ExtensionNotFound:
-        san = []
-    if san:
-        for dns_name in san.value:
-            dns_names.append(dns_name.value)
-    return dns_names
-
-
-def encode_san_dns_names(san):
-    """
-    Return a list of x509.DNSName attributes from a list of strings.
-    """
-    dns_names = []
-    for dns_name in san:
-        dns_names.append(x509.DNSName(dns_name))
-    return dns_names
-
-
-def generate_self_signed_certificate(key, cn, validity, san=None):
-    """
-    Using the provided rsa key, a string common name, a validity (in number
-    of days), and a list of subject alternative names (as strings), generate
-    and return a signed certificate object.
-    """
-    _validity = min(validity, settings.ACM_PRIVATE_CA_MAX_VALIDITY_DAYS)
-    subject = generate_x509_name(cn)
-    issuer = subject
-    # x509.CertificateBuilder functions return modified versions of the object,
-    # so it's weirdly meant to be chained as function calls, making this look
-    # weirdly javascript-like.
-    cert = x509.CertificateBuilder(
-    ).subject_name(
-        subject,
-    ).issuer_name(
-        issuer,
-    ).public_key(
-        key.public_key(),
-    ).serial_number(
-        x509.random_serial_number(),
-    ).not_valid_before(
-        datetime.datetime.utcnow(),
-    ).not_valid_after(
-        datetime.datetime.utcnow() + datetime.timedelta(days=_validity),
-    )
-    if san:
-        dns_names = encode_san_dns_names(san)
-        cert = cert.add_extension(
-            x509.SubjectAlternativeName(dns_names),
-            critical=False,
-        )
-    return cert.sign(key, hashes.SHA256(), default_backend())
-
-
-def encode_certificate(cert):
-    """
-    Return the PEM string encoded version of the certificate object.
-    """
-    return cert.public_bytes(serialization.Encoding.PEM)
-
-
-def issue_certificate(csr, validity):
-    """
-    Given a PEM encoded csr, and a validity for the certificate (in number of
-    days), issue a certificate from ACM Private CA, and return the ARN
-    of the issued certificate.
-    """
-    client = confidant.clients.get_boto_client('acm-pca')
-    response = client.issue_certificate(
-        CertificateAuthorityArn=settings.ACM_PRIVATE_CA_ARN,
-        Csr=csr,
-        SigningAlgorithm=settings.ACM_PRIVATE_CA_SIGNING_ALGORITHM,
-        Validity={
-            'Value': min(validity, settings.ACM_PRIVATE_CA_MAX_VALIDITY_DAYS),
-            'Type': 'DAYS',
-        },
-        # Quick/easy idempotent token is just a hash of the csr itself. The
-        # token must be 36 chars or less.
-        IdempotencyToken=hashlib.sha256(csr).hexdigest()[:36],
-    )
-    return response['CertificateArn']
-
-
-def _get_cached_certificate_with_key(cache_id):
-    """
-    For the cache id, get the cached response, or, if another thread is in the
-    process of issuing the same certificate, wait for the other thread to
-    populate the cache.
-    """
-    if not settings.ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE:
-        return {}
-    cache = CERTIFICATES.get(cache_id)
-    # We're the first thread attempting to get this certificate
-    if not cache:
-        return {}
-    # A certificate hasn't been issued yet, but since the cache id exists,
-    # another thread has requested the certificate.
-    if not cache.response:
-        # Wait for response
-        while True:
-            # keep waiting while the lock is held.
-            if cache.lock:
-                logging.debug(
-                    'Sleeping in _get_cached_certificate_with_key'
-                    ' for {}'.format(cache_id)
-                )
-                time.sleep(.100)
-            else:
-                break
-    # If the other thread failed to get the certificate, we need to ensure
-    # that this thread attempts to fetch a certificate.
-    return cache.response
-
-
-def issue_certificate_with_key(cn, validity, san=None):
-    """
-    Given the string common name, the validity length of the certificate (in
-    number of days), and a list of subject alternative names, return a dict
-    with the PEM encoded certificate, certificate chain, and private RSA key.
-    """
-    cache_id = CERTIFICATES.get_cache_id(cn, validity, san)
-    cached_response = _get_cached_certificate_with_key(cache_id)
-    if cached_response:
-        logging.debug('Used cached response for {}'.format(cache_id))
-        return cached_response
-    key = generate_key()
-    encoded_key = encode_key(key)
-    if settings.ACM_PRIVATE_CA_SELF_SIGN:
-        cert = encode_certificate(
-            generate_self_signed_certificate(key, cn, validity, san)
-        )
-        return {
-            'certificate': cert,
-            'certificate_chain': cert,
-            'key': encoded_key,
-        }
-    csr = generate_csr(key, cn, san)
-    try:
-        # set a lock
-        CERTIFICATES.lock(cache_id)
-        arn = issue_certificate(encode_csr(csr), validity)
-        response = get_certificate_from_arn(arn)
-        response['key'] = encoded_key
-        CERTIFICATES.set_response(cache_id, response)
-    finally:
-        # release the lock
-        CERTIFICATES.release(cache_id)
-    return response
-
-
-def get_certificate_from_arn(certificate_arn):
-    """
-    Get the PEM encoded certificate from the provided ARN.
-    """
-    client = confidant.clients.get_boto_client('acm-pca')
-    # When a certificate is issued, it may take a while before it's available
-    # via get_certificate. We need to keep retrying until it's fully issued.
-    while True:
+class CertificateAuthority(object):
+    def __init__(self, ca):
         try:
-            response = client.get_certificate(
-                CertificateAuthorityArn=settings.ACM_PRIVATE_CA_ARN,
-                CertificateArn=certificate_arn,
-            )
-            break
-        except client.exceptions.RequestInProgressException:
-            logging.debug(
-                'Sleeping in get_certificate_from_arn for {}'.format(
-                    certificate_arn,
+            self.settings = settings.ACM_PRIVATE_CA_SETTINGS[ca]
+        except KeyError:
+            raise CertificateAuthorityNotFoundError()
+        self.cache = CertificateCache(
+            self.settings['certificate_cache_size'],
+        )
+
+    def generate_key(self):
+        """
+        Generate and return a private RSA key object
+        """
+        key = rsa.generate_private_key(
+            public_exponent=self.settings['key_public_exponent_size'],
+            key_size=self.settings['key_size'],
+            backend=default_backend()
+        )
+        return key
+
+    def encode_key(self, key):
+        """
+        Return the PEM encoded version of the provided private RSA key object
+        """
+        return key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.TraditionalOpenSSL,
+            encryption_algorithm=serialization.NoEncryption(),
+        )
+
+    def generate_x509_name(self, cn):
+        """
+        For the given common name string, generate and return an x509.Name, with
+        attributes configured in the settings.
+        """
+        name_attributes = [
+            x509.NameAttribute(NameOID.COMMON_NAME, cn),
+        ]
+        if self.settings['csr_country_name']:
+            name_attributes.append(
+                x509.NameAttribute(
+                    NameOID.COUNTRY_NAME,
+                    self.settings['csr_country_name'],
                 )
             )
-            time.sleep(.200)
-    return {
-        'certificate': response['Certificate'],
-        'certificate_chain': response['CertificateChain'],
-    }
+        if self.settings['csr_state_or_province_name']:
+            name_attributes.append(
+                x509.NameAttribute(
+                    NameOID.STATE_OR_PROVINCE_NAME,
+                    self.settings['csr_state_or_province_name'],
+                )
+            )
+        if self.settings['csr_locality_name']:
+            name_attributes.append(
+                x509.NameAttribute(
+                    NameOID.LOCALITY_NAME,
+                    self.settings['csr_locality_name'],
+                )
+            )
+        if self.settings['csr_organization_name']:
+            name_attributes.append(
+                x509.NameAttribute(
+                    NameOID.ORGANIZATION_NAME,
+                    self.settings['csr_organization_name'],
+                )
+            )
+        return x509.Name(name_attributes)
+
+    def generate_csr(self, key, cn, san=None):
+        """
+        Using the provided rsa key object, a string common name, and a list of
+        string subject alternative names, generate and return a csr object.
+        """
+        csr = x509.CertificateSigningRequestBuilder().subject_name(
+            self.generate_x509_name(cn)
+        )
+        if san:
+            dns_names = self.encode_san_dns_names(san)
+            csr = csr.add_extension(
+                x509.SubjectAlternativeName(dns_names),
+                critical=False,
+            )
+        return csr.sign(key, hashes.SHA256(), default_backend())
+
+    def encode_csr(self, csr):
+        """
+        Return a PEM string encoded version of the csr object.
+        """
+        return csr.public_bytes(serialization.Encoding.PEM)
+
+    def decode_csr(self, pem_csr):
+        """
+        Return a csr object from the pem encoded csr.
+        """
+        return x509.load_pem_x509_csr(pem_csr, default_backend())
+
+    def get_csr_common_name(self, csr):
+        """
+        From the provided csr object, return the string value of the common
+        name attribute.
+        """
+        cns = csr.subject.get_attributes_for_oid(NameOID.COMMON_NAME)
+        if cns:
+            # get_attributes_for_oid returns a list, but there should only be a
+            # single cn attribute, so just return the first item.
+            return cns[0].value
+        return None
+
+    def get_csr_san(self, csr):
+        """
+        From the provided csr object, return a list of the string values of the
+        subjust alternative name extension.
+        """
+        dns_names = []
+        try:
+            san = csr.extensions.get_extension_for_class(
+                x509.SubjectAlternativeName
+            )
+        except ExtensionNotFound:
+            san = []
+        if san:
+            for dns_name in san.value:
+                dns_names.append(dns_name.value)
+        return dns_names
+
+    def encode_san_dns_names(self, san):
+        """
+        Return a list of x509.DNSName attributes from a list of strings.
+        """
+        dns_names = []
+        for dns_name in san:
+            dns_names.append(x509.DNSName(dns_name))
+        return dns_names
+
+    def generate_self_signed_certificate(self, key, cn, validity, san=None):
+        """
+        Using the provided rsa key, a string common name, a validity (in number
+        of days), and a list of subject alternative names (as strings), generate
+        and return a signed certificate object.
+        """
+        _validity = min(validity, self.settings['max_validity_days'])
+        subject = self.generate_x509_name(cn)
+        issuer = subject
+        # x509.CertificateBuilder functions return modified versions of the
+        # object, so it's weirdly meant to be chained as function calls, making
+        # this look weirdly javascript-like.
+        cert = x509.CertificateBuilder(
+        ).subject_name(
+            subject,
+        ).issuer_name(
+            issuer,
+        ).public_key(
+            key.public_key(),
+        ).serial_number(
+            x509.random_serial_number(),
+        ).not_valid_before(
+            datetime.datetime.utcnow(),
+        ).not_valid_after(
+            datetime.datetime.utcnow() + datetime.timedelta(days=_validity),
+        )
+        if san:
+            dns_names = self.encode_san_dns_names(san)
+            cert = cert.add_extension(
+                x509.SubjectAlternativeName(dns_names),
+                critical=False,
+            )
+        return cert.sign(key, hashes.SHA256(), default_backend())
+
+    def encode_certificate(self, cert):
+        """
+        Return the PEM string encoded version of the certificate object.
+        """
+        return cert.public_bytes(serialization.Encoding.PEM)
+
+    def issue_certificate(self, csr, validity):
+        """
+        Given a PEM encoded csr, and a validity for the certificate (in number
+        of days), issue a certificate from ACM Private CA, and return the ARN
+        of the issued certificate.
+        """
+        client = confidant.clients.get_boto_client('acm-pca')
+        response = client.issue_certificate(
+            CertificateAuthorityArn=self.settings['arn'],
+            Csr=csr,
+            SigningAlgorithm=self.settings['signing_algorithm'],
+            Validity={
+                'Value': min(validity, self.settings['max_validity_days']),
+                'Type': 'DAYS',
+            },
+            # Quick/easy idempotent token is just a hash of the csr itself. The
+            # token must be 36 chars or less.
+            IdempotencyToken=hashlib.sha256(csr).hexdigest()[:36],
+        )
+        return response['CertificateArn']
+
+    def _get_cached_certificate_with_key(self, cache_id):
+        """
+        For the cache id, get the cached response, or, if another thread is in
+        the process of issuing the same certificate, wait for the other thread
+        to populate the cache.
+        """
+        if not self.settings['certificate_use_cache']:
+            return {}
+        item = self.cache.get(cache_id)
+        # We're the first thread attempting to get this certificate
+        if not item:
+            return {}
+        # A certificate hasn't been issued yet, but since the cache id exists,
+        # another thread has requested the certificate.
+        if not item.response:
+            # Wait for response
+            while True:
+                # keep waiting while the lock is held.
+                if item.lock:
+                    logging.debug(
+                        'Sleeping in _get_cached_certificate_with_key'
+                        ' for {}'.format(cache_id)
+                    )
+                    time.sleep(.100)
+                else:
+                    break
+        # If the other thread failed to get the certificate, we need to ensure
+        # that this thread attempts to fetch a certificate.
+        return item.response
+
+    def issue_certificate_with_key(self, cn, validity, san=None):
+        """
+        Given the string common name, the validity length of the certificate (in
+        number of days), and a list of subject alternative names, return a dict
+        with the PEM encoded certificate, certificate chain, and private RSA
+        key.
+        """
+        cache_id = self.cache.get_cache_id(cn, validity, san)
+        cached_response = self._get_cached_certificate_with_key(cache_id)
+        if cached_response:
+            logging.debug('Used cached response for {}'.format(cache_id))
+            return cached_response
+        key = self.generate_key()
+        encoded_key = self.encode_key(key)
+        if self.settings['self_sign']:
+            cert = self.encode_certificate(
+                self.generate_self_signed_certificate(key, cn, validity, san)
+            )
+            return {
+                'certificate': cert,
+                'certificate_chain': cert,
+                'key': encoded_key,
+            }
+        csr = self.generate_csr(key, cn, san)
+        try:
+            # set a lock
+            self.cache.lock(cache_id)
+            arn = self.issue_certificate(self.encode_csr(csr), validity)
+            response = self.get_certificate_from_arn(arn)
+            response['key'] = encoded_key
+            self.cache.set_response(cache_id, response)
+        finally:
+            # release the lock
+            self.cache.release(cache_id)
+        return response
+
+    def get_certificate_from_arn(self, certificate_arn):
+        """
+        Get the PEM encoded certificate from the provided ARN.
+        """
+        client = confidant.clients.get_boto_client('acm-pca')
+        # When a certificate is issued, it may take a while before it's
+        # available via get_certificate. We need to keep retrying until it's
+        # fully issued.
+        while True:
+            try:
+                response = client.get_certificate(
+                    CertificateAuthorityArn=self.settings['arn'],
+                    CertificateArn=certificate_arn,
+                )
+                break
+            except client.exceptions.RequestInProgressException:
+                logging.debug(
+                    'Sleeping in get_certificate_from_arn for {}'.format(
+                        certificate_arn,
+                    )
+                )
+                time.sleep(.200)
+        return {
+            'certificate': response['Certificate'],
+            'certificate_chain': response['CertificateChain'],
+        }
+
+    def get_certificate_authority_certificate(self):
+        """
+        Return the PEM encoded CA certificate and certificate chain from the CA
+        ARN.
+        """
+        client = confidant.clients.get_boto_client('acm-pca')
+        response = client.get_certificate_authority_certificate(
+            CertificateAuthorityArn=self.settings['arn'],
+        )
+        return response
 
 
-def get_certificate_authority_certificate():
-    """
-    Return the PEM encoded CA certificate and certificate chain from the CA
-    ARN.
-    """
-    client = confidant.clients.get_boto_client('acm-pca')
-    response = client.get_certificate_authority_certificate(
-        CertificateAuthorityArn=settings.ACM_PRIVATE_CA_ARN,
-    )
-    return response
+_CAS = {}
+
+
+def get_ca(ca):
+    if ca not in _CAS:
+        _CAS[ca] = CertificateAuthority(ca)
+    return _CAS[ca]

@@ -17,7 +17,7 @@ def test_get_certificate(mocker):
         return_value=False,
     )
     ret = app.test_client().get(
-        '/v1/certificates/test.example.com',
+        '/v1/certificates/development/test.example.com',
         follow_redirects=False,
     )
     assert ret.status_code == 401
@@ -35,7 +35,7 @@ def test_get_certificate(mocker):
         return_value=False,
     )
     ret = app.test_client().get(
-        '/v1/certificates/test.example.com',
+        '/v1/certificates/development/test.example.com',
         follow_redirects=False,
     )
     assert ret.status_code == 403
@@ -44,9 +44,12 @@ def test_get_certificate(mocker):
         'confidant.routes.certificates.acl_module_check',
         return_value=True,
     )
+    ca_object = certificatemanager.CertificateAuthority('development')
     mocker.patch(
-        ('confidant.routes.certificates.certificatemanager'
-         '.issue_certificate_with_key'),
+        ('confidant.routes.certificates.certificatemanager.get_ca'),
+        return_value=ca_object,
+    )
+    ca_object.issue_certificate_with_key = mocker.Mock(
         return_value={
             'certificate': 'test_certificate',
             'certificate_chain': 'test_certificate_chain',
@@ -54,7 +57,7 @@ def test_get_certificate(mocker):
         },
     )
     ret = app.test_client().get(
-        '/v1/certificates/test.example.com',
+        '/v1/certificates/development/test.example.com',
         follow_redirects=False,
     )
     json_data = json.loads(ret.data)
@@ -67,15 +70,16 @@ def test_get_certificate(mocker):
 
 
 def test_get_certificate_from_csr(mocker):
-    key = certificatemanager.generate_key()
-    csr = certificatemanager.generate_csr(key, 'test.example.com')
-    encoded_csr = certificatemanager.encode_csr(csr).decode('ascii')
+    ca_object = certificatemanager.CertificateAuthority('development')
+    key = ca_object.generate_key()
+    csr = ca_object.generate_csr(key, 'test.example.com')
+    encoded_csr = ca_object.encode_csr(csr).decode('ascii')
 
     app = create_app()
 
     mocker.patch('confidant.settings.USE_AUTH', False)
     ret = app.test_client().post(
-        '/v1/certificates',
+        '/v1/certificates/development',
         data=json.dumps({}),
         content_type='application/json',
         follow_redirects=False,
@@ -83,7 +87,7 @@ def test_get_certificate_from_csr(mocker):
     assert ret.status_code == 400
 
     ret = app.test_client().post(
-        '/v1/certificates',
+        '/v1/certificates/development',
         data=json.dumps({'validity': 7}),
         content_type='application/json',
         follow_redirects=False,
@@ -91,7 +95,7 @@ def test_get_certificate_from_csr(mocker):
     assert ret.status_code == 400
 
     ret = app.test_client().post(
-        '/v1/certificates',
+        '/v1/certificates/development',
         data=json.dumps({'csr': 'invalid_csr'}),
         content_type='application/json',
         follow_redirects=False,
@@ -107,7 +111,7 @@ def test_get_certificate_from_csr(mocker):
         return_value=False,
     )
     ret = app.test_client().post(
-        '/v1/certificates',
+        '/v1/certificates/development',
         data=json.dumps({
             'csr': encoded_csr,
             'validity': 7,
@@ -130,7 +134,7 @@ def test_get_certificate_from_csr(mocker):
         return_value=False,
     )
     ret = app.test_client().post(
-        '/v1/certificates',
+        '/v1/certificates/development',
         data=json.dumps({
             'csr': encoded_csr,
             'validity': 7,
@@ -145,20 +149,20 @@ def test_get_certificate_from_csr(mocker):
         return_value=True,
     )
     mocker.patch(
-        ('confidant.routes.certificates.certificatemanager'
-         '.issue_certificate'),
-        return_value='test-arn',
+        ('confidant.routes.certificates.certificatemanager.get_ca'),
+        return_value=ca_object,
     )
-    mocker.patch(
-        ('confidant.routes.certificates.certificatemanager'
-         '.get_certificate_from_arn'),
+    ca_object.issue_certificate = mocker.Mock(
+        return_value='test-certificate-arn',
+    )
+    ca_object.get_certificate_from_arn = mocker.Mock(
         return_value={
             'certificate': 'test_certificate',
             'certificate_chain': 'test_certificate_chain',
         },
     )
     ret = app.test_client().post(
-        '/v1/certificates',
+        '/v1/certificates/development',
         data=json.dumps({
             'csr': encoded_csr,
             'validity': 7,

@@ -1,8 +1,22 @@
 import datetime
 
+import pytest
 from cryptography.hazmat.primitives import hashes
 
 from confidant.services import certificatemanager
+
+
+@pytest.fixture()
+def ca_object(mocker):
+    ca_object = certificatemanager.CertificateAuthority('development')
+    ca_object.settings['csr_country_name'] = 'US'
+    ca_object.settings['csr_state_or_province_name'] = 'California'
+    ca_object.settings['csr_locality_name'] = 'San Francisco'
+    ca_object.settings['csr_organization_name'] = 'Example Inc.'
+    mocker.patch(
+        'confidant.services.certificatemanager.get_ca', return_value=ca_object
+    )
+    return ca_object
 
 
 def test_certificate_cache():
@@ -25,121 +39,73 @@ def test_certificate_cache():
     assert cache.get(cache_id) is None
 
 
-def test_generate_key(mocker):
-    mocker.patch('confidant.settings.ACM_PRIVATE_CA_KEY_SIZE', 1024)
-    key = certificatemanager.generate_key()
+def test_generate_key(ca_object):
+    ca_object.settings['key_size'] = 1024
+    key = ca_object.generate_key()
     assert key.key_size == 1024
 
 
-def test_encode_key():
-    key = certificatemanager.generate_key()
-    encoded_key = certificatemanager.encode_key(key)
+def test_encode_key(ca_object):
+    key = ca_object.generate_key()
+    encoded_key = ca_object.encode_key(key)
     assert encoded_key.startswith(b'-----BEGIN RSA PRIVATE KEY-----')
 
 
-def test_generate_x509_name(mocker):
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_COUNTRY_NAME',
-        'US',
-    )
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME',
-        'California',
-    )
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_LOCALITY_NAME',
-        'San Francisco',
-    )
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_ORGANIZATION_NAME',
-        'Example Inc.',
-    )
-    x509_name = certificatemanager.generate_x509_name('test.example.com')
+def test_generate_x509_name(ca_object):
+    x509_name = ca_object.generate_x509_name('test.example.com')
     assert x509_name.rfc4514_string() == (
         'CN=test.example.com,C=US,ST=California,L=San Francisco,O=Example Inc.'
     )
 
 
-def test_generate_csr(mocker):
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_COUNTRY_NAME',
-        'US',
-    )
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME',
-        'California',
-    )
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_LOCALITY_NAME',
-        'San Francisco',
-    )
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_ORGANIZATION_NAME',
-        'Example Inc.',
-    )
-    key = certificatemanager.generate_key()
+def test_generate_csr(ca_object):
+    key = ca_object.generate_key()
     san = ['test2.example.com', 'test3.example.com']
-    csr = certificatemanager.generate_csr(key, 'test.example.com', san)
+    csr = ca_object.generate_csr(key, 'test.example.com', san)
     assert csr.is_signature_valid is True
     assert csr.subject.rfc4514_string() == (
         'CN=test.example.com,C=US,ST=California,L=San Francisco,O=Example Inc.'
     )
 
 
-def test_encode_csr():
-    key = certificatemanager.generate_key()
-    csr = certificatemanager.generate_csr(key, 'test.example.com')
-    encoded_csr = certificatemanager.encode_csr(csr)
+def test_encode_csr(ca_object):
+    key = ca_object.generate_key()
+    csr = ca_object.generate_csr(key, 'test.example.com')
+    encoded_csr = ca_object.encode_csr(csr)
     assert encoded_csr.startswith(b'-----BEGIN CERTIFICATE REQUEST-----')
 
 
-def test_decode_csr():
+def test_decode_csr(ca_object):
     encoded_csr = b'-----BEGIN CERTIFICATE REQUEST-----\nMIICwDCCAagCAQAwajEZMBcGA1UEAwwQdGVzdC5leGFtcGxlLmNvbTELMAkGA1UE\nBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExFjAUBgNVBAcMDVNhbiBGcmFuY2lz\nY28xEzARBgNVBAoMCkx5ZnQsIEluYy4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\nggEKAoIBAQDqAFNwMlG3DiPJzUgSfzInRlAYdZzycz/mRsw5Boucii4jBQpLfhp/\nwjkbClAuuwLIija5yv95zChxbJPJ6Je1FtcXtbXAEVjWnf+B1s/OEA+uSO8IoGiL\nsYRNFqXI2hyzcqMshnxc90+qfMB+/eAv17t0fkMjT028N5I/Rvqh0RQx9l+0AbvH\nPtNBzNSWj9s/Oy4mEaXary/S3VZPd+38hpXc3HQINczmSKQTG/pPKwQcg+dQMjQz\nvlPuntrgvy5S2mK5D0xOCfLUfNVT7qb89/Rd9siZw7VMzL/XDkNtVZEEuJAL16PN\n/1zPQO6jxqNes0PqeWz0brsrx6LqhxiPAgMBAAGgETAPBgkqhkiG9w0BCQ4xAjAA\nMA0GCSqGSIb3DQEBCwUAA4IBAQBZaU01DoLf4Ldum/gOrjc+R1lqgXna6Thu/DHs\nAKbPyztjQjRwGApoPUXqRs6MYpB8XJOal4rsYazybxRNsiIQV/yNtlToVsz86lys\nPP85zzk7nZTT28gMew/iuS7H0in4XJz3LWdDxVIk+P4ktiqTOQSQyqMBGM+Rw93Y\nBDCfk1/pigxis0umyfp6Ho/qfdKEr4MYi2UZfTIl8F8dLq+PKPzqK+sEEOBDOUtP\nc4Edeg3PL1XROiwv3uPhtfaIe1iVD4IjWxNN06anoa29xMmJ/vXkaqYLQSd+FKHe\ny00DRxiYx7zqqfByUAUV3pPRwytFMit5bsOEAlhYmTRc2PEx\n-----END CERTIFICATE REQUEST-----\n'  # noqa:E501
-    csr = certificatemanager.decode_csr(encoded_csr)
+    csr = ca_object.decode_csr(encoded_csr)
     assert csr.is_signature_valid is True
 
 
-def test_get_csr_common_name():
-    key = certificatemanager.generate_key()
-    csr = certificatemanager.generate_csr(key, 'test.example.com')
-    assert certificatemanager.get_csr_common_name(csr) == 'test.example.com'
+def test_get_csr_common_name(ca_object):
+    key = ca_object.generate_key()
+    csr = ca_object.generate_csr(key, 'test.example.com')
+    assert ca_object.get_csr_common_name(csr) == 'test.example.com'
 
 
-def test_get_csr_san():
-    key = certificatemanager.generate_key()
+def test_get_csr_san(ca_object):
+    key = ca_object.generate_key()
     san = ['test1.example.com', 'test2.example.com']
-    csr = certificatemanager.generate_csr(key, 'test.example.com', san)
-    assert certificatemanager.get_csr_san(csr) == san
+    csr = ca_object.generate_csr(key, 'test.example.com', san)
+    assert ca_object.get_csr_san(csr) == san
 
 
-def test_encode_san_dns_names():
+def test_encode_san_dns_names(ca_object):
     san = ['test1.example.com', 'test2.example.com']
-    dns_names = certificatemanager.encode_san_dns_names(san)
+    dns_names = ca_object.encode_san_dns_names(san)
     assert len(dns_names) == len(san)
     for dns_name in dns_names:
         assert dns_name.value in san
 
 
-def test_generate_self_signed_certificate(mocker):
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_COUNTRY_NAME',
-        'US',
-    )
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME',
-        'California',
-    )
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_LOCALITY_NAME',
-        'San Francisco',
-    )
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CSR_ORGANIZATION_NAME',
-        'Example Inc.',
-    )
-    key = certificatemanager.generate_key()
+def test_generate_self_signed_certificate(ca_object):
+    key = ca_object.generate_key()
     san = ['test1.example.com', 'test2.example.com']
-    cert = certificatemanager.generate_self_signed_certificate(
+    cert = ca_object.generate_self_signed_certificate(
         key,
         'test.example.com',
         7,
@@ -153,18 +119,18 @@ def test_generate_self_signed_certificate(mocker):
     assert isinstance(cert.signature_hash_algorithm, hashes.SHA256)
 
 
-def test_encode_certificate():
-    key = certificatemanager.generate_key()
-    cert = certificatemanager.generate_self_signed_certificate(
+def test_encode_certificate(ca_object):
+    key = ca_object.generate_key()
+    cert = ca_object.generate_self_signed_certificate(
         key,
         'test.example.com',
         7,
     )
-    encoded_cert = certificatemanager.encode_certificate(cert)
+    encoded_cert = ca_object.encode_certificate(cert)
     assert encoded_cert.startswith(b'-----BEGIN CERTIFICATE-----')
 
 
-def test_issue_certificate(mocker):
+def test_issue_certificate(mocker, ca_object):
     client_mock = mocker.patch(
         'confidant.clients.get_boto_client',
         autospec=True,
@@ -174,28 +140,22 @@ def test_issue_certificate(mocker):
         'CertificateArn': 'test',
     }
     client_mock.return_value = issue_certificate_mock
-    key = certificatemanager.generate_key()
-    csr = certificatemanager.generate_csr(key, 'test.example.com', [])
-    encoded_csr = certificatemanager.encode_csr(csr)
-    assert certificatemanager.issue_certificate(encoded_csr, 7) == 'test'
+    key = ca_object.generate_key()
+    csr = ca_object.generate_csr(key, 'test.example.com', [])
+    encoded_csr = ca_object.encode_csr(csr)
+    assert ca_object.issue_certificate(encoded_csr, 7) == 'test'
 
 
-def test__get_cached_certificate_with_key(mocker):
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE',
-        False,
-    )
-    assert certificatemanager._get_cached_certificate_with_key('test') == {}
-    mocker.patch(
-        'confidant.settings.ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE',
-        True,
-    )
+def test__get_cached_certificate_with_key(mocker, ca_object):
+    ca_object.settings['certificate_use_cache'] = False
+    assert ca_object._get_cached_certificate_with_key('test') == {}
+    ca_object.settings['certificate_use_cache'] = True
     cache = certificatemanager.CertificateCache(10)
-    mocker.patch('confidant.services.certificatemanager.CERTIFICATES', cache)
-    assert certificatemanager._get_cached_certificate_with_key('test') == {}
+    ca_object.cache = cache
+    assert ca_object._get_cached_certificate_with_key('test') == {}
     cache.lock('test')
     cache.set_response('test', {'hello': 'world'})
-    assert certificatemanager._get_cached_certificate_with_key('test') == {'hello': 'world'}  # noqa:E501
+    assert ca_object._get_cached_certificate_with_key('test') == {'hello': 'world'}  # noqa:E501
     # test lock loop
     cache.lock('test1')
     item = mocker.MagicMock()
@@ -205,49 +165,43 @@ def test__get_cached_certificate_with_key(mocker):
     )
     cache.get = mocker.MagicMock(return_value=item)
     time_mock = mocker.patch('time.sleep')
-    assert certificatemanager._get_cached_certificate_with_key('test1') == {'hello': 'world'}  # noqa:E501
+    assert ca_object._get_cached_certificate_with_key('test1') == {'hello': 'world'}  # noqa:E501
     assert time_mock.called is True
 
 
-def test_issue_certificate_with_key(mocker):
-    mocker.patch('confidant.settings.ACM_PRIVATE_CA_SELF_SIGN', True)
-    data = certificatemanager.issue_certificate_with_key('test.example.com', 7)
+def test_issue_certificate_with_key(mocker, ca_object):
+    ca_object.settings['self_sign'] = True
+    data = ca_object.issue_certificate_with_key('test.example.com', 7)
     assert data['certificate'].startswith(b'-----BEGIN CERTIFICATE-----')
     assert data['certificate_chain'].startswith(b'-----BEGIN CERTIFICATE-----')
     assert data['key'].startswith(b'-----BEGIN RSA PRIVATE KEY-----')
 
-    mocker.patch(
-        'confidant.services.certificatemanager.'
-        '_get_cached_certificate_with_key',
+    ca_object._get_cached_certificate_with_key = mocker.Mock(
         return_value={'hello': 'world'},
     )
-    data = certificatemanager.issue_certificate_with_key('test.example.com', 7)
+    data = ca_object.issue_certificate_with_key('test.example.com', 7)
     assert data == {'hello': 'world'}
-    mocker.patch(
-        'confidant.services.certificatemanager.'
-        '_get_cached_certificate_with_key',
+    ca_object._get_cached_certificate_with_key = mocker.Mock(
         return_value={},
     )
 
-    mocker.patch('confidant.settings.ACM_PRIVATE_CA_SELF_SIGN', False)
-    mocker.patch(
-        'confidant.services.certificatemanager.issue_certificate',
-        return_value='test-arn',
+    ca_object.settings['self_sign'] = False
+    ca_object.issue_certificate = mocker.Mock(
+        return_value='test-certificate-arn',
     )
-    mocker.patch(
-        'confidant.services.certificatemanager.get_certificate_from_arn',
+    ca_object.get_certificate_from_arn = mocker.Mock(
         return_value={
             'certificate': 'test_certificate',
             'certificate_chain': 'test_certificate_chain',
         },
     )
-    data = certificatemanager.issue_certificate_with_key('test.example.com', 7)
+    data = ca_object.issue_certificate_with_key('test.example.com', 7)
     assert data['certificate'] == 'test_certificate'
     assert data['certificate_chain'] == 'test_certificate_chain'
     assert data['key'].startswith(b'-----BEGIN RSA PRIVATE KEY-----')
 
 
-def test_get_certificate_from_arn_no_exception(mocker):
+def test_get_certificate_from_arn_no_exception(mocker, ca_object):
     time_mock = mocker.patch('time.sleep')
     client_mock = mocker.patch(
         'confidant.clients.get_boto_client',
@@ -259,12 +213,12 @@ def test_get_certificate_from_arn_no_exception(mocker):
         'CertificateChain': 'test_chain',
     }
     client_mock.return_value = get_certificate_mock
-    data = certificatemanager.get_certificate_from_arn('test_arn')
+    data = ca_object.get_certificate_from_arn('test_arn')
     assert time_mock.called is False
     assert data == {'certificate': 'test', 'certificate_chain': 'test_chain'}
 
 
-def test_get_certificate_from_arn_with_exception(mocker):
+def test_get_certificate_from_arn_with_exception(mocker, ca_object):
     class RequestInProgressException(Exception):
         pass
 
@@ -280,12 +234,12 @@ def test_get_certificate_from_arn_with_exception(mocker):
         {'Certificate': 'test', 'CertificateChain': 'test_chain'},
     ]
     client_mock.return_value = get_certificate_mock
-    data = certificatemanager.get_certificate_from_arn('test_arn')
+    data = ca_object.get_certificate_from_arn('test_arn')
     assert time_mock.called is True
     assert data == {'certificate': 'test', 'certificate_chain': 'test_chain'}
 
 
-def test_get_certificate_authority_certificate(mocker):
+def test_get_certificate_authority_certificate(mocker, ca_object):
     client_mock = mocker.patch(
         'confidant.clients.get_boto_client',
         autospec=True,
@@ -293,5 +247,5 @@ def test_get_certificate_authority_certificate(mocker):
     gcac_mock = mocker.MagicMock()
     gcac_mock.get_certificate_authority_certificate.return_value = 'test'
     client_mock.return_value = gcac_mock
-    data = certificatemanager.get_certificate_authority_certificate()
+    data = ca_object.get_certificate_authority_certificate()
     assert data == 'test'
