@@ -27,8 +27,8 @@ flask-sslify==0.1.5
 flask==1.1.1
 funcsigs==1.0.2           # via mock, pytest
 futures==3.3.0            # via s3transfer
-gevent==1.2.1
-greenlet==0.4.12
+gevent==1.4.0
+greenlet==0.4.15
 guard==1.0.1
 gunicorn==19.9.0
 idna==2.8                 # via requests
