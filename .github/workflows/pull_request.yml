@@ -37,16 +37,19 @@ jobs:
   #      run: license_finder
   test:
     runs-on: ubuntu-18.04
+    strategy:
+        matrix:
+          python-version: ['3.6.x', '3.7.x']
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
           node-version: '8.x'
-      - name: Setup python 3.6
+      - name: Setup python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
-          python-version: 3.6
+          python-version: ${{ matrix.python-version }}
       - name: Install apt dependencies
         run: sudo apt-get update && sudo apt-get install -y python3-dev openssl libssl-dev gcc pkg-config libffi-dev libxml2-dev libxmlsec1-dev
       - name: Install dependencies
