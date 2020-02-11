@@ -37,21 +37,20 @@ def test_user_is_user_type(mocker):
     assert authnz.user_is_user_type('anything') is True
 
     mocker.patch('confidant.authnz.settings.USE_AUTH', True)
-    g_mock = mocker.patch('confidant.authnz.g')
-    g_mock.user_type = 'user'
-    assert authnz.user_is_user_type('user') is True
+    app = create_app()
+    with app.app_context():
+        g_mock = mocker.patch('confidant.authnz.g')
+        g_mock.user_type = 'user'
+        assert authnz.user_is_user_type('user') is True
 
-    g_mock = mocker.patch('confidant.authnz.g')
-    g_mock.user_type = 'service'
-    assert authnz.user_is_user_type('service') is True
+        g_mock.user_type = 'service'
+        assert authnz.user_is_user_type('service') is True
 
-    g_mock = mocker.patch('confidant.authnz.g')
-    g_mock.user_type = 'user'
-    assert authnz.user_is_user_type('service') is False
+        g_mock.user_type = 'user'
+        assert authnz.user_is_user_type('service') is False
 
-    g_mock = mocker.patch('confidant.authnz.g')
-    g_mock.user_type = 'service'
-    assert authnz.user_is_user_type('user') is False
+        g_mock.user_type = 'service'
+        assert authnz.user_is_user_type('user') is False
 
 
 def test_user_type_has_privilege():
@@ -71,22 +70,22 @@ def test_require_csrf_token(mocker):
     assert wrapped() == 'unittestval'
 
     mocker.patch('confidant.authnz.settings.USE_AUTH', True)
-    g_mock = mocker.patch('confidant.authnz.g')
-    g_mock.auth_type = 'kms'
-    assert wrapped() == 'unittestval'
+    app = create_app()
+    with app.app_context():
+        g_mock = mocker.patch('confidant.authnz.g')
+        g_mock.auth_type = 'kms'
+        assert wrapped() == 'unittestval'
 
-    g_mock = mocker.patch('confidant.authnz.g')
-    g_mock.auth_type = 'google oauth'
-    u_mock = mocker.patch('confidant.authnz.user_mod')
-    u_mock.check_csrf_token = mocker.Mock(return_value=True)
-    assert wrapped() == 'unittestval'
+        g_mock.auth_type = 'google oauth'
+        u_mock = mocker.patch('confidant.authnz.user_mod')
+        u_mock.check_csrf_token = mocker.Mock(return_value=True)
+        assert wrapped() == 'unittestval'
 
-    g_mock = mocker.patch('confidant.authnz.g')
-    g_mock.auth_type = 'google oauth'
-    u_mock = mocker.patch('confidant.authnz.user_mod')
-    u_mock.check_csrf_token = mocker.Mock(return_value=False)
-    with pytest.raises(Unauthorized):
-        wrapped()
+        g_mock.auth_type = 'google oauth'
+        u_mock = mocker.patch('confidant.authnz.user_mod')
+        u_mock.check_csrf_token = mocker.Mock(return_value=False)
+        with pytest.raises(Unauthorized):
+            wrapped()
 
 
 def test_user_is_service(mocker):
@@ -94,23 +93,26 @@ def test_user_is_service(mocker):
     assert authnz.user_is_service('anything') is True
 
     mocker.patch('confidant.authnz.settings.USE_AUTH', True)
-    g_mock = mocker.patch('confidant.authnz.g')
-    g_mock.username = 'confidant-unitttest'
-    assert authnz.user_is_service('confidant-unitttest') is True
+    app = create_app()
+    with app.app_context():
+        g_mock = mocker.patch('confidant.authnz.g')
+        g_mock.username = 'confidant-unitttest'
+        assert authnz.user_is_service('confidant-unitttest') is True
 
-    g_mock = mocker.patch('confidant.authnz.g')
-    g_mock.username = 'confidant-unitttest'
-    assert authnz.user_is_service('notconfidant-unitttest') is False
+        g_mock.username = 'confidant-unitttest'
+        assert authnz.user_is_service('notconfidant-unitttest') is False
 
 
 def test_service_in_account(mocker):
     # If we aren't scoping, this should pass
     assert authnz.service_in_account(None) is True
 
-    g_mock = mocker.patch('confidant.authnz.g')
-    g_mock.account = 'confidant-unitttest'
-    assert authnz.service_in_account('bad-service') is False
-    assert authnz.service_in_account('confidant-unitttest') is True
+    app = create_app()
+    with app.app_context():
+        g_mock = mocker.patch('confidant.authnz.g')
+        g_mock.account = 'confidant-unitttest'
+        assert authnz.service_in_account('bad-service') is False
+        assert authnz.service_in_account('confidant-unitttest') is True
 
 
 def test_account_for_key_alias(mocker):
@@ -304,11 +306,13 @@ def test_require_auth(mocker):
     mocker.patch('confidant.authnz.user_type_has_privilege', return_value=True)
     mocker.patch('confidant.authnz.account_for_key_alias', return_value=None)
 
-    g_mock = mocker.patch('confidant.authnz.g')
-    assert wrapped() == 'unittestval'
-    assert g_mock.user_type == 'service'
-    assert g_mock.auth_type == 'kms'
-    assert g_mock.username == 'test-user'
+    app = create_app()
+    with app.app_context():
+        g_mock = mocker.patch('confidant.authnz.g')
+        assert wrapped() == 'unittestval'
+        assert g_mock.user_type == 'service'
+        assert g_mock.auth_type == 'kms'
+        assert g_mock.username == 'test-user'
 
     mocker.patch(
         'confidant.authnz._get_kms_auth_data',
