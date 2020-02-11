@@ -479,12 +479,23 @@ BACKGROUND_CACHE_IAM_ROLE_REFRESH_RATE = int_env(
 
 # ACM Private CA configuration
 
+# ACM_PRIVATE_CAS is a comma separated list of friendly ca names. Confidant
+# will use these names to load settings for each CA, by appending the name
+# to the sub-setting. e.g.:
+#   ACM_PRIVATE_CAS=testca1,testca2
+#   ACM_PRIVATE_CA_ARN_TESTCA1=arn:...
+#   ACM_PRIVATE_CA_ARN_TESTCA2=arn:...
 ACM_PRIVATE_CAS = str_env('ACM_PRIVATE_CAS').split(',')
+# ACM_PRIVATE_CA_SETTINGS is used internally, and can not be set via
+# environment.
 ACM_PRIVATE_CA_SETTINGS = {}
 for ca in ACM_PRIVATE_CAS:
     # Skip any empty values (such as ACM_PRIVATE_CAS being unset)
     if not ca:
         continue
+    # Folks may set the list to "a, b, c" so we need to strip whitespace
+    ca = ca.strip()
+    # We require environment to be all uppercase, including the CA name.
     ca_up = ca.upper()
     ca_settings = {}
     # The full ARN of the private CA
