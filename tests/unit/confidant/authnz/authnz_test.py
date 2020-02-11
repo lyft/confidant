@@ -125,44 +125,48 @@ def test_account_for_key_alias(mocker):
 
 
 def test__get_kms_auth_data_from_auth(mocker):
-    auth_mock = mocker.patch('confidant.authnz.request')
-    expected = {
-        'username': 'test-user',
-        'token': 'test-token',
-    }
-    auth_mock.authorization = {
-        'username': expected['username'],
-        'password': expected['token'],
-    }
-    auth_mock.headers = None
-    assert authnz._get_kms_auth_data() == expected
+    app = create_app()
+    with app.app_context():
+        auth_mock = mocker.patch('confidant.authnz.request')
+        expected = {
+            'username': 'test-user',
+            'token': 'test-token',
+        }
+        auth_mock.authorization = {
+            'username': expected['username'],
+            'password': expected['token'],
+        }
+        auth_mock.headers = None
+        assert authnz._get_kms_auth_data() == expected
 
-    auth_mock.authorization = {
-        'username': expected['username'],
-    }
-    with pytest.raises(authnz.AuthenticationError):
-        authnz._get_kms_auth_data()
+        auth_mock.authorization = {
+            'username': expected['username'],
+        }
+        with pytest.raises(authnz.AuthenticationError):
+            authnz._get_kms_auth_data()
 
 
 def test__get_kms_auth_data_from_headers(mocker):
-    auth_mock = mocker.patch('confidant.authnz.request')
-    expected = {
-        'username': 'test-user',
-        'token': 'test-token',
-    }
-    auth_mock.headers = {
-        'X-Auth-From': expected['username'],
-        'X-Auth-Token': expected['token'],
-    }
-    auth_mock.authorization = None
-    assert authnz._get_kms_auth_data() == expected
+    app = create_app()
+    with app.app_context():
+        auth_mock = mocker.patch('confidant.authnz.request')
+        expected = {
+            'username': 'test-user',
+            'token': 'test-token',
+        }
+        auth_mock.headers = {
+            'X-Auth-From': expected['username'],
+            'X-Auth-Token': expected['token'],
+        }
+        auth_mock.authorization = None
+        assert authnz._get_kms_auth_data() == expected
 
-    auth_mock.headers = {
-        'X-Auth-From': expected['username'],
-        'X-Auth-Token': None,
-    }
-    with pytest.raises(authnz.AuthenticationError):
-        authnz._get_kms_auth_data()
+        auth_mock.headers = {
+            'X-Auth-From': expected['username'],
+            'X-Auth-Token': None,
+        }
+        with pytest.raises(authnz.AuthenticationError):
+            authnz._get_kms_auth_data()
 
 
 def test_redirect_to_logout_if_no_auth(mocker):
