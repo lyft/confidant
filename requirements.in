@@ -171,3 +171,8 @@ pytest-lazy-fixture==0.6.1
 # License: MIT
 # Upstream url: https://github.com/MobileDynasty/pytest-env/
 pytest-env==0.6.2
+
+# Ensure that gevent is properly patched when invoking pytest
+# License: MIT
+# Upstream url: https://github.com/asottile/pytest-gevent
+pytest-gevent==1.0.0

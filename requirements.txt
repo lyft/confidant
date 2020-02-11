@@ -58,6 +58,7 @@ pyopenssl==19.0.0
 pyparsing==2.4.6          # via packaging
 pytest-cov==2.8.1
 pytest-env==0.6.2
+pytest-gevent==1.0.0
 pytest-lazy-fixture==0.6.1
 pytest-mock==1.11.2
 pytest==4.6.9
