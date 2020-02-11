@@ -126,7 +126,7 @@ def test_account_for_key_alias(mocker):
 
 def test__get_kms_auth_data_from_auth(mocker):
     app = create_app()
-    with app.app_context():
+    with app.test_request_context('/fake'):
         auth_mock = mocker.patch('confidant.authnz.request')
         expected = {
             'username': 'test-user',
@@ -148,7 +148,7 @@ def test__get_kms_auth_data_from_auth(mocker):
 
 def test__get_kms_auth_data_from_headers(mocker):
     app = create_app()
-    with app.app_context():
+    with app.test_request_context('/fake'):
         auth_mock = mocker.patch('confidant.authnz.request')
         expected = {
             'username': 'test-user',
