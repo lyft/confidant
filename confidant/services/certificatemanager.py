@@ -207,7 +207,7 @@ class CertificateAuthority(object):
                 x509.SubjectAlternativeName
             )
         except ExtensionNotFound:
-            san = []
+            san = None
         if san:
             for dns_name in san.value:
                 dns_names.append(dns_name.value)
@@ -297,16 +297,21 @@ class CertificateAuthority(object):
             return {}
         # A certificate hasn't been issued yet, but since the cache id exists,
         # another thread has requested the certificate.
+        i = 0
         if not item.response:
             # Wait for response
             while True:
+                # Only allow a maximum of 10s wait.
                 # keep waiting while the lock is held.
                 if item.lock:
+                    if i >= 100:
+                        break
                     logging.debug(
                         'Sleeping in _get_cached_certificate_with_key'
                         ' for {}'.format(cache_id)
                     )
                     time.sleep(.100)
+                    i = i + 1
                 else:
                     break
         # If the other thread failed to get the certificate, we need to ensure
@@ -357,6 +362,7 @@ class CertificateAuthority(object):
         # When a certificate is issued, it may take a while before it's
         # available via get_certificate. We need to keep retrying until it's
         # fully issued.
+        i = 0
         while True:
             try:
                 response = client.get_certificate(
@@ -365,12 +371,16 @@ class CertificateAuthority(object):
                 )
                 break
             except client.exceptions.RequestInProgressException:
+                # Sleep for a maximum of 10 seconds
+                if i >= 50:
+                    raise
                 logging.debug(
                     'Sleeping in get_certificate_from_arn for {}'.format(
                         certificate_arn,
                     )
                 )
                 time.sleep(.200)
+                i = i + 1
         return {
             'certificate': response['Certificate'],
             'certificate_chain': response['CertificateChain'],
