@@ -70,7 +70,7 @@ Flask-SSLify==0.1.5
 # License: MIT
 # Upstream url: http://peterhudec.github.io/authomatic
 # Use: For google auth
-Authomatic==0.1.0.post1
+Authomatic==1.0.0
 
 # License: MIT
 # Upstream url: https://github.com/onelogin/python3-saml
