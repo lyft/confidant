@@ -1,4 +1,3 @@
-import fnmatch
 import logging
 
 import kmsauth
