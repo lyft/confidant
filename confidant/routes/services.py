@@ -72,41 +72,33 @@ def get_service(id):
         'update': False,
     }
     metadata_only = request.args.get('metadata_only', default=False, type=bool)
-    if authnz.user_is_user_type('service'):
-        if not authnz.user_is_service(id):
-            logging.warning('Authz failed for service {0}.'.format(id))
-            msg = 'Service is not authorized.'
-            return jsonify({'error': msg}), 401
-        permissions['metadata'] = True
-        permissions['get'] = True
-    else:
-        logged_in_user = authnz.get_logged_in_user()
-        action = 'metadata' if metadata_only else 'get'
-        permissions['metadata'] = acl_module_check(
-            resource_type='service',
-            action=action,
-            resource_id=id,
+    logged_in_user = authnz.get_logged_in_user()
+    action = 'metadata' if metadata_only else 'get'
+    permissions['metadata'] = acl_module_check(
+        resource_type='service',
+        action='metadata',
+        resource_id=id,
+    )
+    permissions['get'] = acl_module_check(
+        resource_type='service',
+        action='get',
+        resource_id=id,
+    )
+    if not permissions[action]:
+        msg = "{} does not have access to get service {}".format(
+            authnz.get_logged_in_user(),
+            id
         )
-        permissions['get'] = acl_module_check(
-            resource_type='service',
-            action=action,
-            resource_id=id,
-        )
-        if not permissions[action]:
-            msg = "{} does not have access to get service {}".format(
-                authnz.get_logged_in_user(),
-                id
-            )
-            error_msg = {'error': msg, 'reference': id}
-            return jsonify(error_msg), 403
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
 
-        logging.info(
-            'get_service called on id={} by user={} metadata_only={}'.format(
-                id,
-                logged_in_user,
-                metadata_only,
-            )
+    logging.info(
+        'get_service called on id={} by user={} metadata_only={}'.format(
+            id,
+            logged_in_user,
+            metadata_only,
         )
+    )
     try:
         service = Service.get(id)
         if not authnz.service_in_account(service.account):

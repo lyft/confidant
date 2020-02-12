@@ -16,10 +16,6 @@ from confidant.authnz.errors import (
 )
 from confidant.authnz import userauth
 
-PRIVILEGES = {
-    'user': ['*'],
-    'service': ['get_service']
-}
 _VALIDATOR = None
 
 user_mod = userauth.init_user_auth_class()
@@ -81,13 +77,6 @@ def service_in_account(account):
 
 def account_for_key_alias(key_alias):
     return settings.SCOPED_AUTH_KEYS.get(key_alias)
-
-
-def user_type_has_privilege(user_type, privilege):
-    for _privilege in PRIVILEGES[user_type]:
-        if fnmatch.fnmatch(privilege, _privilege):
-            return True
-    return False
 
 
 def require_csrf_token(f):
@@ -184,17 +173,11 @@ def require_auth(f):
                 msg = 'Authenticated {0} with user_type {1} via kms auth'
                 msg = msg.format(_from, _user_type)
                 logging.debug(msg)
-                if user_type_has_privilege(_user_type, f.__name__):
-                    g.user_type = _user_type
-                    g.auth_type = 'kms'
-                    g.account = account_for_key_alias(token_data['key_alias'])
-                    g.username = _from
-                    return f(*args, **kwargs)
-                else:
-                    msg = '{0} is not authorized to access {1}.'
-                    msg = msg.format(_from, f.__name__)
-                    logging.warning(msg)
-                    return abort(403)
+                g.user_type = _user_type
+                g.auth_type = 'kms'
+                g.account = account_for_key_alias(token_data['key_alias'])
+                g.username = _from
+                return f(*args, **kwargs)
             except kmsauth.TokenValidationError:
                 logging.exception('Failed to decrypt authentication token.')
                 msg = 'Access denied for {0}. Authentication Failed.'
@@ -205,8 +188,6 @@ def require_auth(f):
         # If not using kms auth, require auth using the user_mod authn module.
         else:
             user_type = 'user'
-            if not user_type_has_privilege(user_type, f.__name__):
-                return abort(403)
 
             if user_mod.is_expired():
                 return abort(401)
