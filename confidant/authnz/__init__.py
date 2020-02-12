@@ -231,9 +231,6 @@ def require_auth(f):
             # Not authenticated
             return abort(401)
 
-        logging.error('Ran out of authentication methods')
-        return abort(403)
-
     return decorated
 
 
