@@ -53,12 +53,6 @@ def test_user_is_user_type(mocker):
         assert authnz.user_is_user_type('user') is False
 
 
-def test_user_type_has_privilege():
-    assert authnz.user_type_has_privilege('user', 'random_function') is True
-    assert authnz.user_type_has_privilege('service', 'random_function') is False
-    assert authnz.user_type_has_privilege('service', 'get_service') is True
-
-
 def test_require_csrf_token(mocker):
     mock_fn = mocker.Mock()
     mock_fn.__name__ = 'mock_fn'
@@ -251,10 +245,12 @@ def test_require_auth(mocker):
     mock_fn.__name__ = 'mock_fn'
     mock_fn.return_value = 'unittestval'
 
+    # Auth is disabled, so immediate return
     wrapped = authnz.require_auth(mock_fn)
     mocker.patch('confidant.authnz.settings.USE_AUTH', False)
     assert wrapped() == 'unittestval'
 
+    # Test auth failure
     mocker.patch('confidant.authnz.settings.USE_AUTH', True)
     mocker.patch(
         'confidant.authnz._get_kms_auth_data',
@@ -274,6 +270,7 @@ def test_require_auth(mocker):
     mocker.patch('confidant.authnz._get_validator', return_value=validator_mock)
     validator_mock.extract_username_field = extract_username_field
 
+    # Test for a bad user type in the token
     mocker.patch(
         'confidant.authnz._get_kms_auth_data',
         return_value={
@@ -284,6 +281,7 @@ def test_require_auth(mocker):
     with pytest.raises(Forbidden):
         wrapped()
 
+    # Test for validation error from the kmsauth library
     mocker.patch(
         'confidant.authnz._get_kms_auth_data',
         return_value={
@@ -300,14 +298,7 @@ def test_require_auth(mocker):
     validator_mock.decrypt_token = mocker.Mock(
         return_value={'payload': {}, 'key_alias': 'testkey'},
     )
-    mocker.patch(
-        'confidant.authnz.user_type_has_privilege',
-        return_value=False,
-    )
-    with pytest.raises(Forbidden):
-        wrapped()
 
-    mocker.patch('confidant.authnz.user_type_has_privilege', return_value=True)
     mocker.patch('confidant.authnz.account_for_key_alias', return_value=None)
 
     app = create_app()
@@ -318,26 +309,26 @@ def test_require_auth(mocker):
         assert g_mock.auth_type == 'kms'
         assert g_mock.username == 'test-user'
 
+    # User auth
     mocker.patch(
         'confidant.authnz._get_kms_auth_data',
         return_value={},
     )
-    mocker.patch('confidant.authnz.user_type_has_privilege', return_value=False)
-    with pytest.raises(Forbidden):
-        wrapped()
 
-    mocker.patch('confidant.authnz.user_type_has_privilege', return_value=True)
+    # Session token is expired
     user_mod = mocker.MagicMock()
     mocker.patch('confidant.authnz.user_mod', user_mod)
     user_mod.is_expired = mocker.Mock(return_value=True)
     with pytest.raises(Unauthorized):
         wrapped()
 
+    # Failed to authenticate
     user_mod.is_expired = mocker.Mock(return_value=False)
     user_mod.is_authenticated = mocker.Mock(return_value=False)
     with pytest.raises(Unauthorized):
         wrapped()
 
+    # User authentication success
     user_mod.is_authenticated = mocker.Mock(return_value=True)
     user_mod.check_authorization = mocker.Mock(return_value=None)
     user_mod.auth_type = 'testmod'
@@ -349,6 +340,7 @@ def test_require_auth(mocker):
     assert g_mock.user_type == 'user'
     assert g_mock.auth_type == 'testmod'
 
+    # User is authenticated, but not authorized
     user_mod.check_authorization = mocker.Mock(side_effect=authnz.NotAuthorized)
     with pytest.raises(Forbidden):
         wrapped()
