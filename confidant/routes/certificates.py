@@ -26,41 +26,34 @@ def get_certificate(ca, cn):
     except certificatemanager.CertificateAuthorityNotFoundError:
         return jsonify({'error': 'Provided CA not found.'}), 404
     san = request.args.getlist('san')
-    if authnz.user_is_user_type('service'):
-        # TODO: acl check this, rather than checking service name matches
-        if not authnz.user_is_service(cn):
-            logging.warning('Authz failed for service {}.'.format(id))
-            msg = ('Service is not authorized to get certificate cn {} against'
-                   ' ca {}')
-            msg = msg.format(cn, ca)
-            return jsonify({'error': msg}), 401
-    else:
-        logged_in_user = authnz.get_logged_in_user()
-        if not acl_module_check(
-            resource_type='certificate',
-            action='get',
-            resource_id=cn,
-            kwargs={
-                'ca': ca,
-                'san': san,
-            },
-        ):
-            msg = ('{} does not have access to get certificate cn {} against'
-                   ' ca {}').format(
-                authnz.get_logged_in_user(),
-                cn,
-                ca,
-            )
-            error_msg = {'error': msg, 'reference': cn}
-            return jsonify(error_msg), 403
 
-        logging.info(
-            'get_certificate called on id={} for ca={} by user={}'.format(
-                cn,
-                ca,
-                logged_in_user,
-            )
+    logged_in_user = authnz.get_logged_in_user()
+    if not acl_module_check(
+        resource_type='certificate',
+        action='get',
+        resource_id=cn,
+        kwargs={
+            'ca': ca,
+            'san': san,
+        },
+    ):
+        msg = ('{} does not have access to get certificate cn {} against'
+               ' ca {}').format(
+            authnz.get_logged_in_user(),
+            cn,
+            ca,
         )
+        error_msg = {'error': msg, 'reference': cn}
+        return jsonify(error_msg), 403
+
+    logging.info(
+        'get_certificate called on id={} for ca={} by user={}'.format(
+            cn,
+            ca,
+            logged_in_user,
+        )
+    )
+
     validity = request.args.get(
         'validity',
         default=ca_object.settings['max_validity_days'],
@@ -112,41 +105,34 @@ def get_certificate_from_csr(ca):
     # for the ACL check.
     cn = ca_object.get_csr_common_name(csr)
     san = ca_object.get_csr_san(csr)
-    if authnz.user_is_user_type('service'):
-        # TODO: acl check this, rather than checking service name matches
-        if not authnz.user_is_service(cn):
-            logging.warning('Authz failed for service {}.'.format(id))
-            msg = ('Service is not authorized to get certificate cn {} against'
-                   ' ca {}')
-            msg = msg.format(cn, ca)
-            return jsonify({'error': msg}), 401
-    else:
-        logged_in_user = authnz.get_logged_in_user()
-        if not acl_module_check(
-            resource_type='certificate',
-            action='get',
-            resource_id=cn,
-            kwargs={
-                'ca': ca,
-                'san': san,
-            },
-        ):
-            msg = ('{} does not have access to get certificate cn {} against'
-                   ' ca {}').format(
-                authnz.get_logged_in_user(),
-                cn,
-                ca,
-            )
-            error_msg = {'error': msg, 'reference': cn}
-            return jsonify(error_msg), 403
 
-        logging.info(
-            'get_certificate called on id={} for ca={} by user={}'.format(
-                cn,
-                ca,
-                logged_in_user,
-            )
+    logged_in_user = authnz.get_logged_in_user()
+    if not acl_module_check(
+        resource_type='certificate',
+        action='get',
+        resource_id=cn,
+        kwargs={
+            'ca': ca,
+            'san': san,
+        },
+    ):
+        msg = ('{} does not have access to get certificate cn {} against'
+               ' ca {}').format(
+            authnz.get_logged_in_user(),
+            cn,
+            ca,
         )
+        error_msg = {'error': msg, 'reference': cn}
+        return jsonify(error_msg), 403
+
+    logging.info(
+        'get_certificate called on id={} for ca={} by user={}'.format(
+            cn,
+            ca,
+            logged_in_user,
+        )
+    )
+
     arn = ca_object.issue_certificate(encoded_csr, validity)
     certificate = ca_object.get_certificate_from_arn(arn)
     certificate_response = CertificateResponse(
