@@ -13,6 +13,7 @@ from lru import LRU
 
 import confidant.clients
 from confidant import settings
+from confidant.utils import stats
 
 
 class CachedCertificate(object):
@@ -268,20 +269,21 @@ class CertificateAuthority(object):
         of days), issue a certificate from ACM Private CA, and return the ARN
         of the issued certificate.
         """
-        client = confidant.clients.get_boto_client('acm-pca')
-        response = client.issue_certificate(
-            CertificateAuthorityArn=self.settings['arn'],
-            Csr=csr,
-            SigningAlgorithm=self.settings['signing_algorithm'],
-            Validity={
-                'Value': min(validity, self.settings['max_validity_days']),
-                'Type': 'DAYS',
-            },
-            # Quick/easy idempotent token is just a hash of the csr itself. The
-            # token must be 36 chars or less.
-            IdempotencyToken=hashlib.sha256(csr).hexdigest()[:36],
-        )
-        return response['CertificateArn']
+        with stats.timer('issue_certificate'):
+            client = confidant.clients.get_boto_client('acm-pca')
+            response = client.issue_certificate(
+                CertificateAuthorityArn=self.settings['arn'],
+                Csr=csr,
+                SigningAlgorithm=self.settings['signing_algorithm'],
+                Validity={
+                    'Value': min(validity, self.settings['max_validity_days']),
+                    'Type': 'DAYS',
+                },
+                # Quick/easy idempotent token is just a hash of the csr itself.
+                # The token must be 36 chars or less.
+                IdempotencyToken=hashlib.sha256(csr).hexdigest()[:36],
+            )
+            return response['CertificateArn']
 
     def _get_cached_certificate_with_key(self, cache_id):
         """
@@ -289,34 +291,35 @@ class CertificateAuthority(object):
         the process of issuing the same certificate, wait for the other thread
         to populate the cache.
         """
-        if not self.settings['certificate_use_cache']:
-            return {}
-        item = self.cache.get(cache_id)
-        # We're the first thread attempting to get this certificate
-        if not item:
-            return {}
-        # A certificate hasn't been issued yet, but since the cache id exists,
-        # another thread has requested the certificate.
-        i = 0
-        if not item.response:
-            # Wait for response
-            while True:
-                # Only allow a maximum of 10s wait.
-                # keep waiting while the lock is held.
-                if item.lock:
-                    if i >= 100:
+        with stats.timer('get_cached_certificate_with_key'):
+            if not self.settings['certificate_use_cache']:
+                return {}
+            item = self.cache.get(cache_id)
+            # We're the first thread attempting to get this certificate
+            if not item:
+                return {}
+            # A certificate hasn't been issued yet, but since the cache id
+            # exists, another thread has requested the certificate.
+            i = 0
+            if not item.response:
+                # Wait for response
+                while True:
+                    # Only allow a maximum of 10s wait.
+                    # keep waiting while the lock is held.
+                    if item.lock:
+                        if i >= 100:
+                            break
+                        logging.debug(
+                            'Sleeping in _get_cached_certificate_with_key'
+                            ' for {}'.format(cache_id)
+                        )
+                        time.sleep(.100)
+                        i = i + 1
+                    else:
                         break
-                    logging.debug(
-                        'Sleeping in _get_cached_certificate_with_key'
-                        ' for {}'.format(cache_id)
-                    )
-                    time.sleep(.100)
-                    i = i + 1
-                else:
-                    break
-        # If the other thread failed to get the certificate, we need to ensure
-        # that this thread attempts to fetch a certificate.
-        return item.response
+            # If the other thread failed to get the certificate, we need to
+            # ensure that this thread attempts to fetch a certificate.
+            return item.response
 
     def issue_certificate_with_key(self, cn, validity, san=None):
         """
@@ -325,66 +328,75 @@ class CertificateAuthority(object):
         with the PEM encoded certificate, certificate chain, and private RSA
         key.
         """
-        cache_id = self.cache.get_cache_id(cn, validity, san)
-        cached_response = self._get_cached_certificate_with_key(cache_id)
-        if cached_response:
-            logging.debug('Used cached response for {}'.format(cache_id))
-            return cached_response
-        key = self.generate_key()
-        encoded_key = self.encode_key(key)
-        if self.settings['self_sign']:
-            cert = self.encode_certificate(
-                self.generate_self_signed_certificate(key, cn, validity, san)
-            )
-            return {
-                'certificate': cert,
-                'certificate_chain': cert,
-                'key': encoded_key,
-            }
-        csr = self.generate_csr(key, cn, san)
-        try:
-            # set a lock
-            self.cache.lock(cache_id)
-            arn = self.issue_certificate(self.encode_csr(csr), validity)
-            response = self.get_certificate_from_arn(arn)
-            response['key'] = encoded_key
-            self.cache.set_response(cache_id, response)
-        finally:
-            # release the lock
-            self.cache.release(cache_id)
-        return response
+        with stats.timer('issue_certificate_with_key'):
+            cache_id = self.cache.get_cache_id(cn, validity, san)
+            cached_response = self._get_cached_certificate_with_key(cache_id)
+            if cached_response:
+                stats.incr('get_cached_certificate_with_key.hit')
+                logging.debug('Used cached response for {}'.format(cache_id))
+                return cached_response
+            stats.incr('get_cached_certificate_with_key.miss')
+            key = self.generate_key()
+            encoded_key = self.encode_key(key)
+            if self.settings['self_sign']:
+                cert = self.encode_certificate(
+                    self.generate_self_signed_certificate(
+                        key,
+                        cn,
+                        validity,
+                        san,
+                    )
+                )
+                return {
+                    'certificate': cert,
+                    'certificate_chain': cert,
+                    'key': encoded_key,
+                }
+            csr = self.generate_csr(key, cn, san)
+            try:
+                # set a lock
+                self.cache.lock(cache_id)
+                arn = self.issue_certificate(self.encode_csr(csr), validity)
+                response = self.get_certificate_from_arn(arn)
+                response['key'] = encoded_key
+                self.cache.set_response(cache_id, response)
+            finally:
+                # release the lock
+                self.cache.release(cache_id)
+            return response
 
     def get_certificate_from_arn(self, certificate_arn):
         """
         Get the PEM encoded certificate from the provided ARN.
         """
-        client = confidant.clients.get_boto_client('acm-pca')
-        # When a certificate is issued, it may take a while before it's
-        # available via get_certificate. We need to keep retrying until it's
-        # fully issued.
-        i = 0
-        while True:
-            try:
-                response = client.get_certificate(
-                    CertificateAuthorityArn=self.settings['arn'],
-                    CertificateArn=certificate_arn,
-                )
-                break
-            except client.exceptions.RequestInProgressException:
-                # Sleep for a maximum of 10 seconds
-                if i >= 50:
-                    raise
-                logging.debug(
-                    'Sleeping in get_certificate_from_arn for {}'.format(
-                        certificate_arn,
+        with stats.timer('get_certificate_from_arn'):
+            client = confidant.clients.get_boto_client('acm-pca')
+            # When a certificate is issued, it may take a while before it's
+            # available via get_certificate. We need to keep retrying until it's
+            # fully issued.
+            i = 0
+            while True:
+                try:
+                    response = client.get_certificate(
+                        CertificateAuthorityArn=self.settings['arn'],
+                        CertificateArn=certificate_arn,
                     )
-                )
-                time.sleep(.200)
-                i = i + 1
-        return {
-            'certificate': response['Certificate'],
-            'certificate_chain': response['CertificateChain'],
-        }
+                    break
+                except client.exceptions.RequestInProgressException:
+                    # Sleep for a maximum of 10 seconds
+                    if i >= 50:
+                        raise
+                    logging.debug(
+                        'Sleeping in get_certificate_from_arn for {}'.format(
+                            certificate_arn,
+                        )
+                    )
+                    time.sleep(.200)
+                    i = i + 1
+            return {
+                'certificate': response['Certificate'],
+                'certificate_chain': response['CertificateChain'],
+            }
 
     def get_certificate_authority_certificate(self):
         """
