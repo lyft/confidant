@@ -8,7 +8,10 @@ def test_get_certificate(mocker):
     app = create_app()
 
     mocker.patch('confidant.settings.USE_AUTH', False)
-    mocker.patch('confidant.authnz.get_logged_in_user', return_value='badservice')
+    mocker.patch(
+        'confidant.authnz.get_logged_in_user',
+        return_value='badservice',
+    )
     mocker.patch(
         'confidant.routes.certificates.authnz.user_is_user_type',
         return_value=True,

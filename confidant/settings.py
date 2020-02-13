@@ -565,15 +565,13 @@ for ca in ACM_PRIVATE_CAS:
     # If no named group is defined, then the default ACL will deny generation
     # of the certificate.
     # Any certificate issue attempt not matching this pattern for CN or values
-    # in SAN will be denied.
-    #     Default: (?P<service_name>\w+)\.([\w.])+
-    #     Example match: test.example.com
-    #     service_name from example: test
-    # Default will match service_name with any domain, so it's recommended to
-    # override this setting.
+    # in SAN will be denied. If this is unset, all certificate issue attempts
+    # will be denied by the default_acl.
+    #     Example: (?P<service_name>[\w-]+)\.example.com
+    #     Example match: test-service.example.com
+    #     service_name from example: test-service
     ca_settings['name_regex'] = str_env(
-        'ACM_PRIVATE_CA_ALLOWED_DOMAINS_{}'.format(ca_up),
-        '(?P<service_name>[\w-]+)\.([\w.])+',
+        'ACM_PRIVATE_CA_DOMAIN_REGEX_{}'.format(ca_up),
     )
     ACM_PRIVATE_CA_SETTINGS[ca] = ca_settings
 

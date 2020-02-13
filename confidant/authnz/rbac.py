@@ -36,6 +36,9 @@ def default_acl(*args, **kwargs):
                 return True
         elif resource_type == 'certificate' and action in ['get']:
             ca_object = certificatemanager.get_ca(resource_kwargs.get('ca'))
+            # Require a name pattern
+            if not ca_object.settings['name_regex']:
+                return False
             cert_pattern = re.compile(ca_object.settings['name_regex'])
             domains = [resource_id]
             domains.extend(resource_kwargs.get('san', []))
