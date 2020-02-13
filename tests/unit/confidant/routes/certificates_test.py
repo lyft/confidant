@@ -8,6 +8,7 @@ def test_get_certificate(mocker):
     app = create_app()
 
     mocker.patch('confidant.settings.USE_AUTH', False)
+    mocker.patch('confidant.authnz.get_logged_in_user', return_value='badservice')
     mocker.patch(
         'confidant.routes.certificates.authnz.user_is_user_type',
         return_value=True,
@@ -20,7 +21,7 @@ def test_get_certificate(mocker):
         '/v1/certificates/development/test.example.com',
         follow_redirects=False,
     )
-    assert ret.status_code == 401
+    assert ret.status_code == 403
 
     mocker.patch(
         'confidant.routes.certificates.authnz.user_is_user_type',
@@ -44,6 +45,7 @@ def test_get_certificate(mocker):
         'confidant.routes.certificates.acl_module_check',
         return_value=True,
     )
+    mocker.patch('confidant.authnz.get_logged_in_user', return_value='test')
     ca_object = certificatemanager.CertificateAuthority('development')
     mocker.patch(
         ('confidant.routes.certificates.certificatemanager.get_ca'),
@@ -110,6 +112,10 @@ def test_get_certificate_from_csr(mocker):
         'confidant.routes.certificates.authnz.user_is_service',
         return_value=False,
     )
+    mocker.patch(
+        'confidant.routes.certificates.authnz.get_logged_in_user',
+        return_value='badservice',
+    )
     ret = app.test_client().post(
         '/v1/certificates/development',
         data=json.dumps({
@@ -119,7 +125,7 @@ def test_get_certificate_from_csr(mocker):
         content_type='application/json',
         follow_redirects=False,
     )
-    assert ret.status_code == 401
+    assert ret.status_code == 403
 
     mocker.patch(
         'confidant.routes.certificates.authnz.user_is_user_type',

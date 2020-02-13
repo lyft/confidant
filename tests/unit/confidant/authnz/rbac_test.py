@@ -1,66 +1,117 @@
-from confidant.authnz import rbac
 from confidant.app import create_app
+from confidant.authnz import rbac
 
 
 def test_default_acl(mocker):
+    mocker.patch('confidant.settings.USE_AUTH', True)
     app = create_app()
     with app.test_request_context('/fake'):
+        g_mock = mocker.patch('confidant.authnz.g')
+
         # Test for user type is user
-        mocker.patch('confidant.authnz.user_is_user_type', return_value=True)
+        g_mock.user_type = 'user'
         assert rbac.default_acl(resource_type='service') is True
+        assert rbac.default_acl(resource_type='certificate') is False
         # Test for user type is service, but not an allowed resource type
-        mocker.patch(
-            'confidant.authnz.user_is_user_type',
-            side_effect=[False, True],
-        )
+        g_mock.user_type = 'service'
+        g_mock.username = 'test-service'
         assert rbac.default_acl(
-            resource_type='service', action='update'
+            resource_type='service',
+            action='update',
+            resource_id='test-service'
         ) is False
         # Test for user type is service, and an allowed resource, with metadata
         # action, but service name doesn't match
-        mocker.patch(
-            'confidant.authnz.user_is_user_type',
-            side_effect=[False, True],
-        )
-        mocker.patch(
-            'confidant.authnz.user_is_service',
-            return_value=False,
-        )
+        g_mock.username = 'bad-service'
         assert rbac.default_acl(
-            resource_type='service', action='metadata'
+            resource_type='service',
+            action='metadata',
+            resource_id='test-service',
         ) is False
         # Test for user type is service, and an allowed resource, with metadata
         # action
-        mocker.patch(
-            'confidant.authnz.user_is_user_type',
-            side_effect=[False, True],
-        )
-        mocker.patch(
-            'confidant.authnz.user_is_service',
-            return_value=True,
-        )
+        g_mock.username = 'test-service'
         assert rbac.default_acl(
-            resource_type='service', action='metadata'
+            resource_type='service',
+            action='metadata',
+            resource_id='test-service',
         ) is True
         # Test for user type is service, and an allowed resource, with get
         # action
-        mocker.patch(
-            'confidant.authnz.user_is_user_type',
-            side_effect=[False, True],
-        )
-        assert rbac.default_acl(resource_type='service', action='get') is True
+        assert rbac.default_acl(
+            resource_type='service',
+            action='get',
+            resource_id='test-service',
+        ) is True
+        # Test for user type is service, with certificate resource and get
+        # action, with a CN that doesn't match the name pattern
+        assert rbac.default_acl(
+            resource_type='certificate',
+            action='get',
+            # missing domain name...
+            resource_id='test-service',
+            kwargs={'ca': 'development'},
+        ) is False
+        # Test for user type is service, with certificate resource and get
+        # action, with a valid CN
+        assert rbac.default_acl(
+            resource_type='certificate',
+            action='get',
+            resource_id='test-service.example.com',
+            kwargs={'ca': 'development'},
+        ) is True
+        # Test for user type is service, with certificate resource and get
+        # action, with a valid CN, and valid SAN values
+        assert rbac.default_acl(
+            resource_type='certificate',
+            action='get',
+            resource_id='test-service.example.com',
+            kwargs={
+                'ca': 'development',
+                'san': [
+                    'test-service.internal.example.com',
+                    'test-service.external.example.com',
+                ],
+            },
+        ) is True
+        # Test for user type is service, with certificate resource and get
+        # action, with an invalid CN
+        assert rbac.default_acl(
+            resource_type='certificate',
+            action='get',
+            resource_id='bad-service.example.com',
+            kwargs={'ca': 'development'},
+        ) is False
+        # Test for user type is service, with certificate resource and get
+        # action, with a valid CN, but an invalid SAN
+        assert rbac.default_acl(
+            resource_type='certificate',
+            action='get',
+            resource_id='test-service.example.com',
+            kwargs={
+                'ca': 'development',
+                'san': ['bad-service.example.com'],
+            },
+        ) is False
+        # Test for user type is service, with certificate resource and get
+        # action, with a valid CN, but a mix of valid and invalid SAN values
+        assert rbac.default_acl(
+            resource_type='certificate',
+            action='get',
+            resource_id='test-service.example.com',
+            kwargs={
+                'ca': 'development',
+                'san': [
+                    'bad-service.example.com',
+                    'test-service.example.com',
+                ],
+            },
+        ) is False
         # Test for user type is service, and an allowed resource, with
         # disallowed fake action
-        mocker.patch(
-            'confidant.authnz.user_is_user_type',
-            side_effect=[False, True],
-        )
         assert rbac.default_acl(resource_type='service', action='fake') is False
         # Test for bad user type
-        mocker.patch(
-            'confidant.authnz.user_is_user_type',
-            side_effect=[False, False],
-        )
+        g_mock.user_type = 'badtype'
         assert rbac.default_acl(resource_type='service', action='get') is False
 
 

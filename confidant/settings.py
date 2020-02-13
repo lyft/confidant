@@ -560,6 +560,21 @@ for ca in ACM_PRIVATE_CAS:
         'ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE_{}'.format(ca_up),
         1028,
     )
+    # A regex to match against CN and SAN values for this CA. This regex must
+    # include a named group for service_name: (?P<service_name>)
+    # If no named group is defined, then the default ACL will deny generation
+    # of the certificate.
+    # Any certificate issue attempt not matching this pattern for CN or values
+    # in SAN will be denied.
+    #     Default: (?P<service_name>\w+)\.([\w.])+
+    #     Example match: test.example.com
+    #     service_name from example: test
+    # Default will match service_name with any domain, so it's recommended to
+    # override this setting.
+    ca_settings['name_regex'] = str_env(
+        'ACM_PRIVATE_CA_ALLOWED_DOMAINS_{}'.format(ca_up),
+        '(?P<service_name>[\w-]+)\.([\w.])+',
+    )
     ACM_PRIVATE_CA_SETTINGS[ca] = ca_settings
 
 
