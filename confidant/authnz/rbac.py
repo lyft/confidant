@@ -5,7 +5,7 @@ from confidant.services import certificatemanager
 
 
 def default_acl(*args, **kwargs):
-    """ Default ACLs for confidant: Allow all access to all resource types
+    """ Default ACLs for confidant: Allow access to all resource types
     and actions for users, except for certificate resource_type. Deny access
     to all resource types and actions for services, except:
 
