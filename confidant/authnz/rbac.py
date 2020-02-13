@@ -14,7 +14,7 @@ def default_acl(*args, **kwargs):
       resource_id: must match logged-in user's username
     * resource_type: certificate
       actions: get
-      resource_id: must match against ACM_PRIVATE_CA_ALLOWED_DOMAINS setting
+      resource_id: must match against ACM_PRIVATE_CA_DOMAIN_REGEX setting
           for the CA for the CN in the CSR, and for all SAN values in the CSR,
           and the server_name named group in the regex must match the logged
           in user's username.
