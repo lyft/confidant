@@ -68,3 +68,4 @@ salt/pillar/local.sls
 
 # sphinx
 generated/
+build_docs/
