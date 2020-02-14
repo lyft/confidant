@@ -66,16 +66,5 @@ salt/.orchestration/*
 !salt/.orchestration/minion
 salt/pillar/local.sls
 
-# Middleman
-.bundle
-.divshot-cache
-.DS_Store
-.mm-pid-*
-.rbenv-version
-.ruby-version
-.rvmrc
-.sass-cache
-docs/bin
-docs/build
-docs/Gemfile.lock
-docs/source/mint/config/db.php
+# sphinx
+generated/

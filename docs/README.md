@@ -1,47 +1,20 @@
-Static confidant docs
-=====================
+# Developer-local docs build
 
-## Updating the docs
-
-Localized strings:
-
-* locales/en.yml
-
-Partials for nav, search and tracking:
-
-* source/partials
-
-Basic and advanced docs (in markdown):
-
-* source/basic
-* source/advanced
-
-Landing page and footer:
-
-* source/localizable
-
-All images:
-
-* source/images
-
-### Running a local middleman test server to view changes
-
-```
-bundle exec middleman server
+```bash
+# Just run the make target
+make build_docs
+# or directly run the script:
+./docs/build.sh
 ```
 
-## Building the static site
+The output can be found in `generated/docs`.
 
-```
-bundle exec middleman build
-```
+# How the confidant website and docs are updated
 
-## Publishing changes to github.io
+1. The docs are published to [docs/confidant/latest](https://github.com/lyft/confidant.github.io/tree/master/docs/confidant/latest)
+   on every commit to master. This process is handled by Travis with the
+  [`publish.sh`](https://github.com/lyft/confidant/blob/master/docs/publish.sh) script.
 
-```
-bundle exec middleman deploy
-```
-
-## Copyright
-
-Copyright (c) Lyft, Inc. [Creative Commons Attribution 3.0 Unported License](http://creativecommons.org/licenses/by/3.0/).
+2. The docs are published to [docs/confidant](https://github.com/lyft/confidant.github.io/tree/master/docs/confidant)
+   in a directory named after every tagged commit in this repo. Thus, on every tagged release there
+   are snapped docs.
