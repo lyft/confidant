@@ -1,0 +1,30 @@
+tests.unit.confidant.routes package
+===================================
+
+Submodules
+----------
+
+tests.unit.confidant.routes.credentials\_test module
+----------------------------------------------------
+
+.. automodule:: tests.unit.confidant.routes.credentials_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tests.unit.confidant.routes.identity\_test module
+-------------------------------------------------
+
+.. automodule:: tests.unit.confidant.routes.identity_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: tests.unit.confidant.routes
+   :members:
+   :undoc-members:
+   :show-inheritance:

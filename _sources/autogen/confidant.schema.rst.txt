@@ -1,0 +1,46 @@
+confidant.schema package
+========================
+
+Submodules
+----------
+
+confidant.schema.auto\_build\_schema module
+-------------------------------------------
+
+.. automodule:: confidant.schema.auto_build_schema
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.schema.blind\_credentials module
+------------------------------------------
+
+.. automodule:: confidant.schema.blind_credentials
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.schema.credentials module
+-----------------------------------
+
+.. automodule:: confidant.schema.credentials
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.schema.services module
+--------------------------------
+
+.. automodule:: confidant.schema.services
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: confidant.schema
+   :members:
+   :undoc-members:
+   :show-inheritance:

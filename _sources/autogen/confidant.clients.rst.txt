@@ -1,0 +1,10 @@
+confidant.clients package
+=========================
+
+Module contents
+---------------
+
+.. automodule:: confidant.clients
+   :members:
+   :undoc-members:
+   :show-inheritance:

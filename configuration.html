@@ -1,0 +1,1089 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Configuration &mdash; confidant 5.2.0-de1358 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/confidant.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Managing secrets and mappings" href="using_confidant.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="contents.html" class="icon icon-home"> confidant
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.2.0-de1358
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Basics</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#quickstart-for-testing">Quickstart for testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#docker-installation">Docker installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#to-run-confidant-in-docker">To run confidant in Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#to-build-the-image">To build the image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#pip-installation">pip installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#make-a-virtualenv-and-install-pip-requirements">Make a virtualenv and install pip requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#manual-installation">Manual installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#clone-confidant">Clone Confidant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#id1">Make a virtualenv and install pip requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#build-the-frontend">Build the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#run-confidant">Run confidant</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#docker-vs-bash">Docker vs bash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-environment-configuration">Basic environment configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#google-authentication-configuration">Google authentication configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#saml-authentication-configuration">SAML authentication configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#user-authentication-session-settings">User authentication session settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#disabling-credential-conflict-checks">Disabling credential conflict checks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-environment-configuration">Advanced environment configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#statsd-metrics">statsd metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sending-graphite-events">Sending graphite events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#google-authentication-user-restrictions">Google authentication user restrictions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#auth-token-lifetime">Auth token lifetime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#frontend-configuration">Frontend configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#development-and-testing-settings">Development and testing settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bootstrapping-confidant-s-own-secrets">Bootstrapping Confidant’s own secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-account-authentication">Multi-account authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kms-authentication-for-end-users">KMS authentication for end-users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kms-grant-management">KMS grant management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#confidant-client-configuration">Confidant client configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maintenance-mode-settings">Maintenance mode settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#confidant-performance-settings">Confidant performance settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kms-key-policy-configuration">KMS key policy configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#confidant-iam-role-configuration">Confidant IAM role configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#confidant-dynamodb-table-configuration">Confidant DynamoDB table configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="using_confidant.html">Managing secrets and mappings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="using_confidant.html#using-the-resources-view">Using the resources view</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#creating-secrets">Creating secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#mapping-secrets-to-services">Mapping secrets to services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#finding-credentials-and-services-in-the-sidebar">Finding credentials and services in the sidebar</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="using_confidant.html#using-the-history-view">Using the history view</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Using the Confidant client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="client.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#reformatting-get-service-output">Reformatting get_service output</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="blind_secrets.html">Server-blinded secrets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blind_secrets.html#what-are-server-blinded-secrets">What are server-blinded secrets?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blind_secrets.html#kms-keys-and-iam-policy-examples-for-server-blinded-secrets">KMS keys and IAM policy examples for server-blinded secrets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blind_secrets.html#creating-and-updating-server-blinded-secrets-using-the-confidant-client">Creating and updating server-blinded secrets using the confidant client</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kms_auth.html">KMS authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#service-to-service-authentication">Service-to-service authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kms_auth.html#iam-policy-configuration-for-service-to-service-auth">IAM policy configuration for service-to-service auth</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#passing-encrypted-data-between-services">Passing encrypted data between services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#user-to-service-authentication">User-to-service authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#multi-account-kms-authentication">Multi-account KMS authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="threat_model.html">Threat model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-client-threat-model">Web client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#assumptions">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-authenticated-user-can-achieve">What an authenticated user can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-compromise-of-an-authenticated-user-s-computer-can-achieve">What compromise of an authenticated user’s computer can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-local-network-attacker-who-can-observe-network-traffic-can-achieve">What an unauthenticated local network attacker who can observe network traffic can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-attacker-from-the-internet-can-achieve">What an unauthenticated attacker from the Internet can achieve</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-server-threat-model">Web server threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id1">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-through-compromise-of-the-confidant-web-server">What an attacker can achieve through compromise of the Confidant web server</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#service-client-threat-model">Service client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id2">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-the-service-can-achieve">What the service can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-with-a-filesystem-read-vulnerability">What an attacker can achieve with a filesystem read vulnerability</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#storage-threat-model">Storage threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id3">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-with-dynamodb-access-can-achieve">What an attacker with DynamoDB access can achieve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#code-of-conduct">Code of conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributing-code">Contributing code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#sign-the-contributor-license-agreement-cla">Sign the Contributor License Agreement (CLA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#file-issues-in-github">File issues in Github</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#submit-pull-requests">Submit pull requests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-guide">Development guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#development-using-docker">Development using docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#quickstart-for-testing-or-development">Quickstart for testing or development</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_schema.html">DynamoDB Data Schema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_schema.html#at-rest-encryption-model">At-rest encryption model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="upgrade.html">Upgrading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-2-0-0-or-3-0-0">Upgrading to 2.0.0 or 3.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="upgrade.html#performing-the-data-migration">Performing the data migration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-4-0-0">Upgrading to 4.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="upgrade.html#peforming-the-data-migration-for-4-0-0">Peforming the data migration for 4.0.0</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">5.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">5.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">5.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">5.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">4.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">4.3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">4.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id8">4.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">4.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id10">4.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">3.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">2.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">2.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id14">1.11.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">1.10.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">1.10.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id17">1.9.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id18">1.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id19">1.7.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id20">1.6.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id21">1.5.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id22">1.5.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id23">1.4.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id24">1.3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id25">1.2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id26">1.1.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id27">1.1.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id28">1.1.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id29">1.1.16 - 1.1.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id30">1.1.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id31">1.1.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id32">1.1.13</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Communication</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security_reporting.html">Reporting security vulnerabilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">confidant</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>Configuration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/configuration.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<p>Confidant is primarily configured through environment variables. The list of
+all available configuration options can be found in the settings.py file.</p>
+<p>Prerequisites not covered by this guide:</p>
+<ol class="arabic simple">
+<li><p>Your Google application is setup and you know your client id and secret key.</p></li>
+</ol>
+<div class="section" id="docker-vs-bash">
+<h2>Docker vs bash<a class="headerlink" href="#docker-vs-bash" title="Permalink to this headline">¶</a></h2>
+<p>Note that below the format of the configuration is given in bash format for
+defining and exporting environment variables. Docker environment files have a
+slightly different format than bash. Here’s an example of the difference:</p>
+<p>In bash format:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">MY_VARIABLE</span><span class="o">=</span><span class="s1">&#39;MY_VALUE&#39;</span>
+</pre></div>
+</div>
+<p>In docker env file format, you don’t export the variable, and the value
+shouldn’t be quoted, since everything after the equal sign is considered part
+of the value. So, in a docker environment file, you’d define the same variable
+and value like this:</p>
+<p>In docker format:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>MY_VARIABLE=MY_VALUE
+</pre></div>
+</div>
+</div>
+<div class="section" id="basic-environment-configuration">
+<h2>Basic environment configuration<a class="headerlink" href="#basic-environment-configuration" title="Permalink to this headline">¶</a></h2>
+<p>This is the minimum configuration needed to use Confidant:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># The region our service is running in.</span>
+<span class="nb">export</span> <span class="nv">AWS_DEFAULT_REGION</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span>
+<span class="c1"># The IAM role name of the confidant server.</span>
+<span class="nb">export</span> <span class="nv">AUTH_CONTEXT</span><span class="o">=</span><span class="s1">&#39;confidant-production&#39;</span>
+<span class="c1"># The KMS key used for auth.</span>
+<span class="nb">export</span> <span class="nv">AUTH_KEY</span><span class="o">=</span><span class="s1">&#39;alias/authnz-production&#39;</span>
+<span class="c1"># The DynamoDB table name for storage.</span>
+<span class="nb">export</span> <span class="nv">DYNAMODB_TABLE</span><span class="o">=</span><span class="s1">&#39;confidant-production&#39;</span>
+<span class="c1"># Auto-generate the dynamodb table.</span>
+<span class="nb">export</span> <span class="nv">DYNAMODB_CREATE_TABLE</span><span class="o">=</span><span class="nb">true</span>
+<span class="c1"># Set the gevent resolver to ares; see:</span>
+<span class="c1">#   https://github.com/surfly/gevent/issues/468</span>
+<span class="nb">export</span> <span class="nv">GEVENT_RESOLVER</span><span class="o">=</span><span class="s1">&#39;ares&#39;</span>
+<span class="c1"># The KMS key used for at-rest encryption in DynamoDB.</span>
+<span class="nb">export</span> <span class="nv">KMS_MASTER_KEY</span><span class="o">=</span><span class="s1">&#39;alias/confidant-production&#39;</span>
+<span class="c1"># A long randomly generated string for CSRF protection.</span>
+<span class="c1"># SESSION_SECRET can be loaded via SECRETS_BOOTSTRAP</span>
+<span class="nb">export</span> <span class="nv">SESSION_SECRET</span><span class="o">=</span><span class="s1">&#39;aBVmJA3zv6zWGjrYto135hkdox6mW2kOu7UaXIHK8ztJvT8w5O&#39;</span>
+<span class="c1"># The IP address to listen on.</span>
+<span class="nb">export</span> <span class="nv">HOST</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span>
+<span class="c1"># The port to listen on.</span>
+<span class="nb">export</span> <span class="nv">PORT</span><span class="o">=</span><span class="s1">&#39;80&#39;</span>
+<span class="c1"># Trust X-Forwarded-Proto from any SSL termination server</span>
+<span class="nb">export</span> <span class="nv">FORWARDED_ALLOW_IPS</span><span class="o">=</span><span class="s1">&#39;*&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gunicorn-configuration-for-ssl-termination-support">
+<h2>gunicorn configuration for SSL termination support<a class="headerlink" href="#gunicorn-configuration-for-ssl-termination-support" title="Permalink to this headline">¶</a></h2>
+<p>We assume confidant is always run behind a trusted SSL termination load
+balancer. As such, confidant will run as <a class="reference external" href="http://">http://</a> and gunicorn will need to trust
+X-Forwarded-Proto to know that it’s running behind a terminator.</p>
+<p>To configure this via an environment variable:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Environment for gunicorn</span>
+<span class="nb">export</span> <span class="nv">FORWARDED_ALLOW_IPS</span><span class="o">=</span><span class="s1">&#39;*&#39;</span>
+</pre></div>
+</div>
+<p>If the environment variable doesn’t work, you can configure this through a CLI
+argument to gunicorn:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># CLI flag for gunicorn</span>
+gunicorn confidant.wsgi:app -k gevent --forwarded-allow-ips<span class="o">=</span>*
+</pre></div>
+</div>
+<div class="section" id="google-authentication-configuration">
+<h3>Google authentication configuration<a class="headerlink" href="#google-authentication-configuration" title="Permalink to this headline">¶</a></h3>
+<p>To enable Google authentication, you’ll need to visit the API manager in the
+Google developer console (<a class="reference external" href="https://console.developers.google.com">https://console.developers.google.com</a>), and create a
+new project (or add credentials to an existing project, if you prefer). After
+creating the project, you’ll need to enable the Google+ API. After enabling the
+Google+ API, you’ll need to add credentials to this project. You’ll want to
+create OAuth client ID credentials. The application type is ‘Web application’.
+The Authorized JavaScript origins is ‘<span class="raw-html-m2r"><url></span>/’. The Authorized redirect URI is
+<code class="docutils literal notranslate"><span class="pre">&lt;url&gt;/v1/login</span></code>. Take the generated client id and consumer secret, and set
+them in the settings. You’ll also need to generate a long random string and set
+the AUTHOMATIC_SALT setting, for CSRF protection.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># The authentication type we&#39;ll be using for user authentication (google is the</span>
+<span class="c1"># default)</span>
+<span class="nb">export</span> <span class="nv">USER_AUTH_MODULE</span><span class="o">=</span><span class="s1">&#39;google&#39;</span>
+<span class="c1"># The client id and consumer secret from the google developer console.</span>
+<span class="c1"># GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CONSUMER_SECRET can be loaded via SECRETS_BOOTSTRAP</span>
+<span class="nb">export</span> <span class="nv">GOOGLE_OAUTH_CLIENT_ID</span><span class="o">=</span><span class="s1">&#39;123456789-abcdefghijklmnop.apps.googleusercontent.com&#39;</span>
+<span class="nb">export</span> <span class="nv">GOOGLE_OAUTH_CONSUMER_SECRET</span><span class="o">=</span><span class="s1">&#39;123456789abcdefghijklmnop&#39;</span>
+<span class="c1"># A long randomly generated string used for the google OAuth2 flow.</span>
+<span class="c1"># AUTHOMATIC_SALT can be loaded via SECRETS_BOOTSTRAP</span>
+<span class="nb">export</span> <span class="nv">AUTHOMATIC_SALT</span><span class="o">=</span><span class="s1">&#39;H39bfLCqLbrYrFyiJIxkK0uf12rlzvgjgo9FqOnttPXIdAAuyQ&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="saml-authentication-configuration">
+<h3>SAML authentication configuration<a class="headerlink" href="#saml-authentication-configuration" title="Permalink to this headline">¶</a></h3>
+<p>To enable SAML authentication, set the <code class="docutils literal notranslate"><span class="pre">USER_AUTH_MODULE</span></code> environment variable.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># The authentication type we&#39;ll be using for user authentication - set to SAML.</span>
+<span class="nb">export</span> <span class="nv">USER_AUTH_MODULE</span><span class="o">=</span><span class="s1">&#39;saml&#39;</span>
+</pre></div>
+</div>
+<p>You will first need to create a SAML application in your Identity Provider
+(IdP) and provide the following details to it:</p>
+<ul class="simple">
+<li><p>ACS URL: <a class="reference external" href="https://your-confidant-url-here.com/v1/saml/consume">https://your-confidant-url-here.com/v1/saml/consume</a></p></li>
+<li><p>Entity ID: <a class="reference external" href="https://your-confidant-url-here.com/v1/saml/metadata">https://your-confidant-url-here.com/v1/saml/metadata</a></p></li>
+</ul>
+<p>You can optionally include an attribute mapping on the (IdP) to pass the first
+name as <code class="docutils literal notranslate"><span class="pre">first_name</span></code> and last name as <code class="docutils literal notranslate"><span class="pre">last_name</span></code> to the service provider (SP)
+so that this information is captured when logging in to Confidant. The IdP
+should provide some details about the Entity ID, the IdP certificate, the
+Sign-On URL and the Log-Out URL (the Log-Out URL may not be provided depending
+on the IdP). Export your SAML details as environment variables for Confidant to
+read:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Root URL that browsers use to hit Confidant.</span>
+<span class="nb">export</span> <span class="nv">SAML_CONFIDANT_URL_ROOT</span><span class="o">=</span><span class="s1">&#39;https://your-confidant-url-here.com&#39;</span>
+<span class="c1"># SAML IdP Entity ID (typically a URL)</span>
+<span class="nb">export</span> <span class="nv">SAML_IDP_ENTITY_ID</span><span class="o">=</span><span class="s1">&#39;https://idp-provided-url-here.com/&#39;</span>
+<span class="c1"># SAML IdP Single Sign On URL (HTTP-REDIRECT binding only)</span>
+<span class="nb">export</span> <span class="nv">SAML_IDP_SIGNON_URL</span><span class="o">=</span><span class="s1">&#39;https://idp-provided-url-here.com/&#39;</span>
+<span class="c1"># SAML IdP Single Logout URL, optional, only if IDP supports it</span>
+<span class="c1"># (HTTP-REDIRECT binding only)</span>
+<span class="nb">export</span> <span class="nv">SAML_IDP_LOGOUT_URL</span><span class="o">=</span><span class="s1">&#39;https://idp-provided-url-here.com/&#39;</span>
+<span class="c1"># SAML IdP X.509 certificate in PEM format</span>
+<span class="nb">export</span> <span class="nv">SAML_IDP_CERT</span><span class="o">=</span><span class="s2">&quot;-----BEGIN CERTIFICATE-----</span>
+<span class="s2">MIICsDCCAhmgAwIBAgIJALw1z/rM2pg2MA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV</span>
+<span class="s2">BAYTAkFVMRMwEQYDVQQIEwpTb21lLVN0YXRlMSEwHwYDVQQKExhJbnRlcm5ldCBX</span>
+<span class="s2">aWRnaXRzIFB0eSBMdGQwHhcNMTcwMjE1MTk0NjAyWhcNMjcwMjE1MTk0NjAyWjBF</span>
+<span class="s2">MQswCQYDVQQGEwJBVTETMBEGA1UECBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50</span>
+<span class="s2">ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB</span>
+<span class="s2">gQDVlwBwiK9S9uQo0uNT1ho0TzfPSQ3MZ0QNS7MAUSBUWwqx7B8orjmzohSliWjC</span>
+<span class="s2">0vlb14F8bqkJpcpMEZRrG4AM2H41XG2T/aCBjH4w3SUHZzTsCxuC1VUym4sLbWBU</span>
+<span class="s2">DtvApkpEJDnQiYyQH4M3KMFqKzEB/cu1YEKcDsXqUjHKMQIDAQABo4GnMIGkMB0G</span>
+<span class="s2">A1UdDgQWBBT4HpgZAnlydQzcbhE7xPB9zendbDB1BgNVHSMEbjBsgBT4HpgZAnly</span>
+<span class="s2">dQzcbhE7xPB9zendbKFJpEcwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgTClNvbWUt</span>
+<span class="s2">U3RhdGUxITAfBgNVBAoTGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZIIJALw1z/rM</span>
+<span class="s2">2pg2MAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAirAqPWuc7zX/Qc7Q</span>
+<span class="s2">6xbYd/NdCLIVXoQoPbnNDGuv25b1PZKYcfEuGBt+2kU7Xo0AAxgFUEQ00juyBg/r</span>
+<span class="s2">616V3SRuXi0r+xbUOdTvEz7visAXu2e3kyDQncvryEhq3DCffc4UTGbpZrnTxhRm</span>
+<span class="s2">1DJr81eyo8/xREBnRcK5/DCj+U4=</span>
+<span class="s2">-----END CERTIFICATE-----&quot;</span>
+<span class="c1"># SAML IdP X.509 certificate file in PEM format</span>
+<span class="nb">export</span> <span class="nv">SAML_IDP_CERT_FILE</span><span class="o">=</span><span class="s1">&#39;/path/to/idp_cert.pem&#39;</span>
+<span class="c1"># NOTE: Only provide either SAML_IDP_CERT or SAML_IDP_CERT_FILE (you should not</span>
+<span class="c1"># provide both).</span>
+</pre></div>
+</div>
+<p>If your IdP requires you to sign your SAML requests, you will need to set up
+the service provider (SP) details. If you do not already have a certificate
+and private key for the SP, you can generate one using the command below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate a self-signed certificate and place the certificate in</span>
+<span class="c1"># sp.crt and the private key in private.key. It will ask for input for a</span>
+<span class="c1"># passphrase.</span>
+openssl req -new -x509 -days <span class="m">365</span> -out sp.crt -keyout private.key
+</pre></div>
+</div>
+<p>Export the SP details as environment variables for Confidant to read:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Raw X.509 certificate in PEM format</span>
+<span class="nb">export</span> <span class="nv">SAML_SP_CERT</span><span class="o">=</span><span class="s2">&quot;-----BEGIN CERTIFICATE-----</span>
+<span class="s2">MIICsDCCAhmgAwIBAgIJAKTiHVFA9kAbMA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV</span>
+<span class="s2">BAYTAkFVMRMwEQYDVQQIEwpTb21lLVN0YXRlMSEwHwYDVQQKExhJbnRlcm5ldCBX</span>
+<span class="s2">aWRnaXRzIFB0eSBMdGQwHhcNMTcwMjE1MjIyODQzWhcNMTgwMjE1MjIyODQzWjBF</span>
+<span class="s2">MQswCQYDVQQGEwJBVTETMBEGA1UECBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50</span>
+<span class="s2">ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB</span>
+<span class="s2">gQDF4sRC8SXwhYB6al8UhGjeAB6xJXYnjFEqhd8U3Kc1Gs9SyxDsId4tOHYotWdK</span>
+<span class="s2">C3doeLbCuM0xqVbWZX8XUptLR1PImZvUX2KmLOtO0NVIGGa17XlUJBcgd9uKLrCO</span>
+<span class="s2">lizS8saWTLuPdNdlv7WNYyGSRAgw9/H06Szy2b7735thiQIDAQABo4GnMIGkMB0G</span>
+<span class="s2">A1UdDgQWBBQW3mpcpfpspIF4pKleytfm3gP6bzB1BgNVHSMEbjBsgBQW3mpcpfps</span>
+<span class="s2">pIF4pKleytfm3gP6b6FJpEcwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgTClNvbWUt</span>
+<span class="s2">U3RhdGUxITAfBgNVBAoTGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZIIJAKTiHVFA</span>
+<span class="s2">9kAbMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAi4fOkax7ZMKw9wbF</span>
+<span class="s2">Do1A1c8YXmPERHtfNuGJb3QINLqeMXl+4p/ryzTJR0UP6iqDTPOq02mtJ+eR4AhC</span>
+<span class="s2">Fmgrm671fKCTYu3vjQS33IXOoGW+0f2XX+gWVHie8ZC4vi/dfh30At+A6wJelXkz</span>
+<span class="s2">cRNGXl5zn4uyC6T8g1rC544tbb8=</span>
+<span class="s2">-----END CERTIFICATE-----&quot;</span>
+<span class="c1"># Path to SP X.509 certificate file in PEM format</span>
+<span class="nb">export</span> <span class="nv">SAML_SP_CERT_FILE</span><span class="o">=</span><span class="s1">&#39;/path/to/sp_cert.pem&#39;</span>
+<span class="c1"># NOTE: Only provide either SAML_SP_CERT or SAML_SP_CERT_FILE (you should not</span>
+<span class="c1"># provide both).</span>
+
+<span class="c1"># Path to SP private key file in PEM format</span>
+<span class="nb">export</span> <span class="nv">SAML_SP_KEY_FILE</span><span class="o">=</span><span class="s1">&#39;/path/to/sp_key.key&#39;</span>
+<span class="c1"># Raw SP private key in PEM format</span>
+<span class="c1"># This setting can be loaded from the SECRETS_BOOTSTRAP.</span>
+<span class="nb">export</span> <span class="nv">SAML_SP_KEY</span><span class="o">=</span><span class="s2">&quot;-----BEGIN RSA PRIVATE KEY-----</span>
+<span class="s2">Proc-Type: 4,ENCRYPTED</span>
+<span class="s2">DEK-Info: DES-EDE3-CBC,241900635D644CE6</span>
+
+<span class="s2">RcUZgdpnT2ZUdMGoKb2+3TbenSuT/dsi3SRajCL6IvbFOG9wUo4TvIcH0CCZB5ZY</span>
+<span class="s2">u08B/zmuOpm5QDEFbfiipqs76SXHKUZssKrEiiJPI5FZKfkyCkK5vV7eLhuI/B5U</span>
+<span class="s2">f0S6MBXXvP1dUg5LzZPOhNfJVcaNxOCFPBgl6HJ6sn0qkLOzrcc4wHycHsJmDxhe</span>
+<span class="s2">SC8EfIWv94vk8EsW/pWRsc+AQ1HPw3SHEPMGv6ojUdGPlF136ZTNSTjUlygHjhPX</span>
+<span class="s2">nes9+PKgt+Rfpb+kolXSGlvujFsWTxGz9h08X37RhyVGV8V9bS6REt62OGdErofp</span>
+<span class="s2">BSRO3791dOhYcEywDt8oaFaieR3ND+iL4RnsfKseQRM+EAUBhjVjxqP64h5DlaNc</span>
+<span class="s2">UHzaBuCWUeGoorzVqSG+UotcWYaXeyq+WjkCaDFPI/sCpk0goJtUjzJZP3nL1vKy</span>
+<span class="s2">BMfDyjrz3QPkLU7hksWH4G89H2NXGGSvHttzzY3ihYqVXVJiNASCXPqo3qjnO+/Z</span>
+<span class="s2">Qsis6z//zd/URtqmk2pr6RznqJJg74NL4wj8pMHRlJ3Li7LDYm6q6GCmQugIZ+4l</span>
+<span class="s2">M1nlyELLrq4fRellVmXXA+z0FGqDxEe2q8g4KBbdjpFCzYO0kgqbNiFNilx3SAZY</span>
+<span class="s2">B5FP+dxNU+ZkA1mkS6u2j/sRpdDvPMJJ9R0xdUmrJODwdVL+B2jvfhLsTmNuOnzF</span>
+<span class="s2">hBK/zw00MXYq37qv7x3JcdCrUAtEhinXbdx3xmBPshGHy6YYH5L4UPkrxlV7yAmg</span>
+<span class="s2">Uiql+YCDH79JiVLf8jvKJa3WDPeTEPBEmZDjpdefimdswU73J+oPmg==</span>
+<span class="s2">-----END RSA PRIVATE KEY-----&quot;</span>
+<span class="c1"># Password for the SAML_SP_KEY_FILE</span>
+<span class="c1"># This setting can be loaded from the SECRETS_BOOTSTRAP.</span>
+<span class="nb">export</span> <span class="nv">SAML_SP_KEY_FILE_PASSWORD</span><span class="o">=</span><span class="s1">&#39;verysecurepassword&#39;</span>
+</pre></div>
+</div>
+<p>There are some other SAML options that you can set that may need to be changed
+depending on the IdP that you use. If you get SAML errors, tweaking these
+variables may help solve your issue. The values listed below are the defaults
+that Confidant uses.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Algorithm used for SAML signing</span>
+<span class="c1"># default: http://www.w3.org/2001/04/xmldsig-more#rsa-sha256</span>
+<span class="c1"># see also: http://www.w3.org/2000/09/xmldsig#rsa-sha1</span>
+<span class="nb">export</span> <span class="nv">SAML_SECURITY_SIG_ALGO</span><span class="o">=</span><span class="s1">&#39;http://www.w3.org/2001/04/xmldsig-more#rsa-sha256&#39;</span>
+<span class="c1"># Whether to require signatures on SLO responses</span>
+<span class="nb">export</span> <span class="nv">SAML_SECURITY_SLO_RESP_SIGNED</span><span class="o">=</span><span class="nb">true</span>
+<span class="c1"># Whether to require signatures on full SAML response messages</span>
+<span class="nb">export</span> <span class="nv">SAML_SECURITY_MESSAGES_SIGNED</span><span class="o">=</span><span class="nb">true</span>
+<span class="c1"># Whether to require signatures on individual SAML response assertion fields</span>
+<span class="nb">export</span> <span class="nv">SAML_SECURITY_ASSERTIONS_SIGNED</span><span class="o">=</span><span class="nb">false</span>
+<span class="c1"># NOTE: You will very likely want at least one of</span>
+<span class="c1"># SAML_SECURITY_MESSAGES_SIGNED or SAML_SECURITY_ASSERTIONS_SIGNED to be true.</span>
+<span class="c1"># Whether you want an attribute statement from the SAML assertion</span>
+<span class="nb">export</span> <span class="nv">SAML_WANT_ATTRIBUTE_STATEMENT</span><span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div>
+<p>To debug SAML and/or test SAML in development, you may want to set either of
+the following flags to true.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Debug mode for python-saml library. Follows global DEBUG setting if not set.</span>
+<span class="nb">export</span> <span class="nv">SAML_DEBUG</span><span class="o">=</span><span class="nb">false</span>
+<span class="c1"># Pretend that all requests are HTTPS for purposes of SAML validation. This is</span>
+<span class="c1"># useful if your app is behind a weird load balancer and flask isn&#39;t respecting</span>
+<span class="c1"># X-Forwarded-Proto. For security, this flag will only be respected in debug</span>
+<span class="c1"># mode.</span>
+<span class="nb">export</span> <span class="nv">SAML_FAKE_HTTPS</span><span class="o">=</span><span class="nb">false</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="user-authentication-session-settings">
+<h3>User authentication session settings<a class="headerlink" href="#user-authentication-session-settings" title="Permalink to this headline">¶</a></h3>
+<p>By default (in confidant 1.1) confidant will use itsdangerous secure cookies
+for session management, with a session lifetime and maximum session lifetime. A
+user’s session lifetime with automatically be extended any time a user performs
+any action in the interface, but the user’s session lifetime can only be
+extended up to the maximum session lifetime, in which they’ll be required to
+login again. The session lifetime and maximum session lifetime can be adjusted:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Session lifetime in seconds. Default is 12 hours.</span>
+<span class="nb">export</span> <span class="nv">PERMANENT_SESSION_LIFETIME</span><span class="o">=</span><span class="s1">&#39;43200&#39;</span>
+<span class="c1"># Maximum session lifetime in seconds. Default is 24 hours.</span>
+<span class="nb">export</span> <span class="nv">MAX_PERMANENT_SESSION_LIFETIME</span><span class="o">=</span><span class="s1">&#39;86400&#39;</span>
+</pre></div>
+</div>
+<p>An alternative to using itsdangerous cookies is to store cookies in a redis
+backend:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">REDIS_URL</span><span class="o">=</span><span class="s1">&#39;redis://localhost:6381&#39;</span>
+<span class="nb">export</span> <span class="nv">PERMANENT_SESSION_LIFETIME</span><span class="o">=</span><span class="s1">&#39;0&#39;</span>
+</pre></div>
+</div>
+<p>It’s possible to use custom cookie names for both the session cookie, and for
+the XSRF token cookie:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">SESSION_COOKIE_NAME</span><span class="o">=</span><span class="s1">&#39;confidant_session&#39;</span>
+<span class="nb">export</span> <span class="nv">XSRF_COOKIE_NAME</span><span class="o">=</span><span class="s1">&#39;XSRF-TOKEN&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="disabling-credential-conflict-checks">
+<h3>Disabling credential conflict checks<a class="headerlink" href="#disabling-credential-conflict-checks" title="Permalink to this headline">¶</a></h3>
+<p>By default confidant will ensure that credentials mapped to a service don’t
+have any conflicting credential pair keys. These checks occur when mapping
+credentials to a service, or when modifying credentials that are mapped to a
+service. To disable this check:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">IGNORE_CONFLICTS</span><span class="o">=</span><span class="s1">&#39;True&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="advanced-environment-configuration">
+<h2>Advanced environment configuration<a class="headerlink" href="#advanced-environment-configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="statsd-metrics">
+<h3>statsd metrics<a class="headerlink" href="#statsd-metrics" title="Permalink to this headline">¶</a></h3>
+<p>Confidant can track some stats via statsd. By default it’s set to send stats to
+statsd on localhost on port 8125.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">STATSD_HOST</span><span class="o">=</span><span class="s1">&#39;mystatshost.example.com&#39;</span>
+<span class="nb">export</span> <span class="nv">STATSD_PORT</span><span class="o">=</span><span class="s1">&#39;8125&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sending-graphite-events">
+<h3>Sending graphite events<a class="headerlink" href="#sending-graphite-events" title="Permalink to this headline">¶</a></h3>
+<p>Confidant can also send graphite events on secret updates or changes in service
+mappings:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">GRAPHITE_EVENT_URL</span><span class="o">=</span><span class="s1">&#39;https://graphite.example.com/events/&#39;</span>
+<span class="nb">export</span> <span class="nv">GRAPHITE_USERNAME</span><span class="o">=</span><span class="s1">&#39;mygraphiteuser&#39;</span>
+<span class="c1"># GRAPHITE_PASSWORD can be loaded via SECRETS_BOOTSTRAP</span>
+<span class="nb">export</span> <span class="nv">GRAPHITE_PASSWORD</span><span class="o">=</span><span class="s1">&#39;mylongandsupersecuregraphitepassword&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="google-authentication-user-restrictions">
+<h3>Google authentication user restrictions<a class="headerlink" href="#google-authentication-user-restrictions" title="Permalink to this headline">¶</a></h3>
+<p>It’s possible to restrict access to a subset of users that authenticate
+using Google authentication:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">USERS_FILE</span><span class="o">=</span><span class="s1">&#39;/etc/confidant/users.yaml&#39;</span>
+<span class="nb">export</span> <span class="nv">USER_EMAIL_SUFFIX</span><span class="o">=</span><span class="s1">&#39;@example.com&#39;</span>
+</pre></div>
+</div>
+<p>In the above configuration, Confidant will limit authentication to users with
+the email domain &#64;example.com. Additionally, Confidant will look in the
+users.yaml file for a list of email addresses allowed to access Confidant.</p>
+</div>
+<div class="section" id="auth-token-lifetime">
+<h3>Auth token lifetime<a class="headerlink" href="#auth-token-lifetime" title="Permalink to this headline">¶</a></h3>
+<p>It’s possible to limit the lifetime of KMS authentication tokens. By default
+Confidant limits token lifetime to 60 minutes, to ensure that tokens are being
+rotated. To change this, you can use the following option:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Limit token lifetime to 10 minutes.</span>
+<span class="nb">export</span> <span class="nv">AUTH_TOKEN_MAX_LIFETIME</span><span class="o">=</span><span class="s1">&#39;10&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="frontend-configuration">
+<h3>Frontend configuration<a class="headerlink" href="#frontend-configuration" title="Permalink to this headline">¶</a></h3>
+<p>If you’re using the generated, minified output in the dist directory, you
+need to tell confidant to change its static folder:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">STATIC_FOLDER</span><span class="o">=</span><span class="s1">&#39;dist&#39;</span>
+</pre></div>
+</div>
+<p>It’s possible to customize portions of the angularjs application.
+Currently you can add a documentation section to the credential details view.
+We’d like to make more customization available. Please open a github issue with
+specific customizations you’d like focused on first. The custom js/css/html
+will be served from a directory you specify:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">CUSTOM_FRONTEND_DIRECTORY</span><span class="o">=</span><span class="s1">&#39;/srv/confidant-static&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="development-and-testing-settings">
+<h3>Development and testing settings<a class="headerlink" href="#development-and-testing-settings" title="Permalink to this headline">¶</a></h3>
+<p>There’s a few settings that are meant for development or testing purposes only
+and should never be used in production:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Disable all forms of authentication.</span>
+<span class="c1"># NEVER USE THIS IN PRODUCTION!</span>
+<span class="nb">export</span> <span class="nv">USE_AUTH</span><span class="o">=</span><span class="nb">false</span>
+<span class="c1"># Disable any use of at-rest encryption.</span>
+<span class="c1"># NEVER USE THIS IN PRODUCTION!</span>
+<span class="nb">export</span> <span class="nv">USE_ENCRYPTION</span><span class="o">=</span><span class="nb">false</span>
+<span class="c1"># Disable SSLify</span>
+<span class="c1"># NEVER USE THIS IN PRODUCTION!</span>
+<span class="nb">export</span> <span class="nv">SSLIFY</span><span class="o">=</span><span class="nb">false</span>
+<span class="c1"># Enable debug mode, which will also disable SSLify.</span>
+<span class="c1"># NEVER USE THIS IN PRODUCTION!</span>
+<span class="nb">export</span> <span class="nv">DEBUG</span><span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bootstrapping-confidant-s-own-secrets">
+<h3>Bootstrapping Confidant’s own secrets<a class="headerlink" href="#bootstrapping-confidant-s-own-secrets" title="Permalink to this headline">¶</a></h3>
+<p>It’s possible for confidant to load its own secrets from a KMS encrypted base64
+encoded YAML dict. This dict can be generated (and decrypted) through a
+confidant script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /srv/confidant
+<span class="nb">source</span> venv/bin/activate
+
+<span class="c1"># Encrypt the data</span>
+python manage.py generate_secrets_bootstrap --in unencrypted_dict.yaml --out encrypted_dict.yaml.enc
+<span class="nb">export</span> <span class="nv">SECRETS_BOOTSTRAP</span><span class="o">=</span><span class="sb">`</span>cat encrypted_dict.yaml.enc<span class="sb">`</span>
+
+<span class="c1"># Get a decrypted output of the yaml data</span>
+python manage.py decrypt_secrets_bootstrap
+</pre></div>
+</div>
+</div>
+<div class="section" id="multi-account-authentication">
+<h3>Multi-account authentication<a class="headerlink" href="#multi-account-authentication" title="Permalink to this headline">¶</a></h3>
+<p>It’s possible to use confidant across multiple AWS accounts by allowing
+cross-account access to the AUTH_KEY, but when you give access to the AUTH_KEY
+in other accounts, you’re trusting the other account’s IAM policy for
+generating authentication tokens for services. Confidant supports scoping
+services to accounts, where you generate a KMS key for each account, for
+authentication. You can configure confidant to map keys to account names:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">SCOPED_AUTH_KEYS</span><span class="o">=</span><span class="s1">&#39;{&quot;sandbox-auth-key&quot;:&quot;sandbox&quot;,&quot;primary-auth-key&quot;:&quot;primary&quot;}&#39;</span>
+</pre></div>
+</div>
+<p>In the above example, if a user scopes a service to the “sandbox” account,
+it’ll require authentication to use the “sandbox-auth-key” KMS key.</p>
+</div>
+<div class="section" id="kms-authentication-for-end-users">
+<h3>KMS authentication for end-users<a class="headerlink" href="#kms-authentication-for-end-users" title="Permalink to this headline">¶</a></h3>
+<p>In confidant version 1.1 we introduced a new version of KMS auth that allows
+user authentication in addition to service authentication. By default confidant
+will only allow service authentication.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># The alias of the KMS key being used for authentication that is specifically</span>
+<span class="c1"># for the &#39;user&#39; role. This should not be the same key as AUTH_KEY if your</span>
+<span class="c1"># kms token version is less than 2, as it would allow services to masquerade</span>
+<span class="c1">#  as users.</span>
+<span class="nb">export</span> <span class="nv">USER_AUTH_KEY</span><span class="o">=</span><span class="s1">&#39;alias/user-auth-key&#39;</span>
+<span class="c1"># The maximum version of the authentication token accepted.</span>
+<span class="nb">export</span> <span class="nv">KMS_MAXIMUM_TOKEN_VERSION</span><span class="o">=</span><span class="s1">&#39;2&#39;</span>
+<span class="c1"># The minimum version of the authentication token accepted. You should set this</span>
+<span class="c1"># as high as your clients support.</span>
+<span class="nb">export</span> <span class="nv">KMS_MINIMUM_TOKEN_VERSION</span><span class="o">=</span><span class="s1">&#39;1&#39;</span>
+<span class="c1"># Comma separated list of user types allowed to auth via KMS. Default is</span>
+<span class="c1"># &#39;service&#39;.</span>
+<span class="nb">export</span> <span class="nv">KMS_AUTH_USER_TYPES</span><span class="o">=</span><span class="s1">&#39;user,service&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="kms-grant-management">
+<h3>KMS grant management<a class="headerlink" href="#kms-grant-management" title="Permalink to this headline">¶</a></h3>
+<p>By default confidant will manage KMS grants automatically for services that are
+created, assuming that services are directly associated with IAM roles.
+Confidant services don’t need to be directly associated with IAM roles, though,
+since access to the services is defined either by grants on the keys, or
+through IAM policy. It’s possible to disable confidant’s grant management. If
+you disable grant managenent, you’ll either need to manage KMS key grants
+manually, or you’ll need to manage your IAM policy for KMS.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Manage auth key grants for service to service authentication. Default True</span>
+<span class="nb">export</span> <span class="nv">KMS_AUTH_MANAGE_GRANTS</span><span class="o">=</span><span class="s1">&#39;False&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="confidant-client-configuration">
+<h3>Confidant client configuration<a class="headerlink" href="#confidant-client-configuration" title="Permalink to this headline">¶</a></h3>
+<p>Confidant exposes some data to its clients via a flask endpoint. It’s possible
+to expose additional custom data to clients through the server’s configuration:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">CLIENT_CONFIG</span><span class="o">=</span><span class="s1">&#39;{&quot;blind_keys&quot;:{&quot;us-east-1&quot;:&quot;alias/blindkey-useast1&quot;,&quot;us-west-2&quot;:&quot;alias/blindkey-uswest2&quot;},&quot;blind_cipher_type&quot;:&quot;fernet&quot;,&quot;blind_cipher_version&quot;:&quot;2&quot;,&quot;blind_store_credential_keys&quot;:true}&#39;</span>
+</pre></div>
+</div>
+<p>The native client, or custom clients can use this data to help configure
+themselves.</p>
+</div>
+<div class="section" id="maintenance-mode-settings">
+<h3>Maintenance mode settings<a class="headerlink" href="#maintenance-mode-settings" title="Permalink to this headline">¶</a></h3>
+<p>If you need to disable all writes via the API, for maintenance actions, or
+any other reason, Confidant has a maintenance mode that can be enabled.
+There’s a couple ways to put Confidant into maintenance mode. An explicit
+setting is available:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">MAINTENANCE_MODE</span><span class="o">=</span><span class="s1">&#39;True&#39;</span>
+</pre></div>
+</div>
+<p>There’s also a runtime setting, that allows you to enable/disable maintenance
+mode by using a touch file. You’ll need to configure the location of this
+touch file via settings:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">MAINTENANCE_MODE_TOUCH_FILE</span><span class="o">=</span><span class="s1">&#39;/run/confidant/maintenance&#39;</span>
+</pre></div>
+</div>
+<p>To enable maintenance mode, create the file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch /run/confidant/maintenance
+</pre></div>
+</div>
+<p>To disable maintenance mode, remove the file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm /run/confidant/maintenance
+</pre></div>
+</div>
+</div>
+<div class="section" id="confidant-performance-settings">
+<h3>Confidant performance settings<a class="headerlink" href="#confidant-performance-settings" title="Permalink to this headline">¶</a></h3>
+<p>Confidant comes setup to perform well by default, but it’s possible you may
+find some of these settings too aggressive, or you may have enough clients or
+services that the defaults aren’t high enough.</p>
+<p>The primary performance setting is for authentication token caching, and is set
+to 4096. This should be set to something near your total number of clients with
+unique authentication tokens. Assuming every client has a unique token, it
+should be equal to greater than your number of clients. This cache avoids calls
+to KMS for authentication, reducing latency and reducing likelyhood of
+ratelimiting from KMS. The following configuration can adjust this:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export KMS_AUTH_TOKEN_CACHE_SIZE=4096
+</pre></div>
+</div>
+<p>Confidant has a couple settings for tuning pynamodb performance. By default
+confidant is pretty aggressive with pynamodb timeouts, setting the default
+timeout to 1s. This is to fail fast and retry, rather than waiting on a blocked
+request that could be general networking failures, attempting to avoid request
+pileups. If this setting is too aggressive, you can adjust it via:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export PYNAMO_REQUEST_TIMEOUT_SECONDS=1
+</pre></div>
+</div>
+<p>To avoid recreating connections to dynamodb on each request, we open a larger
+than default number of pooled connections to dynamodb. Our default is 100. The
+number of connections should be greater than or equal to the number of
+concurrent requests per worker. To adjust this:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export PYNAMO_CONNECTION_POOL_SIZE=100
+</pre></div>
+</div>
+<p>Similar to the performance tuning for dynamodb, we also have similar tuning
+settings for KMS. For both connection and read timeouts, we aggressively set
+the timeout to be 1s, since we assume any request that takes this long is
+related to some network failure. To adjust these settings:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export KMS_CONNECTION_TIMEOUT=1
+export KMS_READ_TIMEOUT=1
+</pre></div>
+</div>
+<p>We also increase the default connection pool to KMS. This should be greater
+than or equal to the number of concurrent requests per worker. To adjust this:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export KMS_MAX_POOL_CONNECTIONS=100
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="kms-key-policy-configuration">
+<h2>KMS key policy configuration<a class="headerlink" href="#kms-key-policy-configuration" title="Permalink to this headline">¶</a></h2>
+<p>Confidant needs to have special KMS key policy for both the at-rest
+KMS_MASTER_KEY and the authentication AUTH_KEY.</p>
+<p>Here’s an example key policy for the at-rest encryption key, KMS_MASTER_KEY, assuming the
+above configuration. Note the following:</p>
+<ol class="arabic simple">
+<li><p>The “Enable IAM User Permissions” policy ensures that IAM users in your account
+that have the proper IAM permissions can manage this key. This is here to
+ensure you don’t lock yourself out of the key.</p></li>
+<li><p>The “Allow access for Key Administrators” policy ensures that a special IAM
+user can manage the KMS key.</p></li>
+<li><p>The “Allow use of the key” policy ensures that confidant can use the key.</p></li>
+</ol>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;Version&quot;</span> <span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Id&quot;</span> <span class="p">:</span> <span class="s2">&quot;key-consolepolicy-1&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Statement&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;Sid&quot;</span> <span class="p">:</span> <span class="s2">&quot;Enable IAM User Permissions&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Effect&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Principal&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;AWS&quot;</span> <span class="p">:</span> <span class="s2">&quot;arn:aws:iam::12345:root&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;Action&quot;</span> <span class="p">:</span> <span class="s2">&quot;kms:*&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Resource&quot;</span> <span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;Sid&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow access for Key Administrators&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Effect&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Principal&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;AWS&quot;</span> <span class="p">:</span> <span class="s2">&quot;arn:aws:iam::12345:user/myadminuser&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;Action&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;kms:Describe*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:List*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Create*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Revoke*&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kms:Enable*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Get*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Disable*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Delete*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Put*&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kms:Update*&quot;</span> <span class="p">],</span>
+    <span class="nt">&quot;Resource&quot;</span> <span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;Sid&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow use of the key&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Effect&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Principal&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;AWS&quot;</span> <span class="p">:</span> <span class="s2">&quot;arn:aws:iam::12345:role/confidant-production&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;Action&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:GenerateDataKey*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:ReEncrypt*&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kms:DescribeKey&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Encrypt&quot;</span> <span class="p">],</span>
+    <span class="nt">&quot;Resource&quot;</span> <span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+  <span class="p">}</span> <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here’s an example key policy for the authentication key, AUTH_KEY, assuming the
+above configuration. Note the following:</p>
+<ol class="arabic simple">
+<li><p>The “Enable IAM User Permissions” policy ensures that IAM users in your account
+that have the proper IAM permissions can manage this key. This is here to
+ensure you don’t lock yourself out of the key.</p></li>
+<li><p>The “Allow access for Key Administrators” policy ensures that a special IAM
+user can manage the KMS key.</p></li>
+<li><p>The “Allow use of the key” policy ensures that confidant can use the key.</p></li>
+<li><p>The “Allow attachment of persistent resources” policy ensures that confidant
+can add and revoke grants for the auth key, which is necessary to give
+access to context specific encrypt and decrypt calls for service IAM roles.</p></li>
+</ol>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;Version&quot;</span> <span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Id&quot;</span> <span class="p">:</span> <span class="s2">&quot;key-consolepolicy-1&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Statement&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="nt">&quot;Sid&quot;</span> <span class="p">:</span> <span class="s2">&quot;Enable IAM User Permissions&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Effect&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Principal&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;AWS&quot;</span> <span class="p">:</span> <span class="s2">&quot;arn:aws:iam::12345:root&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;Action&quot;</span> <span class="p">:</span> <span class="s2">&quot;kms:*&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Resource&quot;</span> <span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;Sid&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow access for Key Administrators&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Effect&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Principal&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;AWS&quot;</span> <span class="p">:</span> <span class="s2">&quot;arn:aws:iam::12345:user/myadminuser&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;Action&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;kms:Describe*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:List*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Create*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Revoke*&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kms:Enable*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Get*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Disable*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Delete*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Put*&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kms:Update*&quot;</span> <span class="p">],</span>
+    <span class="nt">&quot;Resource&quot;</span> <span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;Sid&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow use of the key&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Effect&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Principal&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;AWS&quot;</span> <span class="p">:</span> <span class="s2">&quot;arn:aws:iam::12345:role/confidant-production&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;Action&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:GenerateDataKey*&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:ReEncrypt*&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kms:DescribeKey&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:Encrypt&quot;</span> <span class="p">],</span>
+    <span class="nt">&quot;Resource&quot;</span> <span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nt">&quot;Sid&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow attachment of persistent resources&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Effect&quot;</span> <span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Principal&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;AWS&quot;</span> <span class="p">:</span> <span class="s2">&quot;arn:aws:iam::12345:role/confidant-production&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;Action&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;kms:ListGrants&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:CreateGrant&quot;</span><span class="p">,</span> <span class="s2">&quot;kms:RevokeGrant&quot;</span> <span class="p">],</span>
+    <span class="nt">&quot;Resource&quot;</span> <span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+  <span class="p">}</span> <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="confidant-iam-role-configuration">
+<h2>Confidant IAM role configuration<a class="headerlink" href="#confidant-iam-role-configuration" title="Permalink to this headline">¶</a></h2>
+<p>Confidant needs some IAM policies to properly function. Here’s some example
+policies, based on the above configuration:</p>
+<p>A policy to find instance profiles, so that Confidant can know which IAM roles
+exist. This is to make it easier for users to find which services they can
+create.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;iam:ListRoles&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;iam:GetRole&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;Resource&quot;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Allow Confidant to generate random data from KMS:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;kms:GenerateRandom&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;Resource&quot;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Allow Confidant access to its DynamoDB table. We restrict DeleteTable access,
+because the application should never be able to do that.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;dynamodb:*&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;Resource&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;arn:aws:dynamodb:*:*:table/confidant-production&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;arn:aws:dynamodb:*:*:table/confidant-production/*&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;dynamodb:DeleteTable&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Deny&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;Resource&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;arn:aws:dynamodb:*:*:table/confidant-production&quot;</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="confidant-dynamodb-table-configuration">
+<h2>Confidant DynamoDB table configuration<a class="headerlink" href="#confidant-dynamodb-table-configuration" title="Permalink to this headline">¶</a></h2>
+<p>You’ll need to create a dynamodb with two global indexes:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>hash id: id
+hash key data type: S
+
+global indexes:
+
+data_type_date_index:
+  hash key: data_type
+  hash key data type: S
+  range key: modified_date
+  range key data type: S
+
+data_type_revision_index:
+  hash key: data_type
+  hash key data type: S
+  range key: revision
+  range key data type: N
+</pre></div>
+</div>
+<p>Provisioned read/write units can be relative low on both the primary table and
+the indexes. See your usage in cloudwatch and increase throughput as necessary.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="using_confidant.html" class="btn btn-neutral float-right" title="Managing secrets and mappings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019-2020, Confidant Project Authors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+tests.unit.confidant package
+============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   tests.unit.confidant.authnz
+   tests.unit.confidant.models
+   tests.unit.confidant.routes
+   tests.unit.confidant.services
+
+Submodules
+----------
+
+tests.unit.confidant.encrypted\_settings\_test module
+-----------------------------------------------------
+
+.. automodule:: tests.unit.confidant.encrypted_settings_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: tests.unit.confidant
+   :members:
+   :undoc-members:
+   :show-inheritance:

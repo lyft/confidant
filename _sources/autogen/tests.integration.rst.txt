@@ -1,0 +1,17 @@
+tests.integration package
+=========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   tests.integration.confidant
+
+Module contents
+---------------
+
+.. automodule:: tests.integration
+   :members:
+   :undoc-members:
+   :show-inheritance:

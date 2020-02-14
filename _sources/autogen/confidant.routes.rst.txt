@@ -1,0 +1,62 @@
+confidant.routes package
+========================
+
+Submodules
+----------
+
+confidant.routes.blind\_credentials module
+------------------------------------------
+
+.. automodule:: confidant.routes.blind_credentials
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.routes.credentials module
+-----------------------------------
+
+.. automodule:: confidant.routes.credentials
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.routes.identity module
+--------------------------------
+
+.. automodule:: confidant.routes.identity
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.routes.saml module
+----------------------------
+
+.. automodule:: confidant.routes.saml
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.routes.services module
+--------------------------------
+
+.. automodule:: confidant.routes.services
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.routes.static\_files module
+-------------------------------------
+
+.. automodule:: confidant.routes.static_files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: confidant.routes
+   :members:
+   :undoc-members:
+   :show-inheritance:

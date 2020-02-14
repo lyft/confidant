@@ -1,0 +1,38 @@
+confidant.authnz package
+========================
+
+Submodules
+----------
+
+confidant.authnz.errors module
+------------------------------
+
+.. automodule:: confidant.authnz.errors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.authnz.rbac module
+----------------------------
+
+.. automodule:: confidant.authnz.rbac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.authnz.userauth module
+--------------------------------
+
+.. automodule:: confidant.authnz.userauth
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: confidant.authnz
+   :members:
+   :undoc-members:
+   :show-inheritance:

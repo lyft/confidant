@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Reporting security vulnerabilities &mdash; confidant 5.2.0-de1358 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/confidant.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Support" href="support.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="contents.html" class="icon icon-home"> confidant
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.2.0-de1358
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#quickstart-for-testing">Quickstart for testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#docker-installation">Docker installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#to-run-confidant-in-docker">To run confidant in Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#to-build-the-image">To build the image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#pip-installation">pip installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#make-a-virtualenv-and-install-pip-requirements">Make a virtualenv and install pip requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#manual-installation">Manual installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#clone-confidant">Clone Confidant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#id1">Make a virtualenv and install pip requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#build-the-frontend">Build the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#run-confidant">Run confidant</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#docker-vs-bash">Docker vs bash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#basic-environment-configuration">Basic environment configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#google-authentication-configuration">Google authentication configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#saml-authentication-configuration">SAML authentication configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#user-authentication-session-settings">User authentication session settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#disabling-credential-conflict-checks">Disabling credential conflict checks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#advanced-environment-configuration">Advanced environment configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#statsd-metrics">statsd metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#sending-graphite-events">Sending graphite events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#google-authentication-user-restrictions">Google authentication user restrictions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#auth-token-lifetime">Auth token lifetime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#frontend-configuration">Frontend configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#development-and-testing-settings">Development and testing settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#bootstrapping-confidant-s-own-secrets">Bootstrapping Confidant’s own secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#multi-account-authentication">Multi-account authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#kms-authentication-for-end-users">KMS authentication for end-users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#kms-grant-management">KMS grant management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-client-configuration">Confidant client configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#maintenance-mode-settings">Maintenance mode settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-performance-settings">Confidant performance settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#kms-key-policy-configuration">KMS key policy configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#confidant-iam-role-configuration">Confidant IAM role configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#confidant-dynamodb-table-configuration">Confidant DynamoDB table configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="using_confidant.html">Managing secrets and mappings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="using_confidant.html#using-the-resources-view">Using the resources view</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#creating-secrets">Creating secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#mapping-secrets-to-services">Mapping secrets to services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#finding-credentials-and-services-in-the-sidebar">Finding credentials and services in the sidebar</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="using_confidant.html#using-the-history-view">Using the history view</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Using the Confidant client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="client.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#reformatting-get-service-output">Reformatting get_service output</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="blind_secrets.html">Server-blinded secrets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blind_secrets.html#what-are-server-blinded-secrets">What are server-blinded secrets?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blind_secrets.html#kms-keys-and-iam-policy-examples-for-server-blinded-secrets">KMS keys and IAM policy examples for server-blinded secrets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blind_secrets.html#creating-and-updating-server-blinded-secrets-using-the-confidant-client">Creating and updating server-blinded secrets using the confidant client</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kms_auth.html">KMS authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#service-to-service-authentication">Service-to-service authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kms_auth.html#iam-policy-configuration-for-service-to-service-auth">IAM policy configuration for service-to-service auth</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#passing-encrypted-data-between-services">Passing encrypted data between services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#user-to-service-authentication">User-to-service authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#multi-account-kms-authentication">Multi-account KMS authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="threat_model.html">Threat model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-client-threat-model">Web client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#assumptions">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-authenticated-user-can-achieve">What an authenticated user can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-compromise-of-an-authenticated-user-s-computer-can-achieve">What compromise of an authenticated user’s computer can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-local-network-attacker-who-can-observe-network-traffic-can-achieve">What an unauthenticated local network attacker who can observe network traffic can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-attacker-from-the-internet-can-achieve">What an unauthenticated attacker from the Internet can achieve</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-server-threat-model">Web server threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id1">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-through-compromise-of-the-confidant-web-server">What an attacker can achieve through compromise of the Confidant web server</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#service-client-threat-model">Service client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id2">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-the-service-can-achieve">What the service can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-with-a-filesystem-read-vulnerability">What an attacker can achieve with a filesystem read vulnerability</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#storage-threat-model">Storage threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id3">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-with-dynamodb-access-can-achieve">What an attacker with DynamoDB access can achieve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#code-of-conduct">Code of conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributing-code">Contributing code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#sign-the-contributor-license-agreement-cla">Sign the Contributor License Agreement (CLA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#file-issues-in-github">File issues in Github</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#submit-pull-requests">Submit pull requests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-guide">Development guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#development-using-docker">Development using docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#quickstart-for-testing-or-development">Quickstart for testing or development</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_schema.html">DynamoDB Data Schema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_schema.html#at-rest-encryption-model">At-rest encryption model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="upgrade.html">Upgrading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-2-0-0-or-3-0-0">Upgrading to 2.0.0 or 3.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="upgrade.html#performing-the-data-migration">Performing the data migration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-4-0-0">Upgrading to 4.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="upgrade.html#peforming-the-data-migration-for-4-0-0">Peforming the data migration for 4.0.0</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">5.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">5.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">5.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">5.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">4.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">4.3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">4.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id8">4.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">4.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id10">4.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">3.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">2.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">2.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id14">1.11.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">1.10.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">1.10.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id17">1.9.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id18">1.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id19">1.7.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id20">1.6.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id21">1.5.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id22">1.5.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id23">1.4.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id24">1.3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id25">1.2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id26">1.1.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id27">1.1.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id28">1.1.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id29">1.1.16 - 1.1.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id30">1.1.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id31">1.1.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id32">1.1.13</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Communication</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reporting security vulnerabilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">confidant</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>Reporting security vulnerabilities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/security_reporting.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="reporting-security-vulnerabilities">
+<h1>Reporting security vulnerabilities<a class="headerlink" href="#reporting-security-vulnerabilities" title="Permalink to this headline">¶</a></h1>
+<p>If you’ve found a vulnerability or a potential vulnerability in Confidant
+please let us know at <a class="reference external" href="mailto:security&#37;&#52;&#48;lyft&#46;com">security<span>&#64;</span>lyft<span>&#46;</span>com</a>. We’ll send a confirmation email to
+acknowledge your report, and we’ll send an additional email when we’ve
+identified the issue positively or negatively.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="support.html" class="btn btn-neutral float-left" title="Support" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019-2020, Confidant Project Authors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

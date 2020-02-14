@@ -1,0 +1,724 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Changelog &mdash; confidant 5.2.0-de1358 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/confidant.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Support" href="support.html" />
+    <link rel="prev" title="Upgrading" href="upgrade.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="contents.html" class="icon icon-home"> confidant
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.2.0-de1358
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#quickstart-for-testing">Quickstart for testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#docker-installation">Docker installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#to-run-confidant-in-docker">To run confidant in Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#to-build-the-image">To build the image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#pip-installation">pip installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#make-a-virtualenv-and-install-pip-requirements">Make a virtualenv and install pip requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#manual-installation">Manual installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#clone-confidant">Clone Confidant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#id1">Make a virtualenv and install pip requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#build-the-frontend">Build the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#run-confidant">Run confidant</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#docker-vs-bash">Docker vs bash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#basic-environment-configuration">Basic environment configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#google-authentication-configuration">Google authentication configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#saml-authentication-configuration">SAML authentication configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#user-authentication-session-settings">User authentication session settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#disabling-credential-conflict-checks">Disabling credential conflict checks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#advanced-environment-configuration">Advanced environment configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#statsd-metrics">statsd metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#sending-graphite-events">Sending graphite events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#google-authentication-user-restrictions">Google authentication user restrictions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#auth-token-lifetime">Auth token lifetime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#frontend-configuration">Frontend configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#development-and-testing-settings">Development and testing settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#bootstrapping-confidant-s-own-secrets">Bootstrapping Confidant’s own secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#multi-account-authentication">Multi-account authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#kms-authentication-for-end-users">KMS authentication for end-users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#kms-grant-management">KMS grant management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-client-configuration">Confidant client configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#maintenance-mode-settings">Maintenance mode settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-performance-settings">Confidant performance settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#kms-key-policy-configuration">KMS key policy configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#confidant-iam-role-configuration">Confidant IAM role configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#confidant-dynamodb-table-configuration">Confidant DynamoDB table configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="using_confidant.html">Managing secrets and mappings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="using_confidant.html#using-the-resources-view">Using the resources view</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#creating-secrets">Creating secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#mapping-secrets-to-services">Mapping secrets to services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#finding-credentials-and-services-in-the-sidebar">Finding credentials and services in the sidebar</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="using_confidant.html#using-the-history-view">Using the history view</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Using the Confidant client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="client.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#reformatting-get-service-output">Reformatting get_service output</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="blind_secrets.html">Server-blinded secrets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blind_secrets.html#what-are-server-blinded-secrets">What are server-blinded secrets?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blind_secrets.html#kms-keys-and-iam-policy-examples-for-server-blinded-secrets">KMS keys and IAM policy examples for server-blinded secrets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blind_secrets.html#creating-and-updating-server-blinded-secrets-using-the-confidant-client">Creating and updating server-blinded secrets using the confidant client</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kms_auth.html">KMS authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#service-to-service-authentication">Service-to-service authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kms_auth.html#iam-policy-configuration-for-service-to-service-auth">IAM policy configuration for service-to-service auth</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#passing-encrypted-data-between-services">Passing encrypted data between services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#user-to-service-authentication">User-to-service authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#multi-account-kms-authentication">Multi-account KMS authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="threat_model.html">Threat model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-client-threat-model">Web client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#assumptions">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-authenticated-user-can-achieve">What an authenticated user can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-compromise-of-an-authenticated-user-s-computer-can-achieve">What compromise of an authenticated user’s computer can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-local-network-attacker-who-can-observe-network-traffic-can-achieve">What an unauthenticated local network attacker who can observe network traffic can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-attacker-from-the-internet-can-achieve">What an unauthenticated attacker from the Internet can achieve</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-server-threat-model">Web server threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id1">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-through-compromise-of-the-confidant-web-server">What an attacker can achieve through compromise of the Confidant web server</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#service-client-threat-model">Service client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id2">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-the-service-can-achieve">What the service can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-with-a-filesystem-read-vulnerability">What an attacker can achieve with a filesystem read vulnerability</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#storage-threat-model">Storage threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id3">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-with-dynamodb-access-can-achieve">What an attacker with DynamoDB access can achieve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#code-of-conduct">Code of conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributing-code">Contributing code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#sign-the-contributor-license-agreement-cla">Sign the Contributor License Agreement (CLA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#file-issues-in-github">File issues in Github</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#submit-pull-requests">Submit pull requests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-guide">Development guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#development-using-docker">Development using docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#quickstart-for-testing-or-development">Quickstart for testing or development</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_schema.html">DynamoDB Data Schema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_schema.html#at-rest-encryption-model">At-rest encryption model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="upgrade.html">Upgrading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-2-0-0-or-3-0-0">Upgrading to 2.0.0 or 3.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="upgrade.html#performing-the-data-migration">Performing the data migration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-4-0-0">Upgrading to 4.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="upgrade.html#peforming-the-data-migration-for-4-0-0">Peforming the data migration for 4.0.0</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">5.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">5.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">5.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">5.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">4.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">4.3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">4.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">4.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">4.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">4.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">3.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">2.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id13">2.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id14">1.11.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id15">1.10.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id16">1.10.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id17">1.9.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id18">1.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id19">1.7.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id20">1.6.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id21">1.5.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id22">1.5.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id23">1.4.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id24">1.3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id25">1.2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id26">1.1.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id27">1.1.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id28">1.1.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id29">1.1.16 - 1.1.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id30">1.1.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id31">1.1.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id32">1.1.13</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Communication</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security_reporting.html">Reporting security vulnerabilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">confidant</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>Changelog</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/changelog.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>5.2.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Python3 fix in function <code class="docutils literal notranslate"><span class="pre">load_private_key_pem</span></code> in <code class="docutils literal notranslate"><span class="pre">confidant.lib.cryptolib</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>5.1.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Python3 fix in class <code class="docutils literal notranslate"><span class="pre">CipherManager</span></code> in <code class="docutils literal notranslate"><span class="pre">confidant.ciphermanager</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>5.0.1<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Packaging fixes for docker</p></li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>5.0.0<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>This is a breaking release. This release slightly changes the values needed
+for the <code class="docutils literal notranslate"><span class="pre">AUTH_KEY</span></code>, <code class="docutils literal notranslate"><span class="pre">USER_AUTH_KEY</span></code>, and <code class="docutils literal notranslate"><span class="pre">KMS_MASTER_KEY</span></code> settings.
+The previous way these settings were set were to use the alias name, without
+an <code class="docutils literal notranslate"><span class="pre">alias/</span></code> prefix. In this release we switched to using the kmsauth
+library for kms authentication support, which supports aliases and ARNs for
+keys, which means that for these three settings, it’s necessary to add an
+<code class="docutils literal notranslate"><span class="pre">alias/</span></code> prefix to the value. So, for example, if your setting was
+<code class="docutils literal notranslate"><span class="pre">my-auth-key</span></code>, the new value would be <code class="docutils literal notranslate"><span class="pre">alias/my-auth-key</span></code>. Though this
+change of behavior was limited to kmsauth, for consistency we also changed
+<code class="docutils literal notranslate"><span class="pre">KMS_MASTER_KEY</span></code> to use the same behavior. For all three settings, it’s
+also now possible to use ARNs as values, instead of just key aliases.</p></li>
+<li><p>confidant now supports python2 and python3.</p></li>
+<li><p>Requirements have been updated to resolve some reported security
+vulnerabilities in a few of the frozen requirements. A library affecting
+user sessions was upgraded which will cause users to be logged out after
+upgrade, which means if you’re doing a rolling upgrade, that during the
+upgrade, you may have users that seemingly randomly get logged out. After
+a finished upgrade, users should only be logged out once, if they’re
+currently logged in.</p></li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>4.4.0<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">dict</span></code> and <code class="docutils literal notranslate"><span class="pre">set</span></code> in pynamo models rather than <code class="docutils literal notranslate"><span class="pre">{}</span></code> and <code class="docutils literal notranslate"><span class="pre">set()</span></code>,
+to avoid potential corrupted data in model saves. Based on how confidant
+currently uses the pynamo models, the default arguments can’t lead to data
+corruption, but to avoid potential future issues, we’re fixing the default
+args to not be mutable.</p></li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>4.3.1<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Packaging fix</p></li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h2>4.3.0<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Case insentive sort for service and credential list API responses</p></li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h2>4.2.0<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Don’t in-memory cache the USERS_FILE, but re-read it every time, so that
+the confidant process doesn’t need to restarted whenever this file changes.</p></li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h2>4.1.0<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Switch from python-saml to python3-saml.</p></li>
+</ul>
+</div>
+<div class="section" id="id10">
+<h2>4.0.0<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>This is a breaking release. This change upgrades the <code class="docutils literal notranslate"><span class="pre">LegacyBooleanAttributes</span></code>
+to <code class="docutils literal notranslate"><span class="pre">BooleanAttributes</span></code>, which saves data in a new format. Once you upgrade
+to this version, you must run the migrate_bool_attribute maintenance
+script immediately after upgrading, which will convert all old data into
+the new format and prevent further issues with Pynamo upgrades.</p></li>
+</ul>
+</div>
+<div class="section" id="id11">
+<h2>3.0.0<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>This is a breaking release, if you’re using blind credentials. This change
+upgrades to using pynamodb 3.2.1. If you’re using blind credentials, it’s
+necessary to first upgrade to confidant 2.0.0, run the
+migrate_set_attribute maintenance script, then upgrade to this version.
+This is due to a breaking change in pynamodb itself, which requires using
+specific versions of pynamodb to migrate the underlying data.</p></li>
+</ul>
+</div>
+<div class="section" id="id12">
+<h2>2.0.1<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Added additional logging in the v1 routes.</p></li>
+<li><p>Updated the migration script to include both Service and BlindCredential
+migrations, as well as checks to ensure the migration was successful.</p></li>
+</ul>
+</div>
+<div class="section" id="id13">
+<h2>2.0.0<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<p>WARNING: If you upgrade to this version, any new writes to blind credentials
+will be in a format that is only compatible in 1.11.0 forward. If you’ve
+upgraded and need to downgrade, you should downgrade to 1.11.0. This is only
+a concern if you’re using blind credentials. If you’re using blind credentials,
+see the <a class="reference external" href="https://github.com/lyft/confidant/blob/master/docs/source/basics/upgrade.html.markdown">upgrade instructions</a>
+for more detailed information about this breaking change.</p>
+<ul class="simple">
+<li><p>Added support for a maintenance mode, which will disable all writes to
+confidant via the API. This allows you to put confidant into a maintenance
+mode which will let you do maintenance actions via scripts, but will disallow
+all write actions via the API while you’re performing the maintenance.
+This is useful for data migrations, or during periods where you want to
+ensure no confidant changes are being made. See the docs for
+MAINTENANCE_MODE and MAINTENANCE_MODE_TOUCH_FILE settings.</p></li>
+<li><p>Upgraded pynamodb to 2.2.0, to support migration of UnicodeSetAttribute for
+blind credentials in DynamoDB.</p></li>
+<li><p>Changed dynamo models to use LegacyBooleanAttribute, to allow for backwards
+compatibility for the data models. In a future version we’ll require a
+migration for dynamo data to the new BooleanAttribute format used in
+PynamoDB.</p></li>
+</ul>
+</div>
+<div class="section" id="id14">
+<h2>1.11.0<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Upgrade PynamoDB requirement to 1.5.4</p></li>
+</ul>
+</div>
+<div class="section" id="id15">
+<h2>1.10.1<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Fix an issue in the angularjs frontend where credential values were having whitespace trimmed.</p></li>
+</ul>
+</div>
+<div class="section" id="id16">
+<h2>1.10.0<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Upgrade gevent and greenlet for CVE-2016-5180 and gevent/gevent#477</p></li>
+</ul>
+</div>
+<div class="section" id="id17">
+<h2>1.9.0<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>piptools upgrade of transitive dependencies. Most notably this was run to
+upgrade gunicorn to 19.7.1, which allows for using FORWARDED_ALLOW_IPS in
+the environment, as well as any other newer gunicorn settings.</p></li>
+</ul>
+<div class="section" id="id18">
+<h3>1.8.0<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Switch LRU for in-memory cache from an inefficient python implementation to
+lru-dict.</p></li>
+</ul>
+</div>
+<div class="section" id="id19">
+<h3>1.7.0<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Update appdirs requirement</p></li>
+</ul>
+</div>
+<div class="section" id="id20">
+<h3>1.6.0<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Update python-saml for CVE-2016-1000252.</p></li>
+</ul>
+</div>
+<div class="section" id="id21">
+<h3>1.5.1<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fix docker_push.sh</p></li>
+</ul>
+</div>
+<div class="section" id="id22">
+<h3>1.5.0<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Added a feature to disable the credential conflict checks; see configuration
+docs for IGNORE_CONFLICTS</p></li>
+</ul>
+</div>
+<div class="section" id="id23">
+<h3>1.4.0<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Added support for sending basic webhooks; see configuration docs for
+WEBHOOK_URL</p></li>
+</ul>
+</div>
+<div class="section" id="id24">
+<h3>1.3.0<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Update statsd depencency from 3.1 to 3.2.1</p></li>
+</ul>
+</div>
+<div class="section" id="id25">
+<h3>1.2.0<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Switch to doing semver in a more proper way. Though generally all previous
+releases were backwards compatible, we had been releasing features in point
+releases rather than minor releases. Going forward, breaking changes will be
+in major releases, features in minor releases, and bugfixes in point
+releases. When dependencies are updated we’ll consider the impact of the
+dependency update to determine the semver release</p></li>
+<li><p>Made the XSRF cookie name configurable. See the configuration docs for how to
+changet he XSRF cookie name.</p></li>
+</ul>
+</div>
+<div class="section" id="id26">
+<h3>1.1.21<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Move scripts into the confidant module to be able to use the scripts when pip
+installed</p></li>
+</ul>
+</div>
+<div class="section" id="id27">
+<h3>1.1.20<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Added changes and settings for better performance in confidant. See the
+performance section in the configuration docs</p></li>
+</ul>
+</div>
+<div class="section" id="id28">
+<h3>1.1.19<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Important change: the location of the wsgi.py has moved inside of the
+confidant module to make the pypi package runnable. This changes the gunicorn
+invocation from <code class="docutils literal notranslate"><span class="pre">gunicorn</span> <span class="pre">wsgi:app</span> <span class="pre">-k</span> <span class="pre">gevent</span></code> to <code class="docutils literal notranslate"><span class="pre">gunicorn</span> <span class="pre">confidant.wsgi:app</span>
+<span class="pre">-k</span> <span class="pre">gevent</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="id29">
+<h3>1.1.16 - 1.1.18<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Getting the pypi package into a working state</p></li>
+</ul>
+</div>
+<div class="section" id="id30">
+<h3>1.1.15<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Split the client away from the confidant repo</p></li>
+</ul>
+</div>
+<div class="section" id="id31">
+<h3>1.1.14<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Security fix: While preparing for the 1.1 stable release Lyft found a KMS
+authentication vulnerability in the unreleased 1.1 branch while performing an
+audit of the code. The vulnerability was introduced while adding the scoped auth
+key feature (for limiting authentication keys and services to specific AWS
+accounts), where the key was not properly checked after decryption. This check is
+an additional verification to add additional safety on-top of the IAM policy of
+your KMS keys. If IAM policy allows users to use KMS keys without limits on
+encryption context, a KMS key that wasn’t intended to be used for auth, could be
+used for auth.</p></li>
+</ul>
+</div>
+<div class="section" id="id32">
+<h3>1.1.13<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
+<p>versions 1.1.0 - 1.1.12 were pre-release versions of the 1.1 branch. The
+versions were generally increased for changes to the client, during internal
+updates at Lyft. Since 1.1.13 is the first release, we’ll be tracking changes
+in the changelog from this point on. Future releases will track all changes,
+even in unreleased branches.</p>
+<ul class="simple">
+<li><p>Security fix: We discovered when adding tests after a refactor of some of the
+KMS authentication code that confidant wasn’t properly checking the
+expiration of KMS auth tokens. If tokens were able to be exfiltrated from a
+service, they could be used indefinitely. This has now been fixed, and any
+tokens that are expired will now correctly fail to authenticate.</p></li>
+<li><p>Feature: Server-blinded secret support (called blind credentials in code and
+interface). A new type of secret that confidant simply stores, assuming it’s
+been encrypted prior to being passed in. Makes it possible to have
+credentials mapped to services where only the service has the ability to
+decrypt the secret.</p></li>
+<li><p>Refactor: The user authentication code went through a refactor to be abstract
+and support multiple forms of authentication in a configurable way. The
+authentication flow for users has also changed along with this refactor.
+There’s now a proper login/logout flow, and users will be presented with an
+interface before they’re required to authenticate. When a user’s session has
+expired, they’ll be redirected to a loggedout page.</p></li>
+<li><p>Feature: SAML authentication support for user authentication.</p></li>
+<li><p>New python dependencies (for SAML): python-saml</p></li>
+<li><p>New system dependencies (for SAML): libxml2-dev libxmlsec1-dev</p></li>
+<li><p>Feature: Header authentication support for user authentication.</p></li>
+<li><p>Feature (and new default): Added support for secure cookies for session
+management. This removes the dependency on redis. New settings were added to
+control the lifetime of secure cookie sessions.</p></li>
+<li><p>Feature: Extensible metadata for secrets and blind secrets.</p></li>
+<li><p>Feature: AWS account scoping for services. If you’re using multiple AWS
+accounts, it’s possible to limit access to services from specific accounts by
+using multiple KMS keys for KMS authentication.</p></li>
+<li><p>Feature: A new version of KMS auth (version 2). The new version of KMS auth
+can allow service-to-service authentication, or user-to-service
+authentication. It’s possible to use the same authentication key for both
+service-to-service authentication and user-to-service authentication, but it’s
+recommended to make a new KMS key specific to user authentication, unless
+care is taken with IAM policy and your KMS auth key grants are updated to
+require KMS auth v2 (a maintenance script is included with this purpose). By
+default confidant will only allow service-to-service authentication.</p></li>
+<li><p>Feature: Added a config setting to disable KMS auth key grant management. If
+you prefer to manage your KMS auth via IAM policy rather than grants, this
+option will ensure that no grants are added to your keys. A maintenance
+script is included to purge any grants that may already exist on your key.</p></li>
+<li><p>Feature: Added an opinionated confidant client.</p></li>
+<li><p>Feature: Add a formatter for get_service output, with a few export formats
+(combined credential pair output, bash variable export format, etc).</p></li>
+<li><p>Feature: Added a REST endpoint to provide configuration information to
+clients, to help them configure themselves. It’s also possible to add a set
+of custom configuration to be sent to clients along with the server generated
+config, via the CLIENT_CONFIG setting.</p></li>
+<li><p>Feature: Added a setting, SECRETS_BOOTSTRAP, that can either be a base64
+encoded, KMS encrypted, YAML dict, or a file path that contains the base64
+encoded, KMS encrypted, YAML dict. A maintenance script is included that will
+let you generate the encrypted and encoded form of this dict from a yaml
+file. All of confidant’s sensitive settings can be loaded from this bootstrap
+data, allowing you to bootstrap confidant’s own secrets.</p></li>
+<li><p>Feature: A new setting, DYNAMODB_CREATE_TABLE, has been added to allow
+confidant to create its own dynamodb table, if it doesn’t exist yet.</p></li>
+<li><p>Feature: Automatic secret generation for credential pairs from angular UI.</p></li>
+<li><p>Fix: performance fixes for angularjs (disabling some debugging features and
+ignoring grants when grants are disabled).</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="support.html" class="btn btn-neutral float-right" title="Support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="upgrade.html" class="btn btn-neutral float-left" title="Upgrading" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019-2020, Confidant Project Authors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,1006 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Index &mdash; confidant 5.2.0-de1358 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/confidant.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="contents.html" class="icon icon-home"> confidant
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.2.0-de1358
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#quickstart-for-testing">Quickstart for testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#docker-installation">Docker installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#to-run-confidant-in-docker">To run confidant in Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#to-build-the-image">To build the image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#pip-installation">pip installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#make-a-virtualenv-and-install-pip-requirements">Make a virtualenv and install pip requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#manual-installation">Manual installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#clone-confidant">Clone Confidant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#id1">Make a virtualenv and install pip requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#build-the-frontend">Build the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#run-confidant">Run confidant</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#docker-vs-bash">Docker vs bash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#basic-environment-configuration">Basic environment configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#google-authentication-configuration">Google authentication configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#saml-authentication-configuration">SAML authentication configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#user-authentication-session-settings">User authentication session settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#disabling-credential-conflict-checks">Disabling credential conflict checks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#advanced-environment-configuration">Advanced environment configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#statsd-metrics">statsd metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#sending-graphite-events">Sending graphite events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#google-authentication-user-restrictions">Google authentication user restrictions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#auth-token-lifetime">Auth token lifetime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#frontend-configuration">Frontend configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#development-and-testing-settings">Development and testing settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#bootstrapping-confidant-s-own-secrets">Bootstrapping Confidant’s own secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#multi-account-authentication">Multi-account authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#kms-authentication-for-end-users">KMS authentication for end-users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#kms-grant-management">KMS grant management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-client-configuration">Confidant client configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#maintenance-mode-settings">Maintenance mode settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-performance-settings">Confidant performance settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#kms-key-policy-configuration">KMS key policy configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#confidant-iam-role-configuration">Confidant IAM role configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#confidant-dynamodb-table-configuration">Confidant DynamoDB table configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="using_confidant.html">Managing secrets and mappings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="using_confidant.html#using-the-resources-view">Using the resources view</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#creating-secrets">Creating secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#mapping-secrets-to-services">Mapping secrets to services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#finding-credentials-and-services-in-the-sidebar">Finding credentials and services in the sidebar</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="using_confidant.html#using-the-history-view">Using the history view</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Using the Confidant client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="client.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#reformatting-get-service-output">Reformatting get_service output</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="blind_secrets.html">Server-blinded secrets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blind_secrets.html#what-are-server-blinded-secrets">What are server-blinded secrets?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blind_secrets.html#kms-keys-and-iam-policy-examples-for-server-blinded-secrets">KMS keys and IAM policy examples for server-blinded secrets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blind_secrets.html#creating-and-updating-server-blinded-secrets-using-the-confidant-client">Creating and updating server-blinded secrets using the confidant client</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kms_auth.html">KMS authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#service-to-service-authentication">Service-to-service authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kms_auth.html#iam-policy-configuration-for-service-to-service-auth">IAM policy configuration for service-to-service auth</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#passing-encrypted-data-between-services">Passing encrypted data between services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#user-to-service-authentication">User-to-service authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#multi-account-kms-authentication">Multi-account KMS authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="threat_model.html">Threat model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-client-threat-model">Web client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#assumptions">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-authenticated-user-can-achieve">What an authenticated user can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-compromise-of-an-authenticated-user-s-computer-can-achieve">What compromise of an authenticated user’s computer can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-local-network-attacker-who-can-observe-network-traffic-can-achieve">What an unauthenticated local network attacker who can observe network traffic can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-attacker-from-the-internet-can-achieve">What an unauthenticated attacker from the Internet can achieve</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-server-threat-model">Web server threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id1">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-through-compromise-of-the-confidant-web-server">What an attacker can achieve through compromise of the Confidant web server</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#service-client-threat-model">Service client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id2">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-the-service-can-achieve">What the service can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-with-a-filesystem-read-vulnerability">What an attacker can achieve with a filesystem read vulnerability</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#storage-threat-model">Storage threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id3">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-with-dynamodb-access-can-achieve">What an attacker with DynamoDB access can achieve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#code-of-conduct">Code of conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributing-code">Contributing code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#sign-the-contributor-license-agreement-cla">Sign the Contributor License Agreement (CLA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#file-issues-in-github">File issues in Github</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#submit-pull-requests">Submit pull requests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-guide">Development guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#development-using-docker">Development using docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#quickstart-for-testing-or-development">Quickstart for testing or development</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_schema.html">DynamoDB Data Schema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_schema.html#at-rest-encryption-model">At-rest encryption model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="upgrade.html">Upgrading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-2-0-0-or-3-0-0">Upgrading to 2.0.0 or 3.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="upgrade.html#performing-the-data-migration">Performing the data migration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-4-0-0">Upgrading to 4.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="upgrade.html#peforming-the-data-migration-for-4-0-0">Peforming the data migration for 4.0.0</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">5.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">5.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">5.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">5.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">4.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">4.3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">4.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id8">4.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">4.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id10">4.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">3.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">2.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">2.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id14">1.11.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">1.10.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">1.10.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id17">1.9.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id18">1.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id19">1.7.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id20">1.6.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id21">1.5.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id22">1.5.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id23">1.4.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id24">1.3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id25">1.2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id26">1.1.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id27">1.1.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id28">1.1.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id29">1.1.16 - 1.1.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id30">1.1.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id31">1.1.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id32">1.1.13</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Communication</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security_reporting.html">Reporting security vulnerabilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">confidant</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>Index</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ 
+</div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator">AbstractUserAuthenticator (class in confidant.authnz.userauth)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.account_for_key_alias">account_for_key_alias() (in module confidant.authnz)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.allowed_email_suffix">allowed_email_suffix() (confidant.authnz.userauth.AbstractUserAuthenticator property)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.allowed_email_whitelist">allowed_email_whitelist() (confidant.authnz.userauth.AbstractUserAuthenticator property)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.HeaderAuthenticator.assert_headers">assert_headers() (confidant.authnz.userauth.HeaderAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.auth_type">auth_type() (confidant.authnz.userauth.AbstractUserAuthenticator property)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.GoogleOauthAuthenticator.auth_type">(confidant.authnz.userauth.GoogleOauthAuthenticator property)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.HeaderAuthenticator.auth_type">(confidant.authnz.userauth.HeaderAuthenticator property)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.NullUserAuthenticator.auth_type">(confidant.authnz.userauth.NullUserAuthenticator property)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator.auth_type">(confidant.authnz.userauth.SamlAuthenticator property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.errors.AuthenticationError">AuthenticationError</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.AutobuildSchema">AutobuildSchema (class in confidant.schema.auto_build_schema)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.aws_access_key_id">aws_access_key_id (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.aws_secret_access_key">aws_secret_access_key (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.base_backoff_ms">base_backoff_ms (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.blind_credentials.BlindCredentialResponse">BlindCredentialResponse (class in confidant.schema.blind_credentials)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.blind_credentials.BlindCredentialResponseSchema">BlindCredentialResponseSchema (class in confidant.schema.blind_credentials)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.blind_credentials.BlindCredentialResponseSchema.Meta">BlindCredentialResponseSchema.Meta (class in confidant.schema.blind_credentials)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.settings.bool_env">bool_env() (in module confidant.settings)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.AutobuildSchema.build_object">build_object() (confidant.schema.auto_build_schema.AutobuildSchema method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.check_authorization">check_authorization() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.HeaderAuthenticator.check_authorization">(confidant.authnz.userauth.HeaderAuthenticator method)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.NullUserAuthenticator.check_authorization">(confidant.authnz.userauth.NullUserAuthenticator method)</a>
+</li>
+      </ul></li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.check_csrf_token">check_csrf_token() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.utils.html#confidant.utils.maintenance.check_maintenance_mode">check_maintenance_mode() (in module confidant.utils.maintenance)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.ciphermanager.CipherManager">CipherManager (class in confidant.services.ciphermanager)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.ciphermanager.CipherManagerError">CipherManagerError</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.clear_session">clear_session() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.components">components() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.html#module-confidant">confidant (module)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#module-confidant.authnz">confidant.authnz (module)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#module-confidant.authnz.errors">confidant.authnz.errors (module)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#module-confidant.authnz.rbac">confidant.authnz.rbac (module)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#module-confidant.authnz.userauth">confidant.authnz.userauth (module)</a>
+</li>
+      <li><a href="autogen/confidant.clients.html#module-confidant.clients">confidant.clients (module)</a>
+</li>
+      <li><a href="autogen/confidant.html#module-confidant.encrypted_settings">confidant.encrypted_settings (module)</a>
+</li>
+      <li><a href="autogen/confidant.lib.html#module-confidant.lib">confidant.lib (module)</a>
+</li>
+      <li><a href="autogen/confidant.lib.html#module-confidant.lib.cryptolib">confidant.lib.cryptolib (module)</a>
+</li>
+      <li><a href="autogen/confidant.models.html#module-confidant.models.connection_cls">confidant.models.connection_cls (module)</a>
+</li>
+      <li><a href="autogen/confidant.models.html#module-confidant.models.session_cls">confidant.models.session_cls (module)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#module-confidant.routes">confidant.routes (module)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#module-confidant.routes.identity">confidant.routes.identity (module)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#module-confidant.routes.saml">confidant.routes.saml (module)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#module-confidant.routes.static_files">confidant.routes.static_files (module)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#module-confidant.schema">confidant.schema (module)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#module-confidant.schema.auto_build_schema">confidant.schema.auto_build_schema (module)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.schema.html#module-confidant.schema.blind_credentials">confidant.schema.blind_credentials (module)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#module-confidant.scripts">confidant.scripts (module)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.bootstrap">confidant.scripts.bootstrap (module)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.migrate_bool">confidant.scripts.migrate_bool (module)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#module-confidant.services">confidant.services (module)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#module-confidant.services.ciphermanager">confidant.services.ciphermanager (module)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#module-confidant.services.graphite">confidant.services.graphite (module)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#module-confidant.services.iamrolemanager">confidant.services.iamrolemanager (module)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#module-confidant.services.webhook">confidant.services.webhook (module)</a>
+</li>
+      <li><a href="autogen/confidant.html#module-confidant.settings">confidant.settings (module)</a>
+</li>
+      <li><a href="autogen/confidant.utils.html#module-confidant.utils">confidant.utils (module)</a>
+</li>
+      <li><a href="autogen/confidant.utils.html#module-confidant.utils.maintenance">confidant.utils.maintenance (module)</a>
+</li>
+      <li><a href="autogen/confidant.utils.html#module-confidant.utils.misc">confidant.utils.misc (module)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.connection_cls">connection_cls (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator.consume_saml_assertion">consume_saml_assertion() (confidant.authnz.userauth.SamlAuthenticator method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.routes.html#confidant.routes.saml.consume_saml_assertion">(in module confidant.routes.saml)</a>
+</li>
+      </ul></li>
+      <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.create_datakey">create_datakey() (in module confidant.lib.cryptolib)</a>
+</li>
+      <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.create_mock_datakey">create_mock_datakey() (in module confidant.lib.cryptolib)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.current_email">current_email() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.current_first_name">current_first_name() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.current_last_name">current_last_name() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.current_user">current_user() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.HeaderAuthenticator.current_user">(confidant.authnz.userauth.HeaderAuthenticator method)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.NullUserAuthenticator.current_user">(confidant.authnz.userauth.NullUserAuthenticator method)</a>
+</li>
+      </ul></li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.custom_images">custom_images() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.custom_modules">custom_modules() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.custom_styles">custom_styles() (in module confidant.routes.static_files)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.models.html#confidant.models.connection_cls.DDBConnection">DDBConnection (class in confidant.models.connection_cls)</a>
+</li>
+      <li><a href="autogen/confidant.models.html#confidant.models.session_cls.DDBSession">DDBSession (class in confidant.models.session_cls)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.ciphermanager.CipherManager.decrypt">decrypt() (confidant.services.ciphermanager.CipherManager method)</a>
+</li>
+      <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.decrypt_datakey">decrypt_datakey() (in module confidant.lib.cryptolib)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.decrypt_mock_datakey">decrypt_mock_datakey() (in module confidant.lib.cryptolib)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.DecryptSecretsBootstrap">DecryptSecretsBootstrap (class in confidant.scripts.bootstrap)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.rbac.default_acl">default_acl() (in module confidant.authnz.rbac)</a>
+</li>
+      <li><a href="autogen/confidant.utils.html#confidant.utils.misc.dict_deep_update">dict_deep_update() (in module confidant.utils.misc)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.saml.dump_session_info">dump_session_info() (in module confidant.routes.saml)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.enabled">enabled (confidant.scripts.migrate_bool.GenericCredential attribute)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.ciphermanager.CipherManager.encrypt">encrypt() (confidant.services.ciphermanager.CipherManager method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/tests.html#tests.conftest.encrypted_settings_mock">encrypted_settings_mock() (in module tests.conftest)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.encrypted_settings.EncryptedSettings">EncryptedSettings (class in confidant.encrypted_settings)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.favicon">favicon() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.settings.float_env">float_env() (in module confidant.settings)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.fonts">fonts() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.blind_credentials.BlindCredentialResponse.from_blind_credential">from_blind_credential() (confidant.schema.blind_credentials.BlindCredentialResponse class method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator.generate_metadata">generate_metadata() (confidant.authnz.userauth.SamlAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.saml.generate_saml_login_redirect">generate_saml_login_redirect() (in module confidant.routes.saml)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.GenerateSecretsBootstrap">GenerateSecretsBootstrap (class in confidant.scripts.bootstrap)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential">GenericCredential (class in confidant.scripts.migrate_bool)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.DoesNotExist">GenericCredential.DoesNotExist</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta">GenericCredential.Meta (class in confidant.scripts.migrate_bool)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.settings.get">get() (in module confidant.settings)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.encrypted_settings.EncryptedSettings.get_all_secrets">get_all_secrets() (confidant.encrypted_settings.EncryptedSettings method)</a>
+</li>
+      <li><a href="autogen/confidant.clients.html#confidant.clients.get_boto_client">get_boto_client() (in module confidant.clients)</a>
+</li>
+      <li><a href="autogen/confidant.clients.html#confidant.clients.get_boto_resource">get_boto_resource() (in module confidant.clients)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.clients.html#confidant.clients.get_boto_session">get_boto_session() (in module confidant.clients)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.identity.get_client_config">get_client_config() (in module confidant.routes.identity)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.get_csrf_token">get_csrf_token() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.iamrolemanager.get_iam_roles">get_iam_roles() (in module confidant.services.iamrolemanager)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.get_logged_in_user">get_logged_in_user() (in module confidant.authnz)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.saml.get_saml_metadata">get_saml_metadata() (in module confidant.routes.saml)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.encrypted_settings.EncryptedSettings.get_secret">get_secret() (confidant.encrypted_settings.EncryptedSettings method)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.identity.get_user_info">get_user_info() (in module confidant.routes.identity)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.goodbye">goodbye() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.GoogleOauthAuthenticator">GoogleOauthAuthenticator (class in confidant.authnz.userauth)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.HeaderAuthenticator">HeaderAuthenticator (class in confidant.authnz.userauth)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.healthcheck">healthcheck() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.host">host (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.id">id (confidant.scripts.migrate_bool.GenericCredential attribute)</a>
+</li>
+      <li><a href="autogen/confidant.utils.html#confidant.utils.maintenance.in_maintenance_mode">in_maintenance_mode() (in module confidant.utils.maintenance)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.index">index() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.init_user_auth_class">init_user_auth_class() (in module confidant.authnz.userauth)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.settings.int_env">int_env() (in module confidant.settings)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.is_authenticated">is_authenticated() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.HeaderAuthenticator.is_authenticated">(confidant.authnz.userauth.HeaderAuthenticator method)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.NullUserAuthenticator.is_authenticated">(confidant.authnz.userauth.NullUserAuthenticator method)</a>
+</li>
+      </ul></li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.is_expired">is_expired() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.HeaderAuthenticator.is_expired">(confidant.authnz.userauth.HeaderAuthenticator method)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.NullUserAuthenticator.is_expired">(confidant.authnz.userauth.NullUserAuthenticator method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.blind_credentials.BlindCredentialResponseSchema.Meta.jit">jit (confidant.schema.blind_credentials.BlindCredentialResponseSchema.Meta attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.utils.html#confidant.utils.misc.load_module">load_module() (in module confidant.utils.misc)</a>
+</li>
+      <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.load_private_key_pem">load_private_key_pem() (in module confidant.lib.cryptolib)</a>
+</li>
+      <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.load_private_key_pem_as_bare_base64">load_private_key_pem_as_bare_base64() (in module confidant.lib.cryptolib)</a>
+</li>
+      <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.load_x509_certificate_pem">load_x509_certificate_pem() (in module confidant.lib.cryptolib)</a>
+</li>
+      <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.load_x509_certificate_pem_as_bare_base64">load_x509_certificate_pem_as_bare_base64() (in module confidant.lib.cryptolib)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.log_in">log_in() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.GoogleOauthAuthenticator.log_in">(confidant.authnz.userauth.GoogleOauthAuthenticator method)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.HeaderAuthenticator.log_in">(confidant.authnz.userauth.HeaderAuthenticator method)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.NullUserAuthenticator.log_in">(confidant.authnz.userauth.NullUserAuthenticator method)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator.log_in">(confidant.authnz.userauth.SamlAuthenticator method)</a>
+</li>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.log_in">(in module confidant.authnz)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.log_out">log_out() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator.log_out">(confidant.authnz.userauth.SamlAuthenticator method)</a>
+</li>
+      </ul></li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator.log_out_callback">log_out_callback() (confidant.authnz.userauth.SamlAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.identity.login">login() (in module confidant.routes.identity)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator.login_redirect_url">login_redirect_url() (confidant.authnz.userauth.SamlAuthenticator method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.max_retry_attempts">max_retry_attempts (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.migrate_boolean_attributes">migrate_boolean_attributes() (in module confidant.scripts.migrate_bool)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.MigrateBooleanAttribute">MigrateBooleanAttribute (class in confidant.scripts.migrate_bool)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.modules">modules() (in module confidant.routes.static_files)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.rbac.no_acl">no_acl() (in module confidant.authnz.rbac)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.not_found">not_found() (in module confidant.routes.static_files)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.errors.NotAuthorized">NotAuthorized</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.NullUserAuthenticator">NullUserAuthenticator (class in confidant.authnz.userauth)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.DecryptSecretsBootstrap.option_list">option_list (confidant.scripts.bootstrap.DecryptSecretsBootstrap attribute)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.GenerateSecretsBootstrap.option_list">(confidant.scripts.bootstrap.GenerateSecretsBootstrap attribute)</a>
+</li>
+        <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.MigrateBooleanAttribute.option_list">(confidant.scripts.migrate_bool.MigrateBooleanAttribute attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.AutobuildSchema.opts">opts (confidant.schema.auto_build_schema.AutobuildSchema attribute)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.StrictSchema.opts">(confidant.schema.auto_build_schema.StrictSchema attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.blind_credentials.BlindCredentialResponseSchema.opts">(confidant.schema.blind_credentials.BlindCredentialResponseSchema attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.passes_email_suffix">passes_email_suffix() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.passes_email_whitelist">passes_email_whitelist() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.redirect_to_goodbye">redirect_to_goodbye() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.redirect_to_index">redirect_to_index() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.redirect_to_logout_if_no_auth">redirect_to_logout_if_no_auth() (in module confidant.authnz)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.iamrolemanager.refresh_cache">refresh_cache() (in module confidant.services.iamrolemanager)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.region">region (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.encrypted_settings.EncryptedSettings.register">register() (confidant.encrypted_settings.EncryptedSettings method)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.encrypted_settings.EncryptedSettings.registered">registered() (confidant.encrypted_settings.EncryptedSettings method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.request_timeout_seconds">request_timeout_seconds (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.require_auth">require_auth() (in module confidant.authnz)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.require_csrf_token">require_csrf_token() (in module confidant.authnz)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.require_logout_for_goodbye">require_logout_for_goodbye() (in module confidant.authnz)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.robots">robots() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.DecryptSecretsBootstrap.run">run() (confidant.scripts.bootstrap.DecryptSecretsBootstrap method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.GenerateSecretsBootstrap.run">(confidant.scripts.bootstrap.GenerateSecretsBootstrap method)</a>
+</li>
+        <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.MigrateBooleanAttribute.run">(confidant.scripts.migrate_bool.MigrateBooleanAttribute method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.saml.saml_logout">saml_logout() (in module confidant.routes.saml)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator">SamlAuthenticator (class in confidant.authnz.userauth)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.scripts">scripts() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.graphite.send_event">send_event() (in module confidant.services.graphite)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.webhook.send_event">(in module confidant.services.webhook)</a>
+</li>
+      </ul></li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.service_in_account">service_in_account() (in module confidant.authnz)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.session_cls">session_cls (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.set_csrf_token">set_csrf_token() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.set_current_user">set_current_user() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.set_expiration">set_expiration() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.settings.SettingsError">SettingsError</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.static_proxy">static_proxy() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/confidant.html#confidant.settings.str_env">str_env() (in module confidant.settings)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.StrictSchema.Meta.strict">strict (confidant.schema.auto_build_schema.StrictSchema.Meta attribute)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.StrictSchema">StrictSchema (class in confidant.schema.auto_build_schema)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.StrictSchema.Meta">StrictSchema.Meta (class in confidant.schema.auto_build_schema)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.table_name">table_name (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_bootstrap">test_bootstrap() (in module tests.unit.confidant.encrypted_settings_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_bootstrap_filefail">test_bootstrap_filefail() (in module tests.unit.confidant.encrypted_settings_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_1">test_cipher_version_1() (in module tests.unit.confidant.services.ciphermanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_2">test_cipher_version_2() (in module tests.unit.confidant.services.ciphermanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_3">test_cipher_version_3() (in module tests.unit.confidant.services.ciphermanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_get_registered">test_get_registered() (in module tests.unit.confidant.encrypted_settings_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_get_registered_default">test_get_registered_default() (in module tests.unit.confidant.encrypted_settings_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_register">test_register() (in module tests.unit.confidant.encrypted_settings_test)</a>
+</li>
+      <li><a href="autogen/tests.html#module-tests">tests (module)</a>
+</li>
+      <li><a href="autogen/tests.html#module-tests.conftest">tests.conftest (module)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/tests.integration.html#module-tests.integration">tests.integration (module)</a>
+</li>
+      <li><a href="autogen/tests.integration.confidant.html#module-tests.integration.confidant">tests.integration.confidant (module)</a>
+</li>
+      <li><a href="autogen/tests.integration.confidant.authnz.html#module-tests.integration.confidant.authnz">tests.integration.confidant.authnz (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.html#module-tests.unit">tests.unit (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.html#module-tests.unit.confidant">tests.unit.confidant (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.authnz.html#module-tests.unit.confidant.authnz">tests.unit.confidant.authnz (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.html#module-tests.unit.confidant.encrypted_settings_test">tests.unit.confidant.encrypted_settings_test (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.models.html#module-tests.unit.confidant.models">tests.unit.confidant.models (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.routes.html#module-tests.unit.confidant.routes">tests.unit.confidant.routes (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services">tests.unit.confidant.services (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services.ciphermanager_test">tests.unit.confidant.services.ciphermanager_test (module)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.errors.TokenVersionError">TokenVersionError</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.user_is_service">user_is_service() (in module confidant.authnz)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.user_is_user_type">user_is_user_type() (in module confidant.authnz)</a>
+</li>
+      <li><a href="autogen/confidant.authnz.html#confidant.authnz.errors.UserUnknownError">UserUnknownError</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019-2020, Confidant Project Authors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

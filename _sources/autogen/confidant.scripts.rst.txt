@@ -1,0 +1,54 @@
+confidant.scripts package
+=========================
+
+Submodules
+----------
+
+confidant.scripts.bootstrap module
+----------------------------------
+
+.. automodule:: confidant.scripts.bootstrap
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.scripts.manage module
+-------------------------------
+
+.. automodule:: confidant.scripts.manage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.scripts.migrate module
+--------------------------------
+
+.. automodule:: confidant.scripts.migrate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.scripts.migrate\_bool module
+--------------------------------------
+
+.. automodule:: confidant.scripts.migrate_bool
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.scripts.utils module
+------------------------------
+
+.. automodule:: confidant.scripts.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: confidant.scripts
+   :members:
+   :undoc-members:
+   :show-inheritance:

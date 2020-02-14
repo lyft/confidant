@@ -1,0 +1,22 @@
+confidant.lib package
+=====================
+
+Submodules
+----------
+
+confidant.lib.cryptolib module
+------------------------------
+
+.. automodule:: confidant.lib.cryptolib
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: confidant.lib
+   :members:
+   :undoc-members:
+   :show-inheritance:

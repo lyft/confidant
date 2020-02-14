@@ -1,0 +1,61 @@
+confidant package
+=================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   confidant.authnz
+   confidant.clients
+   confidant.lib
+   confidant.models
+   confidant.routes
+   confidant.schema
+   confidant.scripts
+   confidant.services
+   confidant.utils
+
+Submodules
+----------
+
+confidant.app module
+--------------------
+
+.. automodule:: confidant.app
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.encrypted\_settings module
+------------------------------------
+
+.. automodule:: confidant.encrypted_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.settings module
+-------------------------
+
+.. automodule:: confidant.settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.wsgi module
+---------------------
+
+.. automodule:: confidant.wsgi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: confidant
+   :members:
+   :undoc-members:
+   :show-inheritance:

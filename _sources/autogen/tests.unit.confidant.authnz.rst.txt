@@ -1,0 +1,30 @@
+tests.unit.confidant.authnz package
+===================================
+
+Submodules
+----------
+
+tests.unit.confidant.authnz.authnz\_test module
+-----------------------------------------------
+
+.. automodule:: tests.unit.confidant.authnz.authnz_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tests.unit.confidant.authnz.rbac\_test module
+---------------------------------------------
+
+.. automodule:: tests.unit.confidant.authnz.rbac_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: tests.unit.confidant.authnz
+   :members:
+   :undoc-members:
+   :show-inheritance:

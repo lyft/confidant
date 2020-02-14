@@ -1,0 +1,22 @@
+tests.integration.confidant.authnz package
+==========================================
+
+Submodules
+----------
+
+tests.integration.confidant.authnz.authnz\_test module
+------------------------------------------------------
+
+.. automodule:: tests.integration.confidant.authnz.authnz_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: tests.integration.confidant.authnz
+   :members:
+   :undoc-members:
+   :show-inheritance:

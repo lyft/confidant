@@ -1,0 +1,70 @@
+confidant.services package
+==========================
+
+Submodules
+----------
+
+confidant.services.ciphermanager module
+---------------------------------------
+
+.. automodule:: confidant.services.ciphermanager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.services.credentialmanager module
+-------------------------------------------
+
+.. automodule:: confidant.services.credentialmanager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.services.graphite module
+----------------------------------
+
+.. automodule:: confidant.services.graphite
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.services.iamrolemanager module
+----------------------------------------
+
+.. automodule:: confidant.services.iamrolemanager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.services.keymanager module
+------------------------------------
+
+.. automodule:: confidant.services.keymanager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.services.servicemanager module
+----------------------------------------
+
+.. automodule:: confidant.services.servicemanager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.services.webhook module
+---------------------------------
+
+.. automodule:: confidant.services.webhook
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: confidant.services
+   :members:
+   :undoc-members:
+   :show-inheritance:

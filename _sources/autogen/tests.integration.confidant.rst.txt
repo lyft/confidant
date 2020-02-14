@@ -1,0 +1,17 @@
+tests.integration.confidant package
+===================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   tests.integration.confidant.authnz
+
+Module contents
+---------------
+
+.. automodule:: tests.integration.confidant
+   :members:
+   :undoc-members:
+   :show-inheritance:

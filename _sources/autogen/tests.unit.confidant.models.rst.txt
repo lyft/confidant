@@ -1,0 +1,30 @@
+tests.unit.confidant.models package
+===================================
+
+Submodules
+----------
+
+tests.unit.confidant.models.credential\_test module
+---------------------------------------------------
+
+.. automodule:: tests.unit.confidant.models.credential_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tests.unit.confidant.models.service\_test module
+------------------------------------------------
+
+.. automodule:: tests.unit.confidant.models.service_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: tests.unit.confidant.models
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,62 @@
+confidant.models package
+========================
+
+Submodules
+----------
+
+confidant.models.blind\_credential module
+-----------------------------------------
+
+.. automodule:: confidant.models.blind_credential
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.models.connection\_cls module
+---------------------------------------
+
+.. automodule:: confidant.models.connection_cls
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.models.credential module
+----------------------------------
+
+.. automodule:: confidant.models.credential
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.models.non\_null\_unicode\_set\_attribute module
+----------------------------------------------------------
+
+.. automodule:: confidant.models.non_null_unicode_set_attribute
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.models.service module
+-------------------------------
+
+.. automodule:: confidant.models.service
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.models.session\_cls module
+------------------------------------
+
+.. automodule:: confidant.models.session_cls
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: confidant.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
