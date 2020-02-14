@@ -9,7 +9,7 @@ and the history view.
 
 ### Creating secrets
 
-<img src='/images/interface-create.png' width="200" style="float: left; margin: 10px"></img>
+![interface create](images/interface-create.png)
 
 In the left panel of the resources view is the list of secrets and services.
 Above that is a filter, and next to the filter is a plus. Clicking on that plus
@@ -24,7 +24,7 @@ alphanumeric and the value can be anything. Credential pairs are the secrets
 and are encrypted at-rest. The rest of the metadata is stored along with the secret
 and is un-encrypted, so the friendly name should not contain anything sensitive.
 
-<img src='/images/interface-new-credential.png' width="350" style="float: right; margin: 10px"></img>
+![interface new credential](images/interface-new-credential.png)
 
 Credentials can have more than a single credential pair; however, it's
 important to note that keys must be unique in a credential, and when mapping
@@ -34,7 +34,7 @@ conflicting keys would force the service to choose which key is valid.
 
 ### Mapping secrets to services
 
-<img src='/images/interface-new-service.png' width="350" style="float: left; margin: 10px"></img>
+![interface new service](images/interface-new-service.png)
 
 In the same way you created a new credential, do the same thing, but now click
 on create service. This will bring up a new service resourse in the right
@@ -50,20 +50,20 @@ created.
 
 ### Finding credentials and services in the sidebar
 
-<img src='/images/interface-filter.png' width="225" style="float: right; margin: 10px"></img>
+![interface filter](images/interface-filter.png)
 
 Once you have enough credentials and services, it can be difficult to find them
 in the sidebar. To make this easier, the sidebar has a filter at the top
 that'll let you selectively display credentials and services.
-<img src='/images/interface-filter-with-regex.png' width="225" style="float: left; margin: 10px"></img>
+
+![interface filter with regex](images/interface-filter-with-regex.png)
 
 By default this filter will match any word in the user-defined name of
 credentials and services, but it's also possible to use a regex filter instead.
 
-<br>
 ## Using the history view
 
-<img src='/images/interface-history.png' width="400" style="float: right; margin: 10px"></img>
+![interface history](images/interface-history.png)
 
 The history view can be used to explore changes in credentials or services. The
 left panel of the history view shows a list of changes, sorted by date.
