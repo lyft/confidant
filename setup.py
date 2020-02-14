@@ -16,9 +16,12 @@ from setuptools import setup, find_packages
 with open('requirements.in') as f:
     reqs = f.read().splitlines()
 
+with open('VERSION') as f:
+    VERSION = f.read()
+
 setup(
     name="confidant",
-    version="5.2.0",
+    version=VERSION,
     packages=find_packages(exclude=["test*"]),
     include_package_data=True,
     zip_safe=False,
