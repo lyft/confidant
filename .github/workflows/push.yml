@@ -19,7 +19,7 @@ jobs:
       - name: Install virtualenv
         run: pip install virtualenv
       - name: Install xmlsec
-        run: apt-get update -y && apt-get install -y libxmlsec1-dev pkg-config
+        run: sudo apt-get update -y && sudo apt-get install -y libxmlsec1-dev pkg-config
       - name: Build docs
         run: make build_docs
       - name: Remove docs folder, so github will ignore it
