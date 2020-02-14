@@ -1,5 +1,58 @@
 # Changelog
 
+## 6.0.0
+
+* This release is a breaking release. This release slightly changes the API
+  responses. Though the changes should be backwards incompatible, we're now
+  explicitly returning all fields in returns, rather than not including
+  fields that have nil values in the json. Clients that expect fields to not
+  exist could be affected by this change. The offical python client has been
+  tested against these changes, but there's a number of unofficial libraries
+  that you will want to test, if you're using one of them.
+* DEPRECATION NOTICE: This will be the last confidant release that will support
+  python2.
+* DEPRECATION NOTICE: This will be the last confidant release that will support
+  blind credentials. If you're using blind credentials, we recommend switching
+  to standard credentials, and protecting access to them using the new access
+  control (ACL) support hooks to provide fine-grained access control.
+* Confidant is now python3 compatible, and tested against python 3.6, 3.7 and
+  3.8. If you see any python3 related issues, please open an issue.
+* Confidant now includes an access control plugin framework, with a default
+  plugin, `confidant.authnz.rbac:default_acl`, which implements the existing
+  access control behavior of confidant. The `ACL_MODULE` setting can be used
+  to define your own ACL behavior; see the [ACL docs](https://lyft.github.io/confidant/advanced/acls/)
+  for information about how to apply fine-grained access controls to specific
+  resources and actions.
+* kmsauth was upgraded with a more efficient LRU implementation, which allows
+  for higher concurrency.
+* The frontend and backend have been refactored to only provide sensitive data
+  where necessary. For example, previously, when viewing a service, the
+  credentials for that service were included in the response. Now when the
+  frontend fetches a service, it only fetches credential metadata that it uses
+  for display purposes. Similarly, the history view no longer fetches or
+  displays sensitive information. These changes were made to support fine-grained
+  access controls.
+* The resources and history view list panels no longer combine resources in the
+  view, but include a resource type toggle, to make it easier to find resources.
+* The history backend endpoints that list resources now support paged results.
+  Future releases will expand this to all endpoints that list resources. Default
+  behavior for these endpoints is to not page results. Clients can limit the
+  page size via an argument. It's also possible to force paging for these
+  via the `HISTORY_PAGE_LIMIT` setting.
+* New backend endpoints have been added to support reverting credential and
+  service resources, rather than needing to do an edit of resources, with all
+  fields. This was in support of adding fine-grained access controls, but also
+  makes reverting resources trivial from the client side.
+* `GET /v1/services/<id>` now supports a `metadata_only=[True|False]` argument
+  which can be used to only include metadata in the response.
+* Permissions hints are included in the response of resource endpoints, to
+  allow the UI (and other clients) to adjust their behavior based on permissions
+  available.
+* More detailed audit logs have been added for user actions, such as get/update credential,
+  and get/update service.
+* Google OAuth support has been updated to work with the new Google Sign-In APIs,
+  rather than the older Google+ Sign-In APIs.
+
 ## 5.2.0
 
 * Python3 fix in function ``load_private_key_pem`` in ``confidant.lib.cryptolib``

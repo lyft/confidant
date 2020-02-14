@@ -13,6 +13,7 @@ Confidant
 .. toctree::
   :caption: Advanced
 
+  acls
   blind_secrets
   kms_auth
   threat_model
