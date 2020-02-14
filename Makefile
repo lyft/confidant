@@ -10,3 +10,6 @@ test_unit:
 .PHONY: compile_deps # freeze requirements.in to requirements3.txt
 compile_deps:
 	./pip-compile.sh
+
+.PHONY: build_docs
+    ./docs/build.sh
