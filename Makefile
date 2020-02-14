@@ -12,4 +12,5 @@ compile_deps:
 	./pip-compile.sh
 
 .PHONY: build_docs
+build_docs:
 	./docs/build.sh
