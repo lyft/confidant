@@ -30,7 +30,7 @@ In docker format:
 MY_VARIABLE=MY_VALUE
 ```
 
-## Basic environment configuration
+## Environment configuration
 
 This is the minimum configuration needed to use Confidant:
 
@@ -61,7 +61,7 @@ export PORT='80'
 export FORWARDED_ALLOW_IPS='*'
 ```
 
-## gunicorn configuration for SSL termination support
+### gunicorn configuration for SSL termination support
 
 We assume confidant is always run behind a trusted SSL termination load
 balancer. As such, confidant will run as http:// and gunicorn will need to trust
@@ -306,8 +306,6 @@ service. To disable this check:
 ```bash
 export IGNORE_CONFLICTS='True'
 ```
-
-## Advanced environment configuration
 
 ### statsd metrics
 
@@ -562,12 +560,114 @@ than or equal to the number of concurrent requests per worker. To adjust this:
 export KMS_MAX_POOL_CONNECTIONS=100
 ```
 
+### Certificate Authority settings
+
+Confidant can issue certificates from multiple CAs, using AWS's ACM Private CA
+service.
+
+Confidant will configure its CA settings from a comma separated list of CAs,
+which must be alphanumeric (`a-ZA-Z-_`):
+
+```
+export ACM_PRIVATE_CAS=ca1,ca2
+```
+
+Confidant, using the `default_acl` policy, restricts certificate generation,
+so it's necessary to define a regex that will be matched against the CN field
+and values of the SAN attribute for certificates being requested. The regex
+must include a named group, `service_name` (syntax for named group: `(?P<service_name>)`).
+The `service_name` from the match must match the username used with kmsauth. If this is
+unset, confidant will deny every certificate issue attempt:
+
+```
+# Example match: test-service.example.com
+# service_name from example: test-service
+ACM_PRIVATE_CA_DOMAIN_REGEX_='(?P<service_name>[\w-]+)\.example\.com'
+```
+
+The rest of the settings are specific to the CA, and include the CA name
+appended to the end of the setting, in uppercase. The default, for most of
+these values is likely what you want.
+
+For example, if you have `ca1,ca2` set for `ACM_PRIVATE_CAS`, you'd set the arns like so:
+
+```
+export ACM_PRIVATE_CA_ARN_CA1=arn:...
+export ACM_PRIVATE_CA_ARN_CA2=arn:...
+```
+
+The signing algorithm to use with Private CA (default: `SHA256WITHRSA`):
+
+```
+export ACM_PRIVATE_CA_SIGNING_ALGORITHM_CA1=SHA256WITHRSA
+```
+
+The certificate template ARN to use, when issuing certificates (default: `arn:aws:acm-pca:::template/EndEntityCertificate/V1`):
+
+```
+export ACM_PRIVATE_CA_TEMPLATE_ARN_CA1=arn:...
+```
+
+The maximum validity length, in number of days, that can be requested for a
+certificate. If a value larger than this is requested, confidant will default
+to the maximum length:
+
+```
+export ACM_PRIVATE_CA_MAX_VALIDITY_DAYS_CA1=120
+export ACM_PRIVATE_CA_MAX_VALIDITY_DAYS_CA2=120
+```
+
+Confidant has two endpoints for issuing certificates. One endpoint issues a
+certificate from a provided CSR. The other endpoint generates a key, CSR,
+and then issues a certificate from them. The following settings can be used
+to control how confidant generates the key and CSR:
+
+```
+# No defaults for the CSR fields
+export ACM_PRIVATE_CA_CSR_COUNTRY_NAME_CA1=US
+export ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME_CA1=California
+export ACM_PRIVATE_CA_CSR_LOCALITY_NAME_CA1="San Francisco"
+export ACM_PRIVATE_CA_CSR_ORGANIZATION_NAME_CA1="Example Inc."
+```
+
+For test and development purposes, confidant can issue self-signed certificates
+without needing to call into ACM Private CA. This can be useful to evaluate
+the CA features without incurring the cost of issuing certificates:
+
+```
+export ACM_PRIVATE_CA_SELF_SIGN_CA1=false
+```
+
+The default key size, when confidant generates keys is `2048`. This can be adjusted:
+
+```
+export ACM_PRIVATE_CA_KEY_SIZE_CA1=2048
+```
+
+For completeness sake, it's possible to adjust the exponent size used when
+generating private keys, from the default of `65537`, though you should
+not change this setting unless you know what you're doing:
+
+```
+export ACM_PRIVATE_CA_KEY_PUBLIC_EXPONENT_SIZE_CA1=65537
+```
+
+When generating key/CSR and issuing certificates, confidant can also cache the
+data, in an in-process cache, which may reduce issuing costs, when multiple
+clients are requesting the same certificate. This cache is off by default,
+but you can enable it, and control the cache size (default: `1028`):
+
+```
+ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE_CA1=True
+ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE_CA2=1028
+```
+
 ## KMS key policy configuration
 
 Confidant needs to have special KMS key policy for both the at-rest
-KMS\_MASTER\_KEY and the authentication AUTH\_KEY.
+`KMS_MASTER_KEY` and the authentication `AUTH_KEY`.
 
-Here's an example key policy for the at-rest encryption key, KMS\_MASTER\_KEY, assuming the
+Here's an example key policy for the at-rest encryption key, `KMS_MASTER_KEY`, assuming the
 above configuration. Note the following:
 
 1. The "Enable IAM User Permissions" policy ensures that IAM users in your account

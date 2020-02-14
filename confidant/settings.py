@@ -567,7 +567,7 @@ for ca in ACM_PRIVATE_CAS:
     # Any certificate issue attempt not matching this pattern for CN or values
     # in SAN will be denied. If this is unset, all certificate issue attempts
     # will be denied by the default_acl.
-    #     Example: (?P<service_name>[\w-]+)\.example.com
+    #     Example: (?P<service_name>[\w-]+)\.example\.com
     #     Example match: test-service.example.com
     #     service_name from example: test-service
     ca_settings['name_regex'] = str_env(
