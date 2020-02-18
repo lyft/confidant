@@ -184,5 +184,100 @@ def test_get_certificate_from_csr(mocker):
     assert json_data == {
         'certificate': 'test_certificate',
         'certificate_chain': 'test_certificate_chain',
-        'key': None,
+    }
+
+
+def test_list_cas(mocker):
+    app = create_app()
+
+    mocker.patch(
+        'confidant.routes.certificates.authnz.get_logged_in_user',
+        return_value='test@example.com',
+    )
+    mocker.patch(
+        'confidant.routes.certificates.acl_module_check',
+        return_value=False,
+    )
+    ret = app.test_client().get(
+        '/v1/cas',
+        follow_redirects=False,
+    )
+    assert ret.status_code == 403
+
+    mocker.patch(
+        'confidant.routes.certificates.acl_module_check',
+        return_value=True,
+    )
+    mocker.patch('confidant.authnz.get_logged_in_user', return_value='test')
+    ca_object = certificatemanager.CertificateAuthority('development')
+    mocker.patch(
+        ('confidant.routes.certificates.certificatemanager.list_cas'),
+        return_value=[ca_object],
+    )
+    ca_object.issue_certificate_with_key = mocker.Mock(
+        return_value={
+            'certificate': 'test_certificate',
+            'certificate_chain': 'test_certificate_chain',
+            'key': 'test_key',
+            'tags': {'environment': 'development'},
+        },
+    )
+    ret = app.test_client().get('/v1/cas', follow_redirects=False)
+    json_data = json.loads(ret.data)
+    assert ret.status_code == 200
+    assert json_data == {
+        'cas': [{
+            'ca': 'development',
+            'certificate': 'test_certificate',
+            'certificate_chain': 'test_certificate_chain',
+            'key': 'test_key',
+            'tags': {'environment': 'development'},
+        }],
+    }
+
+
+def test_get_ca(mocker):
+    app = create_app()
+
+    mocker.patch(
+        'confidant.routes.certificates.authnz.get_logged_in_user',
+        return_value='test@example.com',
+    )
+    mocker.patch(
+        'confidant.routes.certificates.acl_module_check',
+        return_value=False,
+    )
+    ret = app.test_client().get(
+        '/v1/cas',
+        follow_redirects=False,
+    )
+    assert ret.status_code == 403
+
+    mocker.patch(
+        'confidant.routes.certificates.acl_module_check',
+        return_value=True,
+    )
+    mocker.patch('confidant.authnz.get_logged_in_user', return_value='test')
+    ca_object = certificatemanager.CertificateAuthority('development')
+    mocker.patch(
+        ('confidant.routes.certificates.certificatemanager.get_ca'),
+        return_value=ca_object,
+    )
+    ca_object.issue_certificate_with_key = mocker.Mock(
+        return_value={
+            'certificate': 'test_certificate',
+            'certificate_chain': 'test_certificate_chain',
+            'key': 'test_key',
+            'tags': {'environment': 'development'},
+        },
+    )
+    ret = app.test_client().get('/v1/cas/development', follow_redirects=False)
+    json_data = json.loads(ret.data)
+    assert ret.status_code == 200
+    assert json_data == {
+        'ca': 'development',
+        'certificate': 'test_certificate',
+        'certificate_chain': 'test_certificate_chain',
+        'key': 'test_key',
+        'tags': {'environment': 'development'},
     }

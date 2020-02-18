@@ -28,12 +28,16 @@ def default_acl(*args, **kwargs):
     if authnz.user_is_user_type('user'):
         if resource_type == 'certificate':
             return False
+        elif resource_type == 'ca':
+            return False
         return True
     elif authnz.user_is_user_type('service'):
         if resource_type == 'service' and action in ['metadata', 'get']:
             # Does the resource ID match the authenticated username?
             if authnz.user_is_service(resource_id):
                 return True
+        elif resource_type == 'ca' and action in ['list', 'get']:
+            return True
         elif resource_type == 'certificate' and action in ['get']:
             ca_object = certificatemanager.get_ca(resource_kwargs.get('ca'))
             # Require a name pattern
