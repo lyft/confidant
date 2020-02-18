@@ -245,7 +245,23 @@ def test_get_certificate_authority_certificate(mocker, ca_object):
         autospec=True,
     )
     gcac_mock = mocker.MagicMock()
-    gcac_mock.get_certificate_authority_certificate.return_value = 'test'
+    gcac_mock.get_certificate_authority_certificate.return_value = {
+        'Certificate': 'test-certificate',
+        'CertificateChain': 'test-certificate-chain',
+    }
+    gcac_mock.list_tags.return_value = {
+        'Tags': [
+            {'Key': 'environment', 'Value': 'development'},
+            {'Key': 'extra', 'Value': 'extra-value'},
+        ],
+    }
     client_mock.return_value = gcac_mock
     data = ca_object.get_certificate_authority_certificate()
-    assert data == 'test'
+    assert data == {
+        'certificate': 'test-certificate',
+        'certificate_chain': 'test-certificate-chain',
+        'tags': {
+            'environment': 'development',
+            'extra': 'extra-value',
+        },
+    }
