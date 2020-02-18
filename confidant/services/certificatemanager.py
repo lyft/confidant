@@ -91,6 +91,7 @@ class CertificateAuthorityNotFoundError(Exception):
 class CertificateAuthority(object):
     def __init__(self, ca):
         try:
+            self.ca_name = ca
             self.settings = settings.ACM_PRIVATE_CA_SETTINGS[ca]
         except KeyError:
             raise CertificateAuthorityNotFoundError()
@@ -404,10 +405,22 @@ class CertificateAuthority(object):
         ARN.
         """
         client = confidant.clients.get_boto_client('acm-pca')
-        response = client.get_certificate_authority_certificate(
+        certificate = client.get_certificate_authority_certificate(
             CertificateAuthorityArn=self.settings['arn'],
         )
-        return response
+        # TODO: support pagination for this call
+        tags = client.list_tags(
+            CertificateAuthorityArn=self.settings['arn'],
+        )
+        _tags = {}
+        for tag in tags:
+            _tags[tag['Key']] = tag['Value']
+        return {
+            'ca': self.ca_name,
+            'certificate': certificate['Certificate'],
+            'certificate_chain': certificate['CertificateChain'],
+            'tags': _tags,
+        }
 
 
 _CAS = {}
@@ -417,3 +430,14 @@ def get_ca(ca):
     if ca not in _CAS:
         _CAS[ca] = CertificateAuthority(ca)
     return _CAS[ca]
+
+
+def list_cas():
+    """
+    Return detailed CA information for all CAs.
+    """
+    cas = []
+    for ca in settings.ACM_PRIVATE_CA_SETTINGS:
+        _ca = get_ca(ca)
+        cas.append(_ca.get_certificate_authority_certificate)
+    return cas

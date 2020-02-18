@@ -5,7 +5,12 @@ from flask import blueprints, jsonify, request
 from confidant import authnz, settings
 from confidant.services import certificatemanager
 from confidant.schema.certificates import (
+    certificate_authority_response_schema,
+    certificate_authorities_response_schema,
     certificate_expanded_response_schema,
+    certificate_response_schema,
+    CertificateAuthorityResponse,
+    CertificateAuthoritiesResponse,
     CertificateResponse,
 )
 from confidant.utils import misc
@@ -139,4 +144,69 @@ def get_certificate_from_csr(ca):
         certificate=certificate['certificate'],
         certificate_chain=certificate['certificate_chain'],
     )
-    return certificate_expanded_response_schema.dumps(certificate_response)
+    return certificate_response_schema.dumps(certificate_response)
+
+
+@blueprint.route('/v1/cas', methods=['GET'])
+@authnz.require_auth
+def list_cas(ca):
+    '''
+    List the configured CAs.
+    '''
+
+    logged_in_user = authnz.get_logged_in_user()
+    if not acl_module_check(
+        resource_type='ca',
+        action='list',
+    ):
+        msg = '{} does not have access to list cas'.format(
+            authnz.get_logged_in_user(),
+        )
+        error_msg = {'error': msg, 'reference': ca}
+        return jsonify(error_msg), 403
+
+    cas = certificatemanager.list_cas()
+
+    logging.info('list_cas called by user={}'.format(logged_in_user))
+
+    cas_response = CertificateAuthoritiesResponse.from_cas(cas)
+    return certificate_authorities_response_schema.dumps(cas_response)
+
+
+@blueprint.route('/v1/cas/<ca>', methods=['GET'])
+@authnz.require_auth
+def get_ca(ca):
+    '''
+    Get the CA information for the provided ca.
+    '''
+    try:
+        ca_object = certificatemanager.get_ca(ca)
+    except certificatemanager.CertificateAuthorityNotFoundError:
+        return jsonify({'error': 'Provided CA not found.'}), 404
+
+    logged_in_user = authnz.get_logged_in_user()
+    if not acl_module_check(
+        resource_type='ca',
+        action='get',
+        resource_id=ca,
+    ):
+        msg = '{} does not have access to get ca {}'.format(
+            authnz.get_logged_in_user(),
+            ca,
+        )
+        error_msg = {'error': msg, 'reference': ca}
+        return jsonify(error_msg), 403
+
+    logging.info(
+        'get_ca called on id={} by user={}'.format(
+            ca,
+            logged_in_user,
+        )
+    )
+
+    ca = ca_object.get_certificate_authority_certificate()
+    ca_response = CertificateAuthorityResponse(
+        certificate=ca['certificate'],
+        certificate_chain=ca['certificate_chain'],
+    )
+    return certificate_authority_response_schema.dumps(ca_response)
