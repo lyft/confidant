@@ -37,7 +37,7 @@ class CertificateAuthorityResponseSchema(AutobuildSchema):
 
     certificate = fields.Str(required=True)
     certificate_chain = fields.Str(required=True)
-    tags = fields.Dict(keys=fields.str(), values=fields.str())
+    tags = fields.Dict(keys=fields.Str(), values=fields.Str())
 
 
 class CertificateAuthoritiesResponseSchema(AutobuildSchema):
