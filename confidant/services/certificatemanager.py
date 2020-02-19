@@ -118,7 +118,7 @@ class CertificateAuthority(object):
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.TraditionalOpenSSL,
             encryption_algorithm=serialization.NoEncryption(),
-        )
+        ).decode(encoding='UTF-8')
 
     def generate_x509_name(self, cn):
         """
