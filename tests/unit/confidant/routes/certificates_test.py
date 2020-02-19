@@ -78,7 +78,7 @@ def test_get_certificate_from_csr(mocker):
     ca_object = certificatemanager.CertificateAuthority('development')
     key = ca_object.generate_key()
     csr = ca_object.generate_csr(key, 'test.example.com')
-    encoded_csr = ca_object.encode_csr(csr).decode('ascii')
+    pem_csr = ca_object.encode_csr(csr)
 
     app = create_app()
 
@@ -122,7 +122,7 @@ def test_get_certificate_from_csr(mocker):
     ret = app.test_client().post(
         '/v1/certificates/development',
         data=json.dumps({
-            'csr': encoded_csr,
+            'csr': pem_csr,
             'validity': 7,
         }),
         content_type='application/json',
@@ -145,7 +145,7 @@ def test_get_certificate_from_csr(mocker):
     ret = app.test_client().post(
         '/v1/certificates/development',
         data=json.dumps({
-            'csr': encoded_csr,
+            'csr': pem_csr,
             'validity': 7,
         }),
         content_type='application/json',
@@ -173,7 +173,7 @@ def test_get_certificate_from_csr(mocker):
     ret = app.test_client().post(
         '/v1/certificates/development',
         data=json.dumps({
-            'csr': encoded_csr,
+            'csr': pem_csr,
             'validity': 7,
         }),
         content_type='application/json',

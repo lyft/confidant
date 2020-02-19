@@ -98,9 +98,8 @@ def get_certificate_from_csr(ca):
         'validity',
         ca_object.settings['max_validity_days'],
     )
-    encoded_csr = data['csr'].encode('utf-8')
     try:
-        csr = ca_object.decode_csr(encoded_csr)
+        csr = ca_object.decode_csr(data['csr'])
     except Exception:
         logging.exception('Failed to decode PEM csr')
         return jsonify(
@@ -138,7 +137,7 @@ def get_certificate_from_csr(ca):
         )
     )
 
-    arn = ca_object.issue_certificate(encoded_csr, validity)
+    arn = ca_object.issue_certificate(data['csr'], validity)
     certificate = ca_object.get_certificate_from_arn(arn)
     certificate_response = CertificateResponse(
         certificate=certificate['certificate'],

@@ -178,12 +178,15 @@ class CertificateAuthority(object):
         """
         Return a PEM string encoded version of the csr object.
         """
-        return csr.public_bytes(serialization.Encoding.PEM)
+        return csr.public_bytes(
+            serialization.Encoding.PEM,
+        ).decode(encoding='UTF-8')
 
     def decode_csr(self, pem_csr):
         """
         Return a csr object from the pem encoded csr.
         """
+        pem_csr = pem_csr.encode(encoding='UTF-8')
         return x509.load_pem_x509_csr(pem_csr, default_backend())
 
     def get_csr_common_name(self, csr):
@@ -262,7 +265,9 @@ class CertificateAuthority(object):
         """
         Return the PEM string encoded version of the certificate object.
         """
-        return cert.public_bytes(serialization.Encoding.PEM)
+        return cert.public_bytes(
+            serialization.Encoding.PEM,
+        ).decode(encoding='UTF-8')
 
     def issue_certificate(self, csr, validity):
         """
@@ -270,6 +275,7 @@ class CertificateAuthority(object):
         of days), issue a certificate from ACM Private CA, and return the ARN
         of the issued certificate.
         """
+        csr = csr.encode(encoding='UTF-8')
         with stats.timer('issue_certificate'):
             client = confidant.clients.get_boto_client('acm-pca')
             response = client.issue_certificate(
