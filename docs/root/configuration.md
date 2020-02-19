@@ -572,6 +572,17 @@ which must be alphanumeric (`a-ZA-Z-_`):
 export ACM_PRIVATE_CAS=ca1,ca2
 ```
 
+The rest of the settings are specific to the CA, and include the CA name
+appended to the end of the setting, in uppercase. The default, for most of
+these values is likely what you want.
+
+For example, if you have `ca1,ca2` set for `ACM_PRIVATE_CAS`, you'd set the arns like so:
+
+```
+export ACM_PRIVATE_CA_ARN_CA1=arn:...
+export ACM_PRIVATE_CA_ARN_CA2=arn:...
+```
+
 Confidant, using the `default_acl` policy, restricts certificate generation,
 so it's necessary to define a regex that will be matched against the CN field
 and values of the SAN attribute for certificates being requested. The regex
@@ -582,18 +593,7 @@ unset, confidant will deny every certificate issue attempt:
 ```
 # Example match: test-service.example.com
 # service_name from example: test-service
-ACM_PRIVATE_CA_DOMAIN_REGEX_='(?P<service_name>[\w-]+)\.example\.com'
-```
-
-The rest of the settings are specific to the CA, and include the CA name
-appended to the end of the setting, in uppercase. The default, for most of
-these values is likely what you want.
-
-For example, if you have `ca1,ca2` set for `ACM_PRIVATE_CAS`, you'd set the arns like so:
-
-```
-export ACM_PRIVATE_CA_ARN_CA1=arn:...
-export ACM_PRIVATE_CA_ARN_CA2=arn:...
+ACM_PRIVATE_CA_DOMAIN_REGEX_CA1='(?P<service_name>[\w-]+)\.example\.com'
 ```
 
 The signing algorithm to use with Private CA (default: `SHA256WITHRSA`):
@@ -614,7 +614,6 @@ to the maximum length:
 
 ```
 export ACM_PRIVATE_CA_MAX_VALIDITY_DAYS_CA1=120
-export ACM_PRIVATE_CA_MAX_VALIDITY_DAYS_CA2=120
 ```
 
 Confidant has two endpoints for issuing certificates. One endpoint issues a
@@ -659,7 +658,7 @@ but you can enable it, and control the cache size (default: `1028`):
 
 ```
 ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE_CA1=True
-ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE_CA2=1028
+ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE_CA1=1028
 ```
 
 ## KMS key policy configuration
