@@ -162,7 +162,7 @@ def list_cas():
         msg = '{} does not have access to list cas'.format(
             authnz.get_logged_in_user(),
         )
-        error_msg = {'error': msg, 'reference': ca}
+        error_msg = {'error': msg}
         return jsonify(error_msg), 403
 
     cas = certificatemanager.list_cas()
