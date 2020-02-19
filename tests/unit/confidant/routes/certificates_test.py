@@ -190,6 +190,7 @@ def test_get_certificate_from_csr(mocker):
 def test_list_cas(mocker):
     app = create_app()
 
+    mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch(
         'confidant.routes.certificates.authnz.get_logged_in_user',
         return_value='test@example.com',
@@ -239,6 +240,7 @@ def test_list_cas(mocker):
 def test_get_ca(mocker):
     app = create_app()
 
+    mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch(
         'confidant.routes.certificates.authnz.get_logged_in_user',
         return_value='test@example.com',

@@ -413,7 +413,7 @@ class CertificateAuthority(object):
             CertificateAuthorityArn=self.settings['arn'],
         )
         _tags = {}
-        for tag in tags:
+        for tag in tags['Tags']:
             _tags[tag['Key']] = tag['Value']
         return {
             'ca': self.ca_name,
