@@ -7,6 +7,7 @@ from confidant.schema.auto_build_schema import AutobuildSchema
 
 @attr.s
 class CertificateAuthorityResponse(object):
+    ca = attr.ib()
     certificate = attr.ib()
     certificate_chain = attr.ib()
     tags = attr.ib()
@@ -21,6 +22,7 @@ class CertificateAuthoritiesResponse(object):
         return cls(
             cas=[
                 CertificateAuthorityResponse(
+                    ca=ca['ca'],
                     certificate=ca['certificate'],
                     certificate_chain=ca['certificate_chain'],
                     tags=ca['tags'])
@@ -35,6 +37,7 @@ class CertificateAuthorityResponseSchema(AutobuildSchema):
 
     _class_to_load = CertificateAuthorityResponse
 
+    ca = fields.Str(required=True)
     certificate = fields.Str(required=True)
     certificate_chain = fields.Str(required=True)
     tags = fields.Dict(keys=fields.Str(), values=fields.Str())
@@ -46,7 +49,7 @@ class CertificateAuthoritiesResponseSchema(AutobuildSchema):
 
     _class_to_load = CertificateAuthoritiesResponse
 
-    cas = fields.Nested(CertificateAuthorityResponse, many=True)
+    cas = fields.Nested(CertificateAuthorityResponseSchema, many=True)
 
 
 @attr.s

@@ -204,9 +204,11 @@ def get_ca(ca):
         )
     )
 
-    ca = ca_object.get_certificate_authority_certificate()
+    _ca = ca_object.get_certificate_authority_certificate()
     ca_response = CertificateAuthorityResponse(
-        certificate=ca['certificate'],
-        certificate_chain=ca['certificate_chain'],
+        ca=_ca['ca'],
+        certificate=_ca['certificate'],
+        certificate_chain=_ca['certificate_chain'],
+        tags=_ca['tags'],
     )
     return certificate_authority_response_schema.dumps(ca_response)

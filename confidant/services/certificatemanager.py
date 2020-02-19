@@ -439,5 +439,5 @@ def list_cas():
     cas = []
     for ca in settings.ACM_PRIVATE_CA_SETTINGS:
         _ca = get_ca(ca)
-        cas.append(_ca.get_certificate_authority_certificate)
+        cas.append(_ca.get_certificate_authority_certificate())
     return cas

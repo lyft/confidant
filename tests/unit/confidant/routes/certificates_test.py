@@ -210,18 +210,15 @@ def test_list_cas(mocker):
         return_value=True,
     )
     mocker.patch('confidant.authnz.get_logged_in_user', return_value='test')
-    ca_object = certificatemanager.CertificateAuthority('development')
+    cas = [{
+        'ca': 'development',
+        'certificate': 'test_certificate',
+        'certificate_chain': 'test_certificate_chain',
+        'tags': {'environment': 'development'},
+    }]
     mocker.patch(
         ('confidant.routes.certificates.certificatemanager.list_cas'),
-        return_value=[ca_object],
-    )
-    ca_object.issue_certificate_with_key = mocker.Mock(
-        return_value={
-            'certificate': 'test_certificate',
-            'certificate_chain': 'test_certificate_chain',
-            'key': 'test_key',
-            'tags': {'environment': 'development'},
-        },
+        return_value=cas,
     )
     ret = app.test_client().get('/v1/cas', follow_redirects=False)
     json_data = json.loads(ret.data)
@@ -231,7 +228,6 @@ def test_list_cas(mocker):
             'ca': 'development',
             'certificate': 'test_certificate',
             'certificate_chain': 'test_certificate_chain',
-            'key': 'test_key',
             'tags': {'environment': 'development'},
         }],
     }
@@ -265,11 +261,11 @@ def test_get_ca(mocker):
         ('confidant.routes.certificates.certificatemanager.get_ca'),
         return_value=ca_object,
     )
-    ca_object.issue_certificate_with_key = mocker.Mock(
+    ca_object.get_certificate_authority_certificate = mocker.Mock(
         return_value={
+            'ca': 'development',
             'certificate': 'test_certificate',
             'certificate_chain': 'test_certificate_chain',
-            'key': 'test_key',
             'tags': {'environment': 'development'},
         },
     )
@@ -280,6 +276,5 @@ def test_get_ca(mocker):
         'ca': 'development',
         'certificate': 'test_certificate',
         'certificate_chain': 'test_certificate_chain',
-        'key': 'test_key',
         'tags': {'environment': 'development'},
     }
