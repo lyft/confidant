@@ -149,7 +149,7 @@ def get_certificate_from_csr(ca):
 
 @blueprint.route('/v1/cas', methods=['GET'])
 @authnz.require_auth
-def list_cas(ca):
+def list_cas():
     '''
     List the configured CAs.
     '''

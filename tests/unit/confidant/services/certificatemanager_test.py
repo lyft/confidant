@@ -258,6 +258,7 @@ def test_get_certificate_authority_certificate(mocker, ca_object):
     client_mock.return_value = gcac_mock
     data = ca_object.get_certificate_authority_certificate()
     assert data == {
+        'ca': 'development',
         'certificate': 'test-certificate',
         'certificate_chain': 'test-certificate-chain',
         'tags': {
