@@ -84,6 +84,23 @@ class CertificateCache(object):
         return '{}{}{}{}'.format(cn, validity, san, date)
 
 
+class CertificateCacheNoOp(object):
+    def get(self, cache_id):
+        return None
+
+    def lock(self, cache_id):
+        return None
+
+    def release(self, cache_id):
+        return None
+
+    def set_response(self, cache_id, response):
+        return None
+
+    def get_cache_id(self, cn, validity, san):
+        return ''
+
+
 class CertificateAuthorityNotFoundError(Exception):
     pass
 
@@ -95,9 +112,12 @@ class CertificateAuthority(object):
             self.settings = settings.ACM_PRIVATE_CA_SETTINGS[ca]
         except KeyError:
             raise CertificateAuthorityNotFoundError()
-        self.cache = CertificateCache(
-            self.settings['certificate_cache_size'],
-        )
+        if self.settings['certificate_use_cache']:
+            self.cache = CertificateCache(
+                self.settings['certificate_cache_size'],
+            )
+        else:
+            self.cache = CertificateCacheNoOp()
 
     def generate_key(self):
         """
@@ -299,8 +319,6 @@ class CertificateAuthority(object):
         to populate the cache.
         """
         with stats.timer('get_cached_certificate_with_key'):
-            if not self.settings['certificate_use_cache']:
-                return {}
             item = self.cache.get(cache_id)
             # We're the first thread attempting to get this certificate
             if not item:
