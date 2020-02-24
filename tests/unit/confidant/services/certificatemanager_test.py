@@ -164,9 +164,8 @@ def test__get_cached_certificate_with_key(mocker, ca_object):
         side_effect=[None, {'hello': 'world'}]
     )
     cache.get = mocker.MagicMock(return_value=item)
-    time_mock = mocker.patch('time.sleep')
-    assert ca_object._get_cached_certificate_with_key('test1') == {'hello': 'world'}  # noqa:E501
-    assert time_mock.called is True
+    with pytest.raises(certificatemanager.CertificateNotReadyError):
+        ca_object._get_cached_certificate_with_key('test1')
 
 
 def test_issue_certificate_with_key(mocker, ca_object):

@@ -72,6 +72,15 @@ def test_get_certificate(mocker):
         'certificate_chain': 'test_certificate_chain',
         'key': 'test_key',
     }
+    ca_object.issue_certificate_with_key = mocker.Mock(
+        side_effect=certificatemanager.CertificateNotReadyError(),
+    )
+    ret = app.test_client().get(
+        '/v1/certificates/development/test.example.com',
+        follow_redirects=False,
+    )
+    assert ret.status_code == 429
+    assert ret.headers['Retry-After'] == '2'
 
 
 def test_get_certificate_from_csr(mocker):

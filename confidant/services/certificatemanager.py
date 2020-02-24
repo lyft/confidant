@@ -105,6 +105,10 @@ class CertificateAuthorityNotFoundError(Exception):
     pass
 
 
+class CertificateNotReadyError(Exception):
+    pass
+
+
 class CertificateAuthority(object):
     def __init__(self, ca):
         try:
@@ -325,23 +329,8 @@ class CertificateAuthority(object):
                 return {}
             # A certificate hasn't been issued yet, but since the cache id
             # exists, another thread has requested the certificate.
-            i = 0
-            if not item.response:
-                # Wait for response
-                while True:
-                    # Only allow a maximum of 10s wait.
-                    # keep waiting while the lock is held.
-                    if item.lock:
-                        if i >= 100:
-                            break
-                        logging.debug(
-                            'Sleeping in _get_cached_certificate_with_key'
-                            ' for {}'.format(cache_id)
-                        )
-                        time.sleep(.100)
-                        i = i + 1
-                    else:
-                        break
+            if not item.response and item.lock:
+                raise CertificateNotReadyError()
             # If the other thread failed to get the certificate, we need to
             # ensure that this thread attempts to fetch a certificate.
             return item.response

@@ -64,11 +64,18 @@ def get_certificate(ca, cn):
         default=ca_object.settings['max_validity_days'],
         type=int,
     )
-    certificate = ca_object.issue_certificate_with_key(
-        cn,
-        validity,
-        san,
-    )
+    try:
+        certificate = ca_object.issue_certificate_with_key(
+            cn,
+            validity,
+            san,
+        )
+    except certificatemanager.CertificateNotReadyError:
+        # Ratelimit response for a locked certificate in the cache
+        error_msg = 'Certificate being requested, please wait and try again.'
+        response = jsonify(error_msg)
+        response.retry_after = 2
+        return response, 429
     certificate_response = CertificateResponse(
         certificate=certificate['certificate'],
         certificate_chain=certificate['certificate_chain'],
