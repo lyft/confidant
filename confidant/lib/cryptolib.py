@@ -142,7 +142,7 @@ def load_private_key_pem_as_bare_base64(path, password=None):
     :rtype: string
     """
     return _rsa_private_key_bare_base64(
-        load_private_key_pem(path, password=password))
+        load_private_key_pem(path, password=password)).decode()
 
 
 def _rsa_private_key_bare_base64(key):
