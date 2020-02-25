@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; confidant 6.0.0-eaf617 documentation</title>
+  <title>Index &mdash; confidant 6.0.0-7bd6cd documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                6.0.0-eaf617
+                6.0.0-7bd6cd
               </div>
             
           
@@ -107,15 +107,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#docker-vs-bash">Docker vs bash</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html#basic-environment-configuration">Basic environment configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#environment-configuration">Environment configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#google-authentication-configuration">Google authentication configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#saml-authentication-configuration">SAML authentication configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#user-authentication-session-settings">User authentication session settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#disabling-credential-conflict-checks">Disabling credential conflict checks</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html#advanced-environment-configuration">Advanced environment configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#statsd-metrics">statsd metrics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#sending-graphite-events">Sending graphite events</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#google-authentication-user-restrictions">Google authentication user restrictions</a></li>
@@ -129,6 +126,7 @@
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-client-configuration">Confidant client configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#maintenance-mode-settings">Maintenance mode settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-performance-settings">Confidant performance settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#certificate-authority-settings">Certificate Authority settings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#kms-key-policy-configuration">KMS key policy configuration</a></li>
@@ -447,6 +445,42 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.ca_object">ca_object() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CachedCertificate">CachedCertificate (class in confidant.services.certificatemanager)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthoritiesResponse">CertificateAuthoritiesResponse (class in confidant.schema.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthoritiesResponseSchema">CertificateAuthoritiesResponseSchema (class in confidant.schema.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthoritiesResponseSchema.Meta">CertificateAuthoritiesResponseSchema.Meta (class in confidant.schema.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority">CertificateAuthority (class in confidant.services.certificatemanager)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthorityNotFoundError">CertificateAuthorityNotFoundError</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthorityResponse">CertificateAuthorityResponse (class in confidant.schema.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthorityResponseSchema">CertificateAuthorityResponseSchema (class in confidant.schema.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthorityResponseSchema.Meta">CertificateAuthorityResponseSchema.Meta (class in confidant.schema.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCache">CertificateCache (class in confidant.services.certificatemanager)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCacheNoOp">CertificateCacheNoOp (class in confidant.services.certificatemanager)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateExpandedResponseSchema">CertificateExpandedResponseSchema (class in confidant.schema.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateExpandedResponseSchema.Meta">CertificateExpandedResponseSchema.Meta (class in confidant.schema.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateNotReadyError">CertificateNotReadyError</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateResponse">CertificateResponse (class in confidant.schema.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateResponseSchema">CertificateResponseSchema (class in confidant.schema.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateResponseSchema.Meta">CertificateResponseSchema.Meta (class in confidant.schema.certificates)</a>
+</li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.check_authorization">check_authorization() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 
       <ul>
@@ -487,9 +521,13 @@
 </li>
       <li><a href="autogen/confidant.models.html#module-confidant.models.connection_cls">confidant.models.connection_cls (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.models.html#module-confidant.models.session_cls">confidant.models.session_cls (module)</a>
 </li>
       <li><a href="autogen/confidant.routes.html#module-confidant.routes">confidant.routes (module)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#module-confidant.routes.certificates">confidant.routes.certificates (module)</a>
 </li>
       <li><a href="autogen/confidant.routes.html#module-confidant.routes.identity">confidant.routes.identity (module)</a>
 </li>
@@ -501,9 +539,9 @@
 </li>
       <li><a href="autogen/confidant.schema.html#module-confidant.schema.auto_build_schema">confidant.schema.auto_build_schema (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.schema.html#module-confidant.schema.blind_credentials">confidant.schema.blind_credentials (module)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#module-confidant.schema.certificates">confidant.schema.certificates (module)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts">confidant.scripts (module)</a>
 </li>
@@ -512,6 +550,8 @@
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.migrate_bool">confidant.scripts.migrate_bool (module)</a>
 </li>
       <li><a href="autogen/confidant.services.html#module-confidant.services">confidant.services (module)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#module-confidant.services.certificatemanager">confidant.services.certificatemanager (module)</a>
 </li>
       <li><a href="autogen/confidant.services.html#module-confidant.services.ciphermanager">confidant.services.ciphermanager (module)</a>
 </li>
@@ -571,6 +611,8 @@
 </li>
       <li><a href="autogen/confidant.models.html#confidant.models.session_cls.DDBSession">DDBSession (class in confidant.models.session_cls)</a>
 </li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.decode_csr">decode_csr() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
       <li><a href="autogen/confidant.services.html#confidant.services.ciphermanager.CipherManager.decrypt">decrypt() (confidant.services.ciphermanager.CipherManager method)</a>
 </li>
       <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.decrypt_datakey">decrypt_datakey() (in module confidant.lib.cryptolib)</a>
@@ -595,10 +637,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.enabled">enabled (confidant.scripts.migrate_bool.GenericCredential attribute)</a>
 </li>
-      <li><a href="autogen/confidant.services.html#confidant.services.ciphermanager.CipherManager.encrypt">encrypt() (confidant.services.ciphermanager.CipherManager method)</a>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.encode_certificate">encode_certificate() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.encode_csr">encode_csr() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.encode_key">encode_key() (confidant.services.certificatemanager.CertificateAuthority method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.encode_san_dns_names">encode_san_dns_names() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.ciphermanager.CipherManager.encrypt">encrypt() (confidant.services.ciphermanager.CipherManager method)</a>
+</li>
       <li><a href="autogen/tests.html#tests.conftest.encrypted_settings_mock">encrypted_settings_mock() (in module tests.conftest)</a>
 </li>
       <li><a href="autogen/confidant.html#confidant.encrypted_settings.EncryptedSettings">EncryptedSettings (class in confidant.encrypted_settings)</a>
@@ -619,15 +669,25 @@
 </li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.blind_credentials.BlindCredentialResponse.from_blind_credential">from_blind_credential() (confidant.schema.blind_credentials.BlindCredentialResponse class method)</a>
 </li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthoritiesResponse.from_cas">from_cas() (confidant.schema.certificates.CertificateAuthoritiesResponse class method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.generate_csr">generate_csr() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.generate_key">generate_key() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator.generate_metadata">generate_metadata() (confidant.authnz.userauth.SamlAuthenticator method)</a>
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.saml.generate_saml_login_redirect">generate_saml_login_redirect() (in module confidant.routes.saml)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.generate_self_signed_certificate">generate_self_signed_certificate() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.generate_x509_name">generate_x509_name() (confidant.services.certificatemanager.CertificateAuthority method)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.GenerateSecretsBootstrap">GenerateSecretsBootstrap (class in confidant.scripts.bootstrap)</a>
 </li>
@@ -637,19 +697,49 @@
 </li>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta">GenericCredential.Meta (class in confidant.scripts.migrate_bool)</a>
 </li>
-      <li><a href="autogen/confidant.html#confidant.settings.get">get() (in module confidant.settings)</a>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCache.get">get() (confidant.services.certificatemanager.CertificateCache method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCacheNoOp.get">(confidant.services.certificatemanager.CertificateCacheNoOp method)</a>
 </li>
+        <li><a href="autogen/confidant.html#confidant.settings.get">(in module confidant.settings)</a>
+</li>
+      </ul></li>
       <li><a href="autogen/confidant.html#confidant.encrypted_settings.EncryptedSettings.get_all_secrets">get_all_secrets() (confidant.encrypted_settings.EncryptedSettings method)</a>
 </li>
       <li><a href="autogen/confidant.clients.html#confidant.clients.get_boto_client">get_boto_client() (in module confidant.clients)</a>
 </li>
       <li><a href="autogen/confidant.clients.html#confidant.clients.get_boto_resource">get_boto_resource() (in module confidant.clients)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.clients.html#confidant.clients.get_boto_session">get_boto_session() (in module confidant.clients)</a>
 </li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.certificates.get_ca">get_ca() (in module confidant.routes.certificates)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.get_ca">(in module confidant.services.certificatemanager)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCache.get_cache_id">get_cache_id() (confidant.services.certificatemanager.CertificateCache method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCacheNoOp.get_cache_id">(confidant.services.certificatemanager.CertificateCacheNoOp method)</a>
+</li>
+      </ul></li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.certificates.get_certificate">get_certificate() (in module confidant.routes.certificates)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.get_certificate_authority_certificate">get_certificate_authority_certificate() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.get_certificate_from_arn">get_certificate_from_arn() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.certificates.get_certificate_from_csr">get_certificate_from_csr() (in module confidant.routes.certificates)</a>
+</li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.identity.get_client_config">get_client_config() (in module confidant.routes.identity)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.get_csr_common_name">get_csr_common_name() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.get_csr_san">get_csr_san() (confidant.services.certificatemanager.CertificateAuthority method)</a>
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.get_csrf_token">get_csrf_token() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 </li>
@@ -697,8 +787,6 @@
 </li>
       <li><a href="autogen/confidant.html#confidant.settings.int_env">int_env() (in module confidant.settings)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.is_authenticated">is_authenticated() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 
       <ul>
@@ -707,6 +795,8 @@
         <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.NullUserAuthenticator.is_authenticated">(confidant.authnz.userauth.NullUserAuthenticator method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.is_expired">is_expired() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 
       <ul>
@@ -715,6 +805,10 @@
         <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.NullUserAuthenticator.is_expired">(confidant.authnz.userauth.NullUserAuthenticator method)</a>
 </li>
       </ul></li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.issue_certificate">issue_certificate() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.issue_certificate_with_key">issue_certificate_with_key() (confidant.services.certificatemanager.CertificateAuthority method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -722,13 +816,29 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.schema.html#confidant.schema.blind_credentials.BlindCredentialResponseSchema.Meta.jit">jit (confidant.schema.blind_credentials.BlindCredentialResponseSchema.Meta attribute)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthoritiesResponseSchema.Meta.jit">(confidant.schema.certificates.CertificateAuthoritiesResponseSchema.Meta attribute)</a>
 </li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthorityResponseSchema.Meta.jit">(confidant.schema.certificates.CertificateAuthorityResponseSchema.Meta attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateExpandedResponseSchema.Meta.jit">(confidant.schema.certificates.CertificateExpandedResponseSchema.Meta attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateResponseSchema.Meta.jit">(confidant.schema.certificates.CertificateResponseSchema.Meta attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.certificates.list_cas">list_cas() (in module confidant.routes.certificates)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.list_cas">(in module confidant.services.certificatemanager)</a>
+</li>
+      </ul></li>
       <li><a href="autogen/confidant.utils.html#confidant.utils.misc.load_module">load_module() (in module confidant.utils.misc)</a>
 </li>
       <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.load_private_key_pem">load_private_key_pem() (in module confidant.lib.cryptolib)</a>
@@ -739,6 +849,16 @@
 </li>
       <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.load_x509_certificate_pem_as_bare_base64">load_x509_certificate_pem_as_bare_base64() (in module confidant.lib.cryptolib)</a>
 </li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CachedCertificate.lock">lock() (confidant.services.certificatemanager.CachedCertificate property)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCache.lock">(confidant.services.certificatemanager.CertificateCache method)</a>
+</li>
+        <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCacheNoOp.lock">(confidant.services.certificatemanager.CertificateCacheNoOp method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.log_in">log_in() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 
       <ul>
@@ -753,8 +873,6 @@
         <li><a href="autogen/confidant.authnz.html#confidant.authnz.log_in">(in module confidant.authnz)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.log_out">log_out() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 
       <ul>
@@ -813,14 +931,20 @@
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.MigrateBooleanAttribute.option_list">(confidant.scripts.migrate_bool.MigrateBooleanAttribute attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.AutobuildSchema.opts">opts (confidant.schema.auto_build_schema.AutobuildSchema attribute)</a>
 
       <ul>
         <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.StrictSchema.opts">(confidant.schema.auto_build_schema.StrictSchema attribute)</a>
 </li>
         <li><a href="autogen/confidant.schema.html#confidant.schema.blind_credentials.BlindCredentialResponseSchema.opts">(confidant.schema.blind_credentials.BlindCredentialResponseSchema attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthoritiesResponseSchema.opts">(confidant.schema.certificates.CertificateAuthoritiesResponseSchema attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthorityResponseSchema.opts">(confidant.schema.certificates.CertificateAuthorityResponseSchema attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateExpandedResponseSchema.opts">(confidant.schema.certificates.CertificateExpandedResponseSchema attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateResponseSchema.opts">(confidant.schema.certificates.CertificateResponseSchema attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -855,6 +979,12 @@
 </li>
       <li><a href="autogen/confidant.html#confidant.encrypted_settings.EncryptedSettings.registered">registered() (confidant.encrypted_settings.EncryptedSettings method)</a>
 </li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCache.release">release() (confidant.services.certificatemanager.CertificateCache method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCacheNoOp.release">(confidant.services.certificatemanager.CertificateCacheNoOp method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.request_timeout_seconds">request_timeout_seconds (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
@@ -864,6 +994,8 @@
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.require_csrf_token">require_csrf_token() (in module confidant.authnz)</a>
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.require_logout_for_goodbye">require_logout_for_goodbye() (in module confidant.authnz)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CachedCertificate.response">response() (confidant.services.certificatemanager.CachedCertificate property)</a>
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.robots">robots() (in module confidant.routes.static_files)</a>
 </li>
@@ -899,12 +1031,18 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.set_csrf_token">set_csrf_token() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.set_current_user">set_current_user() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.set_expiration">set_expiration() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 </li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCache.set_response">set_response() (confidant.services.certificatemanager.CertificateCache method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCacheNoOp.set_response">(confidant.services.certificatemanager.CertificateCacheNoOp method)</a>
+</li>
+      </ul></li>
       <li><a href="autogen/confidant.html#confidant.settings.SettingsError">SettingsError</a>
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.static_proxy">static_proxy() (in module confidant.routes.static_files)</a>
@@ -925,9 +1063,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.table_name">table_name (confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
 </li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test__get_cached_certificate_with_key">test__get_cached_certificate_with_key() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_bootstrap">test_bootstrap() (in module tests.unit.confidant.encrypted_settings_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_bootstrap_filefail">test_bootstrap_filefail() (in module tests.unit.confidant.encrypted_settings_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_certificate_cache">test_certificate_cache() (in module tests.unit.confidant.services.certificatemanager_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_1">test_cipher_version_1() (in module tests.unit.confidant.services.ciphermanager_test)</a>
 </li>
@@ -935,9 +1077,43 @@
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_3">test_cipher_version_3() (in module tests.unit.confidant.services.ciphermanager_test)</a>
 </li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_decode_csr">test_decode_csr() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_encode_certificate">test_encode_certificate() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_encode_csr">test_encode_csr() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_encode_key">test_encode_key() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_encode_san_dns_names">test_encode_san_dns_names() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_generate_csr">test_generate_csr() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_generate_key">test_generate_key() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_generate_self_signed_certificate">test_generate_self_signed_certificate() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_generate_x509_name">test_generate_x509_name() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_get_certificate_authority_certificate">test_get_certificate_authority_certificate() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_get_certificate_from_arn_no_exception">test_get_certificate_from_arn_no_exception() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_get_certificate_from_arn_with_exception">test_get_certificate_from_arn_with_exception() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_get_csr_common_name">test_get_csr_common_name() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_get_csr_san">test_get_csr_san() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_get_registered">test_get_registered() (in module tests.unit.confidant.encrypted_settings_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_get_registered_default">test_get_registered_default() (in module tests.unit.confidant.encrypted_settings_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_issue_certificate">test_issue_certificate() (in module tests.unit.confidant.services.certificatemanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_issue_certificate_with_key">test_issue_certificate_with_key() (in module tests.unit.confidant.services.certificatemanager_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_register">test_register() (in module tests.unit.confidant.encrypted_settings_test)</a>
 </li>
@@ -945,8 +1121,6 @@
 </li>
       <li><a href="autogen/tests.html#module-tests.conftest">tests.conftest (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/tests.integration.html#module-tests.integration">tests.integration (module)</a>
 </li>
       <li><a href="autogen/tests.integration.confidant.html#module-tests.integration.confidant">tests.integration.confidant (module)</a>
@@ -966,6 +1140,8 @@
       <li><a href="autogen/tests.unit.confidant.routes.html#module-tests.unit.confidant.routes">tests.unit.confidant.routes (module)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services">tests.unit.confidant.services (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services.certificatemanager_test">tests.unit.confidant.services.certificatemanager_test (module)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services.ciphermanager_test">tests.unit.confidant.services.ciphermanager_test (module)</a>
 </li>

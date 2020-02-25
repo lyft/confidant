@@ -12,6 +12,14 @@ confidant.routes.blind\_credentials module
    :undoc-members:
    :show-inheritance:
 
+confidant.routes.certificates module
+------------------------------------
+
+.. automodule:: confidant.routes.certificates
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 confidant.routes.credentials module
 -----------------------------------
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration &mdash; confidant 6.0.0-eaf617 documentation</title>
+  <title>Configuration &mdash; confidant 6.0.0-7bd6cd documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.0.0-eaf617
+                6.0.0-7bd6cd
               </div>
             
           
@@ -108,15 +108,12 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#docker-vs-bash">Docker vs bash</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#basic-environment-configuration">Basic environment configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#environment-configuration">Environment configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#google-authentication-configuration">Google authentication configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#saml-authentication-configuration">SAML authentication configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#user-authentication-session-settings">User authentication session settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#disabling-credential-conflict-checks">Disabling credential conflict checks</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#advanced-environment-configuration">Advanced environment configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#statsd-metrics">statsd metrics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sending-graphite-events">Sending graphite events</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#google-authentication-user-restrictions">Google authentication user restrictions</a></li>
@@ -130,6 +127,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#confidant-client-configuration">Confidant client configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#maintenance-mode-settings">Maintenance mode settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#confidant-performance-settings">Confidant performance settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#certificate-authority-settings">Certificate Authority settings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#kms-key-policy-configuration">KMS key policy configuration</a></li>
@@ -390,8 +388,8 @@ and value like this:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="basic-environment-configuration">
-<h2>Basic environment configuration<a class="headerlink" href="#basic-environment-configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="environment-configuration">
+<h2>Environment configuration<a class="headerlink" href="#environment-configuration" title="Permalink to this headline">¶</a></h2>
 <p>This is the minimum configuration needed to use Confidant:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># The region our service is running in.</span>
 <span class="nb">export</span> <span class="nv">AWS_DEFAULT_REGION</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span>
@@ -419,9 +417,8 @@ and value like this:</p>
 <span class="nb">export</span> <span class="nv">FORWARDED_ALLOW_IPS</span><span class="o">=</span><span class="s1">&#39;*&#39;</span>
 </pre></div>
 </div>
-</div>
 <div class="section" id="gunicorn-configuration-for-ssl-termination-support">
-<h2>gunicorn configuration for SSL termination support<a class="headerlink" href="#gunicorn-configuration-for-ssl-termination-support" title="Permalink to this headline">¶</a></h2>
+<h3>gunicorn configuration for SSL termination support<a class="headerlink" href="#gunicorn-configuration-for-ssl-termination-support" title="Permalink to this headline">¶</a></h3>
 <p>We assume confidant is always run behind a trusted SSL termination load
 balancer. As such, confidant will run as <a class="reference external" href="http://">http://</a> and gunicorn will need to trust
 X-Forwarded-Proto to know that it’s running behind a terminator.</p>
@@ -435,6 +432,7 @@ argument to gunicorn:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># CLI flag for gunicorn</span>
 gunicorn confidant.wsgi:app -k gevent --forwarded-allow-ips<span class="o">=</span>*
 </pre></div>
+</div>
 </div>
 <div class="section" id="google-authentication-configuration">
 <h3>Google authentication configuration<a class="headerlink" href="#google-authentication-configuration" title="Permalink to this headline">¶</a></h3>
@@ -643,9 +641,6 @@ service. To disable this check:</p>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="advanced-environment-configuration">
-<h2>Advanced environment configuration<a class="headerlink" href="#advanced-environment-configuration" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="statsd-metrics">
 <h3>statsd metrics<a class="headerlink" href="#statsd-metrics" title="Permalink to this headline">¶</a></h3>
 <p>Confidant can track some stats via statsd. By default it’s set to send stats to
@@ -866,12 +861,90 @@ than or equal to the number of concurrent requests per worker. To adjust this:</
 </pre></div>
 </div>
 </div>
+<div class="section" id="certificate-authority-settings">
+<h3>Certificate Authority settings<a class="headerlink" href="#certificate-authority-settings" title="Permalink to this headline">¶</a></h3>
+<p>Confidant can issue certificates from multiple CAs, using AWS’s ACM Private CA
+service.</p>
+<p>Confidant will configure its CA settings from a comma separated list of CAs,
+which must be alphanumeric (<code class="docutils literal notranslate"><span class="pre">a-ZA-Z-_</span></code>):</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export ACM_PRIVATE_CAS=ca1,ca2
+</pre></div>
+</div>
+<p>The rest of the settings are specific to the CA, and include the CA name
+appended to the end of the setting, in uppercase. The default, for most of
+these values is likely what you want.</p>
+<p>For example, if you have <code class="docutils literal notranslate"><span class="pre">ca1,ca2</span></code> set for <code class="docutils literal notranslate"><span class="pre">ACM_PRIVATE_CAS</span></code>, you’d set the arns like so:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export ACM_PRIVATE_CA_ARN_CA1=arn:...
+export ACM_PRIVATE_CA_ARN_CA2=arn:...
+</pre></div>
+</div>
+<p>Confidant, using the <code class="docutils literal notranslate"><span class="pre">default_acl</span></code> policy, restricts certificate generation,
+so it’s necessary to define a regex that will be matched against the CN field
+and values of the SAN attribute for certificates being requested. The regex
+must include a named group, <code class="docutils literal notranslate"><span class="pre">service_name</span></code> (syntax for named group: <code class="docutils literal notranslate"><span class="pre">(?P&lt;service_name&gt;)</span></code>).
+The <code class="docutils literal notranslate"><span class="pre">service_name</span></code> from the match must match the username used with kmsauth. If this is
+unset, confidant will deny every certificate issue attempt:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span># Example match: test-service.example.com
+# service_name from example: test-service
+ACM_PRIVATE_CA_DOMAIN_REGEX_CA1=&#39;(?P&lt;service_name&gt;[\w-]+)\.example\.com&#39;
+</pre></div>
+</div>
+<p>The signing algorithm to use with Private CA (default: <code class="docutils literal notranslate"><span class="pre">SHA256WITHRSA</span></code>):</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export ACM_PRIVATE_CA_SIGNING_ALGORITHM_CA1=SHA256WITHRSA
+</pre></div>
+</div>
+<p>The certificate template ARN to use, when issuing certificates (default: <code class="docutils literal notranslate"><span class="pre">arn:aws:acm-pca:::template/EndEntityCertificate/V1</span></code>):</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export ACM_PRIVATE_CA_TEMPLATE_ARN_CA1=arn:...
+</pre></div>
+</div>
+<p>The maximum validity length, in number of days, that can be requested for a
+certificate. If a value larger than this is requested, confidant will default
+to the maximum length:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export ACM_PRIVATE_CA_MAX_VALIDITY_DAYS_CA1=120
+</pre></div>
+</div>
+<p>Confidant has two endpoints for issuing certificates. One endpoint issues a
+certificate from a provided CSR. The other endpoint generates a key, CSR,
+and then issues a certificate from them. The following settings can be used
+to control how confidant generates the key and CSR:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span># No defaults for the CSR fields
+export ACM_PRIVATE_CA_CSR_COUNTRY_NAME_CA1=US
+export ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME_CA1=California
+export ACM_PRIVATE_CA_CSR_LOCALITY_NAME_CA1=&quot;San Francisco&quot;
+export ACM_PRIVATE_CA_CSR_ORGANIZATION_NAME_CA1=&quot;Example Inc.&quot;
+</pre></div>
+</div>
+<p>For test and development purposes, confidant can issue self-signed certificates
+without needing to call into ACM Private CA. This can be useful to evaluate
+the CA features without incurring the cost of issuing certificates:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export ACM_PRIVATE_CA_SELF_SIGN_CA1=false
+</pre></div>
+</div>
+<p>The default key size, when confidant generates keys is <code class="docutils literal notranslate"><span class="pre">2048</span></code>. This can be adjusted:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export ACM_PRIVATE_CA_KEY_SIZE_CA1=2048
+</pre></div>
+</div>
+<p>For completeness sake, it’s possible to adjust the exponent size used when
+generating private keys, from the default of <code class="docutils literal notranslate"><span class="pre">65537</span></code>, though you should
+not change this setting unless you know what you’re doing:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export ACM_PRIVATE_CA_KEY_PUBLIC_EXPONENT_SIZE_CA1=65537
+</pre></div>
+</div>
+<p>When generating key/CSR and issuing certificates, confidant can also cache the
+data, in an in-process cache, which may reduce issuing costs, when multiple
+clients are requesting the same certificate. This cache is off by default,
+but you can enable it, and control the cache size (default: <code class="docutils literal notranslate"><span class="pre">1028</span></code>):</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE_CA1=True
+ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE_CA1=1028
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="kms-key-policy-configuration">
 <h2>KMS key policy configuration<a class="headerlink" href="#kms-key-policy-configuration" title="Permalink to this headline">¶</a></h2>
 <p>Confidant needs to have special KMS key policy for both the at-rest
-KMS_MASTER_KEY and the authentication AUTH_KEY.</p>
-<p>Here’s an example key policy for the at-rest encryption key, KMS_MASTER_KEY, assuming the
+<code class="docutils literal notranslate"><span class="pre">KMS_MASTER_KEY</span></code> and the authentication <code class="docutils literal notranslate"><span class="pre">AUTH_KEY</span></code>.</p>
+<p>Here’s an example key policy for the at-rest encryption key, <code class="docutils literal notranslate"><span class="pre">KMS_MASTER_KEY</span></code>, assuming the
 above configuration. Note the following:</p>
 <ol class="arabic simple">
 <li><p>The “Enable IAM User Permissions” policy ensures that IAM users in your account

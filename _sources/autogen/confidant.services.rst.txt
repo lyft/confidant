@@ -4,6 +4,14 @@ confidant.services package
 Submodules
 ----------
 
+confidant.services.certificatemanager module
+--------------------------------------------
+
+.. automodule:: confidant.services.certificatemanager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 confidant.services.ciphermanager module
 ---------------------------------------
 

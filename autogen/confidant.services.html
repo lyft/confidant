@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.services package &mdash; confidant 6.0.0-eaf617 documentation</title>
+  <title>confidant.services package &mdash; confidant 6.0.0-7bd6cd documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.0.0-eaf617
+                6.0.0-7bd6cd
               </div>
             
           
@@ -106,15 +106,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../configuration.html#docker-vs-bash">Docker vs bash</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#basic-environment-configuration">Basic environment configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../configuration.html#environment-configuration">Environment configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#google-authentication-configuration">Google authentication configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#saml-authentication-configuration">SAML authentication configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#user-authentication-session-settings">User authentication session settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#disabling-credential-conflict-checks">Disabling credential conflict checks</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#advanced-environment-configuration">Advanced environment configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#statsd-metrics">statsd metrics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#sending-graphite-events">Sending graphite events</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#google-authentication-user-restrictions">Google authentication user restrictions</a></li>
@@ -128,6 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#confidant-client-configuration">Confidant client configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#maintenance-mode-settings">Maintenance mode settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#confidant-performance-settings">Confidant performance settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../configuration.html#certificate-authority-settings">Certificate Authority settings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration.html#kms-key-policy-configuration">KMS key policy configuration</a></li>
@@ -366,6 +364,225 @@
 <h1>confidant.services package<a class="headerlink" href="#confidant-services-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-confidant.services.certificatemanager">
+<span id="confidant-services-certificatemanager-module"></span><h2>confidant.services.certificatemanager module<a class="headerlink" href="#module-confidant.services.certificatemanager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="confidant.services.certificatemanager.CachedCertificate">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.services.certificatemanager.</code><code class="sig-name descname">CachedCertificate</code><span class="sig-paren">(</span><em class="sig-param">lock=False</em>, <em class="sig-param">response=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CachedCertificate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CachedCertificate.lock">
+<em class="property">property </em><code class="sig-name descname">lock</code><a class="headerlink" href="#confidant.services.certificatemanager.CachedCertificate.lock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CachedCertificate.response">
+<em class="property">property </em><code class="sig-name descname">response</code><a class="headerlink" href="#confidant.services.certificatemanager.CachedCertificate.response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.services.certificatemanager.CertificateAuthority">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.services.certificatemanager.</code><code class="sig-name descname">CertificateAuthority</code><span class="sig-paren">(</span><em class="sig-param">ca</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.decode_csr">
+<code class="sig-name descname">decode_csr</code><span class="sig-paren">(</span><em class="sig-param">pem_csr</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.decode_csr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a csr object from the pem encoded csr.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.encode_certificate">
+<code class="sig-name descname">encode_certificate</code><span class="sig-paren">(</span><em class="sig-param">cert</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.encode_certificate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the PEM string encoded version of the certificate object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.encode_csr">
+<code class="sig-name descname">encode_csr</code><span class="sig-paren">(</span><em class="sig-param">csr</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.encode_csr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PEM string encoded version of the csr object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.encode_key">
+<code class="sig-name descname">encode_key</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.encode_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the PEM encoded version of the provided private RSA key object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.encode_san_dns_names">
+<code class="sig-name descname">encode_san_dns_names</code><span class="sig-paren">(</span><em class="sig-param">san</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.encode_san_dns_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of x509.DNSName attributes from a list of strings.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.generate_csr">
+<code class="sig-name descname">generate_csr</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">cn</em>, <em class="sig-param">san=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.generate_csr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using the provided rsa key object, a string common name, and a list of
+string subject alternative names, generate and return a csr object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.generate_key">
+<code class="sig-name descname">generate_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.generate_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate and return a private RSA key object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.generate_self_signed_certificate">
+<code class="sig-name descname">generate_self_signed_certificate</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">cn</em>, <em class="sig-param">validity</em>, <em class="sig-param">san=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.generate_self_signed_certificate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using the provided rsa key, a string common name, a validity (in number
+of days), and a list of subject alternative names (as strings), generate
+and return a signed certificate object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.generate_x509_name">
+<code class="sig-name descname">generate_x509_name</code><span class="sig-paren">(</span><em class="sig-param">cn</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.generate_x509_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>For the given common name string, generate and return an x509.Name, with
+attributes configured in the settings.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.get_certificate_authority_certificate">
+<code class="sig-name descname">get_certificate_authority_certificate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.get_certificate_authority_certificate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the PEM encoded CA certificate and certificate chain from the CA
+ARN.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.get_certificate_from_arn">
+<code class="sig-name descname">get_certificate_from_arn</code><span class="sig-paren">(</span><em class="sig-param">certificate_arn</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.get_certificate_from_arn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the PEM encoded certificate from the provided ARN.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.get_csr_common_name">
+<code class="sig-name descname">get_csr_common_name</code><span class="sig-paren">(</span><em class="sig-param">csr</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.get_csr_common_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>From the provided csr object, return the string value of the common
+name attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.get_csr_san">
+<code class="sig-name descname">get_csr_san</code><span class="sig-paren">(</span><em class="sig-param">csr</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.get_csr_san" title="Permalink to this definition">¶</a></dt>
+<dd><p>From the provided csr object, return a list of the string values of the
+subjust alternative name extension.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.issue_certificate">
+<code class="sig-name descname">issue_certificate</code><span class="sig-paren">(</span><em class="sig-param">csr</em>, <em class="sig-param">validity</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.issue_certificate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a PEM encoded csr, and a validity for the certificate (in number
+of days), issue a certificate from ACM Private CA, and return the ARN
+of the issued certificate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateAuthority.issue_certificate_with_key">
+<code class="sig-name descname">issue_certificate_with_key</code><span class="sig-paren">(</span><em class="sig-param">cn</em>, <em class="sig-param">validity</em>, <em class="sig-param">san=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthority.issue_certificate_with_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the string common name, the validity length of the certificate (in
+number of days), and a list of subject alternative names, return a dict
+with the PEM encoded certificate, certificate chain, and private RSA
+key.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="confidant.services.certificatemanager.CertificateAuthorityNotFoundError">
+<em class="property">exception </em><code class="sig-prename descclassname">confidant.services.certificatemanager.</code><code class="sig-name descname">CertificateAuthorityNotFoundError</code><a class="headerlink" href="#confidant.services.certificatemanager.CertificateAuthorityNotFoundError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.services.certificatemanager.CertificateCache">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.services.certificatemanager.</code><code class="sig-name descname">CertificateCache</code><span class="sig-paren">(</span><em class="sig-param">cache_size</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateCache.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">cache_id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCache.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the CachedCertificate for the given cache_id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateCache.get_cache_id">
+<code class="sig-name descname">get_cache_id</code><span class="sig-paren">(</span><em class="sig-param">cn</em>, <em class="sig-param">validity</em>, <em class="sig-param">san</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCache.get_cache_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a unique string from the provided arguments, for use in the
+certificate cache. The current day is included in the id, to ensure
+cache invalidation (minumum validity is 1 day).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateCache.lock">
+<code class="sig-name descname">lock</code><span class="sig-paren">(</span><em class="sig-param">cache_id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCache.lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lock the CachedCertificate for the given cache_id. If the id is not in
+the cache, create a CachedCertificate for the cache_id, add it to the
+cache, and lock it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateCache.release">
+<code class="sig-name descname">release</code><span class="sig-paren">(</span><em class="sig-param">cache_id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCache.release" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateCache.set_response">
+<code class="sig-name descname">set_response</code><span class="sig-paren">(</span><em class="sig-param">cache_id</em>, <em class="sig-param">response</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCache.set_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.services.certificatemanager.CertificateCacheNoOp">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.services.certificatemanager.</code><code class="sig-name descname">CertificateCacheNoOp</code><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCacheNoOp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateCacheNoOp.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">cache_id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCacheNoOp.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateCacheNoOp.get_cache_id">
+<code class="sig-name descname">get_cache_id</code><span class="sig-paren">(</span><em class="sig-param">cn</em>, <em class="sig-param">validity</em>, <em class="sig-param">san</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCacheNoOp.get_cache_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateCacheNoOp.lock">
+<code class="sig-name descname">lock</code><span class="sig-paren">(</span><em class="sig-param">cache_id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCacheNoOp.lock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateCacheNoOp.release">
+<code class="sig-name descname">release</code><span class="sig-paren">(</span><em class="sig-param">cache_id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCacheNoOp.release" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.certificatemanager.CertificateCacheNoOp.set_response">
+<code class="sig-name descname">set_response</code><span class="sig-paren">(</span><em class="sig-param">cache_id</em>, <em class="sig-param">response</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.CertificateCacheNoOp.set_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="confidant.services.certificatemanager.CertificateNotReadyError">
+<em class="property">exception </em><code class="sig-prename descclassname">confidant.services.certificatemanager.</code><code class="sig-name descname">CertificateNotReadyError</code><a class="headerlink" href="#confidant.services.certificatemanager.CertificateNotReadyError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.certificatemanager.get_ca">
+<code class="sig-prename descclassname">confidant.services.certificatemanager.</code><code class="sig-name descname">get_ca</code><span class="sig-paren">(</span><em class="sig-param">ca</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.get_ca" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.certificatemanager.list_cas">
+<code class="sig-prename descclassname">confidant.services.certificatemanager.</code><code class="sig-name descname">list_cas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.certificatemanager.list_cas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return detailed CA information for all CAs.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-confidant.services.ciphermanager">
 <span id="confidant-services-ciphermanager-module"></span><h2>confidant.services.ciphermanager module<a class="headerlink" href="#module-confidant.services.ciphermanager" title="Permalink to this headline">¶</a></h2>

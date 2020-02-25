@@ -4,6 +4,14 @@ tests.unit.confidant.routes package
 Submodules
 ----------
 
+tests.unit.confidant.routes.certificates\_test module
+-----------------------------------------------------
+
+.. automodule:: tests.unit.confidant.routes.certificates_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 tests.unit.confidant.routes.credentials\_test module
 ----------------------------------------------------
 

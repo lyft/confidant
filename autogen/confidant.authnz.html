@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.authnz package &mdash; confidant 6.0.0-eaf617 documentation</title>
+  <title>confidant.authnz package &mdash; confidant 6.0.0-7bd6cd documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.0.0-eaf617
+                6.0.0-7bd6cd
               </div>
             
           
@@ -106,15 +106,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../configuration.html#docker-vs-bash">Docker vs bash</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#basic-environment-configuration">Basic environment configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../configuration.html#environment-configuration">Environment configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#google-authentication-configuration">Google authentication configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#saml-authentication-configuration">SAML authentication configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#user-authentication-session-settings">User authentication session settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#disabling-credential-conflict-checks">Disabling credential conflict checks</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#advanced-environment-configuration">Advanced environment configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#statsd-metrics">statsd metrics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#sending-graphite-events">Sending graphite events</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#google-authentication-user-restrictions">Google authentication user restrictions</a></li>
@@ -128,6 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#confidant-client-configuration">Confidant client configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#maintenance-mode-settings">Maintenance mode settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#confidant-performance-settings">Confidant performance settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../configuration.html#certificate-authority-settings">Certificate Authority settings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration.html#kms-key-policy-configuration">KMS key policy configuration</a></li>
@@ -399,11 +397,24 @@
 <dl class="function">
 <dt id="confidant.authnz.rbac.default_acl">
 <code class="sig-prename descclassname">confidant.authnz.rbac.</code><code class="sig-name descname">default_acl</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.authnz.rbac.default_acl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default ACLs for confidant: always return true for users, but enforce
-ACLs for services, restricting access to:</p>
-<ul class="simple">
+<dd><p>Default ACLs for confidant: Allow access to all resource types
+and actions for users, except for certificate resource_type. Deny access
+to all resource types and actions for services, except:</p>
+<ul>
 <li><p>resource_type: service
-actions: metadata, get</p></li>
+actions: metadata, get
+resource_id: must match logged-in user’s username</p></li>
+<li><p>resource_type: certificate
+actions: get
+resource_id: must match against ACM_PRIVATE_CA_DOMAIN_REGEX setting</p>
+<blockquote>
+<div><p>for the CA for the CN in the CSR, and for all SAN values in the CSR,
+and the server_name named group in the regex must match the logged
+in user’s username.</p>
+</div></blockquote>
+<p>kwargs (ca): CA used for this get
+kwargs (san): A list of subject alternative names in the CSR</p>
+</li>
 </ul>
 </dd></dl>
 

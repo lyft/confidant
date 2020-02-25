@@ -20,6 +20,14 @@ confidant.schema.blind\_credentials module
    :undoc-members:
    :show-inheritance:
 
+confidant.schema.certificates module
+------------------------------------
+
+.. automodule:: confidant.schema.certificates
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 confidant.schema.credentials module
 -----------------------------------
 

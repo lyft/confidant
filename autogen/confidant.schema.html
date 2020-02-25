@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.schema package &mdash; confidant 6.0.0-eaf617 documentation</title>
+  <title>confidant.schema package &mdash; confidant 6.0.0-7bd6cd documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.0.0-eaf617
+                6.0.0-7bd6cd
               </div>
             
           
@@ -106,15 +106,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../configuration.html#docker-vs-bash">Docker vs bash</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#basic-environment-configuration">Basic environment configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../configuration.html#environment-configuration">Environment configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#google-authentication-configuration">Google authentication configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#saml-authentication-configuration">SAML authentication configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#user-authentication-session-settings">User authentication session settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#disabling-credential-conflict-checks">Disabling credential conflict checks</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html#advanced-environment-configuration">Advanced environment configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#statsd-metrics">statsd metrics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#sending-graphite-events">Sending graphite events</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#google-authentication-user-restrictions">Google authentication user restrictions</a></li>
@@ -128,6 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#confidant-client-configuration">Confidant client configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#maintenance-mode-settings">Maintenance mode settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../configuration.html#confidant-performance-settings">Confidant performance settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../configuration.html#certificate-authority-settings">Certificate Authority settings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration.html#kms-key-policy-configuration">KMS key policy configuration</a></li>
@@ -474,6 +472,124 @@ validation errors will raise an exception.</p>
 <dl class="attribute">
 <dt id="confidant.schema.blind_credentials.BlindCredentialResponseSchema.opts">
 <code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.blind_credentials.BlindCredentialResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-confidant.schema.certificates">
+<span id="confidant-schema-certificates-module"></span><h2>confidant.schema.certificates module<a class="headerlink" href="#module-confidant.schema.certificates" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateAuthoritiesResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.certificates.</code><code class="sig-name descname">CertificateAuthoritiesResponse</code><span class="sig-paren">(</span><em class="sig-param">cas</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthoritiesResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.schema.certificates.CertificateAuthoritiesResponse.from_cas">
+<em class="property">classmethod </em><code class="sig-name descname">from_cas</code><span class="sig-paren">(</span><em class="sig-param">cas</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthoritiesResponse.from_cas" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateAuthoritiesResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.certificates.</code><code class="sig-name descname">CertificateAuthoritiesResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthoritiesResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.schema.auto_build_schema.AutobuildSchema" title="confidant.schema.auto_build_schema.AutobuildSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.schema.auto_build_schema.AutobuildSchema</span></code></a></p>
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateAuthoritiesResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthoritiesResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.certificates.CertificateAuthoritiesResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthoritiesResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.certificates.CertificateAuthoritiesResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthoritiesResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateAuthorityResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.certificates.</code><code class="sig-name descname">CertificateAuthorityResponse</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">certificate</em>, <em class="sig-param">certificate_chain</em>, <em class="sig-param">tags</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthorityResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateAuthorityResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.certificates.</code><code class="sig-name descname">CertificateAuthorityResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthorityResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.schema.auto_build_schema.AutobuildSchema" title="confidant.schema.auto_build_schema.AutobuildSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.schema.auto_build_schema.AutobuildSchema</span></code></a></p>
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateAuthorityResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthorityResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.certificates.CertificateAuthorityResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthorityResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.certificates.CertificateAuthorityResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.certificates.CertificateAuthorityResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateExpandedResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.certificates.</code><code class="sig-name descname">CertificateExpandedResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.certificates.CertificateExpandedResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.schema.auto_build_schema.AutobuildSchema" title="confidant.schema.auto_build_schema.AutobuildSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.schema.auto_build_schema.AutobuildSchema</span></code></a></p>
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateExpandedResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.certificates.CertificateExpandedResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.certificates.CertificateExpandedResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.certificates.CertificateExpandedResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.certificates.CertificateExpandedResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.certificates.CertificateExpandedResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.certificates.</code><code class="sig-name descname">CertificateResponse</code><span class="sig-paren">(</span><em class="sig-param">certificate</em>, <em class="sig-param">certificate_chain</em>, <em class="sig-param">key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.certificates.CertificateResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.certificates.</code><code class="sig-name descname">CertificateResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.certificates.CertificateResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.schema.auto_build_schema.AutobuildSchema" title="confidant.schema.auto_build_schema.AutobuildSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.schema.auto_build_schema.AutobuildSchema</span></code></a></p>
+<dl class="class">
+<dt id="confidant.schema.certificates.CertificateResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.certificates.CertificateResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.certificates.CertificateResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.certificates.CertificateResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.certificates.CertificateResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.certificates.CertificateResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
