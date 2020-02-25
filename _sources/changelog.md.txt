@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.2.0
+
+* This release fixes a python3 stacktrace in SAML auth, when using the `SAML_SP_KEY_FILE` setting.
+
 ## 6.1.0
 
 * This release adds support for confidant acting as a Certificate Authority,
