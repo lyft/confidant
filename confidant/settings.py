@@ -465,6 +465,7 @@ AWS_DEFAULT_REGION = str_env('AWS_DEFAULT_REGION', 'us-east-1')
 # GEVENT_RESOLVER='ares'
 
 # IAM role cache configuration
+
 # Whether or not we keep a hot in-process cache of IAM roles, refreshed by a
 # gevent thread.
 BACKGROUND_CACHE_IAM_ROLES = bool_env('BACKGROUND_CACHE_IAM_ROLES', True)
@@ -475,6 +476,105 @@ BACKGROUND_CACHE_IAM_ROLE_REFRESH_RATE = int_env(
     'BACKGROUND_CACHE_IAM_ROLE_REFRESH_RATE',
     600
 )
+
+# ACM Private CA configuration
+
+# ACM_PRIVATE_CAS is a comma separated list of friendly ca names. Confidant
+# will use these names to load settings for each CA, by appending the name
+# to the sub-setting. e.g.:
+#   ACM_PRIVATE_CAS=testca1,testca2
+#   ACM_PRIVATE_CA_ARN_TESTCA1=arn:...
+#   ACM_PRIVATE_CA_ARN_TESTCA2=arn:...
+ACM_PRIVATE_CAS = str_env('ACM_PRIVATE_CAS').split(',')
+# ACM_PRIVATE_CA_SETTINGS is used internally, and can not be set via
+# environment.
+ACM_PRIVATE_CA_SETTINGS = {}
+for ca in ACM_PRIVATE_CAS:
+    # Skip any empty values (such as ACM_PRIVATE_CAS being unset)
+    if not ca:
+        continue
+    # Folks may set the list to "a, b, c" so we need to strip whitespace
+    ca = ca.strip()
+    # We require environment to be all uppercase, including the CA name.
+    ca_up = ca.upper()
+    ca_settings = {}
+    # The full ARN of the private CA
+    ca_settings['arn'] = str_env('ACM_PRIVATE_CA_ARN_{}'.format(ca_up))
+    # The signing algorithm to use when calling issue certificate in ACM
+    ca_settings['signing_algorithm'] = str_env(
+        'ACM_PRIVATE_CA_SIGNING_ALGORITHM_{}'.format(ca_up),
+        'SHA256WITHRSA',
+    )
+    # The full ARN of the certificate template used when issuing certificates.
+    # The default value used here allows for client and server authentication.
+    ca_settings['template_arn'] = str_env(
+        'ACM_PRIVATE_CA_TEMPLATE_ARN_{}'.format(ca_up),
+        'arn:aws:acm-pca:::template/EndEntityCertificate/V1',
+    )
+    # Maximum validity of certificates issued from the private CA. If clients
+    # request a higher validity period, we'll set the validity to this value.
+    ca_settings['max_validity_days'] = int_env(
+        'ACM_PRIVATE_CA_MAX_VALIDITY_DAYS_{}'.format(ca_up),
+        120,
+    )
+    # Attributes to use when generating CSRs
+    ca_settings['csr_country_name'] = str_env(
+        'ACM_PRIVATE_CA_CSR_COUNTRY_NAME_{}'.format(ca_up),
+    )
+    ca_settings['csr_state_or_province_name'] = str_env(
+        'ACM_PRIVATE_CA_CSR_STATE_OR_PROVINCE_NAME_{}'.format(ca_up),
+    )
+    ca_settings['csr_locality_name'] = str_env(
+        'ACM_PRIVATE_CA_CSR_LOCALITY_NAME_{}'.format(ca_up),
+    )
+    ca_settings['csr_organization_name'] = str_env(
+        'ACM_PRIVATE_CA_CSR_ORGANIZATION_NAME_{}'.format(ca_up),
+    )
+    # Whether we generate self-signed certificates, or issue certificates from
+    # the private CA. This is intended for testing and development purposes.
+    ca_settings['self_sign'] = bool_env(
+        'ACM_PRIVATE_CA_SELF_SIGN_{}'.format(ca_up),
+        False,
+    )
+    # Size of private keys generated.
+    ca_settings['key_size'] = int_env(
+        'ACM_PRIVATE_CA_KEY_SIZE_{}'.format(ca_up),
+        2048,
+    )
+    # Exponent size used when generating keys. You probably don't want to change
+    # this.
+    ca_settings['key_public_exponent_size'] = int_env(
+        'ACM_PRIVATE_CA_KEY_PUBLIC_EXPONENT_SIZE_{}'.format(ca_up),
+        65537,
+    )
+    # Whether or not to cache certificates, when generating key/csr/certificates
+    # and calling into ACM private CA to issue certificates.
+    ca_settings['certificate_use_cache'] = bool_env(
+        'ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE_{}'.format(ca_up),
+        False,
+    )
+    # Number of certificates to cache, when generating key/csr/certificates and
+    # calling into ACM private CA to issue certificates. This should be high
+    # enough to cache all concurrent certificates being issued at one time.
+    ca_settings['certificate_cache_size'] = int_env(
+        'ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE_{}'.format(ca_up),
+        1028,
+    )
+    # A regex to match against CN and SAN values for this CA. This regex must
+    # include a named group for service_name: (?P<service_name>)
+    # If no named group is defined, then the default ACL will deny generation
+    # of the certificate.
+    # Any certificate issue attempt not matching this pattern for CN or values
+    # in SAN will be denied. If this is unset, all certificate issue attempts
+    # will be denied by the default_acl.
+    #     Example: (?P<service_name>[\w-]+)\.example\.com
+    #     Example match: test-service.example.com
+    #     service_name from example: test-service
+    ca_settings['name_regex'] = str_env(
+        'ACM_PRIVATE_CA_DOMAIN_REGEX_{}'.format(ca_up),
+    )
+    ACM_PRIVATE_CA_SETTINGS[ca] = ca_settings
+
 
 # Configuration validation
 _settings_failures = False
