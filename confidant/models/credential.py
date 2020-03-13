@@ -52,6 +52,13 @@ class Credential(Model):
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
 
+    # Classification info (eg: ADMIN_PRIV, FINANCIALLY_SENSITIVE) for SOX compliance
+    sox_category = UnicodeAttribute(null=True)
+    last_rotation_date = UTCDateTimeAttribute(null=True)
+    next_rotation_date = UTCDateTimeAttribute(null=True)
+    # Num seconds between each credential rotation for SOX compliance
+    rotation_frequency_s = NumberAttribute(null=True)
+
     def equals(self, other_cred):
         if self.name != other_cred.name:
             return False
@@ -62,6 +69,10 @@ class Credential(Model):
         if self.enabled != other_cred.enabled:
             return False
         if self.documentation != other_cred.documentation:
+            return False
+        if self.sox_category != other_cred.sox_category:
+            return False
+        if self.rotation_frequency_s != other_cred.rotation_frequency_s:
             return False
         return True
 
@@ -93,6 +104,22 @@ class Credential(Model):
                 'added': new.documentation,
                 'removed': old.documentation
             }
+        if old.rotation_frequency_s != new.rotation_frequency_s:
+            diff['rotation_frequency_s'] = {
+                'added': new.rotation_frequency_s,
+                'removed': old.rotation_frequency_s
+            }
+        if old.last_rotation_date != new.last_rotation_date:
+            diff['last_rotation_date'] = {
+                'added': new.last_rotation_date,
+                'removed': old.last_rotation_date
+            }
+        if old.next_rotation_date != new.next_rotation_date:
+            diff['next_rotation_date'] = {
+                'added': new.next_rotation_date,
+                'removed': old.next_rotation_date
+            }
+
         diff['modified_by'] = {
             'added': new.modified_by,
             'removed': old.modified_by,
