@@ -38,6 +38,50 @@ VALUE_LENGTH = 50
 @blueprint.route('/v1/credentials', methods=['GET'])
 @authnz.require_auth
 def get_credential_list():
+    """
+    Returns a list of the metadata of all the current revision of credentials.
+
+    .. :quickref: Credentials; Get a list of the metadata for all current
+                  revision credentials.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/credentials
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "credentials": [
+           {
+             "id": "abcd12345bf4f1cafe8e722d3860404
+             "name": "Example Credential",
+             "credential_keys": [],
+             "credential_pairs": {},
+             "metadata": {
+               "example_metadata_key": "example_value"
+             },
+             "revision": 1,
+             "enabled": true,
+             "documentation": "Example documentation",
+             "modified_date": "2019-12-16T23:16:11.413299+00:00",
+             "modified_by": "rlane@example.com",
+             "permissions": {}
+          },
+          ...
+        ]
+      }
+
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have permissions to list credentials.
+    """
     if not acl_module_check(resource_type='credential', action='list'):
         msg = "{} does not have access to list credentials".format(
             authnz.get_logged_in_user()
@@ -55,6 +99,58 @@ def get_credential_list():
 @blueprint.route('/v1/credentials/<id>', methods=['GET'])
 @authnz.require_auth
 def get_credential(id):
+    """
+    Returns a credential object for the provided credential id.
+
+    .. :quickref: Credential; Get a credential from the provided id.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/credentials/abcd12345bf4f1cafe8e722d3860404
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "id": "...",
+         "name": "Example Credential",
+         "credential_keys": [
+           "api_key",
+           "api_user"
+         ],
+         "credential_pairs": {
+           "api_key": "1234",
+           "api_user": "example_user"
+         },
+         "metadata": {
+           "example_metadata_key": "example_value"
+         },
+         "revision": 1,
+         "enabled": true,
+         "documentation": "Example documentation",
+         "modified_date": "2019-12-16T23:16:11.413299+00:00",
+         "modified_by": "rlane@example.com",
+         "permissions": {
+           "metadata": true,
+           "get": true,
+           "update": true
+         }
+      }
+
+    :param id: The credential ID to get.
+    :type id: str
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have permissions to get the credential for
+                     the provided ID.
+    :statuscode 404: The provided credential ID does not exist.
+    """
     if not acl_module_check(resource_type='credential',
                             action='metadata',
                             resource_id=id):
@@ -111,6 +207,67 @@ def get_credential(id):
 )
 @authnz.require_auth
 def diff_credential(id, old_revision, new_revision):
+    """
+    Returns a diff between old_revision and new_revision for the provided
+    credential id.
+
+    .. :quickref: Credential Diff; Get a diff of two revisions of a credential.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/credentials/abcd12345bf4f1cafe8e722d3860404/1/2
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "name": {
+           "added": "New credential name",
+           "removed": "Example credential name"
+         },
+         "credential_pairs": {
+           "added": [
+             "api_key",
+             "api_user"
+           ],
+           "removed": [
+             "api_certificate"
+           ]
+         },
+         "metadata": {
+           "added": "example_key"
+         },
+         "enabled": {
+           "added": false,
+           "removed": true
+         },
+         "documentation": {
+           "added": "The way you rotate this credential is to...",
+           "removed": "Example documentation",
+         ",
+         "modified_date": "2019-12-16T23:16:11.413299+00:00",
+         "modified_by": "rlane@example.com"
+      }
+
+    :param id: The credential ID to get.
+    :type id: str
+    :param old_revision: One of the two revisions to diff against.
+    :type old_revision: int
+    :param new_revision: One of the two revisions to diff against.
+    :type new_revision: int
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have permissions to diff the provided
+                     credential.
+    :statuscode 404: The provided credential ID or one of the provided
+                     revisions does not exist.
+    """
     if not acl_module_check(resource_type='credential',
                             action='metadata',
                             resource_id=id):
