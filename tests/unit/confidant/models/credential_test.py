@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from confidant.models.credential import Credential
+from confidant.models.credential import Credential, CredentialArchive
 
 
 def test_equals(mocker):
@@ -94,3 +94,20 @@ def test_diff(mocker):
         },
     }
     assert old.diff(new) == expectedDiff
+
+
+def test_credential_archive(mocker):
+    decrypted_pairs_mock = mocker.patch(
+        'confidant.models.credential.Credential.decrypted_credential_pairs'
+    )
+    decrypted_pairs_mock.return_value = {'test': 'me'}
+    cred = Credential(
+        name='test',
+        enabled=True,
+        documentation='',
+        metadata={},
+    )
+    archive_cred = CredentialArchive.from_credential(cred)
+    # objects should be equivalent in terms of data, as we're just writing
+    # them to another table.
+    assert cred.equals(archive_cred) is True

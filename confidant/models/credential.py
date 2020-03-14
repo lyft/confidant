@@ -28,19 +28,10 @@ class DataTypeDateIndex(GlobalSecondaryIndex):
     modified_date = UTCDateTimeAttribute(range_key=True)
 
 
-class Credential(Model):
-    class Meta:
-        table_name = settings.DYNAMODB_TABLE
-        if settings.DYNAMODB_URL:
-            host = settings.DYNAMODB_URL
-        region = settings.AWS_DEFAULT_REGION
-        connection_cls = DDBConnection
-        session_cls = DDBSession
-
+class CredentialBase(Model):
     id = UnicodeAttribute(hash_key=True)
     revision = NumberAttribute()
     data_type = UnicodeAttribute()
-    data_type_date_index = DataTypeDateIndex()
     name = UnicodeAttribute()
     credential_pairs = UnicodeAttribute()
     enabled = BooleanAttribute(default=True)
@@ -51,6 +42,18 @@ class Credential(Model):
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
+
+
+class Credential(CredentialBase):
+    class Meta:
+        table_name = settings.DYNAMODB_TABLE
+        if settings.DYNAMODB_URL:
+            host = settings.DYNAMODB_URL
+        region = settings.AWS_DEFAULT_REGION
+        connection_cls = DDBConnection
+        session_cls = DDBSession
+
+    data_type_date_index = DataTypeDateIndex()
 
     def equals(self, other_cred):
         if self.name != other_cred.name:
@@ -145,3 +148,30 @@ class Credential(Model):
     @property
     def decrypted_credential_pairs(self):
         return(self._get_decrypted_credential_pairs())
+
+
+class CredentialArchive(CredentialBase):
+    class Meta:
+        table_name = settings.DYNAMODB_TABLE_ARCHIVE
+        if settings.DYNAMODB_URL:
+            host = settings.DYNAMODB_URL
+        region = settings.AWS_DEFAULT_REGION
+        connection_cls = DDBConnection
+        session_cls = DDBSession
+
+    @classmethod
+    def from_credential(cls, credential):
+        return CredentialArchive(
+            id=credential.id,
+            revision=credential.revision,
+            data_type=credential.data_type,
+            name=credential.name,
+            credential_pairs=credential.credential_pairs,
+            enabled=credential.enabled,
+            data_key=credential.data_key,
+            cipher_version=credential.cipher_version,
+            metadata=credential.metadata,
+            modified_date=credential.modified_date,
+            modified_by=credential.modified_by,
+            documentation=credential.documentation,
+        )
