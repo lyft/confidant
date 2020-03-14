@@ -285,12 +285,19 @@ def map_service_credentials(id):
         except keymanager.ServiceCreateGrantError:
             msg = 'Failed to add grants for {0}.'.format(id)
             logging.error(msg)
+    credentials = credentialmanager.get_credentials(data.get('credentials'))
+    blind_credentials = credentialmanager.get_blind_credentials(
+        data.get('blind_credentials'),
+    )
+    # Use the IDs from the fetched IDs, to ensure we filter any archived
+    # credential IDs.
+    filtered_credential_ids = [cred.id for cred in credentials]
     # Try to save to the archive
     try:
         Service(
             id='{0}-{1}'.format(id, revision),
             data_type='archive-service',
-            credentials=data.get('credentials'),
+            credentials=filtered_credential_ids,
             blind_credentials=data.get('blind_credentials'),
             account=data.get('account'),
             enabled=data.get('enabled'),
@@ -305,7 +312,7 @@ def map_service_credentials(id):
         service = Service(
             id=id,
             data_type='service',
-            credentials=data.get('credentials'),
+            credentials=filtered_credential_ids,
             blind_credentials=data.get('blind_credentials'),
             account=data.get('account'),
             enabled=data.get('enabled'),
@@ -318,16 +325,6 @@ def map_service_credentials(id):
         return jsonify({'error': 'Failed to update active service.'}), 500
     servicemanager.send_service_mapping_graphite_event(service, _service)
     webhook.send_event('service_update', [service.id], service.credentials)
-    try:
-        credentials = credentialmanager.get_credentials(
-            service.credentials,
-        )
-    except KeyError:
-        logging.exception('KeyError occurred in getting credentials')
-        return jsonify({'error': 'Decryption error.'}), 500
-    blind_credentials = credentialmanager.get_blind_credentials(
-        service.blind_credentials,
-    )
     permissions = {
         'create': True,
         'metadata': True,
@@ -382,11 +379,6 @@ def revert_service_to_revision(id, to_revision):
     if revert_service.data_type != 'archive-service':
         msg = 'id provided is not a service.'
         return jsonify({'error': msg}), 400
-    if revert_service.equals(current_service):
-        ret = {
-            'error': 'No difference between old and new service.'
-        }
-        return jsonify(ret), 400
     if revert_service.credentials or revert_service.blind_credentials:
         conflicts = credentialmanager.pair_key_conflicts_for_credentials(
             revert_service.credentials,
@@ -398,6 +390,20 @@ def revert_service_to_revision(id, to_revision):
                 'conflicts': conflicts
             }
             return jsonify(ret), 400
+    credentials = credentialmanager.get_credentials(
+        revert_service.credentials,
+    )
+    blind_credentials = credentialmanager.get_blind_credentials(
+        revert_service.blind_credentials,
+    )
+    # Use the IDs from the fetched IDs, to ensure we filter any archived
+    # credential IDs.
+    revert_service.credentials = [cred.id for cred in credentials]
+    if revert_service.equals(current_service):
+        ret = {
+            'error': 'No difference between old and new service.'
+        }
+        return jsonify(ret), 400
     # Try to save to the archive
     try:
         Service(
@@ -434,16 +440,6 @@ def revert_service_to_revision(id, to_revision):
         'service_update',
         [service.id],
         service.credentials,
-    )
-    try:
-        credentials = credentialmanager.get_credentials(
-            service.credentials,
-        )
-    except KeyError:
-        logging.exception('KeyError occurred in getting credentials')
-        return jsonify({'error': 'Decryption error.'}), 500
-    blind_credentials = credentialmanager.get_blind_credentials(
-        service.blind_credentials,
     )
     return service_expanded_response_schema.dumps(
         ServiceResponse.from_service_expanded(
