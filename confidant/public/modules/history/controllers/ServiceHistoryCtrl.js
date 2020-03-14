@@ -74,7 +74,7 @@
                     return cred.id.indexOf(credId) === 0;
                 }), 'name');
                 if (!name) {
-                    name = credId + ' (archived?)'
+                    name = credId + ' (archived?)';
                 }
                 return name;
             };
