@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from pynamodb.models import Model
 from pynamodb.attributes import (
@@ -52,12 +52,10 @@ class Credential(Model):
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
 
-    # Classification info (eg: ADMIN_PRIV, FINANCIALLY_SENSITIVE) for SOX compliance
-    sox_category = UnicodeAttribute(null=True)
+    # Classification info (eg: FINANCIALLY_SENSITIVE)
+    category = UnicodeAttribute(null=True)
+    last_decrypted_date = UTCDateTimeAttribute(null=True)
     last_rotation_date = UTCDateTimeAttribute(null=True)
-    next_rotation_date = UTCDateTimeAttribute(null=True)
-    # Num seconds between each credential rotation for SOX compliance
-    rotation_frequency_s = NumberAttribute(null=True)
 
     def equals(self, other_cred):
         if self.name != other_cred.name:
@@ -70,9 +68,7 @@ class Credential(Model):
             return False
         if self.documentation != other_cred.documentation:
             return False
-        if self.sox_category != other_cred.sox_category:
-            return False
-        if self.rotation_frequency_s != other_cred.rotation_frequency_s:
+        if self.category != other_cred.category:
             return False
         return True
 
@@ -104,20 +100,15 @@ class Credential(Model):
                 'added': new.documentation,
                 'removed': old.documentation
             }
-        if old.rotation_frequency_s != new.rotation_frequency_s:
-            diff['rotation_frequency_s'] = {
-                'added': new.rotation_frequency_s,
-                'removed': old.rotation_frequency_s
+        if old.category != new.category:
+            diff['category'] = {
+                'added': new.category,
+                'removed': old.category
             }
         if old.last_rotation_date != new.last_rotation_date:
             diff['last_rotation_date'] = {
                 'added': new.last_rotation_date,
                 'removed': old.last_rotation_date
-            }
-        if old.next_rotation_date != new.next_rotation_date:
-            diff['next_rotation_date'] = {
-                'added': new.next_rotation_date,
-                'removed': old.next_rotation_date
             }
 
         diff['modified_by'] = {
@@ -168,6 +159,40 @@ class Credential(Model):
         _credential_pairs = cipher.decrypt(self.credential_pairs)
         _credential_pairs = json.loads(_credential_pairs)
         return _credential_pairs
+
+    @property
+    def next_rotation_date(self):
+        """
+        Return when a credential needs to be rotated for security purposes.
+        """
+        if not self.requires_rotation or self.rotation_frequency is None:
+            return None
+
+        # If a credential has never been rotated or been decrypted,
+        # immediately rotate
+        if self.last_rotation_date is None:
+            return datetime.utcnow()
+
+        if self.last_decrypted_date and \
+                self.last_decrypted_date > self.last_rotation_date:
+            return datetime.utcnow()
+
+        return self.last_rotation_date + timedelta(days=self.rotation_frequency)
+
+    @property
+    def rotation_frequency(self):
+        """
+        Return how frequently a credential needs to be rotated
+        Return None if category is not in CREDENTIAL_ROTATION_DAYS config
+        """
+        return settings.CREDENTIAL_ROTATION_DAYS.get(self.category)
+
+    @property
+    def requires_rotation(self):
+        """
+        Some credentials need to be periodically rotated
+        """
+        return self.category == settings.FINANCIALLY_SENSITIVE
 
     @property
     def decrypted_credential_pairs(self):

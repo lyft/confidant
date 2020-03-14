@@ -576,6 +576,10 @@ for ca in ACM_PRIVATE_CAS:
     ACM_PRIVATE_CA_SETTINGS[ca] = ca_settings
 
 
+FINANCIALLY_SENSITIVE = 'FINANCIALLY_SENSITIVE'
+CREDENTIAL_ROTATION_DAYS = json.loads(str_env('CREDENTIAL_ROTATION_DAYS', '{}'))
+
+
 # Configuration validation
 _settings_failures = False
 if len(set(SCOPED_AUTH_KEYS.values())) != len(SCOPED_AUTH_KEYS.values()):
