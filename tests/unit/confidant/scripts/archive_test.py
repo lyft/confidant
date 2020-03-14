@@ -63,7 +63,6 @@ def credentials(mocker, now):
     )
     revision2.delete = mocker.Mock()
     archive_revision2 = CredentialArchive.from_credential(revision2)
-    print(archive_revision2)
     archive_revision2.save = mocker.Mock()
 
     def from_credential(credential):
