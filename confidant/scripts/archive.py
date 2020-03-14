@@ -17,10 +17,11 @@ logger.setLevel(logging.INFO)
 class ArchiveCredentials(Command):
 
     option_list = [
-        Option('--days', dest='days', required=True, type=int)
+        Option('--days', dest='days', required=True, type=int),
+        Option('--force', action='store_true', dest='force', default=False),
     ]
 
-    def run(self, days):
+    def run(self, days, force):
         if not settings.DYNAMODB_TABLE_ARCHIVE:
             logger.error('DYNAMODB_TABLE_ARCHIVE is not configured, exiting.')
             return 1
@@ -35,11 +36,18 @@ class ArchiveCredentials(Command):
                     logger.warning(msg.format(credential.id))
                     continue
                 # save the current record.
-                logger.info('Archiving credential {}'.format(credential.id))
-                archive_credential = CredentialArchive.from_credential(
-                    credential,
-                )
-                archive_credential.save()
+                if force:
+                    logger.info('Archiving credential {}'.format(credential.id))
+                    archive_credential = CredentialArchive.from_credential(
+                        credential,
+                    )
+                    archive_credential.save()
+                else:
+                    logger.info(
+                        'Would have archived credential {}'.format(
+                            credential.id
+                        )
+                    )
                 # fetch and save every revision
                 _range = range(1, credential.revision + 1)
                 ids = []
@@ -47,16 +55,39 @@ class ArchiveCredentials(Command):
                     ids.append("{0}-{1}".format(credential.id, i))
                 revisions = Credential.batch_get(ids)
                 for revision in revisions:
+                    if force:
+                        logger.info(
+                            'Archiving credential revision {}'.format(
+                                revision.id
+                            )
+                        )
+                        archive_revision = CredentialArchive.from_credential(
+                            revision,
+                        )
+                        archive_revision.save()
+                    else:
+                        logger.info(
+                            'Would have archived credential revision {}'.format(
+                                revision.id
+                            )
+                        )
+                    if force:
+                        logger.info(
+                            'Deleting credential revision {}'.format(
+                                revision.id
+                            )
+                        )
+                        revision.delete()
+                    else:
+                        logger.info(
+                            'would have deleted credential revision {}'.format(
+                                revision.id
+                            )
+                        )
+                if force:
+                    logger.info('Deleting credential {}'.format(credential.id))
+                    credential.delete()
+                else:
                     logger.info(
-                        'Archiving credential revision {}'.format(revision.id)
+                        'Would have deleted credential {}'.format(credential.id)
                     )
-                    archive_revision = CredentialArchive.from_credential(
-                        revision,
-                    )
-                    archive_revision.save()
-                    logger.info(
-                        'Deleting credential revision {}'.format(revision.id)
-                    )
-                    revision.delete()
-                logger.info('Deleting credential {}'.format(credential.id))
-                credential.delete()

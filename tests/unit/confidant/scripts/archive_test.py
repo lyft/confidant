@@ -130,7 +130,7 @@ def test_run_old_disabled_unmapped_credential(
         return_value=old_disabled_credentials['revisions']
     )
     ac = ArchiveCredentials()
-    ac.run(days=10)
+    ac.run(days=10, force=True)
 
     for credential in old_disabled_credentials['credentials']:
         assert credential.delete.called is True
@@ -140,6 +140,32 @@ def test_run_old_disabled_unmapped_credential(
         assert revision.delete.called is True
     for revision in old_disabled_credentials['archive_revisions']:
         assert revision.save.called is True
+
+
+def test_run_old_disabled_unmapped_credential_no_force(
+    mocker,
+    old_disabled_credentials,
+    no_mapped_service,
+):
+    mocker.patch(
+        'confidant.scripts.archive.Credential.data_type_date_index.query',
+        return_value=old_disabled_credentials['credentials']
+    )
+    mocker.patch(
+        'confidant.scripts.archive.Credential.batch_get',
+        return_value=old_disabled_credentials['revisions']
+    )
+    ac = ArchiveCredentials()
+    ac.run(days=10, force=False)
+
+    for credential in old_disabled_credentials['credentials']:
+        assert credential.delete.called is False
+    for credential in old_disabled_credentials['archive_credentials']:
+        assert credential.save.called is False
+    for revision in old_disabled_credentials['revisions']:
+        assert revision.delete.called is False
+    for revision in old_disabled_credentials['archive_revisions']:
+        assert revision.save.called is False
 
 
 def test_run_old_disabled_mapped_credential(
@@ -156,7 +182,7 @@ def test_run_old_disabled_mapped_credential(
         return_value=old_disabled_credentials['revisions']
     )
     ac = ArchiveCredentials()
-    ac.run(days=10)
+    ac.run(days=10, force=True)
 
     for credential in old_disabled_credentials['credentials']:
         assert credential.delete.called is False
@@ -182,7 +208,7 @@ def test_run_new_enabled_unmapped_credential(
         return_value=credentials['revisions']
     )
     ac = ArchiveCredentials()
-    ac.run(days=10)
+    ac.run(days=10, force=True)
 
     for credential in credentials['credentials']:
         assert credential.delete.called is False
@@ -200,4 +226,4 @@ def test_run_no_archive_table(mocker):
         None,
     )
     ac = ArchiveCredentials()
-    assert ac.run(days=10) == 1
+    assert ac.run(days=10, force=True) == 1
