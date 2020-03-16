@@ -103,8 +103,8 @@ class Credential(Model):
             }
         if set(old.tags) != set(new.tags):
             diff['tags'] = {
-                'added': new.tags,
-                'removed': old.tags
+                'added': list(set(new.tags) - set(old.tags)),
+                'removed': list(set(old.tags) - set(new.tags)),
             }
         if old.last_rotation_date != new.last_rotation_date:
             diff['last_rotation_date'] = {
@@ -191,10 +191,9 @@ class Credential(Model):
     @property
     def exempt_from_rotation(self):
         """
-        Credentials with certain tags (say financial credential)
-        must be rotated.  Credentials without these tags can be exempt.
+        Credentials with certain tags can be exempt from rotation
         """
-        return len(set(self.tags) & set(settings.TAGS_REQUIRING_ROTATION)) == 0
+        return len(set(self.tags) & set(settings.TAGS_EXCLUDING_ROTATION)) > 0
 
     @property
     def decrypted_credential_pairs(self):

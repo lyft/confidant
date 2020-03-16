@@ -81,7 +81,7 @@ def test_diff(mocker):
         metadata={'hello': 'world'},
         modified_by=modified_by,
         modified_date=modified_date_old,
-        tags=['FINANCIALLY_SENSITIVE'],
+        tags=['FINANCIALLY_SENSITIVE', 'IMPORTANT'],
     )
     new = Credential(
         name='test2',
@@ -91,7 +91,7 @@ def test_diff(mocker):
         metadata={'foo': 'bar'},
         modified_by=modified_by,
         modified_date=modified_date_new,
-        tags=['ADMIN_PRIV'],
+        tags=['ADMIN_PRIV', 'IMPORTANT'],
     )
     # TODO: figure out how to test decrypted_credential_pairs. Mocking
     # it is turning out to be difficult.
@@ -126,16 +126,16 @@ def test_diff(mocker):
 
 def test_next_rotation_date_no_rotation_required(mocker):
     mocker.patch(
-        'confidant.models.credential.settings.TAGS_REQUIRING_ROTATION',
-        [],
+        'confidant.models.credential.settings.TAGS_EXCLUDING_ROTATION',
+        ['ADMIN_PRIV'],
     )
     assert Credential(tags=['ADMIN_PRIV']).next_rotation_date is None
 
 
 def test_next_rotation_date_never_rotated(mocker):
     mocker.patch(
-        'confidant.models.credential.settings.TAGS_REQUIRING_ROTATION',
-        ['FINANCIALLY_SENSITIVE'],
+        'confidant.models.credential.settings.TAGS_EXCLUDING_ROTATION',
+        [],
     )
     cred = Credential(tags=['FINANCIALLY_SENSITIVE'])
     assert cred.next_rotation_date <= datetime.utcnow()
@@ -143,8 +143,8 @@ def test_next_rotation_date_never_rotated(mocker):
 
 def test_next_rotation_date_last_rotation_present(mocker):
     mocker.patch(
-        'confidant.models.credential.settings.TAGS_REQUIRING_ROTATION',
-        ['FINANCIALLY_SENSITIVE'],
+        'confidant.models.credential.settings.TAGS_EXCLUDING_ROTATION',
+        [],
     )
     mocker.patch(
         'confidant.models.credential.settings.MAXIMUM_ROTATION_DAYS',
@@ -163,8 +163,8 @@ def test_next_rotation_date_last_rotation_present(mocker):
 
 def test_exempt_from_rotation(mocker):
     mocker.patch(
-        'confidant.models.credential.settings.TAGS_REQUIRING_ROTATION',
-        ['FINANCIALLY_SENSITIVE'],
+        'confidant.models.credential.settings.TAGS_EXCLUDING_ROTATION',
+        ['ADMIN_PRIV'],
     )
     cred = Credential(tags=['ADMIN_PRIV'])
     assert cred.exempt_from_rotation is True
