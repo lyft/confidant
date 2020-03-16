@@ -8,7 +8,8 @@ from pynamodb.attributes import (
     BooleanAttribute,
     UTCDateTimeAttribute,
     BinaryAttribute,
-    JSONAttribute
+    JSONAttribute,
+    ListAttribute
 )
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
@@ -53,7 +54,7 @@ class Credential(Model):
     documentation = UnicodeAttribute(null=True)
 
     # Classification info (eg: FINANCIALLY_SENSITIVE)
-    category = UnicodeAttribute(null=True)
+    tags = ListAttribute(default=list)
     last_decrypted_date = UTCDateTimeAttribute(null=True)
     last_rotation_date = UTCDateTimeAttribute(null=True)
 
@@ -68,7 +69,7 @@ class Credential(Model):
             return False
         if self.documentation != other_cred.documentation:
             return False
-        if self.category != other_cred.category:
+        if set(self.tags) != set(other_cred.tags):
             return False
         return True
 
@@ -100,10 +101,10 @@ class Credential(Model):
                 'added': new.documentation,
                 'removed': old.documentation
             }
-        if old.category != new.category:
-            diff['category'] = {
-                'added': new.category,
-                'removed': old.category
+        if set(old.tags) != set(new.tags):
+            diff['tags'] = {
+                'added': new.tags,
+                'removed': old.tags
             }
         if old.last_rotation_date != new.last_rotation_date:
             diff['last_rotation_date'] = {
@@ -165,7 +166,8 @@ class Credential(Model):
         """
         Return when a credential needs to be rotated for security purposes.
         """
-        if not self.requires_rotation or self.rotation_frequency is None:
+        # Some credentials never need to be rotated
+        if self.exempt_from_rotation:
             return None
 
         # If a credential has never been rotated or been decrypted,
@@ -173,26 +175,26 @@ class Credential(Model):
         if self.last_rotation_date is None:
             return datetime.utcnow()
 
-        if self.last_decrypted_date and \
-                self.last_decrypted_date > self.last_rotation_date:
+        if (self.last_decrypted_date and
+                self.last_decrypted_date > self.last_rotation_date):
             return datetime.utcnow()
 
-        return self.last_rotation_date + timedelta(days=self.rotation_frequency)
+        days = settings.MAXIMUM_ROTATION_DAYS
+        for tag in self.tags:
+            rotation_days = settings.ROTATION_DAYS_CONFIG.get(tag)
+            if rotation_days is None:
+                continue
+            if days is None or rotation_days < days:
+                days = rotation_days
+        return self.last_rotation_date + timedelta(days=days)
 
     @property
-    def rotation_frequency(self):
+    def exempt_from_rotation(self):
         """
-        Return how frequently a credential needs to be rotated
-        Return None if category is not in CREDENTIAL_ROTATION_DAYS config
+        Credentials with certain tags (say financial credential)
+        must be rotated.  Credentials without these tags can be exempt.
         """
-        return settings.CREDENTIAL_ROTATION_DAYS.get(self.category)
-
-    @property
-    def requires_rotation(self):
-        """
-        Some credentials need to be periodically rotated
-        """
-        return self.category == settings.FINANCIALLY_SENSITIVE
+        return len(set(self.tags) & set(settings.TAGS_REQUIRING_ROTATION)) == 0
 
     @property
     def decrypted_credential_pairs(self):

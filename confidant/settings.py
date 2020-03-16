@@ -576,8 +576,14 @@ for ca in ACM_PRIVATE_CAS:
     ACM_PRIVATE_CA_SETTINGS[ca] = ca_settings
 
 
-FINANCIALLY_SENSITIVE = 'FINANCIALLY_SENSITIVE'
-CREDENTIAL_ROTATION_DAYS = json.loads(str_env('CREDENTIAL_ROTATION_DAYS', '{}'))
+MAXIMUM_ROTATION_DAYS = int_env('MAXIMUM_ROTATION_DAYS')
+# Credentials can be "tagged" (eg: FINANCIALLY_SENSITIVE or ADMIN_PRIV)
+# We might want to rotate certain categories
+TAGS_REQUIRING_ROTATION = json.loads(str_env('TAGS_REQUIRING_ROTATION', '[]'))
+# Credentials with different tags might have different rotation schedules
+# We use this config to specify how many days each type of credential should
+# be rotated
+ROTATION_DAYS_CONFIG = json.loads(str_env('ROTATION_DAYS_CONFIG', '{}'))
 
 
 # Configuration validation

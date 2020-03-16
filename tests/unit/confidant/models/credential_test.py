@@ -1,5 +1,4 @@
 from datetime import datetime
-from unittest import mock
 
 from confidant.models.credential import Credential
 
@@ -44,7 +43,7 @@ def test_not_equals(mocker):
     assert cred1.equals(cred2) is False
 
 
-def test_not_equals_different_category(mocker):
+def test_not_equals_different_tags(mocker):
     decrypted_pairs_mock = mocker.patch(
         'confidant.models.credential.Credential.decrypted_credential_pairs'
     )
@@ -54,14 +53,14 @@ def test_not_equals_different_category(mocker):
         enabled=True,
         documentation='',
         metadata={},
-        category='ADMIN_PRIV',
+        tags=['ADMIN_PRIV'],
     )
     cred2 = Credential(
         name='test',
         enabled=True,
         documentation='',
         metadata={},
-        category='FINANCIALLY_SENSITIVE',
+        tags=['FINANCIALLY_SENSITIVE'],
     )
     assert cred1.equals(cred2) is False
 
@@ -82,7 +81,7 @@ def test_diff(mocker):
         metadata={'hello': 'world'},
         modified_by=modified_by,
         modified_date=modified_date_old,
-        category='FINANCIALLY_SENSITIVE',
+        tags=['FINANCIALLY_SENSITIVE'],
     )
     new = Credential(
         name='test2',
@@ -92,7 +91,7 @@ def test_diff(mocker):
         metadata={'foo': 'bar'},
         modified_by=modified_by,
         modified_date=modified_date_new,
-        category='ADMIN_PRIV',
+        tags=['ADMIN_PRIV'],
     )
     # TODO: figure out how to test decrypted_credential_pairs. Mocking
     # it is turning out to be difficult.
@@ -117,35 +116,58 @@ def test_diff(mocker):
             'removed': modified_date_old,
             'added': modified_date_new,
         },
-        'category': {
-            'removed': 'FINANCIALLY_SENSITIVE',
-            'added': 'ADMIN_PRIV',
+        'tags': {
+            'removed': ['FINANCIALLY_SENSITIVE'],
+            'added': ['ADMIN_PRIV'],
         },
     }
     assert old.diff(new) == expectedDiff
 
 
-def test_next_rotation_date_no_rotation_required():
-    assert Credential(category='ADMIN_PRIV').next_rotation_date is None
+def test_next_rotation_date_no_rotation_required(mocker):
+    mocker.patch(
+        'confidant.models.credential.settings.TAGS_REQUIRING_ROTATION',
+        [],
+    )
+    assert Credential(tags=['ADMIN_PRIV']).next_rotation_date is None
+
+
+def test_next_rotation_date_never_rotated(mocker):
+    mocker.patch(
+        'confidant.models.credential.settings.TAGS_REQUIRING_ROTATION',
+        ['FINANCIALLY_SENSITIVE'],
+    )
+    cred = Credential(tags=['FINANCIALLY_SENSITIVE'])
+    assert cred.next_rotation_date <= datetime.utcnow()
 
 
 def test_next_rotation_date_last_rotation_present(mocker):
-    mocker.patch.object(
-        Credential,
-        'rotation_frequency',
-        new_callable=mock.PropertyMock,
-        return_value=30
+    mocker.patch(
+        'confidant.models.credential.settings.TAGS_REQUIRING_ROTATION',
+        ['FINANCIALLY_SENSITIVE'],
+    )
+    mocker.patch(
+        'confidant.models.credential.settings.MAXIMUM_ROTATION_DAYS',
+        100,
+    )
+    mocker.patch(
+        'confidant.models.credential.settings.ROTATION_DAYS_CONFIG',
+        {'FINANCIALLY_SENSITIVE': 30},
     )
     cred = Credential(
-        category='FINANCIALLY_SENSITIVE',
+        tags=['FINANCIALLY_SENSITIVE'],
         last_rotation_date=datetime(2020, 1, 1),
     )
     assert cred.next_rotation_date == datetime(2020, 1, 31)
 
 
-def test_requires_rotation():
-    cred = Credential(category='FINANCIALLY_SENSITIVE')
-    assert cred.requires_rotation is True
+def test_exempt_from_rotation(mocker):
+    mocker.patch(
+        'confidant.models.credential.settings.TAGS_REQUIRING_ROTATION',
+        ['FINANCIALLY_SENSITIVE'],
+    )
+    cred = Credential(tags=['ADMIN_PRIV'])
+    assert cred.exempt_from_rotation is True
 
-    cred = Credential(category='ADMIN_PRIV')
-    assert cred.requires_rotation is False
+    cred = Credential(tags=['FINANCIALLY_SENSITIVE'])
+    assert cred.exempt_from_rotation is False
