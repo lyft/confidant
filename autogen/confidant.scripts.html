@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.scripts package &mdash; confidant 6.2.0-23c3da documentation</title>
+  <title>confidant.scripts package &mdash; confidant 6.2.0-e2547c documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.2.0-23c3da
+                6.2.0-e2547c
               </div>
             
           
@@ -406,11 +406,179 @@ arguments as configured by the Command options.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="confidant-scripts-manage-module">
-<h2>confidant.scripts.manage module<a class="headerlink" href="#confidant-scripts-manage-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.scripts.manage">
+<span id="confidant-scripts-manage-module"></span><h2>confidant.scripts.manage module<a class="headerlink" href="#module-confidant.scripts.manage" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="confidant.scripts.manage.main">
+<code class="sig-prename descclassname">confidant.scripts.manage.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.manage.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="confidant-scripts-migrate-module">
-<h2>confidant.scripts.migrate module<a class="headerlink" href="#confidant-scripts-migrate-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.scripts.migrate">
+<span id="confidant-scripts-migrate-module"></span><h2>confidant.scripts.migrate module<a class="headerlink" href="#module-confidant.scripts.migrate" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="confidant.scripts.migrate.GeneralCredentialModel">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">GeneralCredentialModel</code><span class="sig-paren">(</span><em class="sig-param">hash_key=None</em>, <em class="sig-param">range_key=None</em>, <em class="sig-param">_user_instantiated=True</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralCredentialModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.models.Model</span></code></p>
+<dl class="exception">
+<dt id="confidant.scripts.migrate.GeneralCredentialModel.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg=None</em>, <em class="sig-param">cause=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralCredentialModel.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.exceptions.DoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.scripts.migrate.GeneralCredentialModel.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.scripts.migrate.GeneralCredentialModel.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.blind_credential.Meta</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.migrate.GeneralCredentialModel.credential_keys">
+<code class="sig-name descname">credential_keys</code><a class="headerlink" href="#confidant.scripts.migrate.GeneralCredentialModel.credential_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unicode set</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.migrate.GeneralCredentialModel.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#confidant.scripts.migrate.GeneralCredentialModel.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unicode attribute</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.scripts.migrate.GeneralServiceModel">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">GeneralServiceModel</code><span class="sig-paren">(</span><em class="sig-param">hash_key=None</em>, <em class="sig-param">range_key=None</em>, <em class="sig-param">_user_instantiated=True</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralServiceModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.models.Model</span></code></p>
+<dl class="exception">
+<dt id="confidant.scripts.migrate.GeneralServiceModel.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg=None</em>, <em class="sig-param">cause=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralServiceModel.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.exceptions.DoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.scripts.migrate.GeneralServiceModel.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.scripts.migrate.GeneralServiceModel.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.service.Meta</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.migrate.GeneralServiceModel.blind_credentials">
+<code class="sig-name descname">blind_credentials</code><a class="headerlink" href="#confidant.scripts.migrate.GeneralServiceModel.blind_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unicode set</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.migrate.GeneralServiceModel.credentials">
+<code class="sig-name descname">credentials</code><a class="headerlink" href="#confidant.scripts.migrate.GeneralServiceModel.credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unicode set</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.migrate.GeneralServiceModel.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#confidant.scripts.migrate.GeneralServiceModel.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unicode attribute</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.scripts.migrate.MigrateBlindCredentialSetAttribute">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">MigrateBlindCredentialSetAttribute</code><span class="sig-paren">(</span><em class="sig-param">func=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.MigrateBlindCredentialSetAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_script.commands.Command</span></code></p>
+<dl class="method">
+<dt id="confidant.scripts.migrate.MigrateBlindCredentialSetAttribute.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.MigrateBlindCredentialSetAttribute.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a command. This must be implemented by the subclass. Should take
+arguments as configured by the Command options.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.scripts.migrate.MigrateServiceSetAttribute">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">MigrateServiceSetAttribute</code><span class="sig-paren">(</span><em class="sig-param">func=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.MigrateServiceSetAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_script.commands.Command</span></code></p>
+<dl class="method">
+<dt id="confidant.scripts.migrate.MigrateServiceSetAttribute.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.MigrateServiceSetAttribute.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a command. This must be implemented by the subclass. Should take
+arguments as configured by the Command options.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.scripts.migrate.NewUnicodeSetAttribute">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">NewUnicodeSetAttribute</code><span class="sig-paren">(</span><em class="sig-param">hash_key=False</em>, <em class="sig-param">range_key=False</em>, <em class="sig-param">null=None</em>, <em class="sig-param">default=None</em>, <em class="sig-param">default_for_new=None</em>, <em class="sig-param">attr_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.scripts.migrate.SetMixin" title="confidant.scripts.migrate.SetMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.scripts.migrate.SetMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.attributes.Attribute</span></code></p>
+<p>A unicode set</p>
+<dl class="attribute">
+<dt id="confidant.scripts.migrate.NewUnicodeSetAttribute.attr_type">
+<code class="sig-name descname">attr_type</code><em class="property"> = 'StringSet'</em><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute.attr_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.migrate.NewUnicodeSetAttribute.deserialize">
+<code class="sig-name descname">deserialize</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute.deserialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deserializes a set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.migrate.NewUnicodeSetAttribute.element_deserialize">
+<code class="sig-name descname">element_deserialize</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute.element_deserialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.migrate.NewUnicodeSetAttribute.element_serialize">
+<code class="sig-name descname">element_serialize</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute.element_serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>This serializes unicode / strings out as unicode strings.
+It does not touch the value if it is already a unicode str
+:param value:
+:return:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.migrate.NewUnicodeSetAttribute.null">
+<code class="sig-name descname">null</code><em class="property"> = True</em><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute.null" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.migrate.NewUnicodeSetAttribute.serialize">
+<code class="sig-name descname">serialize</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serializes a set</p>
+<p>Because dynamodb doesn’t store empty attributes,
+empty sets return None</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.scripts.migrate.SetMixin">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">SetMixin</code><a class="headerlink" href="#confidant.scripts.migrate.SetMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Adds (de)serialization methods for sets</p>
+<dl class="method">
+<dt id="confidant.scripts.migrate.SetMixin.deserialize">
+<code class="sig-name descname">deserialize</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.SetMixin.deserialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deserializes a set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.migrate.SetMixin.serialize">
+<code class="sig-name descname">serialize</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.SetMixin.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serializes a set</p>
+<p>Because dynamodb doesn’t store empty attributes,
+empty sets return None</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.scripts.migrate.is_old_unicode_set">
+<code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">is_old_unicode_set</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.is_old_unicode_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-confidant.scripts.migrate_bool">
 <span id="confidant-scripts-migrate-bool-module"></span><h2>confidant.scripts.migrate_bool module<a class="headerlink" href="#module-confidant.scripts.migrate_bool" title="Permalink to this headline">¶</a></h2>
@@ -577,8 +745,48 @@ number_of_them_that_failed_due_to_conditional_update)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="confidant-scripts-utils-module">
-<h2>confidant.scripts.utils module<a class="headerlink" href="#confidant-scripts-utils-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.scripts.utils">
+<span id="confidant-scripts-utils-module"></span><h2>confidant.scripts.utils module<a class="headerlink" href="#module-confidant.scripts.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="confidant.scripts.utils.CreateDynamoTables">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.utils.</code><code class="sig-name descname">CreateDynamoTables</code><span class="sig-paren">(</span><em class="sig-param">func=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.utils.CreateDynamoTables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_script.commands.Command</span></code></p>
+<p>Setup dynamo tables</p>
+<dl class="method">
+<dt id="confidant.scripts.utils.CreateDynamoTables.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.utils.CreateDynamoTables.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a command. This must be implemented by the subclass. Should take
+arguments as configured by the Command options.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.scripts.utils.ManageGrants">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.utils.</code><code class="sig-name descname">ManageGrants</code><span class="sig-paren">(</span><em class="sig-param">func=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.utils.ManageGrants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_script.commands.Command</span></code></p>
+<dl class="method">
+<dt id="confidant.scripts.utils.ManageGrants.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.utils.ManageGrants.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a command. This must be implemented by the subclass. Should take
+arguments as configured by the Command options.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.scripts.utils.RevokeGrants">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.utils.</code><code class="sig-name descname">RevokeGrants</code><span class="sig-paren">(</span><em class="sig-param">func=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.utils.RevokeGrants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_script.commands.Command</span></code></p>
+<dl class="method">
+<dt id="confidant.scripts.utils.RevokeGrants.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.utils.RevokeGrants.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a command. This must be implemented by the subclass. Should take
+arguments as configured by the Command options.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-confidant.scripts">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-confidant.scripts" title="Permalink to this headline">¶</a></h2>

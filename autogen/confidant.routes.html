@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.routes package &mdash; confidant 6.2.0-23c3da documentation</title>
+  <title>confidant.routes package &mdash; confidant 6.2.0-e2547c documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.2.0-23c3da
+                6.2.0-e2547c
               </div>
             
           
@@ -367,8 +367,48 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="confidant-routes-blind-credentials-module">
-<h2>confidant.routes.blind_credentials module<a class="headerlink" href="#confidant-routes-blind-credentials-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.routes.blind_credentials">
+<span id="confidant-routes-blind-credentials-module"></span><h2>confidant.routes.blind_credentials module<a class="headerlink" href="#module-confidant.routes.blind_credentials" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="confidant.routes.blind_credentials.create_blind_credential">
+<code class="sig-prename descclassname">confidant.routes.blind_credentials.</code><code class="sig-name descname">create_blind_credential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.blind_credentials.create_blind_credential" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.blind_credentials.get_archive_blind_credential_list">
+<code class="sig-prename descclassname">confidant.routes.blind_credentials.</code><code class="sig-name descname">get_archive_blind_credential_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.blind_credentials.get_archive_blind_credential_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.blind_credentials.get_archive_blind_credential_revisions">
+<code class="sig-prename descclassname">confidant.routes.blind_credentials.</code><code class="sig-name descname">get_archive_blind_credential_revisions</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.blind_credentials.get_archive_blind_credential_revisions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.blind_credentials.get_blind_credential">
+<code class="sig-prename descclassname">confidant.routes.blind_credentials.</code><code class="sig-name descname">get_blind_credential</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.blind_credentials.get_blind_credential" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.blind_credentials.get_blind_credential_dependencies">
+<code class="sig-prename descclassname">confidant.routes.blind_credentials.</code><code class="sig-name descname">get_blind_credential_dependencies</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.blind_credentials.get_blind_credential_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.blind_credentials.get_blind_credential_list">
+<code class="sig-prename descclassname">confidant.routes.blind_credentials.</code><code class="sig-name descname">get_blind_credential_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.blind_credentials.get_blind_credential_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.blind_credentials.revert_blind_credential_to_revision">
+<code class="sig-prename descclassname">confidant.routes.blind_credentials.</code><code class="sig-name descname">revert_blind_credential_to_revision</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">to_revision</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.blind_credentials.revert_blind_credential_to_revision" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.blind_credentials.update_blind_credential">
+<code class="sig-prename descclassname">confidant.routes.blind_credentials.</code><code class="sig-name descname">update_blind_credential</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.blind_credentials.update_blind_credential" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-confidant.routes.certificates">
 <span id="confidant-routes-certificates-module"></span><h2>confidant.routes.certificates module<a class="headerlink" href="#module-confidant.routes.certificates" title="Permalink to this headline">¶</a></h2>
@@ -376,12 +416,94 @@
 <dt id="confidant.routes.certificates.get_ca">
 <code class="sig-prename descclassname">confidant.routes.certificates.</code><code class="sig-name descname">get_ca</code><span class="sig-paren">(</span><em class="sig-param">ca</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.certificates.get_ca" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the CA information for the provided ca.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/cas/example-ca
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ca</strong> (<em>str</em>) – The friendly name of the certificate authority to issue a
+certificate against.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;example-ca&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;certificate&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;certificate_chain&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;tags&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;hello&quot;</span><span class="p">:</span> <span class="s2">&quot;world&quot;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have access to get the requested CA.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="confidant.routes.certificates.get_certificate">
 <code class="sig-prename descclassname">confidant.routes.certificates.</code><code class="sig-name descname">get_certificate</code><span class="sig-paren">(</span><em class="sig-param">ca</em>, <em class="sig-param">cn</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.certificates.get_certificate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a certificate for the provided cn, using the provided CA.</p>
+<dd><p>Get a certificate from the provided CA, for the provided CN.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/certificates/example-ca/service.example.com
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ca</strong> (<em>str</em>) – The friendly name of the certificate authority to issue a
+certificate against.</p></li>
+<li><p><strong>cn</strong> (<em>str</em>) – The canonical name attribute to use in the issued certificate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Query string san</dt>
+<dd class="field-even"><p>A subject alternative name attribute to use in the
+issued certificate. This query parameter can be
+provided multiple times</p>
+</dd>
+<dt class="field-odd">Query int validity</dt>
+<dd class="field-odd"><p>The length (in days) that the issued certificate
+should be valid for. If this value is longer than
+the server defined maximum validity length, the
+validity will be set to the maximum validity length.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;certificate&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;certificate_chain&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>client does not have access to generate the requested
+certificate.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -389,17 +511,669 @@
 <code class="sig-prename descclassname">confidant.routes.certificates.</code><code class="sig-name descname">get_certificate_from_csr</code><span class="sig-paren">(</span><em class="sig-param">ca</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.certificates.get_certificate_from_csr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a certificate from the ca provided in the url, using the CSR, validity
 and san provided in the POST body.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>POST /v1/certificates/example-ca
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">&lt;json string ca</dt>
+<dd class="field-odd"><p>The friendly name of the certificate authority to issue
+a certificate against.</p>
+</dd>
+<dt class="field-even">&lt;json List[string] san</dt>
+<dd class="field-even"><p>a list of subject alternative name attributes to
+use in the issued certificate. This query
+parameter can be provided multiple times</p>
+</dd>
+<dt class="field-odd">&lt;json int validity</dt>
+<dd class="field-odd"><p>The length (in days) that the issued certificate.
+should be valid for. If this value is longer than
+the server defined maximum validity length, the
+validity will be set to the maximum validity length.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;certificate&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;certificate_chain&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 400</dt>
+<dd class="field-odd"><p>Invalid input; either the CSR was unsbale to be decoded,
+or was missing from the request.</p>
+</dd>
+<dt class="field-even">Statuscode 403</dt>
+<dd class="field-even"><p>Client does not have access to generate the requested
+certificate.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="confidant.routes.certificates.list_cas">
 <code class="sig-prename descclassname">confidant.routes.certificates.</code><code class="sig-name descname">list_cas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.certificates.list_cas" title="Permalink to this definition">¶</a></dt>
 <dd><p>List the configured CAs.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/cas
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;cas&quot;: [
+    &quot;example-ca&quot;: {
+      &quot;certificate&quot;: &quot;---...BEGIN...&quot;,
+      &quot;certificate_chain&quot;: &quot;---...BEGIN...&quot;,
+      &quot;tags&quot;: {
+        &quot;hello&quot;: &quot;world&quot;
+     },
+     ...
+  ]
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>client does not have access to list CAs</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
-<div class="section" id="confidant-routes-credentials-module">
-<h2>confidant.routes.credentials module<a class="headerlink" href="#confidant-routes-credentials-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.routes.credentials">
+<span id="confidant-routes-credentials-module"></span><h2>confidant.routes.credentials module<a class="headerlink" href="#module-confidant.routes.credentials" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="confidant.routes.credentials.create_credential">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">create_credential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.create_credential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a credential using the data provided in the POST body.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>POST /v1/credentials
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">&lt;json string name</dt>
+<dd class="field-odd"><p>The friendly name for the credential. (required)</p>
+</dd>
+<dt class="field-even">&lt;json Dictionary{string</dt>
+<dd class="field-even"><p>string} credential_pairs: A dictionary of
+arbitrary key/value pairs to be encrypted at rest. (required)</p>
+</dd>
+<dt class="field-odd">&lt;json Dictionary{string</dt>
+<dd class="field-odd"><p>string} metadata: A dictionary of arbitrary key/
+value pairs for custom per-credential end-user extensions. This is not
+encrypted at rest.</p>
+</dd>
+<dt class="field-even">&lt;json boolean enabled</dt>
+<dd class="field-even"><p>Whether or not this credential is enabled.
+(default: true)</p>
+</dd>
+<dt class="field-odd">&lt;json string documentation</dt>
+<dd class="field-odd"><p>End-user provided documentation for this
+credential. (required)</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+ <span class="p">{</span>
+   <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;abcd12345bf4f1cafe8e722d3860404&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Credential&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;credential_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;example_credential_key&quot;</span><span class="p">],</span>
+   <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;example_credential_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_credential_value&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;example_metadata_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_value&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;get&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;update&quot;</span><span class="p">:</span> <span class="kc">true</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 400</dt>
+<dd class="field-odd"><p>Invalid input; either the data provided was not in the
+correct format, or a required field was not provided.</p>
+</dd>
+<dt class="field-even">Statuscode 403</dt>
+<dd class="field-even"><p>Client does not have access to create credentials.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.credentials.diff_credential">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">diff_credential</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">old_revision</em>, <em class="sig-param">new_revision</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.diff_credential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a diff between old_revision and new_revision for the provided
+credential id.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/credentials/abcd12345bf4f1cafe8e722d3860404/1/2
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The credential ID to get.</p></li>
+<li><p><strong>old_revision</strong> (<em>int</em>) – One of the two revisions to diff against.</p></li>
+<li><p><strong>new_revision</strong> (<em>int</em>) – One of the two revisions to diff against.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;New credential name&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;Example credential name&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;api_key&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;api_user&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;api_certificate&quot;</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;example_key&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;The way you rotate this credential is to...&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-11-16T23:16:11.413299+00:00&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;testuser@example.com&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to diff the provided
+credential ID.</p>
+</dd>
+<dt class="field-even">Statuscode 404</dt>
+<dd class="field-even"><p>The provided credential ID or one of the provided
+revisions does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.credentials.generate_value">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">generate_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.generate_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a randomly generated value, for use in credential pairs.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/value_generator
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;c5S0w08YwU4PY3EZ7eQf4QYYUIT6ryyKOydhjyTti9pjPuMU00&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.credentials.get_archive_credential_list">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">get_archive_credential_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.get_archive_credential_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the metadata of all the history revisions of credentials.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/archive/credentials/abcd12345bf4f1cafe8e722d3860404
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Query string next_page</dt>
+<dd class="field-odd"><p>If paged results were returned in a call, this
+query string can be used to fetch the next page.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;revisions&quot;: [
+    {
+      &quot;id&quot;: &quot;abcd12345bf4f1cafe8e722d3860404-1&quot;,
+      &quot;name&quot;: &quot;Example Credential&quot;,
+      &quot;credential_keys&quot;: [],
+      &quot;credential_pairs&quot;: {},
+      &quot;metadata&quot;: {
+        &quot;example_metadata_key&quot;: &quot;example_value&quot;
+      },
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;documentation&quot;: &quot;Example documentation&quot;,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  next_page: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to list credentials</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.credentials.get_archive_credential_revisions">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">get_archive_credential_revisions</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.get_archive_credential_revisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the metadata of all the revisions of the provided
+credential.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/archive/credentials/abcd12345bf4f1cafe8e722d3860404
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Query string next_page</dt>
+<dd class="field-odd"><p>If paged results were returned in a call, this
+query string can be used to fetch the next page.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;revisions&quot;: [
+    {
+      &quot;id&quot;: &quot;abcd12345bf4f1cafe8e722d3860404-1&quot;,
+      &quot;name&quot;: &quot;Example Credential&quot;,
+      &quot;credential_keys&quot;: [],
+      &quot;credential_pairs&quot;: {},
+      &quot;metadata&quot;: {
+        &quot;example_metadata_key&quot;: &quot;example_value&quot;
+      },
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;documentation&quot;: &quot;Example documentation&quot;,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  next_page: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to get credential
+metadata for the provided credential ID.</p>
+</dd>
+<dt class="field-even">Statuscode 404</dt>
+<dd class="field-even"><p>The provided credential ID does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.credentials.get_credential">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">get_credential</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.get_credential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a credential object for the provided credential id.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/credentials/abcd12345bf4f1cafe8e722d3860404
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – The credential ID to get.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Credential&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;credential_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;api_key&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;api_user&quot;</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;api_key&quot;</span><span class="p">:</span> <span class="s2">&quot;1234&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;api_user&quot;</span><span class="p">:</span> <span class="s2">&quot;example_user&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;example_metadata_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_value&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;get&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;update&quot;</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to get the credential for
+the provided ID.</p>
+</dd>
+<dt class="field-even">Statuscode 404</dt>
+<dd class="field-even"><p>The provided credential ID does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.credentials.get_credential_dependencies">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">get_credential_dependencies</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.get_credential_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of services that this credential is mapped to.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/credentials/abcd12345bf4f1cafe8e722d3860404/services
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;services&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;example-development&quot;</span><span class="p">,</span> <span class="s2">&quot;example2-development&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to get metadata for the
+provided credential.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.credentials.get_credential_list">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">get_credential_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.get_credential_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the metadata of all the current revision of credentials.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/credentials
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Query string next_page</dt>
+<dd class="field-odd"><p>If paged results were returned in a call, this
+query string can be used to fetch the next page.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;credentials&quot;: [
+    {
+      &quot;id&quot;: &quot;abcd12345bf4f1cafe8e722d3860404&quot;,
+      &quot;name&quot;: &quot;Example Credential&quot;,
+      &quot;credential_keys&quot;: [],
+      &quot;credential_pairs&quot;: {},
+      &quot;metadata&quot;: {
+        &quot;example_metadata_key&quot;: &quot;example_value&quot;
+      },
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;documentation&quot;: &quot;Example documentation&quot;,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  next_page: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to list credentials.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.credentials.revert_credential_to_revision">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">revert_credential_to_revision</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">to_revision</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.revert_credential_to_revision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revert the provided credential to the provided revision.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>PUT /v1/credentials/abcd12345bf4f1cafe8e722d3860404/1
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The credential ID to revert.</p></li>
+<li><p><strong>to_revision</strong> (<em>int</em>) – The revision to revert this credential to.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+ <span class="p">{</span>
+   <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;abcd12345bf4f1cafe8e722d3860404&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Credential&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;credential_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;example_credential_key&quot;</span><span class="p">],</span>
+   <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{},</span>
+   <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;example_metadata_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_value&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;get&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;update&quot;</span><span class="p">:</span> <span class="kc">true</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 400</dt>
+<dd class="field-odd"><p>Invalid input; the update would create conflicting
+credential keys in a mapped service.</p>
+</dd>
+<dt class="field-even">Statuscode 403</dt>
+<dd class="field-even"><p>Client does not have access to revert the provided
+credential ID.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.credentials.update_credential">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">update_credential</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.update_credential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the provided credential using the data provided in the POST body.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>PUT /v1/credentials/abcd12345bf4f1cafe8e722d3860404
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – The credential ID to update.</p>
+</dd>
+<dt class="field-even">&lt;json string name</dt>
+<dd class="field-even"><p>The friendly name for the credential.</p>
+</dd>
+<dt class="field-odd">&lt;json Dictionary{string</dt>
+<dd class="field-odd"><p>string} credential_pairs: A dictionary of
+arbitrary key/value pairs to be encrypted at rest.</p>
+</dd>
+<dt class="field-even">&lt;json Dictionary{string</dt>
+<dd class="field-even"><p>string} metadata: A dictionary of arbitrary key/
+value pairs for custom per-credential end-user extensions. This is not
+encrypted at rest.</p>
+</dd>
+<dt class="field-odd">&lt;json boolean enabled</dt>
+<dd class="field-odd"><p>Whether or not this credential is enabled.</p>
+</dd>
+<dt class="field-even">&lt;json string documentation</dt>
+<dd class="field-even"><p>End-user provided documentation for this
+credential.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+ <span class="p">{</span>
+   <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;abcd12345bf4f1cafe8e722d3860404&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Credential&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;credential_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;example_credential_key&quot;</span><span class="p">],</span>
+   <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;example_credential_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_credential_value&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;example_metadata_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_value&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;get&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;update&quot;</span><span class="p">:</span> <span class="kc">true</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 400</dt>
+<dd class="field-odd"><p>Invalid input; either the data provided was not in the
+correct format, or the update would create conflicting
+credential keys in a mapped service.</p>
+</dd>
+<dt class="field-even">Statuscode 403</dt>
+<dd class="field-even"><p>Client does not have access to update the provided
+credential ID.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-confidant.routes.identity">
 <span id="confidant-routes-identity-module"></span><h2>confidant.routes.identity module<a class="headerlink" href="#module-confidant.routes.identity" title="Permalink to this headline">¶</a></h2>
@@ -407,18 +1181,76 @@ and san provided in the POST body.</p>
 <dt id="confidant.routes.identity.get_client_config">
 <code class="sig-prename descclassname">confidant.routes.identity.</code><code class="sig-name descname">get_client_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.identity.get_client_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get configuration to help clients bootstrap themselves.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/client_config
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;defined&quot;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="nt">&quot;generated&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;kms_auth_manage_grants&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;aws_accounts&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nt">&quot;xsrf_cookie_name&quot;</span><span class="p">:</span> <span class="s2">&quot;XSRF_COOKIE&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;maintenance_mode&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;history_page_limit&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;list&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nt">&quot;create&quot;</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="confidant.routes.identity.get_user_info">
 <code class="sig-prename descclassname">confidant.routes.identity.</code><code class="sig-name descname">get_user_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.identity.get_user_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the email address of the currently logged-in user.</p>
+<dd><p>Get the email associated with the currently authenticated user.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/user/email
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="confidant.routes.identity.login">
 <code class="sig-prename descclassname">confidant.routes.identity.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.identity.login" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send user through login flow.</p>
+<dd><p>Send user through login flow. Response depends on configured authentication
+plugin.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/login
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -458,8 +1290,566 @@ logout.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="confidant-routes-services-module">
-<h2>confidant.routes.services module<a class="headerlink" href="#confidant-routes-services-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.routes.services">
+<span id="confidant-routes-services-module"></span><h2>confidant.routes.services module<a class="headerlink" href="#module-confidant.routes.services" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="confidant.routes.services.diff_service">
+<code class="sig-prename descclassname">confidant.routes.services.</code><code class="sig-name descname">diff_service</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">old_revision</em>, <em class="sig-param">new_revision</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.services.diff_service" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a diff between old_revision and new_revision for the provided
+service id.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/services/example-development/1/2
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The service ID to get.</p></li>
+<li><p><strong>old_revision</strong> (<em>int</em>) – One of the two revisions to diff against.</p></li>
+<li><p><strong>new_revision</strong> (<em>int</em>) – One of the two revisions to diff against.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="kc">false</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;credentials&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;abcd12345bf4f1cafe8e722d3860404&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;aaaa33335bf4f1cafe8e722d3860404&quot;</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;blind_credentials&quot;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-11-16T23:16:11.413299+00:00&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;testuser@example.com&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to diff the provided
+service ID.</p>
+</dd>
+<dt class="field-even">Statuscode 404</dt>
+<dd class="field-even"><p>The provided service ID or one of the provided
+revisions does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.services.ensure_grants">
+<code class="sig-prename descclassname">confidant.routes.services.</code><code class="sig-name descname">ensure_grants</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.services.ensure_grants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure grants are set for the provided service ID.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>PUT /v1/grants/example-development
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – The service ID to ensure grants for.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;example-development&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;grants&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;encrypt_grant&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;decrypt_grant&quot;</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 400</dt>
+<dd class="field-odd"><p>Invalid input. The service provided does not exist.</p>
+</dd>
+<dt class="field-even">Statuscode 403</dt>
+<dd class="field-even"><p>Client does not have permissions to create or update the
+specified service ID.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.services.get_archive_service_list">
+<code class="sig-prename descclassname">confidant.routes.services.</code><code class="sig-name descname">get_archive_service_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.services.get_archive_service_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of service history revisions.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/archive/services
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Query string next_page</dt>
+<dd class="field-odd"><p>If paged results were returned in a call, this
+query string can be used to fetch the next page.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;services&quot;: [
+    {
+      &quot;id&quot;: &quot;example-development-1&quot;,
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;account&quot;: null,
+      &quot;credentials&quot;: [],
+      &quot;blind_credentials&quot;: [],
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  &quot;next_page&quot;: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to list services.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.services.get_archive_service_revisions">
+<code class="sig-prename descclassname">confidant.routes.services.</code><code class="sig-name descname">get_archive_service_revisions</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.services.get_archive_service_revisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of revisions for the specified service ID.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/archive/services/example-development
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – The service ID to get.</p>
+</dd>
+<dt class="field-even">Query string next_page</dt>
+<dd class="field-even"><p>If paged results were returned in a call, this
+query string can be used to fetch the next page.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;revisions&quot;: [
+    {
+      &quot;id&quot;: &quot;example-development-1&quot;,
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;account&quot;: null,
+      &quot;credentials&quot;: [],
+      &quot;blind_credentials&quot;: [],
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  &quot;next_page&quot;: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to get metadata for the
+provided service ID.</p>
+</dd>
+<dt class="field-even">Statuscode 404</dt>
+<dd class="field-even"><p>Specified ID does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.services.get_grants">
+<code class="sig-prename descclassname">confidant.routes.services.</code><code class="sig-name descname">get_grants</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.services.get_grants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get grants for the provided service ID.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/grants/example-development
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – The service ID to ensure grants for.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;example-development&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;grants&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;encrypt_grant&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;decrypt_grant&quot;</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 400</dt>
+<dd class="field-odd"><p>Invalid input. The service provided does not exist.</p>
+</dd>
+<dt class="field-even">Statuscode 403</dt>
+<dd class="field-even"><p>Client does not have permissions to get service metadata
+for the specified service ID.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.services.get_iam_roles_list">
+<code class="sig-prename descclassname">confidant.routes.services.</code><code class="sig-name descname">get_iam_roles_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.services.get_iam_roles_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of IAM roles from the configured AWS account.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/roles
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;roles&quot;: [
+    &#39;example-development&#39;,
+    &#39;example2-development&#39;,
+    ...
+  ]
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to list services.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.services.get_service">
+<code class="sig-prename descclassname">confidant.routes.services.</code><code class="sig-name descname">get_service</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.services.get_service" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a service object from the provided service ID.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/services/example-development
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – The service ID to get.</p>
+</dd>
+<dt class="field-even">Query boolean metadata_only</dt>
+<dd class="field-even"><p>If true, only fetch metadata for this
+service, and do not respond with decrypted credential pairs in the
+credential responses.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;id&quot;: &quot;example-development&quot;,
+  &quot;revision&quot;: 1,
+  &quot;enabled&quot;: true,
+  &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+  &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+  &quot;account&quot;: null,
+  &quot;credentials&quot;: [
+    {
+      &quot;id&quot;: &quot;abcd12345bf4f1cafe8e722d3860404&quot;,
+      &quot;name&quot;: &quot;Example Credential&quot;,
+      &quot;credential_keys&quot;: [&quot;test_key&quot;],
+      &quot;credential_pairs&quot;: {
+        &quot;test_key&quot;: &quot;test_value&quot;
+      },
+      &quot;metadata&quot;: {
+        &quot;example_metadata_key&quot;: &quot;example_value&quot;
+      },
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;documentation&quot;: &quot;Example documentation&quot;,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  &quot;blind_credentials&quot;: [],
+  &quot;permissions&quot;: {
+    &quot;metadata&quot;: true,
+    &quot;get&quot;: true,
+    &quot;update&quot;: true
+  }
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to get the service ID
+provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.services.get_service_list">
+<code class="sig-prename descclassname">confidant.routes.services.</code><code class="sig-name descname">get_service_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.services.get_service_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of current service revisions.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/services
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Query string next_page</dt>
+<dd class="field-odd"><p>If paged results were returned in a call, this
+query string can be used to fetch the next page.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;services&quot;: [
+    {
+      &quot;id&quot;: &quot;example-development&quot;,
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;account&quot;: null,
+      &quot;credentials&quot;: [],
+      &quot;blind_credentials&quot;: [],
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  &quot;next_page&quot;: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 403</dt>
+<dd class="field-odd"><p>Client does not have permissions to list services.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.services.map_service_credentials">
+<code class="sig-prename descclassname">confidant.routes.services.</code><code class="sig-name descname">map_service_credentials</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.services.map_service_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or update a service to credential mapping.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>PUT /v1/services/example-development
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – The service ID to create or update.</p>
+</dd>
+<dt class="field-even">&lt;json List[string] credentials</dt>
+<dd class="field-even"><p>A list of credential IDs to map to this
+service.</p>
+</dd>
+<dt class="field-odd">&lt;json List[string] blind_credentials</dt>
+<dd class="field-odd"><p>A list of blind_credential IDs to
+map to this service.</p>
+</dd>
+<dt class="field-even">&lt;json boolean enabled</dt>
+<dd class="field-even"><p>Whether or not this service is enabled.
+(default: true)</p>
+</dd>
+<dt class="field-odd">&lt;json string account</dt>
+<dd class="field-odd"><p>An AWS account to scope this service to.</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;id&quot;: &quot;example-development&quot;,
+  &quot;revision&quot;: 1,
+  &quot;enabled&quot;: true,
+  &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+  &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+  &quot;account&quot;: null,
+  &quot;credentials&quot;: [
+    {
+      &quot;id&quot;: &quot;abcd12345bf4f1cafe8e722d3860404&quot;,
+      &quot;name&quot;: &quot;Example Credential&quot;,
+      &quot;credential_keys&quot;: [&quot;test_key&quot;],
+      &quot;credential_pairs&quot;: {
+        &quot;test_key&quot;: &quot;test_value&quot;
+      },
+      &quot;metadata&quot;: {
+        &quot;example_metadata_key&quot;: &quot;example_value&quot;
+      },
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;documentation&quot;: &quot;Example documentation&quot;,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  &quot;blind_credentials&quot;: [],
+  &quot;permissions&quot;: {}
+    &quot;metadata&quot;: True,
+    &quot;get&quot;: True,
+    &quot;update&quot;: True
+  }
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 400</dt>
+<dd class="field-odd"><p>Invalid input; Either required fields were not provided
+or credentials being mapped would result in credential key
+conflicts.</p>
+</dd>
+<dt class="field-even">Statuscode 403</dt>
+<dd class="field-even"><p>Client does not have permissions to create or update the
+specified service ID.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.services.revert_service_to_revision">
+<code class="sig-prename descclassname">confidant.routes.services.</code><code class="sig-name descname">revert_service_to_revision</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">to_revision</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.services.revert_service_to_revision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revert the provided service to the provided revision.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>PUT /v1/services/example-development/1
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The service ID to revert.</p></li>
+<li><p><strong>to_revision</strong> (<em>int</em>) – The revision to revert this service to.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;abcd12345bf4f1cafe8e722d3860404&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Credential&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;credential_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;test_key&quot;</span><span class="p">],</span>
+  <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;test_key&quot;</span><span class="p">:</span> <span class="s2">&quot;test_value&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;example_metadata_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_value&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 400</dt>
+<dd class="field-odd"><p>Invalid input; the update would create conflicting
+credential keys in the service mapping.</p>
+</dd>
+<dt class="field-even">Statuscode 403</dt>
+<dd class="field-even"><p>Client does not have access to revert the provided
+service ID.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-confidant.routes.static_files">
 <span id="confidant-routes-static-files-module"></span><h2>confidant.routes.static_files module<a class="headerlink" href="#module-confidant.routes.static_files" title="Permalink to this headline">¶</a></h2>

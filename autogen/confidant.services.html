@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.services package &mdash; confidant 6.2.0-23c3da documentation</title>
+  <title>confidant.services package &mdash; confidant 6.2.0-e2547c documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.2.0-23c3da
+                6.2.0-e2547c
               </div>
             
           
@@ -615,8 +615,43 @@ decrypted_text = cipher.decrypt(encrypted_text)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="confidant-services-credentialmanager-module">
-<h2>confidant.services.credentialmanager module<a class="headerlink" href="#confidant-services-credentialmanager-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.services.credentialmanager">
+<span id="confidant-services-credentialmanager-module"></span><h2>confidant.services.credentialmanager module<a class="headerlink" href="#module-confidant.services.credentialmanager" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="confidant.services.credentialmanager.check_credential_pair_values">
+<code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">check_credential_pair_values</code><span class="sig-paren">(</span><em class="sig-param">credential_pairs</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.check_credential_pair_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.credentialmanager.get_blind_credentials">
+<code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">get_blind_credentials</code><span class="sig-paren">(</span><em class="sig-param">credential_ids</em>, <em class="sig-param">metadata_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.get_blind_credentials" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.credentialmanager.get_credentials">
+<code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">get_credentials</code><span class="sig-paren">(</span><em class="sig-param">credential_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.get_credentials" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.credentialmanager.get_latest_blind_credential_revision">
+<code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">get_latest_blind_credential_revision</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">revision</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.get_latest_blind_credential_revision" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.credentialmanager.get_latest_credential_revision">
+<code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">get_latest_credential_revision</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">revision</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.get_latest_credential_revision" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.credentialmanager.lowercase_credential_pairs">
+<code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">lowercase_credential_pairs</code><span class="sig-paren">(</span><em class="sig-param">credential_pairs</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.lowercase_credential_pairs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.credentialmanager.pair_key_conflicts_for_credentials">
+<code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">pair_key_conflicts_for_credentials</code><span class="sig-paren">(</span><em class="sig-param">credential_ids</em>, <em class="sig-param">blind_credential_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.pair_key_conflicts_for_credentials" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-confidant.services.graphite">
 <span id="confidant-services-graphite-module"></span><h2>confidant.services.graphite module<a class="headerlink" href="#module-confidant.services.graphite" title="Permalink to this headline">¶</a></h2>
@@ -639,11 +674,90 @@ decrypted_text = cipher.decrypt(encrypted_text)</p>
 <dd></dd></dl>
 
 </div>
-<div class="section" id="confidant-services-keymanager-module">
-<h2>confidant.services.keymanager module<a class="headerlink" href="#confidant-services-keymanager-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.services.keymanager">
+<span id="confidant-services-keymanager-module"></span><h2>confidant.services.keymanager module<a class="headerlink" href="#module-confidant.services.keymanager" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="confidant.services.keymanager.ServiceCreateGrantError">
+<em class="property">exception </em><code class="sig-prename descclassname">confidant.services.keymanager.</code><code class="sig-name descname">ServiceCreateGrantError</code><a class="headerlink" href="#confidant.services.keymanager.ServiceCreateGrantError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="confidant.services.keymanager.ServiceGetGrantError">
+<em class="property">exception </em><code class="sig-prename descclassname">confidant.services.keymanager.</code><code class="sig-name descname">ServiceGetGrantError</code><a class="headerlink" href="#confidant.services.keymanager.ServiceGetGrantError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.keymanager.create_datakey">
+<code class="sig-prename descclassname">confidant.services.keymanager.</code><code class="sig-name descname">create_datakey</code><span class="sig-paren">(</span><em class="sig-param">encryption_context</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.keymanager.create_datakey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a datakey from KMS.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.keymanager.decrypt_datakey">
+<code class="sig-prename descclassname">confidant.services.keymanager.</code><code class="sig-name descname">decrypt_datakey</code><span class="sig-paren">(</span><em class="sig-param">data_key</em>, <em class="sig-param">encryption_context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.keymanager.decrypt_datakey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrypt a datakey.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.keymanager.ensure_grants">
+<code class="sig-prename descclassname">confidant.services.keymanager.</code><code class="sig-name descname">ensure_grants</code><span class="sig-paren">(</span><em class="sig-param">service_name</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.keymanager.ensure_grants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add encryption and decryption grants for the service.</p>
+<dl class="simple">
+<dt>TODO: We should probably orchestrate this, rather than doing it in</dt><dd><p>confidant.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.keymanager.get_grants">
+<code class="sig-prename descclassname">confidant.services.keymanager.</code><code class="sig-name descname">get_grants</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.keymanager.get_grants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.keymanager.get_key_id">
+<code class="sig-prename descclassname">confidant.services.keymanager.</code><code class="sig-name descname">get_key_id</code><span class="sig-paren">(</span><em class="sig-param">key_alias</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.keymanager.get_key_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.keymanager.grants_exist">
+<code class="sig-prename descclassname">confidant.services.keymanager.</code><code class="sig-name descname">grants_exist</code><span class="sig-paren">(</span><em class="sig-param">service_name</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.keymanager.grants_exist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="confidant-services-servicemanager-module">
-<h2>confidant.services.servicemanager module<a class="headerlink" href="#confidant-services-servicemanager-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.services.servicemanager">
+<span id="confidant-services-servicemanager-module"></span><h2>confidant.services.servicemanager module<a class="headerlink" href="#module-confidant.services.servicemanager" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="confidant.services.servicemanager.get_latest_service_revision">
+<code class="sig-prename descclassname">confidant.services.servicemanager.</code><code class="sig-name descname">get_latest_service_revision</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">revision</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.servicemanager.get_latest_service_revision" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.servicemanager.get_service_map">
+<code class="sig-prename descclassname">confidant.services.servicemanager.</code><code class="sig-name descname">get_service_map</code><span class="sig-paren">(</span><em class="sig-param">services</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.servicemanager.get_service_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.servicemanager.get_services_for_blind_credential">
+<code class="sig-prename descclassname">confidant.services.servicemanager.</code><code class="sig-name descname">get_services_for_blind_credential</code><span class="sig-paren">(</span><em class="sig-param">_id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.servicemanager.get_services_for_blind_credential" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.servicemanager.get_services_for_credential">
+<code class="sig-prename descclassname">confidant.services.servicemanager.</code><code class="sig-name descname">get_services_for_credential</code><span class="sig-paren">(</span><em class="sig-param">_id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.servicemanager.get_services_for_credential" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.servicemanager.pair_key_conflicts_for_services">
+<code class="sig-prename descclassname">confidant.services.servicemanager.</code><code class="sig-name descname">pair_key_conflicts_for_services</code><span class="sig-paren">(</span><em class="sig-param">_id</em>, <em class="sig-param">credential_keys</em>, <em class="sig-param">services</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.servicemanager.pair_key_conflicts_for_services" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.servicemanager.send_service_mapping_graphite_event">
+<code class="sig-prename descclassname">confidant.services.servicemanager.</code><code class="sig-name descname">send_service_mapping_graphite_event</code><span class="sig-paren">(</span><em class="sig-param">new_service</em>, <em class="sig-param">old_service</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.servicemanager.send_service_mapping_graphite_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-confidant.services.webhook">
 <span id="confidant-services-webhook-module"></span><h2>confidant.services.webhook module<a class="headerlink" href="#module-confidant.services.webhook" title="Permalink to this headline">¶</a></h2>

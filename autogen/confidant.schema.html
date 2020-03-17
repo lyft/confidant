@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.schema package &mdash; confidant 6.2.0-23c3da documentation</title>
+  <title>confidant.schema package &mdash; confidant 6.2.0-e2547c documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.2.0-23c3da
+                6.2.0-e2547c
               </div>
             
           
@@ -597,11 +597,283 @@ validation errors will raise an exception.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="confidant-schema-credentials-module">
-<h2>confidant.schema.credentials module<a class="headerlink" href="#confidant-schema-credentials-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.schema.credentials">
+<span id="confidant-schema-credentials-module"></span><h2>confidant.schema.credentials module<a class="headerlink" href="#module-confidant.schema.credentials" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="confidant.schema.credentials.CredentialResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.credentials.</code><code class="sig-name descname">CredentialResponse</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">name</em>, <em class="sig-param">revision</em>, <em class="sig-param">enabled</em>, <em class="sig-param">modified_date</em>, <em class="sig-param">modified_by</em>, <em class="sig-param">documentation=None</em>, <em class="sig-param">metadata=&lt;class 'dict'&gt;</em>, <em class="sig-param">credential_keys=&lt;class 'list'&gt;</em>, <em class="sig-param">credential_pairs=&lt;class 'dict'&gt;</em>, <em class="sig-param">permissions=&lt;class 'dict'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.CredentialResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.schema.credentials.CredentialResponse.from_credential">
+<em class="property">classmethod </em><code class="sig-name descname">from_credential</code><span class="sig-paren">(</span><em class="sig-param">credential</em>, <em class="sig-param">include_credential_keys=False</em>, <em class="sig-param">include_credential_pairs=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.CredentialResponse.from_credential" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.credentials.CredentialResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.credentials.</code><code class="sig-name descname">CredentialResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.CredentialResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.schema.auto_build_schema.AutobuildSchema" title="confidant.schema.auto_build_schema.AutobuildSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.schema.auto_build_schema.AutobuildSchema</span></code></a></p>
+<dl class="class">
+<dt id="confidant.schema.credentials.CredentialResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.credentials.CredentialResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.credentials.CredentialResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.credentials.CredentialResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.credentials.CredentialResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.credentials.CredentialResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.credentials.CredentialsResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.credentials.</code><code class="sig-name descname">CredentialsResponse</code><span class="sig-paren">(</span><em class="sig-param">credentials</em>, <em class="sig-param">next_page</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.CredentialsResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.schema.credentials.CredentialsResponse.from_credentials">
+<em class="property">classmethod </em><code class="sig-name descname">from_credentials</code><span class="sig-paren">(</span><em class="sig-param">credentials</em>, <em class="sig-param">next_page=None</em>, <em class="sig-param">include_credential_keys=False</em>, <em class="sig-param">include_credential_pairs=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.CredentialsResponse.from_credentials" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.credentials.CredentialsResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.credentials.</code><code class="sig-name descname">CredentialsResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.CredentialsResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">marshmallow.schema.Schema</span></code></p>
+<dl class="class">
+<dt id="confidant.schema.credentials.CredentialsResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.credentials.CredentialsResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.credentials.CredentialsResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.credentials.CredentialsResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.schema.credentials.CredentialsResponseSchema.encode_next_page">
+<code class="sig-name descname">encode_next_page</code><span class="sig-paren">(</span><em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.CredentialsResponseSchema.encode_next_page" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.credentials.CredentialsResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.credentials.CredentialsResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.schema.credentials.CredentialsResponseSchema.sort_credentials">
+<code class="sig-name descname">sort_credentials</code><span class="sig-paren">(</span><em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.CredentialsResponseSchema.sort_credentials" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.credentials.RevisionsResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.credentials.</code><code class="sig-name descname">RevisionsResponse</code><span class="sig-paren">(</span><em class="sig-param">revisions</em>, <em class="sig-param">next_page</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.RevisionsResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.schema.credentials.RevisionsResponse.from_credentials">
+<em class="property">classmethod </em><code class="sig-name descname">from_credentials</code><span class="sig-paren">(</span><em class="sig-param">credentials</em>, <em class="sig-param">next_page=None</em>, <em class="sig-param">include_credential_keys=False</em>, <em class="sig-param">include_credential_pairs=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.RevisionsResponse.from_credentials" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.credentials.RevisionsResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.credentials.</code><code class="sig-name descname">RevisionsResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.RevisionsResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">marshmallow.schema.Schema</span></code></p>
+<dl class="class">
+<dt id="confidant.schema.credentials.RevisionsResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.credentials.RevisionsResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.credentials.RevisionsResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.credentials.RevisionsResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.schema.credentials.RevisionsResponseSchema.encode_next_page">
+<code class="sig-name descname">encode_next_page</code><span class="sig-paren">(</span><em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.RevisionsResponseSchema.encode_next_page" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.credentials.RevisionsResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.credentials.RevisionsResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.schema.credentials.RevisionsResponseSchema.sort_revisions">
+<code class="sig-name descname">sort_revisions</code><span class="sig-paren">(</span><em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.credentials.RevisionsResponseSchema.sort_revisions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="confidant-schema-services-module">
-<h2>confidant.schema.services module<a class="headerlink" href="#confidant-schema-services-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-confidant.schema.services">
+<span id="confidant-schema-services-module"></span><h2>confidant.schema.services module<a class="headerlink" href="#module-confidant.schema.services" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="confidant.schema.services.RevisionsResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.services.</code><code class="sig-name descname">RevisionsResponse</code><span class="sig-paren">(</span><em class="sig-param">revisions</em>, <em class="sig-param">next_page</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.RevisionsResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.schema.services.RevisionsResponse.from_services">
+<em class="property">classmethod </em><code class="sig-name descname">from_services</code><span class="sig-paren">(</span><em class="sig-param">services</em>, <em class="sig-param">include_credentials=False</em>, <em class="sig-param">include_blind_credentials=False</em>, <em class="sig-param">next_page=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.RevisionsResponse.from_services" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.services.RevisionsResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.services.</code><code class="sig-name descname">RevisionsResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.RevisionsResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">marshmallow.schema.Schema</span></code></p>
+<dl class="class">
+<dt id="confidant.schema.services.RevisionsResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.services.RevisionsResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.services.RevisionsResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.services.RevisionsResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.schema.services.RevisionsResponseSchema.encode_next_page">
+<code class="sig-name descname">encode_next_page</code><span class="sig-paren">(</span><em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.RevisionsResponseSchema.encode_next_page" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.services.RevisionsResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.services.RevisionsResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.schema.services.RevisionsResponseSchema.sort_revisions">
+<code class="sig-name descname">sort_revisions</code><span class="sig-paren">(</span><em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.RevisionsResponseSchema.sort_revisions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.services.ServiceExpandedResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.services.</code><code class="sig-name descname">ServiceExpandedResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.ServiceExpandedResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.schema.auto_build_schema.AutobuildSchema" title="confidant.schema.auto_build_schema.AutobuildSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.schema.auto_build_schema.AutobuildSchema</span></code></a></p>
+<dl class="class">
+<dt id="confidant.schema.services.ServiceExpandedResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.services.ServiceExpandedResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.services.ServiceExpandedResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.services.ServiceExpandedResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.services.ServiceExpandedResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.services.ServiceExpandedResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.services.ServiceResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.services.</code><code class="sig-name descname">ServiceResponse</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">revision</em>, <em class="sig-param">enabled</em>, <em class="sig-param">modified_date</em>, <em class="sig-param">modified_by</em>, <em class="sig-param">account=None</em>, <em class="sig-param">credentials=&lt;class 'list'&gt;</em>, <em class="sig-param">blind_credentials=&lt;class 'list'&gt;</em>, <em class="sig-param">permissions=&lt;class 'dict'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.ServiceResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.schema.services.ServiceResponse.from_service">
+<em class="property">classmethod </em><code class="sig-name descname">from_service</code><span class="sig-paren">(</span><em class="sig-param">service</em>, <em class="sig-param">include_credentials=False</em>, <em class="sig-param">include_blind_credentials=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.ServiceResponse.from_service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.schema.services.ServiceResponse.from_service_expanded">
+<em class="property">classmethod </em><code class="sig-name descname">from_service_expanded</code><span class="sig-paren">(</span><em class="sig-param">service</em>, <em class="sig-param">credentials</em>, <em class="sig-param">blind_credentials</em>, <em class="sig-param">metadata_only=True</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.ServiceResponse.from_service_expanded" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.services.ServiceResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.services.</code><code class="sig-name descname">ServiceResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.ServiceResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.schema.auto_build_schema.AutobuildSchema" title="confidant.schema.auto_build_schema.AutobuildSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.schema.auto_build_schema.AutobuildSchema</span></code></a></p>
+<dl class="class">
+<dt id="confidant.schema.services.ServiceResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.services.ServiceResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.services.ServiceResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.services.ServiceResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.services.ServiceResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.services.ServiceResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.services.ServicesResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.services.</code><code class="sig-name descname">ServicesResponse</code><span class="sig-paren">(</span><em class="sig-param">services</em>, <em class="sig-param">next_page</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.ServicesResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.schema.services.ServicesResponse.from_services">
+<em class="property">classmethod </em><code class="sig-name descname">from_services</code><span class="sig-paren">(</span><em class="sig-param">services</em>, <em class="sig-param">next_page=None</em>, <em class="sig-param">include_credentials=False</em>, <em class="sig-param">include_blind_credentials=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.ServicesResponse.from_services" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.services.ServicesResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.services.</code><code class="sig-name descname">ServicesResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.ServicesResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">marshmallow.schema.Schema</span></code></p>
+<dl class="class">
+<dt id="confidant.schema.services.ServicesResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.services.ServicesResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.services.ServicesResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.services.ServicesResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.schema.services.ServicesResponseSchema.encode_next_page">
+<code class="sig-name descname">encode_next_page</code><span class="sig-paren">(</span><em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.ServicesResponseSchema.encode_next_page" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.services.ServicesResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.services.ServicesResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.schema.services.ServicesResponseSchema.sort_services">
+<code class="sig-name descname">sort_services</code><span class="sig-paren">(</span><em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.services.ServicesResponseSchema.sort_services" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-confidant.schema">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-confidant.schema" title="Permalink to this headline">¶</a></h2>
