@@ -1,3 +1,4 @@
+from datetime import datetime
 import base64
 import json
 import logging
@@ -250,6 +251,7 @@ def create_credential():
     data_key = keymanager.create_datakey(encryption_context={'id': id})
     cipher = CipherManager(data_key['plaintext'], version=2)
     credential_pairs = cipher.encrypt(credential_pairs)
+    last_rotation_date = datetime.utcnow()
     cred = Credential(
         id='{0}-{1}'.format(id, revision),
         data_type='archive-credential',
@@ -261,7 +263,8 @@ def create_credential():
         data_key=data_key['ciphertext'],
         cipher_version=2,
         modified_by=authnz.get_logged_in_user(),
-        documentation=data.get('documentation')
+        documentation=data.get('documentation'),
+        last_rotation_date=last_rotation_date
     ).save(id__null=True)
     # Make this the current revision
     cred = Credential(
@@ -275,7 +278,8 @@ def create_credential():
         data_key=data_key['ciphertext'],
         cipher_version=2,
         modified_by=authnz.get_logged_in_user(),
-        documentation=data.get('documentation')
+        documentation=data.get('documentation'),
+        last_rotation_date=last_rotation_date
     )
     cred.save()
     permissions = {
@@ -370,7 +374,9 @@ def update_credential(id):
             }
             return jsonify(ret), 400
         update['credential_pairs'] = json.dumps(credential_pairs)
+        update['last_rotation_date'] = datetime.utcnow()
     else:
+        update['last_rotation_date'] = _cred.last_rotation_date
         update['credential_pairs'] = _cred.decrypted_credential_pairs
     data_key = keymanager.create_datakey(encryption_context={'id': id})
     cipher = CipherManager(data_key['plaintext'], version=2)
@@ -395,7 +401,8 @@ def update_credential(id):
             data_key=data_key['ciphertext'],
             cipher_version=2,
             modified_by=authnz.get_logged_in_user(),
-            documentation=update['documentation']
+            documentation=update['documentation'],
+            last_rotation_date=update['last_rotation_date']
         ).save(id__null=True)
     except PutError as e:
         logging.error(e)
@@ -412,7 +419,8 @@ def update_credential(id):
             data_key=data_key['ciphertext'],
             cipher_version=2,
             modified_by=authnz.get_logged_in_user(),
-            documentation=update['documentation']
+            documentation=update['documentation'],
+            last_rotation_date=update['last_rotation_date']
         )
         cred.save()
     except PutError as e:
@@ -514,6 +522,7 @@ def revert_credential_to_revision(id, to_revision):
             cipher_version=revert_credential.cipher_version,
             modified_by=authnz.get_logged_in_user(),
             documentation=revert_credential.documentation,
+            last_rotation_date=revert_credential.last_rotation_date,
         ).save(id__null=True)
     except PutError as e:
         logging.error(e)
@@ -531,6 +540,7 @@ def revert_credential_to_revision(id, to_revision):
             cipher_version=revert_credential.cipher_version,
             modified_by=authnz.get_logged_in_user(),
             documentation=revert_credential.documentation,
+            last_rotation_date=revert_credential.last_rotation_date,
         )
         cred.save()
     except PutError as e:
