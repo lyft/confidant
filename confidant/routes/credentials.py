@@ -73,11 +73,11 @@ def get_credential_list():
              "modified_date": "2019-12-16T23:16:11.413299+00:00",
              "modified_by": "rlane@example.com",
              "permissions": {}
-          },
-          ...
-        ],
-        next_page: null
-      }
+           },
+           ...
+         ],
+         next_page: null
+       }
 
     :query string next_page: If paged results were returned in a call, this
                              query string can be used to fetch the next page.
@@ -144,7 +144,7 @@ def get_credential(id):
            "get": true,
            "update": true
          }
-      }
+       }
 
     :param id: The credential ID to get.
     :type id: str
@@ -252,11 +252,17 @@ def diff_credential(id, old_revision, new_revision):
          },
          "documentation": {
            "added": "The way you rotate this credential is to...",
-           "removed": "Example documentation",
-         ",
-         "modified_date": "2019-12-16T23:16:11.413299+00:00",
-         "modified_by": "rlane@example.com"
-      }
+           "removed": "Example documentation"
+         },
+         "modified_date": {
+           "added": "2019-12-16T23:16:11.413299+00:00",
+           "removed": "2019-11-16T23:16:11.413299+00:00"
+         },
+         "modified_by": {
+           "added": "rlane@example.com",
+           "removed": "testuser@example.com"
+         }
+       }
 
     :param id: The credential ID to get.
     :type id: str
@@ -340,11 +346,11 @@ def get_archive_credential_revisions(id):
              "modified_date": "2019-12-16T23:16:11.413299+00:00",
              "modified_by": "rlane@example.com",
              "permissions": {}
-          },
-          ...
-        ],
-        next_page: null
-      }
+           },
+           ...
+         ],
+         next_page: null
+       }
 
     :query string next_page: If paged results were returned in a call, this
                              query string can be used to fetch the next page.
@@ -422,11 +428,11 @@ def get_archive_credential_list():
              "modified_date": "2019-12-16T23:16:11.413299+00:00",
              "modified_by": "rlane@example.com",
              "permissions": {}
-          },
-          ...
-        ],
-        next_page: null
-      }
+           },
+           ...
+         ],
+         next_page: null
+       }
 
     :query string next_page: If paged results were returned in a call, this
                              query string can be used to fetch the next page.
@@ -510,7 +516,7 @@ def create_credential():
             "get": true,
             "update": true
           }
-       }
+        }
 
       :<json string name: The friendly name for the credential. (required)
       :<json Dictionary{string: string} credential_pairs: A dictionary of
@@ -694,7 +700,7 @@ def update_credential(id):
             "get": true,
             "update": true
           }
-       }
+        }
 
       :param id: The credential ID to update.
       :type id: str
@@ -882,7 +888,7 @@ def revert_credential_to_revision(id, to_revision):
             "get": true,
             "update": true
           }
-       }
+        }
 
       :param id: The credential ID to revert.
       :type id: str

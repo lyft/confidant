@@ -86,15 +86,15 @@ def get_client_config():
        {
          "defined": {},
          "generated": {
-             "kms_auth_manage_grants": false,
-             "aws_accounts": [],
-             "xsrf_cookie_name": "XSRF_COOKIE",
-             "maintenance_mode": false,
-             "history_page_limit": 500,
-             "permissions": {
-               "list": true,
-               "create": true
-             }
+           "kms_auth_manage_grants": false,
+           "aws_accounts": [],
+           "xsrf_cookie_name": "XSRF_COOKIE",
+           "maintenance_mode": false,
+           "history_page_limit": 500,
+           "permissions": {
+             "list": true,
+             "create": true
+           }
          }
        }
 

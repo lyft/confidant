@@ -31,6 +31,37 @@ acl_module_check = misc.load_module(settings.ACL_MODULE)
 @blueprint.route('/v1/roles', methods=['GET'])
 @authnz.require_auth
 def get_iam_roles_list():
+    """
+    Get a list of IAM roles from the configured AWS account.
+
+    .. :quickref: IAM Roles; Get a list of IAM roles from the configured
+                  AWS account.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/roles
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "roles": [
+           'example-development',
+           'example2-development',
+           ...
+         ]
+       }
+
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have permissions to list services.
+    """
     if not acl_module_check(resource_type='service',
                             action='list'):
         msg = "{} does not have access to list services".format(
@@ -46,6 +77,48 @@ def get_iam_roles_list():
 @blueprint.route('/v1/services', methods=['GET'])
 @authnz.require_auth
 def get_service_list():
+    """
+    Get a list of current service revisions.
+
+    .. :quickref: Services; Get a list of current service revisions.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/services
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "services": [
+           {
+             "id": "example-development",
+             "revision": 1,
+             "enabled": true,
+             "modified_date": "2019-12-16T23:16:11.413299+00:00",
+             "modified_by": "rlane@example.com",
+             "account": null,
+             "credentials": [],
+             "blind_credentials": [],
+             "permissions": {}
+           },
+           ...
+         ],
+         "next_page": null
+       }
+
+    :query string next_page: If paged results were returned in a call, this
+                             query string can be used to fetch the next page.
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have permissions to list services.
+    """
     if not acl_module_check(resource_type='service',
                             action='list'):
         msg = "{} does not have access to list services".format(
@@ -63,8 +136,67 @@ def get_service_list():
 @authnz.require_auth
 def get_service(id):
     '''
-    Get service metadata and all credentials for this service. This endpoint
-    allows basic authentication.
+    Get a service object from the provided service ID.
+
+    .. :quickref: Service; Get a service object from the provided service ID.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/services/example-development
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "id": "example-development",
+         "revision": 1,
+         "enabled": true,
+         "modified_date": "2019-12-16T23:16:11.413299+00:00",
+         "modified_by": "rlane@example.com",
+         "account": null,
+         "credentials": [
+           {
+             "id": "abcd12345bf4f1cafe8e722d3860404",
+             "name": "Example Credential",
+             "credential_keys": ["test_key"],
+             "credential_pairs": {
+               "test_key": "test_value"
+             },
+             "metadata": {
+               "example_metadata_key": "example_value"
+             },
+             "revision": 1,
+             "enabled": true,
+             "documentation": "Example documentation",
+             "modified_date": "2019-12-16T23:16:11.413299+00:00",
+             "modified_by": "rlane@example.com",
+             "permissions": {}
+           },
+           ...
+         ],
+         "blind_credentials": [],
+         "permissions": {
+           "metadata": true,
+           "get": true,
+           "update": true
+         }
+       }
+
+    :param id: The service ID to get.
+    :type id: str
+    :query boolean metadata_only: If true, only fetch metadata for this
+    service, and do not respond with decrypted credential pairs in the
+    credential responses.
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have permissions to get the service ID
+    provided.
     '''
     permissions = {
         'metadata': False,
@@ -149,6 +281,53 @@ def get_service(id):
 @blueprint.route('/v1/archive/services/<id>', methods=['GET'])
 @authnz.require_auth
 def get_archive_service_revisions(id):
+    """
+    Get a list of revisions for the specified service ID.
+
+    .. :quickref: Service History; Get a list of revisions for the specified
+                  service ID.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/archive/services/example-development
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "revisions": [
+           {
+             "id": "example-development-1",
+             "revision": 1,
+             "enabled": true,
+             "modified_date": "2019-12-16T23:16:11.413299+00:00",
+             "modified_by": "rlane@example.com",
+             "account": null,
+             "credentials": [],
+             "blind_credentials": [],
+             "permissions": {}
+           },
+           ...
+         ],
+         "next_page": null
+       }
+
+    :param id: The service ID to get.
+    :type id: str
+    :query string next_page: If paged results were returned in a call, this
+                             query string can be used to fetch the next page.
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have permissions to get metadata for the
+    provided service ID.
+    :statuscode 404: Specified ID does not exist.
+    """
     if not acl_module_check(resource_type='service',
                             action='metadata',
                             resource_id=id):
@@ -181,6 +360,48 @@ def get_archive_service_revisions(id):
 @blueprint.route('/v1/archive/services', methods=['GET'])
 @authnz.require_auth
 def get_archive_service_list():
+    """
+    Get a list of service history revisions.
+
+    .. :quickref: Service History; Get a list of service history revisions.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/archive/services
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "services": [
+           {
+             "id": "example-development-1",
+             "revision": 1,
+             "enabled": true,
+             "modified_date": "2019-12-16T23:16:11.413299+00:00",
+             "modified_by": "rlane@example.com",
+             "account": null,
+             "credentials": [],
+             "blind_credentials": [],
+             "permissions": {}
+           },
+           ...
+         ],
+         "next_page": null
+       }
+
+    :query string next_page: If paged results were returned in a call, this
+                             query string can be used to fetch the next page.
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have permissions to list services.
+    """
     if not acl_module_check(resource_type='service',
                             action='list'):
         msg = "{} does not have access to list services".format(
@@ -218,6 +439,76 @@ def get_archive_service_list():
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def map_service_credentials(id):
+    """
+    Create or update a service to credential mapping.
+
+    .. :quickref: Service; Create or update a service to credential mapping
+                  with the data provided in the PUT body.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       PUT /v1/services/example-development
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "id": "example-development",
+         "revision": 1,
+         "enabled": true,
+         "modified_date": "2019-12-16T23:16:11.413299+00:00",
+         "modified_by": "rlane@example.com",
+         "account": null,
+         "credentials": [
+           {
+             "id": "abcd12345bf4f1cafe8e722d3860404",
+             "name": "Example Credential",
+             "credential_keys": ["test_key"],
+             "credential_pairs": {
+               "test_key": "test_value"
+             },
+             "metadata": {
+               "example_metadata_key": "example_value"
+             },
+             "revision": 1,
+             "enabled": true,
+             "documentation": "Example documentation",
+             "modified_date": "2019-12-16T23:16:11.413299+00:00",
+             "modified_by": "rlane@example.com",
+             "permissions": {}
+           },
+           ...
+         ],
+         "blind_credentials": [],
+         "permissions": {}
+           "metadata": True,
+           "get": True,
+           "update": True
+         }
+       }
+
+    :param id: The service ID to create or update.
+    :type id: str
+    :<json List[string] credentials: A list of credential IDs to map to this
+    service.
+    :<json List[string] blind_credentials: A list of blind_credential IDs to
+    map to this service.
+    :<json boolean enabled: Whether or not this service is enabled.
+    (default: true)
+    :<json string account: An AWS account to scope this service to.
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 400: Invalid input; Either required fields were not provided
+    or credentials being mapped would result in credential key conflicts.
+    :statuscode 403: Client does not have permissions to create or update the
+    specified service ID.
+    """
     try:
         _service = Service.get(id)
         if _service.data_type != 'service':
@@ -348,6 +639,54 @@ def map_service_credentials(id):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def revert_service_to_revision(id, to_revision):
+    '''
+    Revert the provided service to the provided revision.
+
+    .. :quickref: Service; Revert the provided service to the provided
+                  revision
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       PUT /v1/services/example-development/1
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "id": "abcd12345bf4f1cafe8e722d3860404",
+         "name": "Example Credential",
+         "credential_keys": ["test_key"],
+         "credential_pairs": {
+           "test_key": "test_value"
+         },
+         "metadata": {
+           "example_metadata_key": "example_value"
+         },
+         "revision": 1,
+         "enabled": true,
+         "documentation": "Example documentation",
+         "modified_date": "2019-12-16T23:16:11.413299+00:00",
+         "modified_by": "rlane@example.com",
+         "permissions": {}
+       }
+
+      :param id: The service ID to revert.
+      :type id: str
+      :param to_revision: The revision to revert this service to.
+      :type to_revision: int
+      :resheader Content-Type: application/json
+      :statuscode 200: Success
+      :statuscode 400: Invalid input; the update would create conflicting
+      credential keys in the service mapping.
+      :statuscode 403: Client does not have access to revert the provided
+      service ID.
+    '''
     if not acl_module_check(resource_type='service',
                             action='revert',
                             resource_id=id):
@@ -460,6 +799,62 @@ def revert_service_to_revision(id, to_revision):
 )
 @authnz.require_auth
 def diff_service(id, old_revision, new_revision):
+    """
+    Returns a diff between old_revision and new_revision for the provided
+    service id.
+
+    .. :quickref: Service Diff; Get a diff of two revisions of a service.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/services/example-development/1/2
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "enabled": {
+           "added": true,
+           "removed": false
+         },
+         "credentials": {
+           "added": [
+             "abcd12345bf4f1cafe8e722d3860404"
+           ],
+           "removed": [
+             "aaaa33335bf4f1cafe8e722d3860404"
+           ]
+         },
+         "blind_credentials": {},
+         "modified_date": {
+           "added": "2019-12-16T23:16:11.413299+00:00",
+           "removed": "2019-11-16T23:16:11.413299+00:00"
+         },
+         "modified_by": {
+           "added": "rlane@example.com",
+           "removed": "testuser@example.com"
+         }
+       }
+
+    :param id: The service ID to get.
+    :type id: str
+    :param old_revision: One of the two revisions to diff against.
+    :type old_revision: int
+    :param new_revision: One of the two revisions to diff against.
+    :type new_revision: int
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have permissions to diff the provided
+                     service ID.
+    :statuscode 404: The provided service ID or one of the provided
+                     revisions does not exist.
+    """
     if not acl_module_check(resource_type='service',
                             action='metadata',
                             resource_id=id):
@@ -495,6 +890,40 @@ def diff_service(id, old_revision, new_revision):
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
 def ensure_grants(id):
+    """
+    Ensure grants are set for the provided service ID.
+
+    .. :quickref: KMS Grants; Ensure grants are set for the provided service ID.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       PUT /v1/grants/example-development
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "id": "example-development",
+         "grants": {
+           "encrypt_grant": true,
+           "decrypt_grant": true
+         }
+       }
+
+    :param id: The service ID to ensure grants for.
+    :type id: str
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 400: Invalid input. The service provided does not exist.
+    :statuscode 403: Client does not have permissions to create or update the
+    specified service ID.
+    """
     # we pass [] in for the credential IDs, because this action isn't related
     # to adding or removing credentials, but just a generic update of a
     # service.
@@ -538,6 +967,40 @@ def ensure_grants(id):
 @blueprint.route('/v1/grants/<id>', methods=['GET'])
 @authnz.require_auth
 def get_grants(id):
+    """
+    Get grants for the provided service ID.
+
+    .. :quickref: KMS Grants; Get grants for the provided service ID.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/grants/example-development
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "id": "example-development",
+         "grants": {
+           "encrypt_grant": true,
+           "decrypt_grant": true
+         }
+       }
+
+    :param id: The service ID to ensure grants for.
+    :type id: str
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 400: Invalid input. The service provided does not exist.
+    :statuscode 403: Client does not have permissions to get service metadata
+    for the specified service ID.
+    """
     if not acl_module_check(
           resource_type='service',
           action='metadata',
