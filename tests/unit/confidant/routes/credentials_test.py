@@ -291,7 +291,7 @@ def test_create_credential(mocker, credential):
     ret = app.test_client().post(
         '/v1/credentials',
         headers={"Content-Type": 'application/json'},
-        data='{}',
+        data=json.dumps({'name': 'me'}),
     )
     json_data = json.loads(ret.data)
     assert ret.status_code == 400
@@ -306,6 +306,7 @@ def test_create_credential(mocker, credential):
         '/v1/credentials',
         headers={"Content-Type": 'application/json'},
         data=json.dumps({
+            'name': 'me',
             'documentation': 'doc',
             'credential_pairs': {'key': 'value'},
         }),
@@ -331,6 +332,10 @@ def test_create_credential(mocker, credential):
         ('confidant.routes.credentials.Credential'
          '._get_decrypted_credential_pairs'),
         return_value={'test': 'me'},
+    )
+    mocker.patch(
+        'confidant.routes.credentials.CipherManager.encrypt',
+        return_value={'foo': 'baz'}
     )
     ret = app.test_client().post(
         '/v1/credentials',
