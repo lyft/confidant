@@ -50,6 +50,9 @@ def get_credential_list():
 
        GET /v1/credentials
 
+    :query string next_page: If paged results were returned in a call, this
+                             query string can be used to fetch the next page.
+
     **Example response**:
 
     .. sourcecode:: http
@@ -79,8 +82,6 @@ def get_credential_list():
          next_page: null
        }
 
-    :query string next_page: If paged results were returned in a call, this
-                             query string can be used to fetch the next page.
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to list credentials.
@@ -112,6 +113,9 @@ def get_credential(id):
     .. sourcecode:: http
 
        GET /v1/credentials/abcd12345bf4f1cafe8e722d3860404
+
+    :param id: The credential ID to get.
+    :type id: str
 
     **Example response**:
 
@@ -146,8 +150,6 @@ def get_credential(id):
          }
        }
 
-    :param id: The credential ID to get.
-    :type id: str
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to get the credential for
@@ -222,6 +224,13 @@ def diff_credential(id, old_revision, new_revision):
 
        GET /v1/credentials/abcd12345bf4f1cafe8e722d3860404/1/2
 
+    :param id: The credential ID to get.
+    :type id: str
+    :param old_revision: One of the two revisions to diff against.
+    :type old_revision: int
+    :param new_revision: One of the two revisions to diff against.
+    :type new_revision: int
+
     **Example response**:
 
     .. sourcecode:: http
@@ -264,12 +273,6 @@ def diff_credential(id, old_revision, new_revision):
          }
        }
 
-    :param id: The credential ID to get.
-    :type id: str
-    :param old_revision: One of the two revisions to diff against.
-    :type old_revision: int
-    :param new_revision: One of the two revisions to diff against.
-    :type new_revision: int
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to diff the provided
@@ -323,6 +326,9 @@ def get_archive_credential_revisions(id):
 
        GET /v1/archive/credentials/abcd12345bf4f1cafe8e722d3860404
 
+    :query string next_page: If paged results were returned in a call, this
+                             query string can be used to fetch the next page.
+
     **Example response**:
 
     .. sourcecode:: http
@@ -352,8 +358,6 @@ def get_archive_credential_revisions(id):
          next_page: null
        }
 
-    :query string next_page: If paged results were returned in a call, this
-                             query string can be used to fetch the next page.
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to get credential
@@ -405,6 +409,9 @@ def get_archive_credential_list():
 
        GET /v1/archive/credentials/abcd12345bf4f1cafe8e722d3860404
 
+    :query string next_page: If paged results were returned in a call, this
+                             query string can be used to fetch the next page.
+
     **Example response**:
 
     .. sourcecode:: http
@@ -434,8 +441,6 @@ def get_archive_credential_list():
          next_page: null
        }
 
-    :query string next_page: If paged results were returned in a call, this
-                             query string can be used to fetch the next page.
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to list credentials
@@ -489,6 +494,17 @@ def create_credential():
 
        POST /v1/credentials
 
+    :<json string name: The friendly name for the credential. (required)
+    :<json Dictionary{string: string} credential_pairs: A dictionary of
+      arbitrary key/value pairs to be encrypted at rest. (required)
+    :<json Dictionary{string: string} metadata: A dictionary of arbitrary key/
+      value pairs for custom per-credential end-user extensions. This is not
+      encrypted at rest.
+    :<json boolean enabled: Whether or not this credential is enabled.
+      (default: true)
+    :<json string documentation: End-user provided documentation for this
+      credential. (required)
+
     **Example response**:
 
     .. sourcecode:: http
@@ -518,21 +534,11 @@ def create_credential():
           }
         }
 
-      :<json string name: The friendly name for the credential. (required)
-      :<json Dictionary{string: string} credential_pairs: A dictionary of
-      arbitrary key/value pairs to be encrypted at rest. (required)
-      :<json Dictionary{string: string} metadata: A dictionary of arbitrary key/
-      value pairs for custom per-credential end-user extensions. This is not
-      encrypted at rest.
-      :<json boolean enabled: Whether or not this credential is enabled.
-      (default: true)
-      :<json string documentation: End-user provided documentation for this
-      credential. (required)
-      :resheader Content-Type: application/json
-      :statuscode 200: Success
-      :statuscode 400: Invalid input; either the data provided was not in the
-      correct format, or a required field was not provided.
-      :statuscode 403: Client does not have access to create credentials.
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 400: Invalid input; either the data provided was not in the
+                     correct format, or a required field was not provided.
+    :statuscode 403: Client does not have access to create credentials.
     '''
     if not acl_module_check(resource_type='credential', action='create'):
         msg = "{} does not have access to create credentials".format(
@@ -641,7 +647,7 @@ def get_credential_dependencies(id):
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to get metadata for the
-    provided credential.
+                     provided credential.
     """
     if not acl_module_check(resource_type='credential',
                             action='metadata',
@@ -673,6 +679,18 @@ def update_credential(id):
 
        PUT /v1/credentials/abcd12345bf4f1cafe8e722d3860404
 
+    :param id: The credential ID to update.
+    :type id: str
+    :<json string name: The friendly name for the credential.
+    :<json Dictionary{string: string} credential_pairs: A dictionary of
+      arbitrary key/value pairs to be encrypted at rest.
+    :<json Dictionary{string: string} metadata: A dictionary of arbitrary key/
+      value pairs for custom per-credential end-user extensions. This is not
+      encrypted at rest.
+    :<json boolean enabled: Whether or not this credential is enabled.
+    :<json string documentation: End-user provided documentation for this
+      credential.
+
     **Example response**:
 
     .. sourcecode:: http
@@ -702,24 +720,13 @@ def update_credential(id):
           }
         }
 
-      :param id: The credential ID to update.
-      :type id: str
-      :<json string name: The friendly name for the credential.
-      :<json Dictionary{string: string} credential_pairs: A dictionary of
-      arbitrary key/value pairs to be encrypted at rest.
-      :<json Dictionary{string: string} metadata: A dictionary of arbitrary key/
-      value pairs for custom per-credential end-user extensions. This is not
-      encrypted at rest.
-      :<json boolean enabled: Whether or not this credential is enabled.
-      :<json string documentation: End-user provided documentation for this
-      credential.
-      :resheader Content-Type: application/json
-      :statuscode 200: Success
-      :statuscode 400: Invalid input; either the data provided was not in the
-      correct format, or the update would create conflicting credential keys
-      in a mapped service.
-      :statuscode 403: Client does not have access to update the provided
-      credential ID.
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 400: Invalid input; either the data provided was not in the
+                     correct format, or the update would create conflicting
+                     credential keys in a mapped service.
+    :statuscode 403: Client does not have access to update the provided
+                     credential ID.
     '''
     if not acl_module_check(resource_type='credential',
                             action='update',
@@ -863,6 +870,11 @@ def revert_credential_to_revision(id, to_revision):
 
        PUT /v1/credentials/abcd12345bf4f1cafe8e722d3860404/1
 
+    :param id: The credential ID to revert.
+    :type id: str
+    :param to_revision: The revision to revert this credential to.
+    :type to_revision: int
+
     **Example response**:
 
     .. sourcecode:: http
@@ -890,16 +902,12 @@ def revert_credential_to_revision(id, to_revision):
           }
         }
 
-      :param id: The credential ID to revert.
-      :type id: str
-      :param to_revision: The revision to revert this credential to.
-      :type to_revision: int
-      :resheader Content-Type: application/json
-      :statuscode 200: Success
-      :statuscode 400: Invalid input; the update would create conflicting
-      credential keys in a mapped service.
-      :statuscode 403: Client does not have access to revert the provided
-      credential ID.
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 400: Invalid input; the update would create conflicting
+                     credential keys in a mapped service.
+    :statuscode 403: Client does not have access to revert the provided
+                     credential ID.
     '''
     if not acl_module_check(resource_type='credential',
                             action='revert',

@@ -88,6 +88,9 @@ def get_service_list():
 
        GET /v1/services
 
+    :query string next_page: If paged results were returned in a call, this
+                             query string can be used to fetch the next page.
+
     **Example response**:
 
     .. sourcecode:: http
@@ -113,8 +116,6 @@ def get_service_list():
          "next_page": null
        }
 
-    :query string next_page: If paged results were returned in a call, this
-                             query string can be used to fetch the next page.
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to list services.
@@ -145,6 +146,12 @@ def get_service(id):
     .. sourcecode:: http
 
        GET /v1/services/example-development
+
+    :param id: The service ID to get.
+    :type id: str
+    :query boolean metadata_only: If true, only fetch metadata for this
+      service, and do not respond with decrypted credential pairs in the
+      credential responses.
 
     **Example response**:
 
@@ -188,15 +195,10 @@ def get_service(id):
          }
        }
 
-    :param id: The service ID to get.
-    :type id: str
-    :query boolean metadata_only: If true, only fetch metadata for this
-    service, and do not respond with decrypted credential pairs in the
-    credential responses.
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to get the service ID
-    provided.
+                     provided.
     '''
     permissions = {
         'metadata': False,
@@ -293,6 +295,11 @@ def get_archive_service_revisions(id):
 
        GET /v1/archive/services/example-development
 
+    :param id: The service ID to get.
+    :type id: str
+    :query string next_page: If paged results were returned in a call, this
+                             query string can be used to fetch the next page.
+
     **Example response**:
 
     .. sourcecode:: http
@@ -318,14 +325,10 @@ def get_archive_service_revisions(id):
          "next_page": null
        }
 
-    :param id: The service ID to get.
-    :type id: str
-    :query string next_page: If paged results were returned in a call, this
-                             query string can be used to fetch the next page.
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to get metadata for the
-    provided service ID.
+                     provided service ID.
     :statuscode 404: Specified ID does not exist.
     """
     if not acl_module_check(resource_type='service',
@@ -371,6 +374,9 @@ def get_archive_service_list():
 
        GET /v1/archive/services
 
+    :query string next_page: If paged results were returned in a call, this
+                             query string can be used to fetch the next page.
+
     **Example response**:
 
     .. sourcecode:: http
@@ -396,8 +402,6 @@ def get_archive_service_list():
          "next_page": null
        }
 
-    :query string next_page: If paged results were returned in a call, this
-                             query string can be used to fetch the next page.
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to list services.
@@ -451,6 +455,16 @@ def map_service_credentials(id):
 
        PUT /v1/services/example-development
 
+    :param id: The service ID to create or update.
+    :type id: str
+    :<json List[string] credentials: A list of credential IDs to map to this
+      service.
+    :<json List[string] blind_credentials: A list of blind_credential IDs to
+      map to this service.
+    :<json boolean enabled: Whether or not this service is enabled.
+      (default: true)
+    :<json string account: An AWS account to scope this service to.
+
     **Example response**:
 
     .. sourcecode:: http
@@ -493,21 +507,13 @@ def map_service_credentials(id):
          }
        }
 
-    :param id: The service ID to create or update.
-    :type id: str
-    :<json List[string] credentials: A list of credential IDs to map to this
-    service.
-    :<json List[string] blind_credentials: A list of blind_credential IDs to
-    map to this service.
-    :<json boolean enabled: Whether or not this service is enabled.
-    (default: true)
-    :<json string account: An AWS account to scope this service to.
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 400: Invalid input; Either required fields were not provided
-    or credentials being mapped would result in credential key conflicts.
+                     or credentials being mapped would result in credential key
+                     conflicts.
     :statuscode 403: Client does not have permissions to create or update the
-    specified service ID.
+                     specified service ID.
     """
     try:
         _service = Service.get(id)
@@ -651,6 +657,11 @@ def revert_service_to_revision(id, to_revision):
 
        PUT /v1/services/example-development/1
 
+    :param id: The service ID to revert.
+    :type id: str
+    :param to_revision: The revision to revert this service to.
+    :type to_revision: int
+
     **Example response**:
 
     .. sourcecode:: http
@@ -676,16 +687,12 @@ def revert_service_to_revision(id, to_revision):
          "permissions": {}
        }
 
-      :param id: The service ID to revert.
-      :type id: str
-      :param to_revision: The revision to revert this service to.
-      :type to_revision: int
-      :resheader Content-Type: application/json
-      :statuscode 200: Success
-      :statuscode 400: Invalid input; the update would create conflicting
-      credential keys in the service mapping.
-      :statuscode 403: Client does not have access to revert the provided
-      service ID.
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 400: Invalid input; the update would create conflicting
+                     credential keys in the service mapping.
+    :statuscode 403: Client does not have access to revert the provided
+                     service ID.
     '''
     if not acl_module_check(resource_type='service',
                             action='revert',
@@ -811,6 +818,13 @@ def diff_service(id, old_revision, new_revision):
 
        GET /v1/services/example-development/1/2
 
+    :param id: The service ID to get.
+    :type id: str
+    :param old_revision: One of the two revisions to diff against.
+    :type old_revision: int
+    :param new_revision: One of the two revisions to diff against.
+    :type new_revision: int
+
     **Example response**:
 
     .. sourcecode:: http
@@ -842,12 +856,6 @@ def diff_service(id, old_revision, new_revision):
          }
        }
 
-    :param id: The service ID to get.
-    :type id: str
-    :param old_revision: One of the two revisions to diff against.
-    :type old_revision: int
-    :param new_revision: One of the two revisions to diff against.
-    :type new_revision: int
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to diff the provided
@@ -901,6 +909,9 @@ def ensure_grants(id):
 
        PUT /v1/grants/example-development
 
+    :param id: The service ID to ensure grants for.
+    :type id: str
+
     **Example response**:
 
     .. sourcecode:: http
@@ -916,13 +927,11 @@ def ensure_grants(id):
          }
        }
 
-    :param id: The service ID to ensure grants for.
-    :type id: str
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 400: Invalid input. The service provided does not exist.
     :statuscode 403: Client does not have permissions to create or update the
-    specified service ID.
+                     specified service ID.
     """
     # we pass [] in for the credential IDs, because this action isn't related
     # to adding or removing credentials, but just a generic update of a
@@ -978,6 +987,9 @@ def get_grants(id):
 
        GET /v1/grants/example-development
 
+    :param id: The service ID to ensure grants for.
+    :type id: str
+
     **Example response**:
 
     .. sourcecode:: http
@@ -993,13 +1005,11 @@ def get_grants(id):
          }
        }
 
-    :param id: The service ID to ensure grants for.
-    :type id: str
     :resheader Content-Type: application/json
     :statuscode 200: Success
     :statuscode 400: Invalid input. The service provided does not exist.
     :statuscode 403: Client does not have permissions to get service metadata
-    for the specified service ID.
+                     for the specified service ID.
     """
     if not acl_module_check(
           resource_type='service',
