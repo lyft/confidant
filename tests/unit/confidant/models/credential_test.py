@@ -13,12 +13,14 @@ def test_equals(mocker):
         enabled=True,
         documentation='',
         metadata={},
+        tags=['ADMIN_PRIV'],
     )
     cred2 = Credential(
         name='test',
         enabled=True,
         documentation='',
         metadata={},
+        tags=['ADMIN_PRIV'],
     )
     assert cred1.equals(cred2) is True
 
