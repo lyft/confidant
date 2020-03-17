@@ -11,7 +11,16 @@ acl_module_check = misc.load_module(settings.ACL_MODULE)
 @blueprint.route('/v1/login', methods=['GET', 'POST'])
 def login():
     '''
-    Send user through login flow.
+    Send user through login flow. Response depends on configured authentication
+    plugin.
+
+    .. :quickref: Authenticate; Send user through login flow.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/login
     '''
     return authnz.log_in()
 
@@ -20,7 +29,30 @@ def login():
 @authnz.require_auth
 def get_user_info():
     '''
-    Get the email address of the currently logged-in user.
+    Get the email associated with the currently authenticated user.
+
+    .. :quickref: Email Address; Get the email address associated with the
+                  currently authenticated user.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/user/email
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "email": "rlane@example.com"
+       }
+
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
     '''
     try:
         response = jsonify({'email': authnz.get_logged_in_user()})
@@ -34,6 +66,40 @@ def get_user_info():
 def get_client_config():
     '''
     Get configuration to help clients bootstrap themselves.
+
+    .. :quickref: Client Configuration; Get configuration to help clients
+                  bootstrap themselves.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/client_config
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "defined": {},
+         "generated": {
+             "kms_auth_manage_grants": false,
+             "aws_accounts": [],
+             "xsrf_cookie_name": "XSRF_COOKIE",
+             "maintenance_mode": false,
+             "history_page_limit": 500,
+             "permissions": {
+               "list": true,
+               "create": true
+             }
+         }
+       }
+
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
     '''
     permissions = {
         'credentials': {
