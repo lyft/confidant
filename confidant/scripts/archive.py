@@ -45,19 +45,7 @@ class ArchiveCredentials(Command):
         )
         with CredentialArchive.batch_write() as batch:
             for save in saves:
-                while True:
-                    try:
-                        batch.save(save)
-                        break
-                    except Exception as e:
-                        msg = ''
-                        if hasattr(e, 'msg'):
-                            msg = e.msg
-                        if 'ProvisionedThroughputExceededException' in msg:
-                            # Out of write capacity, sleep and try again
-                            time.sleep(1)
-                        else:
-                            raise e
+                batch.save(save)
 
     def delete(self, deletes, force=False):
         _deletes = ', '.join([delete.id for delete in deletes])
@@ -73,20 +61,9 @@ class ArchiveCredentials(Command):
                 _deletes,
             )
         )
-        for delete in deletes:
-            while True:
-                try:
-                    delete.delete()
-                    break
-                except Exception as e:
-                    msg = ''
-                    if hasattr(e, 'msg'):
-                        msg = e.msg
-                    if 'ProvisionedThroughputExceededException' in msg:
-                        # Out of write capacity, sleep and try again
-                        time.sleep(1)
-                    else:
-                        raise e
+        with CredentialArchive.batch_write() as batch:
+            for delete in deletes:
+                batch.delete(delete)
 
     def archive(self, credentials, force):
         services = [
@@ -140,8 +117,10 @@ class ArchiveCredentials(Command):
             return 1
         if days and ids:
             logger.error('--days and --ids options are mutually exclusive')
+            return 1
         if not days and not ids:
             logger.error('Either --days or --ids options are required')
+            return 1
         credentials = []
         if ids:
             # filter strips an empty string
@@ -165,4 +144,4 @@ class ArchiveCredentials(Command):
                 delta = now - credential.modified_date
                 if not credential.enabled and delta.days > days:
                     credentials.append(credential)
-        self.archive(credentials, force)
+        self.archive(credentials, force=force)

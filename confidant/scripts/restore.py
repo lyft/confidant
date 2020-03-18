@@ -56,19 +56,7 @@ class RestoreCredentials(Command):
         )
         with Credential.batch_write() as batch:
             for save in _saves:
-                while True:
-                    try:
-                        batch.save(save)
-                        break
-                    except Exception as e:
-                        msg = ''
-                        if hasattr(e, 'msg'):
-                            msg = e.msg
-                        if 'ProvisionedThroughputExceededException' in msg:
-                            # Out of write capacity, sleep and try again
-                            time.sleep(1)
-                        else:
-                            raise e
+                batch.save(save)
 
     def restore(self, archive_credentials, force):
         for archive_credential in archive_credentials:
@@ -120,4 +108,4 @@ class RestoreCredentials(Command):
             credentials = CredentialArchive.data_type_date_index.query(
                 'credential',
             )
-        self.restore(credentials, force)
+        self.restore(credentials, force=force)
