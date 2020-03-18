@@ -60,6 +60,8 @@ pip install -r "${SCRIPT_DIR}"/requirements.txt
 
 rsync -av "${SCRIPT_DIR}"/root/ "${SCRIPT_DIR}"/conf.py "${GENERATED_RST_DIR}"
 
+# TODO: don't setup clients on module import so we can avoid setting the region here.
+export AWS_DEFAULT_REGION='us-east-1'
 export EXIT_ON_BAD_CONFIG='false'
 set -x
 sphinx-apidoc -o "${GENERATED_AUTOGEN_RST_DIR}" -T -P ../confidant
