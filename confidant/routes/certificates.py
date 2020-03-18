@@ -24,7 +24,47 @@ acl_module_check = misc.load_module(settings.ACL_MODULE)
 @authnz.require_auth
 def get_certificate(ca, cn):
     '''
-    Get a certificate for the provided cn, using the provided CA.
+    Get a certificate from the provided CA, for the provided CN.
+
+    .. :quickref: Certificate; Get certificate from the provided CA, for the
+                  provided CN.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/certificates/example-ca/service.example.com
+
+    :param ca: The friendly name of the certificate authority to issue a
+               certificate against.
+    :type ca: str
+    :param cn: The canonical name attribute to use in the issued certificate.
+    :type cn: str
+    :query string san: A subject alternative name attribute to use in the
+                       issued certificate. This query parameter can be
+                       provided multiple times
+    :query int validity: The length (in days) that the issued certificate
+                         should be valid for. If this value is longer than
+                         the server defined maximum validity length, the
+                         validity will be set to the maximum validity length.
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "certificate": "---...BEGIN...",
+         "certificate_chain": "---...BEGIN...",
+         "key": "---...BEGIN..."
+       }
+
+    :resheader Content-Type: application/json
+    :statuscode 200: success
+    :statuscode 403: client does not have access to generate the requested
+                     certificate.
     '''
     try:
         ca_object = certificatemanager.get_ca(ca)
@@ -91,6 +131,44 @@ def get_certificate_from_csr(ca):
     '''
     Get a certificate from the ca provided in the url, using the CSR, validity
     and san provided in the POST body.
+
+    .. :quickref: Certificate; Issue and get a certificate from the provided
+                  CA, using a CSR provided in the POST body.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       POST /v1/certificates/example-ca
+
+    :<json string ca: The friendly name of the certificate authority to issue
+                      a certificate against.
+    :<json List[string] san: a list of subject alternative name attributes to
+                             use in the issued certificate. This query
+                             parameter can be provided multiple times
+    :<json int validity: The length (in days) that the issued certificate.
+                         should be valid for. If this value is longer than
+                         the server defined maximum validity length, the
+                         validity will be set to the maximum validity length.
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "certificate": "---...BEGIN...",
+         "certificate_chain": "---...BEGIN..."
+       }
+
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 400: Invalid input; either the CSR was unsbale to be decoded,
+                     or was missing from the request.
+    :statuscode 403: Client does not have access to generate the requested
+                     certificate.
     '''
     try:
         ca_object = certificatemanager.get_ca(ca)
@@ -158,6 +236,38 @@ def get_certificate_from_csr(ca):
 def list_cas():
     '''
     List the configured CAs.
+
+    .. :quickref: Certificate Authorities; Get a list of the detailed
+                  certificate authorities configured on the server.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/cas
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "cas": [
+           "example-ca": {
+             "certificate": "---...BEGIN...",
+             "certificate_chain": "---...BEGIN...",
+             "tags": {
+               "hello": "world"
+            },
+            ...
+         ]
+       }
+
+    :resheader Content-Type: application/json
+    :statuscode 200: success
+    :statuscode 403: client does not have access to list CAs
     '''
 
     logged_in_user = authnz.get_logged_in_user()
@@ -184,6 +294,39 @@ def list_cas():
 def get_ca(ca):
     '''
     Get the CA information for the provided ca.
+
+    .. :quickref: Certificate Authorities; Get the detailed certificate
+                  authority information for the specified CA.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/cas/example-ca
+
+    :param ca: The friendly name of the certificate authority to issue a
+               certificate against.
+    :type ca: str
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "example-ca": {
+           "certificate": "---...BEGIN...",
+           "certificate_chain": "---...BEGIN...",
+           "tags": {
+             "hello": "world"
+          }
+       }
+
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have access to get the requested CA.
     '''
     try:
         ca_object = certificatemanager.get_ca(ca)

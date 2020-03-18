@@ -1,12 +1,11 @@
 # Changelog
 
-## 6.2.0
+## 6.3.0
 
-* This release adds support for keeping track of when credentials should be rotated
+* This release adds support for keeping track of when credentials should be rotated.
   Three new fields have been added to the Credential model:
 
-
-  * tags: `tags` are a set of strings that can be used to categorize a credential.  For instance
+  * tags: `tags` are a set of strings that can be used to categorize a credential. For instance
   "ADMIN_PRIV" or "EXEMPT_FROM_ROTATION" could be potential tags. We choose to have a list of tags
   rather than a single string because some credentials might fall into multiple categories
   * last_decrypted_date: `last_decrypted_date` explicitly stores when someone viewed a credential.
@@ -15,7 +14,7 @@
   * last_rotation_date: `last_rotation_date` stores when a credential was last rotated. Some credentials
   might need to periodically be rotated for security purposes.
 
-  There is also some additional logic for calculating when a credential should next be rotated
+  There is also additional logic for calculating when a credential should next be rotated
   given its previous rotation history. This logic lives as the `next_rotation_date` property on the
   Credential object and is not persisted into the DB layer.  To use this logic:
 
@@ -26,6 +25,10 @@
      config where the key represents a tag (eg: "ADMIN_PRIV") and the value represents the number of days
      that keys with this tag should be rotated. For instance, we could have a `ROTATION_DAYS_CONFIG` that
      looks something like '{"ADMIN_PRIV": 30, "FINANCIAL_DATA": 10}'
+
+## 6.2.0
+
+* This release fixes a python3 stacktrace in SAML auth, when using the `SAML_SP_KEY_FILE` setting.
 
 ## 6.1.0
 
