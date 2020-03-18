@@ -57,6 +57,7 @@ class CredentialBase(Model):
     last_decrypted_date = UTCDateTimeAttribute(null=True)
     last_rotation_date = UTCDateTimeAttribute(null=True)
 
+
 class Credential(CredentialBase):
     class Meta:
         table_name = settings.DYNAMODB_TABLE

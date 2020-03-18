@@ -145,7 +145,7 @@ def test_credential_archive(mocker):
     # TODO: do a more thorough equality test here.
     assert cred.id == archive_cred.id
 
-    
+
 def test_next_rotation_date_no_rotation_required(mocker):
     mocker.patch(
         'confidant.models.credential.settings.TAGS_EXCLUDING_ROTATION',
