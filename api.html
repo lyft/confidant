@@ -1,0 +1,2091 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API &mdash; confidant 6.2.0-917b2e documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/confidant.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Access Controls (ACLs)" href="acls.html" />
+    <link rel="prev" title="Using the Confidant client" href="client.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="contents.html" class="icon icon-home"> confidant
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                6.2.0-917b2e
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#quickstart-for-testing">Quickstart for testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#docker-installation">Docker installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#to-run-confidant-in-docker">To run confidant in Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#to-build-the-image">To build the image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#pip-installation">pip installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#make-a-virtualenv-and-install-pip-requirements">Make a virtualenv and install pip requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#manual-installation">Manual installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install.html#clone-confidant">Clone Confidant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#id1">Make a virtualenv and install pip requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#build-the-frontend">Build the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#run-confidant">Run confidant</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#docker-vs-bash">Docker vs bash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#environment-configuration">Environment configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#gunicorn-configuration-for-ssl-termination-support">gunicorn configuration for SSL termination support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#google-authentication-configuration">Google authentication configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#saml-authentication-configuration">SAML authentication configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#user-authentication-session-settings">User authentication session settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#disabling-credential-conflict-checks">Disabling credential conflict checks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#statsd-metrics">statsd metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#sending-graphite-events">Sending graphite events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#google-authentication-user-restrictions">Google authentication user restrictions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#auth-token-lifetime">Auth token lifetime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#frontend-configuration">Frontend configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#development-and-testing-settings">Development and testing settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#bootstrapping-confidant-s-own-secrets">Bootstrapping Confidant’s own secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#multi-account-authentication">Multi-account authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#kms-authentication-for-end-users">KMS authentication for end-users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#kms-grant-management">KMS grant management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-client-configuration">Confidant client configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#maintenance-mode-settings">Maintenance mode settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-performance-settings">Confidant performance settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#certificate-authority-settings">Certificate Authority settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#kms-key-policy-configuration">KMS key policy configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#confidant-iam-role-configuration">Confidant IAM role configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#confidant-dynamodb-table-configuration">Confidant DynamoDB table configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="using_confidant.html">Managing secrets and mappings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="using_confidant.html#using-the-resources-view">Using the resources view</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#creating-secrets">Creating secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#mapping-secrets-to-services">Mapping secrets to services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="using_confidant.html#finding-credentials-and-services-in-the-sidebar">Finding credentials and services in the sidebar</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="using_confidant.html#using-the-history-view">Using the history view</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Using the Confidant client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="client.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#reformatting-get-service-output">Reformatting get_service output</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#api-route-documentation">API route documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="acls.html">Access Controls (ACLs)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="acls.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="acls.html#acl-hookpoints">ACL Hookpoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="acls.html#credentials">Credentials</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#list-credentials">List credentials</a></li>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#get-credential-metadata">Get credential metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#get-credential">Get credential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#create-credential">Create credential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#update-credential">Update credential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#id1">Revert credential</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="acls.html#services">Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#list-services">List services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#get-service-metadata">Get service metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#get-service">Get service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#create-service">Create service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#update-service">Update service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="acls.html#id3">Revert service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="blind_secrets.html">Server-blinded secrets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blind_secrets.html#what-are-server-blinded-secrets">What are server-blinded secrets?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blind_secrets.html#kms-keys-and-iam-policy-examples-for-server-blinded-secrets">KMS keys and IAM policy examples for server-blinded secrets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blind_secrets.html#creating-and-updating-server-blinded-secrets-using-the-confidant-client">Creating and updating server-blinded secrets using the confidant client</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kms_auth.html">KMS authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#service-to-service-authentication">Service-to-service authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kms_auth.html#iam-policy-configuration-for-service-to-service-auth">IAM policy configuration for service-to-service auth</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#passing-encrypted-data-between-services">Passing encrypted data between services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#user-to-service-authentication">User-to-service authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kms_auth.html#multi-account-kms-authentication">Multi-account KMS authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="threat_model.html">Threat model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-client-threat-model">Web client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#assumptions">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-authenticated-user-can-achieve">What an authenticated user can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-compromise-of-an-authenticated-user-s-computer-can-achieve">What compromise of an authenticated user’s computer can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-local-network-attacker-who-can-observe-network-traffic-can-achieve">What an unauthenticated local network attacker who can observe network traffic can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-attacker-from-the-internet-can-achieve">What an unauthenticated attacker from the Internet can achieve</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-server-threat-model">Web server threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id1">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-through-compromise-of-the-confidant-web-server">What an attacker can achieve through compromise of the Confidant web server</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#service-client-threat-model">Service client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id2">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-the-service-can-achieve">What the service can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-with-a-filesystem-read-vulnerability">What an attacker can achieve with a filesystem read vulnerability</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#storage-threat-model">Storage threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id3">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-with-dynamodb-access-can-achieve">What an attacker with DynamoDB access can achieve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#code-of-conduct">Code of conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributing-code">Contributing code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#sign-the-contributor-license-agreement-cla">Sign the Contributor License Agreement (CLA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#file-issues-in-github">File issues in Github</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#submit-pull-requests">Submit pull requests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-guide">Development guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#development-using-docker">Development using docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#quickstart-for-testing-or-development">Quickstart for testing or development</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_schema.html">DynamoDB Data Schema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_schema.html#at-rest-encryption-model">At-rest encryption model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="upgrade.html">Upgrading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-2-0-0-or-3-0-0">Upgrading to 2.0.0 or 3.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="upgrade.html#performing-the-data-migration">Performing the data migration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-4-0-0">Upgrading to 4.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="upgrade.html#peforming-the-data-migration-for-4-0-0">Peforming the data migration for 4.0.0</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">6.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">6.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">6.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">5.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">5.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">5.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">5.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id8">4.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">4.3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id10">4.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">4.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">4.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">4.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id14">3.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">2.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">2.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id17">1.11.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">1.10.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id19">1.10.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">1.9.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id21">1.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id22">1.7.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id23">1.6.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id24">1.5.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id25">1.5.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id26">1.4.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id27">1.3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id28">1.2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id29">1.1.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id30">1.1.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id31">1.1.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id32">1.1.16 - 1.1.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id33">1.1.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id34">1.1.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id35">1.1.13</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Communication</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security_reporting.html">Reporting security vulnerabilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">confidant</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="api">
+<h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
+<p>Confidant has an API that can be used for programmatic access from the UI, libraries, or CLIs. Authentication is required for all endpoints, and the allowed types of authentication (kmsauth, SAML, OAuth, etc.) are based on your configuration and RBAC settings. See configuration and RBAC documentation for more information about authentication and authorization.</p>
+<div class="section" id="api-route-documentation">
+<h2>API route documentation<a class="headerlink" href="#api-route-documentation" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 45%" />
+<col style="width: 35%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>Operation</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#get--v1-saml-metadata">GET /v1/saml/metadata</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><a class="reference external" href="#post--v1-saml-consume">POST /v1/saml/consume</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#get--v1-saml-logout">GET /v1/saml/logout</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><a class="reference external" href="#get--v1-saml-login">GET /v1/saml/login</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#get--v1-saml-debug">GET /v1/saml/debug</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Authenticate</p></td>
+<td><p><a class="reference external" href="#get--v1-login">GET /v1/login</a></p></td>
+<td><p>Send user through login flow.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#post--v1-login">POST /v1/login</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Certificate</p></td>
+<td><p><a class="reference external" href="#get--v1-certificates-(ca)-(cn)">GET /v1/certificates/(ca)/(cn)</a></p></td>
+<td><p>Get certificate from the provided CA, for the</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#post--v1-certificates-(ca)">POST /v1/certificates/(ca)</a></p></td>
+<td><p>Issue and get a certificate from the provided</p></td>
+</tr>
+<tr class="row-odd"><td><p>Certificate Authorities</p></td>
+<td><p><a class="reference external" href="#get--v1-cas">GET /v1/cas</a></p></td>
+<td><p>Get a list of the detailed</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#get--v1-cas-(ca)">GET /v1/cas/(ca)</a></p></td>
+<td><p>Get the detailed certificate</p></td>
+</tr>
+<tr class="row-odd"><td><p>Client Configuration</p></td>
+<td><p><a class="reference external" href="#get--v1-client_config">GET /v1/client_config</a></p></td>
+<td><p>Get configuration to help clients</p></td>
+</tr>
+<tr class="row-even"><td><p>Credential</p></td>
+<td><p><a class="reference external" href="#post--v1-credentials">POST /v1/credentials</a></p></td>
+<td><p>Create a credential using the data provided in</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><a class="reference external" href="#put--v1-credentials-(id)-(to_revision)">PUT /v1/credentials/(id)/(to_revision)</a></p></td>
+<td><p>Revert the provided credential to the provided</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#get--v1-credentials-(id)">GET /v1/credentials/(id)</a></p></td>
+<td><p>Get a credential from the provided id.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><a class="reference external" href="#put--v1-credentials-(id)">PUT /v1/credentials/(id)</a></p></td>
+<td><p>Update the provided credential using the data</p></td>
+</tr>
+<tr class="row-even"><td><p>Credential Diff</p></td>
+<td><p><a class="reference external" href="#get--v1-credentials-(id)-(old_revision)-(new_revision)">GET /v1/credentials/(id)/(old_revision)/(new_revision)</a></p></td>
+<td><p>Get a diff of two revisions of a credential.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Credential History</p></td>
+<td><p><a class="reference external" href="#get--v1-archive-credentials">GET /v1/archive/credentials</a></p></td>
+<td><p>Get a list of the metadata for all history</p></td>
+</tr>
+<tr class="row-even"><td><p>Credential Mappings</p></td>
+<td><p><a class="reference external" href="#get--v1-credentials-(id)-services">GET /v1/credentials/(id)/services</a></p></td>
+<td><p>Get a list of services that this</p></td>
+</tr>
+<tr class="row-odd"><td><p>Credential Revisions</p></td>
+<td><p><a class="reference external" href="#get--v1-archive-credentials-(id)">GET /v1/archive/credentials/(id)</a></p></td>
+<td><p>Get a list of the metadata of all the</p></td>
+</tr>
+<tr class="row-even"><td><p>Credentials</p></td>
+<td><p><a class="reference external" href="#get--v1-credentials">GET /v1/credentials</a></p></td>
+<td><p>Get a list of the metadata for all current</p></td>
+</tr>
+<tr class="row-odd"><td><p>Email Address</p></td>
+<td><p><a class="reference external" href="#get--v1-user-email">GET /v1/user/email</a></p></td>
+<td><p>Get the email address associated with the</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#post--v1-user-email">POST /v1/user/email</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>IAM Roles</p></td>
+<td><p><a class="reference external" href="#get--v1-roles">GET /v1/roles</a></p></td>
+<td><p>Get a list of IAM roles from the configured</p></td>
+</tr>
+<tr class="row-even"><td><p>KMS Grants</p></td>
+<td><p><a class="reference external" href="#put--v1-grants-(id)">PUT /v1/grants/(id)</a></p></td>
+<td><p>Ensure grants are set for the provided service ID.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><a class="reference external" href="#get--v1-grants-(id)">GET /v1/grants/(id)</a></p></td>
+<td><p>Get grants for the provided service ID.</p></td>
+</tr>
+<tr class="row-even"><td><p>Random Value</p></td>
+<td><p><a class="reference external" href="#get--v1-value_generator">GET /v1/value_generator</a></p></td>
+<td><p>Get a randomly generated value, for use in</p></td>
+</tr>
+<tr class="row-odd"><td><p>Service</p></td>
+<td><p><a class="reference external" href="#put--v1-services-(id)-(to_revision)">PUT /v1/services/(id)/(to_revision)</a></p></td>
+<td><p>Revert the provided service to the provided</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#get--v1-services-(id)">GET /v1/services/(id)</a></p></td>
+<td><p>Get a service object from the provided service ID.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><a class="reference external" href="#put--v1-services-(id)">PUT /v1/services/(id)</a></p></td>
+<td><p>Create or update a service to credential mapping</p></td>
+</tr>
+<tr class="row-even"><td><p>Service Diff</p></td>
+<td><p><a class="reference external" href="#get--v1-services-(id)-(old_revision)-(new_revision)">GET /v1/services/(id)/(old_revision)/(new_revision)</a></p></td>
+<td><p>Get a diff of two revisions of a service.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Service History</p></td>
+<td><p><a class="reference external" href="#get--v1-archive-services">GET /v1/archive/services</a></p></td>
+<td><p>Get a list of service history revisions.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#get--v1-archive-services-(id)">GET /v1/archive/services/(id)</a></p></td>
+<td><p>Get a list of revisions for the specified</p></td>
+</tr>
+<tr class="row-odd"><td><p>Services</p></td>
+<td><p><a class="reference external" href="#get--v1-services">GET /v1/services</a></p></td>
+<td><p>Get a list of current service revisions.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="get">
+<dt id="get--v1-archive-credentials">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/archive/credentials</code><a class="headerlink" href="#get--v1-archive-credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the metadata of all the history revisions of credentials.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/archive/credentials/abcd12345bf4f1cafe8e722d3860404
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Query Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>next_page</strong> (<em>string</em>) – If paged results were returned in a call, this
+query string can be used to fetch the next page.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;revisions&quot;: [
+    {
+      &quot;id&quot;: &quot;abcd12345bf4f1cafe8e722d3860404-1&quot;,
+      &quot;name&quot;: &quot;Example Credential&quot;,
+      &quot;credential_keys&quot;: [],
+      &quot;credential_pairs&quot;: {},
+      &quot;metadata&quot;: {
+        &quot;example_metadata_key&quot;: &quot;example_value&quot;
+      },
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;documentation&quot;: &quot;Example documentation&quot;,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  next_page: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to list credentials</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-archive-services">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/archive/services</code><a class="headerlink" href="#get--v1-archive-services" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of service history revisions.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/archive/services
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Query Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>next_page</strong> (<em>string</em>) – If paged results were returned in a call, this
+query string can be used to fetch the next page.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;services&quot;: [
+    {
+      &quot;id&quot;: &quot;example-development-1&quot;,
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;account&quot;: null,
+      &quot;credentials&quot;: [],
+      &quot;blind_credentials&quot;: [],
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  &quot;next_page&quot;: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to list services.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-saml-metadata">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/saml/metadata</code><a class="headerlink" href="#get--v1-saml-metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate SAML metadata XML describing the service endpoints.</p>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--v1-saml-consume">
+<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/saml/consume</code><a class="headerlink" href="#post--v1-saml-consume" title="Permalink to this definition">¶</a></dt>
+<dd><p>The SAML attribute consumer service receives POST callbacks from the IdP.</p>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-saml-logout">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/saml/logout</code><a class="headerlink" href="#get--v1-saml-logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>This dual purpose route both initiates SingleLogOut redirects to the IdP
+and receives the HTTP-REDIRECT callback (also a GET) from the IdP post
+logout.</p>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-user-email">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/user/email</code><a class="headerlink" href="#get--v1-user-email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the email associated with the currently authenticated user.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/user/email
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--v1-user-email">
+<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/user/email</code><a class="headerlink" href="#post--v1-user-email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the email associated with the currently authenticated user.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/user/email
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-saml-login">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/saml/login</code><a class="headerlink" href="#get--v1-saml-login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redirect to the SAML login page. You don’t normally need to hit this
+since any page with &#64;authnz.require_auth will redirect to login.</p>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-saml-debug">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/saml/debug</code><a class="headerlink" href="#get--v1-saml-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug endpoint to show SAML attributes.</p>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-value_generator">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/value_generator</code><a class="headerlink" href="#get--v1-value_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a randomly generated value, for use in credential pairs.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/value_generator
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;c5S0w08YwU4PY3EZ7eQf4QYYUIT6ryyKOydhjyTti9pjPuMU00&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-client_config">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/client_config</code><a class="headerlink" href="#get--v1-client_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get configuration to help clients bootstrap themselves.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/client_config
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;defined&quot;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="nt">&quot;generated&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;kms_auth_manage_grants&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;aws_accounts&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nt">&quot;xsrf_cookie_name&quot;</span><span class="p">:</span> <span class="s2">&quot;XSRF_COOKIE&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;maintenance_mode&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;history_page_limit&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;list&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nt">&quot;create&quot;</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-credentials">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/credentials</code><a class="headerlink" href="#get--v1-credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the metadata of all the current revision of credentials.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/credentials
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Query Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>next_page</strong> (<em>string</em>) – If paged results were returned in a call, this
+query string can be used to fetch the next page.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;credentials&quot;: [
+    {
+      &quot;id&quot;: &quot;abcd12345bf4f1cafe8e722d3860404&quot;,
+      &quot;name&quot;: &quot;Example Credential&quot;,
+      &quot;credential_keys&quot;: [],
+      &quot;credential_pairs&quot;: {},
+      &quot;metadata&quot;: {
+        &quot;example_metadata_key&quot;: &quot;example_value&quot;
+      },
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;documentation&quot;: &quot;Example documentation&quot;,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  next_page: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to list credentials.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--v1-credentials">
+<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/credentials</code><a class="headerlink" href="#post--v1-credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a credential using the data provided in the POST body.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>POST /v1/credentials
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Request JSON Object</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – The friendly name for the credential. (required)</p></li>
+<li><p><strong>Dictionary{string</strong> – string} credential_pairs: A dictionary of
+arbitrary key/value pairs to be encrypted at rest. (required)</p></li>
+<li><p><strong>Dictionary{string</strong> – string} metadata: A dictionary of arbitrary key/
+value pairs for custom per-credential end-user extensions. This is not
+encrypted at rest.</p></li>
+<li><p><strong>enabled</strong> (<em>boolean</em>) – Whether or not this credential is enabled.
+(default: true)</p></li>
+<li><p><strong>documentation</strong> (<em>string</em>) – End-user provided documentation for this
+credential. (required)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+ <span class="p">{</span>
+   <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;abcd12345bf4f1cafe8e722d3860404&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Credential&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;credential_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;example_credential_key&quot;</span><span class="p">],</span>
+   <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;example_credential_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_credential_value&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;example_metadata_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_value&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;get&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;update&quot;</span><span class="p">:</span> <span class="kc">true</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Invalid input; either the data provided was not in the
+correct format, or a required field was not provided.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have access to create credentials.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-services">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/services</code><a class="headerlink" href="#get--v1-services" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of current service revisions.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/services
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Query Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>next_page</strong> (<em>string</em>) – If paged results were returned in a call, this
+query string can be used to fetch the next page.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;services&quot;: [
+    {
+      &quot;id&quot;: &quot;example-development&quot;,
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;account&quot;: null,
+      &quot;credentials&quot;: [],
+      &quot;blind_credentials&quot;: [],
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  &quot;next_page&quot;: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to list services.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-login">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/login</code><a class="headerlink" href="#get--v1-login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send user through login flow. Response depends on configured authentication
+plugin.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/login
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--v1-login">
+<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/login</code><a class="headerlink" href="#post--v1-login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send user through login flow. Response depends on configured authentication
+plugin.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/login
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-roles">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/roles</code><a class="headerlink" href="#get--v1-roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of IAM roles from the configured AWS account.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/roles
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;roles&quot;: [
+    &#39;example-development&#39;,
+    &#39;example2-development&#39;,
+    ...
+  ]
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to list services.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-cas">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/cas</code><a class="headerlink" href="#get--v1-cas" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the configured CAs.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/cas
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;cas&quot;: [
+    &quot;example-ca&quot;: {
+      &quot;certificate&quot;: &quot;---...BEGIN...&quot;,
+      &quot;certificate_chain&quot;: &quot;---...BEGIN...&quot;,
+      &quot;tags&quot;: {
+        &quot;hello&quot;: &quot;world&quot;
+     },
+     ...
+  ]
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – client does not have access to list CAs</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-credentials-(id)-services">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/credentials/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><code class="sig-name descname">/services</code><a class="headerlink" href="#get--v1-credentials-(id)-services" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of services that this credential is mapped to.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/credentials/abcd12345bf4f1cafe8e722d3860404/services
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;services&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;example-development&quot;</span><span class="p">,</span> <span class="s2">&quot;example2-development&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to get metadata for the
+provided credential.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-archive-credentials-(id)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/archive/credentials/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-archive-credentials-(id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the metadata of all the revisions of the provided
+credential.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/archive/credentials/abcd12345bf4f1cafe8e722d3860404
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Query Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>next_page</strong> (<em>string</em>) – If paged results were returned in a call, this
+query string can be used to fetch the next page.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;revisions&quot;: [
+    {
+      &quot;id&quot;: &quot;abcd12345bf4f1cafe8e722d3860404-1&quot;,
+      &quot;name&quot;: &quot;Example Credential&quot;,
+      &quot;credential_keys&quot;: [],
+      &quot;credential_pairs&quot;: {},
+      &quot;metadata&quot;: {
+        &quot;example_metadata_key&quot;: &quot;example_value&quot;
+      },
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;documentation&quot;: &quot;Example documentation&quot;,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  next_page: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to get credential
+metadata for the provided credential ID.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – The provided credential ID does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-archive-services-(id)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/archive/services/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-archive-services-(id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of revisions for the specified service ID.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/archive/services/example-development
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The service ID to get.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Query Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>next_page</strong> (<em>string</em>) – If paged results were returned in a call, this
+query string can be used to fetch the next page.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;revisions&quot;: [
+    {
+      &quot;id&quot;: &quot;example-development-1&quot;,
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;account&quot;: null,
+      &quot;credentials&quot;: [],
+      &quot;blind_credentials&quot;: [],
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  &quot;next_page&quot;: null
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to get metadata for the
+provided service ID.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Specified ID does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-certificates-(ca)-(cn)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/certificates/</code><span class="sig-paren">(</span><em class="sig-param">ca</em><span class="sig-paren">)</span><code class="sig-name descname">/</code><span class="sig-paren">(</span><em class="sig-param">cn</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-certificates-(ca)-(cn)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a certificate from the provided CA, for the provided CN.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/certificates/example-ca/service.example.com
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ca</strong> (<em>str</em>) – The friendly name of the certificate authority to issue a
+certificate against.</p></li>
+<li><p><strong>cn</strong> (<em>str</em>) – The canonical name attribute to use in the issued certificate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Query Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>san</strong> (<em>string</em>) – A subject alternative name attribute to use in the
+issued certificate. This query parameter can be
+provided multiple times</p></li>
+<li><p><strong>validity</strong> (<em>int</em>) – The length (in days) that the issued certificate
+should be valid for. If this value is longer than
+the server defined maximum validity length, the
+validity will be set to the maximum validity length.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;certificate&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;certificate_chain&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – client does not have access to generate the requested
+certificate.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--v1-certificates-(ca)">
+<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/certificates/</code><span class="sig-paren">(</span><em class="sig-param">ca</em><span class="sig-paren">)</span><a class="headerlink" href="#post--v1-certificates-(ca)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a certificate from the ca provided in the url, using the CSR, validity
+and san provided in the POST body.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>POST /v1/certificates/example-ca
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Request JSON Object</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ca</strong> (<em>string</em>) – The friendly name of the certificate authority to issue
+a certificate against.</p></li>
+<li><p><strong>san</strong> (<em>List[string]</em>) – a list of subject alternative name attributes to
+use in the issued certificate. This query
+parameter can be provided multiple times</p></li>
+<li><p><strong>validity</strong> (<em>int</em>) – The length (in days) that the issued certificate.
+should be valid for. If this value is longer than
+the server defined maximum validity length, the
+validity will be set to the maximum validity length.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;certificate&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;certificate_chain&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Invalid input; either the CSR was unsbale to be decoded,
+or was missing from the request.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have access to generate the requested
+certificate.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-credentials-(id)-(old_revision)-(new_revision)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/credentials/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><code class="sig-name descname">/</code><span class="sig-paren">(</span><em class="sig-param">old_revision</em><span class="sig-paren">)</span><code class="sig-name descname">/</code><span class="sig-paren">(</span><em class="sig-param">new_revision</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-credentials-(id)-(old_revision)-(new_revision)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a diff between old_revision and new_revision for the provided
+credential id.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/credentials/abcd12345bf4f1cafe8e722d3860404/1/2
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The credential ID to get.</p></li>
+<li><p><strong>old_revision</strong> (<em>int</em>) – One of the two revisions to diff against.</p></li>
+<li><p><strong>new_revision</strong> (<em>int</em>) – One of the two revisions to diff against.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;New credential name&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;Example credential name&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;api_key&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;api_user&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;api_certificate&quot;</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;example_key&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;The way you rotate this credential is to...&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-11-16T23:16:11.413299+00:00&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;testuser@example.com&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to diff the provided
+credential ID.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – The provided credential ID or one of the provided
+revisions does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="put">
+<dt id="put--v1-credentials-(id)-(to_revision)">
+<code class="sig-name descname">PUT </code><code class="sig-name descname">/v1/credentials/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><code class="sig-name descname">/</code><span class="sig-paren">(</span><em class="sig-param">to_revision</em><span class="sig-paren">)</span><a class="headerlink" href="#put--v1-credentials-(id)-(to_revision)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revert the provided credential to the provided revision.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>PUT /v1/credentials/abcd12345bf4f1cafe8e722d3860404/1
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The credential ID to revert.</p></li>
+<li><p><strong>to_revision</strong> (<em>int</em>) – The revision to revert this credential to.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+ <span class="p">{</span>
+   <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;abcd12345bf4f1cafe8e722d3860404&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Credential&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;credential_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;example_credential_key&quot;</span><span class="p">],</span>
+   <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{},</span>
+   <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;example_metadata_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_value&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;get&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;update&quot;</span><span class="p">:</span> <span class="kc">true</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Invalid input; the update would create conflicting
+credential keys in a mapped service.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have access to revert the provided
+credential ID.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-credentials-(id)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/credentials/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-credentials-(id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a credential object for the provided credential id.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/credentials/abcd12345bf4f1cafe8e722d3860404
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The credential ID to get.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Credential&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;credential_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;api_key&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;api_user&quot;</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;api_key&quot;</span><span class="p">:</span> <span class="s2">&quot;1234&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;api_user&quot;</span><span class="p">:</span> <span class="s2">&quot;example_user&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;example_metadata_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_value&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;get&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;update&quot;</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to get the credential for
+the provided ID.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – The provided credential ID does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="put">
+<dt id="put--v1-credentials-(id)">
+<code class="sig-name descname">PUT </code><code class="sig-name descname">/v1/credentials/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#put--v1-credentials-(id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the provided credential using the data provided in the POST body.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>PUT /v1/credentials/abcd12345bf4f1cafe8e722d3860404
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The credential ID to update.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Request JSON Object</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – The friendly name for the credential.</p></li>
+<li><p><strong>Dictionary{string</strong> – string} credential_pairs: A dictionary of
+arbitrary key/value pairs to be encrypted at rest.</p></li>
+<li><p><strong>Dictionary{string</strong> – string} metadata: A dictionary of arbitrary key/
+value pairs for custom per-credential end-user extensions. This is not
+encrypted at rest.</p></li>
+<li><p><strong>enabled</strong> (<em>boolean</em>) – Whether or not this credential is enabled.</p></li>
+<li><p><strong>documentation</strong> (<em>string</em>) – End-user provided documentation for this
+credential.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+ <span class="p">{</span>
+   <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;abcd12345bf4f1cafe8e722d3860404&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Credential&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;credential_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;example_credential_key&quot;</span><span class="p">],</span>
+   <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;example_credential_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_credential_value&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;example_metadata_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_value&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;get&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+     <span class="nt">&quot;update&quot;</span><span class="p">:</span> <span class="kc">true</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Invalid input; either the data provided was not in the
+correct format, or the update would create conflicting
+credential keys in a mapped service.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have access to update the provided
+credential ID.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-services-(id)-(old_revision)-(new_revision)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/services/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><code class="sig-name descname">/</code><span class="sig-paren">(</span><em class="sig-param">old_revision</em><span class="sig-paren">)</span><code class="sig-name descname">/</code><span class="sig-paren">(</span><em class="sig-param">new_revision</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-services-(id)-(old_revision)-(new_revision)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a diff between old_revision and new_revision for the provided
+service id.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/services/example-development/1/2
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The service ID to get.</p></li>
+<li><p><strong>old_revision</strong> (<em>int</em>) – One of the two revisions to diff against.</p></li>
+<li><p><strong>new_revision</strong> (<em>int</em>) – One of the two revisions to diff against.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="kc">false</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;credentials&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;abcd12345bf4f1cafe8e722d3860404&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;aaaa33335bf4f1cafe8e722d3860404&quot;</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;blind_credentials&quot;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-11-16T23:16:11.413299+00:00&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;added&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;removed&quot;</span><span class="p">:</span> <span class="s2">&quot;testuser@example.com&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to diff the provided
+service ID.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – The provided service ID or one of the provided
+revisions does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="put">
+<dt id="put--v1-services-(id)-(to_revision)">
+<code class="sig-name descname">PUT </code><code class="sig-name descname">/v1/services/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><code class="sig-name descname">/</code><span class="sig-paren">(</span><em class="sig-param">to_revision</em><span class="sig-paren">)</span><a class="headerlink" href="#put--v1-services-(id)-(to_revision)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revert the provided service to the provided revision.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>PUT /v1/services/example-development/1
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The service ID to revert.</p></li>
+<li><p><strong>to_revision</strong> (<em>int</em>) – The revision to revert this service to.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;abcd12345bf4f1cafe8e722d3860404&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Example Credential&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;credential_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;test_key&quot;</span><span class="p">],</span>
+  <span class="nt">&quot;credential_pairs&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;test_key&quot;</span><span class="p">:</span> <span class="s2">&quot;test_value&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;example_metadata_key&quot;</span><span class="p">:</span> <span class="s2">&quot;example_value&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;documentation&quot;</span><span class="p">:</span> <span class="s2">&quot;Example documentation&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;modified_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-12-16T23:16:11.413299+00:00&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;modified_by&quot;</span><span class="p">:</span> <span class="s2">&quot;rlane@example.com&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Invalid input; the update would create conflicting
+credential keys in the service mapping.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have access to revert the provided
+service ID.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-services-(id)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/services/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-services-(id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a service object from the provided service ID.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/services/example-development
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The service ID to get.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Query Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>metadata_only</strong> (<em>boolean</em>) – If true, only fetch metadata for this
+service, and do not respond with decrypted credential pairs in the
+credential responses.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;id&quot;: &quot;example-development&quot;,
+  &quot;revision&quot;: 1,
+  &quot;enabled&quot;: true,
+  &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+  &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+  &quot;account&quot;: null,
+  &quot;credentials&quot;: [
+    {
+      &quot;id&quot;: &quot;abcd12345bf4f1cafe8e722d3860404&quot;,
+      &quot;name&quot;: &quot;Example Credential&quot;,
+      &quot;credential_keys&quot;: [&quot;test_key&quot;],
+      &quot;credential_pairs&quot;: {
+        &quot;test_key&quot;: &quot;test_value&quot;
+      },
+      &quot;metadata&quot;: {
+        &quot;example_metadata_key&quot;: &quot;example_value&quot;
+      },
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;documentation&quot;: &quot;Example documentation&quot;,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  &quot;blind_credentials&quot;: [],
+  &quot;permissions&quot;: {
+    &quot;metadata&quot;: true,
+    &quot;get&quot;: true,
+    &quot;update&quot;: true
+  }
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to get the service ID
+provided.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="put">
+<dt id="put--v1-services-(id)">
+<code class="sig-name descname">PUT </code><code class="sig-name descname">/v1/services/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#put--v1-services-(id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or update a service to credential mapping.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>PUT /v1/services/example-development
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The service ID to create or update.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Request JSON Object</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>credentials</strong> (<em>List[string]</em>) – A list of credential IDs to map to this
+service.</p></li>
+<li><p><strong>blind_credentials</strong> (<em>List[string]</em>) – A list of blind_credential IDs to
+map to this service.</p></li>
+<li><p><strong>enabled</strong> (<em>boolean</em>) – Whether or not this service is enabled.
+(default: true)</p></li>
+<li><p><strong>account</strong> (<em>string</em>) – An AWS account to scope this service to.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;id&quot;: &quot;example-development&quot;,
+  &quot;revision&quot;: 1,
+  &quot;enabled&quot;: true,
+  &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+  &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+  &quot;account&quot;: null,
+  &quot;credentials&quot;: [
+    {
+      &quot;id&quot;: &quot;abcd12345bf4f1cafe8e722d3860404&quot;,
+      &quot;name&quot;: &quot;Example Credential&quot;,
+      &quot;credential_keys&quot;: [&quot;test_key&quot;],
+      &quot;credential_pairs&quot;: {
+        &quot;test_key&quot;: &quot;test_value&quot;
+      },
+      &quot;metadata&quot;: {
+        &quot;example_metadata_key&quot;: &quot;example_value&quot;
+      },
+      &quot;revision&quot;: 1,
+      &quot;enabled&quot;: true,
+      &quot;documentation&quot;: &quot;Example documentation&quot;,
+      &quot;modified_date&quot;: &quot;2019-12-16T23:16:11.413299+00:00&quot;,
+      &quot;modified_by&quot;: &quot;rlane@example.com&quot;,
+      &quot;permissions&quot;: {}
+    },
+    ...
+  ],
+  &quot;blind_credentials&quot;: [],
+  &quot;permissions&quot;: {}
+    &quot;metadata&quot;: True,
+    &quot;get&quot;: True,
+    &quot;update&quot;: True
+  }
+}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Invalid input; Either required fields were not provided
+or credentials being mapped would result in credential key
+conflicts.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to create or update the
+specified service ID.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="put">
+<dt id="put--v1-grants-(id)">
+<code class="sig-name descname">PUT </code><code class="sig-name descname">/v1/grants/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#put--v1-grants-(id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure grants are set for the provided service ID.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>PUT /v1/grants/example-development
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The service ID to ensure grants for.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;example-development&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;grants&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;encrypt_grant&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;decrypt_grant&quot;</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Invalid input. The service provided does not exist.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to create or update the
+specified service ID.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-grants-(id)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/grants/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-grants-(id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get grants for the provided service ID.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/grants/example-development
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The service ID to ensure grants for.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;example-development&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;grants&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;encrypt_grant&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;decrypt_grant&quot;</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Invalid input. The service provided does not exist.</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to get service metadata
+for the specified service ID.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-cas-(ca)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/cas/</code><span class="sig-paren">(</span><em class="sig-param">ca</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-cas-(ca)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the CA information for the provided ca.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/cas/example-ca
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ca</strong> (<em>str</em>) – The friendly name of the certificate authority to issue a
+certificate against.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;example-ca&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;certificate&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;certificate_chain&quot;</span><span class="p">:</span> <span class="s2">&quot;---...BEGIN...&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;tags&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;hello&quot;</span><span class="p">:</span> <span class="s2">&quot;world&quot;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have access to get the requested CA.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="acls.html" class="btn btn-neutral float-right" title="Access Controls (ACLs)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="client.html" class="btn btn-neutral float-left" title="Using the Confidant client" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019-2020, Confidant Project Authors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
