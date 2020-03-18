@@ -185,6 +185,7 @@ class CredentialArchive(CredentialBase):
         connection_cls = DDBConnection
         session_cls = DDBSession
 
+    archive_date = UTCDateTimeAttribute(default=datetime.now)
     data_type_date_index = ArchiveDataTypeDateIndex()
 
     @classmethod

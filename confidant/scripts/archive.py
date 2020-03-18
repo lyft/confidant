@@ -84,7 +84,7 @@ class ArchiveCredentials(Command):
                 _deletes,
             )
         )
-        with CredentialArchive.batch_write() as batch:
+        with Credential.batch_write() as batch:
             for delete in deletes:
                 batch.delete(delete)
 
