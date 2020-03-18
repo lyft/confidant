@@ -19,6 +19,7 @@ Confidant
   threat_model
   contributing
   data_schema
+  maintenance
   upgrade
   changelog
 
