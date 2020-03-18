@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from pynamodb.models import Model
 from pynamodb.attributes import (
@@ -8,7 +8,8 @@ from pynamodb.attributes import (
     BooleanAttribute,
     UTCDateTimeAttribute,
     BinaryAttribute,
-    JSONAttribute
+    JSONAttribute,
+    ListAttribute
 )
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
@@ -52,6 +53,11 @@ class Credential(Model):
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
 
+    # Classification info (eg: FINANCIALLY_SENSITIVE)
+    tags = ListAttribute(default=list)
+    last_decrypted_date = UTCDateTimeAttribute(null=True)
+    last_rotation_date = UTCDateTimeAttribute(null=True)
+
     def equals(self, other_cred):
         if self.name != other_cred.name:
             return False
@@ -62,6 +68,8 @@ class Credential(Model):
         if self.enabled != other_cred.enabled:
             return False
         if self.documentation != other_cred.documentation:
+            return False
+        if set(self.tags) != set(other_cred.tags):
             return False
         return True
 
@@ -93,6 +101,17 @@ class Credential(Model):
                 'added': new.documentation,
                 'removed': old.documentation
             }
+        if set(old.tags) != set(new.tags):
+            diff['tags'] = {
+                'added': list(set(new.tags) - set(old.tags)),
+                'removed': list(set(old.tags) - set(new.tags)),
+            }
+        if old.last_rotation_date != new.last_rotation_date:
+            diff['last_rotation_date'] = {
+                'added': new.last_rotation_date,
+                'removed': old.last_rotation_date
+            }
+
         diff['modified_by'] = {
             'added': new.modified_by,
             'removed': old.modified_by,
@@ -141,6 +160,40 @@ class Credential(Model):
         _credential_pairs = cipher.decrypt(self.credential_pairs)
         _credential_pairs = json.loads(_credential_pairs)
         return _credential_pairs
+
+    @property
+    def next_rotation_date(self):
+        """
+        Return when a credential needs to be rotated for security purposes.
+        """
+        # Some credentials never need to be rotated
+        if self.exempt_from_rotation:
+            return None
+
+        # If a credential has never been rotated or been decrypted,
+        # immediately rotate
+        if self.last_rotation_date is None:
+            return datetime.utcnow()
+
+        if (self.last_decrypted_date and
+                self.last_decrypted_date > self.last_rotation_date):
+            return datetime.utcnow()
+
+        days = settings.MAXIMUM_ROTATION_DAYS
+        for tag in self.tags:
+            rotation_days = settings.ROTATION_DAYS_CONFIG.get(tag)
+            if rotation_days is None:
+                continue
+            if days is None or rotation_days < days:
+                days = rotation_days
+        return self.last_rotation_date + timedelta(days=days)
+
+    @property
+    def exempt_from_rotation(self):
+        """
+        Credentials with certain tags can be exempt from rotation
+        """
+        return len(set(self.tags) & set(settings.TAGS_EXCLUDING_ROTATION)) > 0
 
     @property
     def decrypted_credential_pairs(self):
