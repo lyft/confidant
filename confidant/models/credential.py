@@ -224,6 +224,9 @@ class Credential(CredentialBase):
             modified_date=archive_credential.modified_date,
             modified_by=archive_credential.modified_by,
             documentation=archive_credential.documentation,
+            tags=archive_credential.tags,
+            last_decrypted_date=archive_credential.last_decrypted_date,
+            last_rotation_date=archive_credential.last_rotation_date,
         )
 
 
@@ -254,4 +257,7 @@ class CredentialArchive(CredentialBase):
             modified_date=credential.modified_date,
             modified_by=credential.modified_by,
             documentation=credential.documentation,
+            tags=credential.tags,
+            last_decrypted_date=credential.last_decrypted_date,
+            last_rotation_date=credential.last_rotation_date,
         )
