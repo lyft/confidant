@@ -28,6 +28,15 @@ class DataTypeDateIndex(GlobalSecondaryIndex):
     modified_date = UTCDateTimeAttribute(range_key=True)
 
 
+class ArchiveDataTypeDateIndex(GlobalSecondaryIndex):
+    class Meta:
+        projection = AllProjection()
+        read_capacity_units = 10
+        write_capacity_units = 10
+    data_type = UnicodeAttribute(hash_key=True)
+    modified_date = UTCDateTimeAttribute(range_key=True)
+
+
 class CredentialBase(Model):
     id = UnicodeAttribute(hash_key=True)
     revision = NumberAttribute()
@@ -149,6 +158,23 @@ class Credential(CredentialBase):
     def decrypted_credential_pairs(self):
         return(self._get_decrypted_credential_pairs())
 
+    @classmethod
+    def from_archive_credential(cls, archive_credential):
+        return Credential(
+            id=archive_credential.id,
+            revision=archive_credential.revision,
+            data_type=archive_credential.data_type,
+            name=archive_credential.name,
+            credential_pairs=archive_credential.credential_pairs,
+            enabled=archive_credential.enabled,
+            data_key=archive_credential.data_key,
+            cipher_version=archive_credential.cipher_version,
+            metadata=archive_credential.metadata,
+            modified_date=archive_credential.modified_date,
+            modified_by=archive_credential.modified_by,
+            documentation=archive_credential.documentation,
+        )
+
 
 class CredentialArchive(CredentialBase):
     class Meta:
@@ -158,6 +184,8 @@ class CredentialArchive(CredentialBase):
         region = settings.AWS_DEFAULT_REGION
         connection_cls = DDBConnection
         session_cls = DDBSession
+
+    data_type_date_index = ArchiveDataTypeDateIndex()
 
     @classmethod
     def from_credential(cls, credential):

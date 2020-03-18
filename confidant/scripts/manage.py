@@ -12,6 +12,7 @@ from confidant.scripts.migrate import (
     MigrateServiceSetAttribute,
 )
 from confidant.scripts.migrate_bool import MigrateBooleanAttribute
+from confidant.scripts.restore import RestoreCredentials
 
 app = create_app()
 manager = Manager(app)
@@ -40,6 +41,7 @@ manager.add_command("migrate_service_set_attribute", MigrateServiceSetAttribute)
 manager.add_command("migrate_boolean_attribute", MigrateBooleanAttribute)
 
 manager.add_command("archive_credentials", ArchiveCredentials)
+manager.add_command("restore_credentials", RestoreCredentials)
 
 
 def main():
