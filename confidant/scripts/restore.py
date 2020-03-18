@@ -1,5 +1,4 @@
 import sys
-import time
 import logging
 
 from flask_script import Command, Option
@@ -15,11 +14,35 @@ logger.setLevel(logging.INFO)
 
 
 class RestoreCredentials(Command):
+    """
+    Command to restore credentials from the permanent archive dynamodb table
+    back into the primary storage table.
+    """
 
     option_list = [
-        Option('--force', action='store_true', dest='force', default=False),
-        Option('--ids', dest='ids'),
-        Option('--all', action='store_true', dest='_all', default=False),
+        Option(
+            '--force',
+            action='store_true',
+            dest='force',
+            default=False,
+            help=('By default, this script runs in dry-run mode, this option'
+                  ' forces the run and makes the changes indicated by the'
+                  ' dry run'),
+        ),
+        Option(
+            '--ids',
+            dest='ids',
+            help=('Restore a comma separated list of credential IDs. (mutually'
+                  ' exclusive with --days)'),
+        ),
+        Option(
+            '--all',
+            action='store_true',
+            dest='_all',
+            default=False,
+            help=('Restore all credentials from the permanent archive dynamodb'
+                  ' table back into the primary store table.'),
+        ),
     ]
 
     def credential_exists(self, credential_id):

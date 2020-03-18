@@ -324,7 +324,8 @@ DYNAMODB_URL = str_env('DYNAMODB_URL')
 # The DynamoDB table to use for storage.
 # Example: mydynamodbtable
 DYNAMODB_TABLE = str_env('DYNAMODB_TABLE')
-# The DynamoDB table to use for archiving old credentials and services
+# The DynamoDB table to use for permanently archiving old credentials and
+# services.
 # Example: mydynamodbtable-archive
 DYNAMODB_TABLE_ARCHIVE = str_env('DYNAMODB_TABLE_ARCHIVE')
 # Have PynamoDB automatically generate the DynamoDB table if it doesn't exist.

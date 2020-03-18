@@ -16,11 +16,34 @@ logger.setLevel(logging.INFO)
 
 
 class ArchiveCredentials(Command):
+    """
+    Command to permanently archive credentials to an archive dynamodb table.
+    """
 
     option_list = [
-        Option('--days', dest='days', type=int),
-        Option('--force', action='store_true', dest='force', default=False),
-        Option('--ids', dest='ids'),
+        Option(
+            '--days',
+            dest='days',
+            type=int,
+            help=('Permanently archive disabled credentials last modified'
+                  ' greater than this many days (mutually exclusive with'
+                  ' --ids)'),
+        ),
+        Option(
+            '--force',
+            action='store_true',
+            dest='force',
+            default=False,
+            help=('By default, this script runs in dry-run mode, this option'
+                  ' forces the run and makes the changes indicated by the'
+                  ' dry run'),
+        ),
+        Option(
+            '--ids',
+            dest='ids',
+            help=('Archive a comma separated list of credential IDs. (mutually'
+                  ' exclusive with --days)'),
+        ),
     ]
 
     def credential_in_service(self, _id, services):
