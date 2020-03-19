@@ -591,6 +591,12 @@ TAGS_EXCLUDING_ROTATION = json.loads(str_env('TAGS_EXCLUDING_ROTATION', '[]'))
 # be rotated
 ROTATION_DAYS_CONFIG = json.loads(str_env('ROTATION_DAYS_CONFIG', '{}'))
 
+# If this is eanbled, update credential.last_decrypted_date
+# when credential.credential_pairs is sent back to the client
+# in GET /v1/credentials/<ID> to keep track of when a human
+# last saw a credential pair
+ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPT_TIME')
+
 
 # Configuration validation
 _settings_failures = False

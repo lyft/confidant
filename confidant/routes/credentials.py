@@ -4,6 +4,7 @@ import logging
 import re
 import uuid
 
+from datetime import datetime
 from flask import blueprints, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
@@ -156,6 +157,12 @@ def get_credential(id):
                      the provided ID.
     :statuscode 404: The provided credential ID does not exist.
     """
+    metadata_only = request.args.get(
+        'metadata_only',
+        default=False,
+        type=bool,
+    )
+
     if not acl_module_check(resource_type='credential',
                             action='metadata',
                             resource_id=id):
@@ -187,16 +194,22 @@ def get_credential(id):
         ),
     }
     include_credential_pairs = False
-    if acl_module_check(resource_type='credential',
-                        action='get',
-                        resource_id=id):
+    if not metadata_only and acl_module_check(resource_type='credential',
+                                              action='get',
+                                              resource_id=id):
         permissions['get'] = True
         include_credential_pairs = True
+
+        if settings.ENABLE_SAVE_LAST_DECRYPTION_TIME:
+            credential.last_decrypted_date = datetime.now()
+            credential.save()
+
         log_line = "{0} get credential {1}".format(
             authnz.get_logged_in_user(),
             id
         )
         logger.info(log_line)
+
     credential_response = CredentialResponse.from_credential(
         credential,
         include_credential_keys=True,
