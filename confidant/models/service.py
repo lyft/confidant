@@ -47,9 +47,9 @@ class Service(Model):
     modified_by = UnicodeAttribute()
 
     def equals(self, other_service):
-        if self.credentials != other_service.credentials:
+        if set(self.credentials) != set(other_service.credentials):
             return False
-        if self.blind_credentials != other_service.blind_credentials:
+        if set(self.blind_credentials) != set(other_service.blind_credentials):
             return False
         if self.account != other_service.account:
             return False
@@ -67,12 +67,12 @@ class Service(Model):
         diff = {}
         if old.enabled != new.enabled:
             diff['enabled'] = {'added': new.enabled, 'removed': old.enabled}
-        if old.credentials != new.credentials:
+        if set(old.credentials) != set(new.credentials):
             diff['credentials'] = self._diff_list(
                 old.credentials,
                 new.credentials,
             )
-        if old.blind_credentials != new.blind_credentials:
+        if set(old.blind_credentials) != set(new.blind_credentials):
             diff['blind_credentials'] = self._diff_list(
                 old.blind_credentials,
                 new.blind_credentials,

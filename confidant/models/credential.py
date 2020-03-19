@@ -29,19 +29,19 @@ class DataTypeDateIndex(GlobalSecondaryIndex):
     modified_date = UTCDateTimeAttribute(range_key=True)
 
 
-class Credential(Model):
+class ArchiveDataTypeDateIndex(GlobalSecondaryIndex):
     class Meta:
-        table_name = settings.DYNAMODB_TABLE
-        if settings.DYNAMODB_URL:
-            host = settings.DYNAMODB_URL
-        region = settings.AWS_DEFAULT_REGION
-        connection_cls = DDBConnection
-        session_cls = DDBSession
+        projection = AllProjection()
+        read_capacity_units = 10
+        write_capacity_units = 10
+    data_type = UnicodeAttribute(hash_key=True)
+    modified_date = UTCDateTimeAttribute(range_key=True)
 
+
+class CredentialBase(Model):
     id = UnicodeAttribute(hash_key=True)
     revision = NumberAttribute()
     data_type = UnicodeAttribute()
-    data_type_date_index = DataTypeDateIndex()
     name = UnicodeAttribute()
     credential_pairs = UnicodeAttribute()
     enabled = BooleanAttribute(default=True)
@@ -52,11 +52,22 @@ class Credential(Model):
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
-
     # Classification info (eg: FINANCIALLY_SENSITIVE)
     tags = ListAttribute(default=list)
     last_decrypted_date = UTCDateTimeAttribute(null=True)
     last_rotation_date = UTCDateTimeAttribute(null=True)
+
+
+class Credential(CredentialBase):
+    class Meta:
+        table_name = settings.DYNAMODB_TABLE
+        if settings.DYNAMODB_URL:
+            host = settings.DYNAMODB_URL
+        region = settings.AWS_DEFAULT_REGION
+        connection_cls = DDBConnection
+        session_cls = DDBSession
+
+    data_type_date_index = DataTypeDateIndex()
 
     def equals(self, other_cred):
         if self.name != other_cred.name:
@@ -198,3 +209,56 @@ class Credential(Model):
     @property
     def decrypted_credential_pairs(self):
         return(self._get_decrypted_credential_pairs())
+
+    @classmethod
+    def from_archive_credential(cls, archive_credential):
+        return Credential(
+            id=archive_credential.id,
+            revision=archive_credential.revision,
+            data_type=archive_credential.data_type,
+            name=archive_credential.name,
+            credential_pairs=archive_credential.credential_pairs,
+            enabled=archive_credential.enabled,
+            data_key=archive_credential.data_key,
+            cipher_version=archive_credential.cipher_version,
+            metadata=archive_credential.metadata,
+            modified_date=archive_credential.modified_date,
+            modified_by=archive_credential.modified_by,
+            documentation=archive_credential.documentation,
+            tags=archive_credential.tags,
+            last_decrypted_date=archive_credential.last_decrypted_date,
+            last_rotation_date=archive_credential.last_rotation_date,
+        )
+
+
+class CredentialArchive(CredentialBase):
+    class Meta:
+        table_name = settings.DYNAMODB_TABLE_ARCHIVE
+        if settings.DYNAMODB_URL:
+            host = settings.DYNAMODB_URL
+        region = settings.AWS_DEFAULT_REGION
+        connection_cls = DDBConnection
+        session_cls = DDBSession
+
+    archive_date = UTCDateTimeAttribute(default=datetime.now)
+    data_type_date_index = ArchiveDataTypeDateIndex()
+
+    @classmethod
+    def from_credential(cls, credential):
+        return CredentialArchive(
+            id=credential.id,
+            revision=credential.revision,
+            data_type=credential.data_type,
+            name=credential.name,
+            credential_pairs=credential.credential_pairs,
+            enabled=credential.enabled,
+            data_key=credential.data_key,
+            cipher_version=credential.cipher_version,
+            metadata=credential.metadata,
+            modified_date=credential.modified_date,
+            modified_by=credential.modified_by,
+            documentation=credential.documentation,
+            tags=credential.tags,
+            last_decrypted_date=credential.last_decrypted_date,
+            last_rotation_date=credential.last_rotation_date,
+        )

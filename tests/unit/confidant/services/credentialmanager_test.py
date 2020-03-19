@@ -1,7 +1,22 @@
 from __future__ import absolute_import
 
+from confidant.models.credential import Credential
 from confidant.services import credentialmanager
 from pynamodb.exceptions import DoesNotExist
+
+
+def test_get_revision_ids_for_credential():
+    credential = Credential(
+        id='1234',
+        revision=3,
+        name='test',
+        enabled=True,
+    )
+    assert credentialmanager.get_revision_ids_for_credential(credential) == [
+        '1234-1',
+        '1234-2',
+        '1234-3',
+    ]
 
 
 def test_get_latest_blind_credential_revision(mocker):
