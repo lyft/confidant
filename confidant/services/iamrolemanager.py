@@ -5,6 +5,7 @@ import random
 import confidant.clients
 from confidant import settings
 
+logger = logging.getLogger(__name__)
 ROLES = []
 
 
@@ -14,10 +15,10 @@ def refresh_cache():
     if settings.BACKGROUND_CACHE_IAM_ROLE_REFRESH_RATE < 60:
         refresh_rate = 60
     try:
-        logging.info('Refreshing IAM roles cache.')
+        logger.info('Refreshing IAM roles cache.')
         ROLES = _get_iam_roles()
     except Exception:
-        logging.exception(
+        logger.exception(
             'Failed to update IAM roles cache.',
             exc_info=True
         )

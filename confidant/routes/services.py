@@ -23,6 +23,7 @@ from confidant.services import (
 from confidant.utils import maintenance, misc
 from confidant.utils.dynamodb import decode_last_evaluated_key
 
+logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('services', __name__)
 
 acl_module_check = misc.load_module(settings.ACL_MODULE)
@@ -226,7 +227,7 @@ def get_service(id):
         error_msg = {'error': msg, 'reference': id}
         return jsonify(error_msg), 403
 
-    logging.info(
+    logger.info(
         'get_service called on id={} by user={} metadata_only={}'.format(
             id,
             logged_in_user,
@@ -236,7 +237,7 @@ def get_service(id):
     try:
         service = Service.get(id)
         if not authnz.service_in_account(service.account):
-            logging.warning(
+            logger.warning(
                 'Authz failed for service {0} (wrong account).'.format(id)
             )
             msg = 'Authenticated user is not authorized.'
@@ -246,11 +247,11 @@ def get_service(id):
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
         return jsonify({}), 404
-    logging.debug('Authz succeeded for service {0}.'.format(id))
+    logger.debug('Authz succeeded for service {0}.'.format(id))
     try:
         credentials = credentialmanager.get_credentials(service.credentials)
     except KeyError:
-        logging.exception('KeyError occurred in getting credentials')
+        logger.exception('KeyError occurred in getting credentials')
         return jsonify({'error': 'Decryption error.'}), 500
     blind_credentials = credentialmanager.get_blind_credentials(
         service.blind_credentials,
@@ -343,7 +344,7 @@ def get_archive_service_revisions(id):
     try:
         service = Service.get(id)
     except DoesNotExist:
-        logging.warning(
+        logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
@@ -423,7 +424,7 @@ def get_archive_service_list():
         try:
             page = decode_last_evaluated_key(page)
         except Exception:
-            logging.exception('Failed to parse provided page')
+            logger.exception('Failed to parse provided page')
             return jsonify({'error': 'Failed to parse page'}), 400
     results = Service.data_type_date_index.query(
         'archive-service',
@@ -581,7 +582,7 @@ def map_service_credentials(id):
             keymanager.ensure_grants(id)
         except keymanager.ServiceCreateGrantError:
             msg = 'Failed to add grants for {0}.'.format(id)
-            logging.error(msg)
+            logger.error(msg)
     credentials = credentialmanager.get_credentials(data.get('credentials'))
     blind_credentials = credentialmanager.get_blind_credentials(
         data.get('blind_credentials'),
@@ -602,7 +603,7 @@ def map_service_credentials(id):
             modified_by=authnz.get_logged_in_user()
         ).save(id__null=True)
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify({'error': 'Failed to add service to archive.'}), 500
 
     try:
@@ -618,7 +619,7 @@ def map_service_credentials(id):
         )
         service.save()
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify({'error': 'Failed to update active service.'}), 500
     servicemanager.send_service_mapping_graphite_event(service, _service)
     webhook.send_event('service_update', [service.id], service.credentials)
@@ -704,7 +705,7 @@ def revert_service_to_revision(id, to_revision):
     try:
         current_service = Service.get(id)
     except DoesNotExist:
-        logging.warning(
+        logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
@@ -718,7 +719,7 @@ def revert_service_to_revision(id, to_revision):
     try:
         revert_service = Service.get('{}-{}'.format(id, to_revision))
     except DoesNotExist:
-        logging.warning(
+        logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
@@ -763,7 +764,7 @@ def revert_service_to_revision(id, to_revision):
             modified_by=authnz.get_logged_in_user()
         ).save(id__null=True)
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify({'error': 'Failed to add service to archive.'}), 500
 
     try:
@@ -779,7 +780,7 @@ def revert_service_to_revision(id, to_revision):
         )
         service.save()
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify({'error': 'Failed to update active service.'}), 500
     servicemanager.send_service_mapping_graphite_event(service, current_service)
     webhook.send_event(
@@ -879,7 +880,7 @@ def diff_service(id, old_revision, new_revision):
     try:
         new_service = Service.get('{}-{}'.format(id, new_revision))
     except DoesNotExist:
-        logging.warning(
+        logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
@@ -956,7 +957,7 @@ def ensure_grants(id):
         keymanager.ensure_grants(id)
     except keymanager.ServiceCreateGrantError:
         msg = 'Failed to add grants for service.'
-        logging.error(msg)
+        logger.error(msg)
         return jsonify({'error': msg}), 400
     try:
         grants = keymanager.grants_exist(id)

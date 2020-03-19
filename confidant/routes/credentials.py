@@ -28,7 +28,7 @@ from confidant.services.ciphermanager import CipherManager
 from confidant.utils import maintenance, misc
 from confidant.utils.dynamodb import decode_last_evaluated_key
 
-
+logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('credentials', __name__)
 
 acl_module_check = misc.load_module(settings.ACL_MODULE)
@@ -169,7 +169,7 @@ def get_credential(id):
     try:
         credential = Credential.get(id)
     except DoesNotExist:
-        logging.warning(
+        logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
@@ -196,7 +196,7 @@ def get_credential(id):
             authnz.get_logged_in_user(),
             id
         )
-        logging.info(log_line)
+        logger.info(log_line)
     credential_response = CredentialResponse.from_credential(
         credential,
         include_credential_keys=True,
@@ -300,7 +300,7 @@ def diff_credential(id, old_revision, new_revision):
     try:
         new_credential = Credential.get('{}-{}'.format(id, new_revision))
     except DoesNotExist:
-        logging.warning(
+        logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
@@ -377,7 +377,7 @@ def get_archive_credential_revisions(id):
     try:
         cred = Credential.get(id)
     except DoesNotExist:
-        logging.warning(
+        logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
@@ -460,7 +460,7 @@ def get_archive_credential_list():
         try:
             page = decode_last_evaluated_key(page)
         except Exception:
-            logging.exception('Failed to parse provided page')
+            logger.exception('Failed to parse provided page')
             return jsonify({'error': 'Failed to parse page'}), 400
     results = Credential.data_type_date_index.query(
         'archive-credential',
@@ -811,7 +811,7 @@ def update_credential(id):
             documentation=update['documentation']
         ).save(id__null=True)
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify({'error': 'Failed to add credential to archive.'}), 500
     try:
         cred = Credential(
@@ -829,7 +829,7 @@ def update_credential(id):
         )
         cred.save()
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify({'error': 'Failed to update active credential.'}), 500
     if services:
         service_names = [x.id for x in services]
@@ -931,7 +931,7 @@ def revert_credential_to_revision(id, to_revision):
     try:
         revert_credential = Credential.get('{}-{}'.format(id, to_revision))
     except DoesNotExist:
-        logging.warning(
+        logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
@@ -980,7 +980,7 @@ def revert_credential_to_revision(id, to_revision):
             documentation=revert_credential.documentation,
         ).save(id__null=True)
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify({'error': 'Failed to add credential to archive.'}), 500
     try:
         cred = Credential(
@@ -998,7 +998,7 @@ def revert_credential_to_revision(id, to_revision):
         )
         cred.save()
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify({'error': 'Failed to update active credential.'}), 500
     if services:
         service_names = [x.id for x in services]

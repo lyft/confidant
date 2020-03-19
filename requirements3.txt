@@ -8,6 +8,7 @@ asn1crypto==0.24.0        # via cryptography
 atomicwrites==1.3.0       # via pytest
 attrs==19.3.0             # via pytest, toastedmarshmallow
 authomatic==1.0.0
+blinker==1.4
 boto3==1.9.227
 botocore==1.12.227
 certifi==2019.6.16        # via requests
@@ -54,6 +55,7 @@ pytest-lazy-fixture==0.6.1
 pytest-mock==1.11.2
 pytest==4.6.9
 python-dateutil==2.8.0    # via botocore, pynamodb
+python-json-logger==0.1.11
 python3-saml==1.9.0
 pyyaml==5.1.2
 redis==2.10.3

@@ -4,6 +4,8 @@ from os import getenv
 
 from confidant.encrypted_settings import EncryptedSettings
 
+logger = logging.getLogger(__name__)
+
 
 class SettingsError(Exception):
     pass
@@ -593,7 +595,7 @@ ROTATION_DAYS_CONFIG = json.loads(str_env('ROTATION_DAYS_CONFIG', '{}'))
 # Configuration validation
 _settings_failures = False
 if len(set(SCOPED_AUTH_KEYS.values())) != len(SCOPED_AUTH_KEYS.values()):
-    logging.error('SCOPED_AUTH_KEYS values are not unique.')
+    logger.error('SCOPED_AUTH_KEYS values are not unique.')
     _settings_failures = True
 
 if _settings_failures:

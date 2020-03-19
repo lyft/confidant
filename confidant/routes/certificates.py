@@ -15,6 +15,7 @@ from confidant.schema.certificates import (
 )
 from confidant.utils import misc
 
+logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('certificates', __name__)
 
 acl_module_check = misc.load_module(settings.ACL_MODULE)
@@ -91,7 +92,7 @@ def get_certificate(ca, cn):
         error_msg = {'error': msg, 'reference': cn}
         return jsonify(error_msg), 403
 
-    logging.info(
+    logger.info(
         'get_certificate called on id={} for ca={} by user={}'.format(
             cn,
             ca,
@@ -186,7 +187,7 @@ def get_certificate_from_csr(ca):
     try:
         csr = ca_object.decode_csr(data['csr'])
     except Exception:
-        logging.exception('Failed to decode PEM csr')
+        logger.exception('Failed to decode PEM csr')
         return jsonify(
             {'error': 'csr could not be decoded'},
         ), 400
@@ -214,7 +215,7 @@ def get_certificate_from_csr(ca):
         error_msg = {'error': msg, 'reference': cn}
         return jsonify(error_msg), 403
 
-    logging.info(
+    logger.info(
         'get_certificate called on id={} for ca={} by user={}'.format(
             cn,
             ca,
@@ -283,7 +284,7 @@ def list_cas():
 
     cas = certificatemanager.list_cas()
 
-    logging.info('list_cas called by user={}'.format(logged_in_user))
+    logger.info('list_cas called by user={}'.format(logged_in_user))
 
     cas_response = CertificateAuthoritiesResponse.from_cas(cas)
     return certificate_authorities_response_schema.dumps(cas_response)
@@ -346,7 +347,7 @@ def get_ca(ca):
         error_msg = {'error': msg, 'reference': ca}
         return jsonify(error_msg), 403
 
-    logging.info(
+    logger.info(
         'get_ca called on id={} by user={}'.format(
             ca,
             logged_in_user,

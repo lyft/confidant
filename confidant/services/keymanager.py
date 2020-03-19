@@ -9,6 +9,7 @@ from confidant import settings
 from confidant.utils import stats
 from confidant.lib import cryptolib
 
+logger = logging.getLogger(__name__)
 config = botocore.config.Config(
     connect_timeout=settings.KMS_CONNECTION_TIMEOUT,
     read_timeout=settings.KMS_READ_TIMEOUT,
@@ -40,9 +41,11 @@ def create_datakey(encryption_context):
     '''
     # Disabled encryption is dangerous, so we don't use falsiness here.
     if settings.USE_ENCRYPTION is False:
-        logging.warning('Creating a mock datakey in keymanager.create_datakey.'
-                        ' If you are not running in a development or test'
-                        ' environment, this should not be happening!')
+        logger.warning(
+            'Creating a mock datakey in keymanager.create_datakey. If you are'
+            ' not running in a development or test environment, this should not'
+            ' be happening!'
+        )
         return cryptolib.create_mock_datakey()
     # underlying lib does generate random and encrypt, so increment by 2
     stats.incr('at_rest_action', 2)
@@ -59,10 +62,11 @@ def decrypt_datakey(data_key, encryption_context=None):
     '''
     # Disabled encryption is dangerous, so we don't use falsiness here.
     if settings.USE_ENCRYPTION is False:
-        logging.warning('Decrypting a mock data key in'
-                        ' keymanager.decrypt_datakey. If you are not running'
-                        ' in a development or test environment, this should'
-                        ' not be happening!')
+        logger.warning(
+            'Decrypting a mock data key in keymanager.decrypt_datakey. If you'
+            ' are not running in a development or test environment, this should'
+            ' not be happening!'
+        )
         return cryptolib.decrypt_mock_datakey(data_key)
     sha = hashlib.sha256(data_key).hexdigest()
     if sha not in DATAKEYS:
@@ -114,7 +118,7 @@ def ensure_grants(service_name):
         grants = get_grants()
         _ensure_grants(role, grants)
     except ClientError:
-        logging.exception(
+        logger.exception(
             'Failed to ensure grants for {0}.'.format(service_name)
         )
         raise ServiceCreateGrantError()
@@ -133,7 +137,7 @@ def grants_exist(service_name):
         grants = get_grants()
         encrypt_grant, decrypt_grant = _grants_exist(role, grants)
     except ClientError:
-        logging.exception('Failed to get grants for {0}.'.format(service_name))
+        logger.exception('Failed to get grants for {0}.'.format(service_name))
         raise ServiceGetGrantError()
     return {
         'encrypt_grant': encrypt_grant,
@@ -186,7 +190,7 @@ def _ensure_grants(role, grants):
     }
     encrypt_grant, decrypt_grant = _grants_exist(role, grants)
     if not encrypt_grant:
-        logging.info('Creating encrypt grant for {0}'.format(role.arn))
+        logger.info('Creating encrypt grant for {0}'.format(role.arn))
         auth_kms_client.create_grant(
             KeyId=get_key_id(settings.AUTH_KEY),
             GranteePrincipal=role.arn,
@@ -194,7 +198,7 @@ def _ensure_grants(role, grants):
             Constraints=encrypt_constraint
         )
     if not decrypt_grant:
-        logging.info('Creating decrypt grant for {0}'.format(role.arn))
+        logger.info('Creating decrypt grant for {0}'.format(role.arn))
         auth_kms_client.create_grant(
             KeyId=get_key_id(settings.AUTH_KEY),
             GranteePrincipal=role.arn,

@@ -4,6 +4,8 @@ import logging
 
 from confidant import settings
 
+logger = logging.getLogger(__name__)
+
 
 def send_event(services, msg):
     try:
@@ -29,6 +31,6 @@ def send_event(services, msg):
         )
         if response.status_code != 200:
             msg = 'Post to graphite returned non-2000 status ({0}).'
-            logging.warning(msg.format(response.status_code))
+            logger.warning(msg.format(response.status_code))
     except Exception as e:
-        logging.warning('Failed to post graphite event. {0}'.format(e))
+        logger.warning('Failed to post graphite event. {0}'.format(e))
