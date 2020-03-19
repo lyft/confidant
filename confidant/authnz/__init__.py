@@ -168,8 +168,11 @@ def require_auth(f):
                         kms_auth_data['username'],
                         kms_auth_data['token']
                     )
-                logger.debug('Auth request had the following token_data:'
-                              ' {0}'.format(token_data))
+                logger.debug(
+                    'Auth request had the following token_data: {0}'.format(
+                        token_data
+                    )
+                )
                 msg = 'Authenticated {0} with user_type {1} via kms auth'
                 msg = msg.format(_from, _user_type)
                 logger.debug(msg)
