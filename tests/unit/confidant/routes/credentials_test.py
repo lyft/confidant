@@ -96,7 +96,7 @@ def test_get_credential(mocker, credential):
 
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch('confidant.settings.ENABLE_SAVE_LAST_DECRYPTION_TIME', True)
-    mock_save = mocker.patch.object(Credential, 'save', return_value=None)
+    mocker.patch.object(Credential, 'save', return_value=None)
     mocker.patch(
         'confidant.routes.credentials.authnz.get_logged_in_user',
         return_value='test@example.com',
@@ -159,6 +159,7 @@ def test_get_credential(mocker, credential):
 
     # Make sure credential is saved when ENABLE_SAVE_LAST_DECRYPTION_TIME=True
     # and metadata_only=False
+    mock_save = mocker.patch.object(Credential, 'save', return_value=None)
     credential.id = '9012'
     ret = app.test_client().get(
         '/v1/credentials/3456?metadata_only=false',
@@ -167,7 +168,7 @@ def test_get_credential(mocker, credential):
     json_data = json.loads(ret.data)
     assert ret.status_code == 200
     assert json_data['permissions']['update'] is True
-    assert mock_save.call_count == 1
+    assert mock_save.call_count == 2  # Once for credential, once for archive
 
     # Make sure credential is NOT saved when
     # ENABLE_SAVE_LAST_DECRYPTION_TIME=True and metadata_only=True
@@ -180,6 +181,18 @@ def test_get_credential(mocker, credential):
     assert ret.status_code == 200
     assert json_data['permissions']['update'] is True
     assert mock_save.call_count == 0
+
+    # Archive credential not found
+    mocker.patch(
+        'confidant.routes.credentials.Credential.get',
+        side_effect=[credential, DoesNotExist()]
+    )
+    ret = app.test_client().get(
+        '/v1/credentials/3456?metadata_only=false',
+        follow_redirects=False
+    )
+    json_data = json.loads(ret.data)
+    assert ret.status_code == 404
 
     mocker.patch(
         'confidant.routes.credentials.Credential.get',

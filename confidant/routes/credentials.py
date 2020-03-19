@@ -6,6 +6,7 @@ import uuid
 
 from datetime import datetime
 from flask import blueprints, jsonify, request
+from flask_restful import inputs
 from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, clients, settings
@@ -160,7 +161,7 @@ def get_credential(id):
     metadata_only = request.args.get(
         'metadata_only',
         default=False,
-        type=bool,
+        type=inputs.boolean,
     )
 
     if not acl_module_check(resource_type='credential',
@@ -201,8 +202,23 @@ def get_credential(id):
         include_credential_pairs = True
 
         if settings.ENABLE_SAVE_LAST_DECRYPTION_TIME:
-            credential.last_decrypted_date = datetime.now()
+            now = datetime.now()
+            credential.last_decrypted_date = now
             credential.save()
+            # Also try to save the archived credential if ID
+            # corresponds to a 'credential'
+            if credential.data_type == 'credential':
+                try:
+                    archived_credential = Credential.get(
+                        '{}-{}'.format(id, credential.revision)
+                    )
+                except DoesNotExist:
+                    logger.warning('Archived credential {}-{} not found'.format(
+                            id, credential.revision)
+                    )
+                    return jsonify({}), 404
+                archived_credential.last_decrypted_date = now
+                archived_credential.save()
 
         log_line = "{0} get credential {1}".format(
             authnz.get_logged_in_user(),
