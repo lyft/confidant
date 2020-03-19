@@ -1,5 +1,19 @@
 # Changelog
 
+## 6.4.0
+
+* This release adds support for 2 small features:
+
+  * Add a `metadata_only` param to `GET /v1/credentials/<ID>`. For instance, if the request is
+    `GET /v1/credentials/123?metadata_only=true`, the response will not contain the credential pairs.
+    `metadata_only` defaults to `false` so that it is backwards compatible. The purpose of this
+    is to give users finer controls when deciding whether to send back `credential_pairs`.
+  * Automatically update the `last_decrypted_date` on a credential when the `credential_pairs` are
+    sent back to the client. Sending `credential_pairs` to the client implies that a credential has been
+    decrypted and is likely to have been read by a human. This is also an OPT IN change.
+    An environment variable `ENABLE_SAVE_LAST_DECRYPTION_TIME` must be set to true in order to
+    update `last_decrypted_date`.
+
 ## 6.3.0
 
 * This release adds support for keeping track of when credentials should be rotated.

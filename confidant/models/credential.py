@@ -184,11 +184,11 @@ class Credential(CredentialBase):
         # If a credential has never been rotated or been decrypted,
         # immediately rotate
         if self.last_rotation_date is None:
-            return datetime.utcnow()
+            return datetime.now()
 
         if (self.last_decrypted_date and
                 self.last_decrypted_date > self.last_rotation_date):
-            return datetime.utcnow()
+            return self.last_decrypted_date
 
         days = settings.MAXIMUM_ROTATION_DAYS
         for tag in self.tags:
