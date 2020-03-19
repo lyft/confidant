@@ -7,6 +7,8 @@ from flask_script import Command, Option
 from confidant import settings
 from confidant.models.credential import Credential, CredentialArchive
 from confidant.models.service import Service
+from confidant.services import credentialmanager
+from confidant.utils import stats
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +70,7 @@ class ArchiveCredentials(Command):
         with CredentialArchive.batch_write() as batch:
             for save in saves:
                 batch.save(save)
+        stats.incr('archive.save.success')
 
     def delete(self, deletes, force=False):
         _deletes = ', '.join([delete.id for delete in deletes])
@@ -86,11 +89,10 @@ class ArchiveCredentials(Command):
         with Credential.batch_write() as batch:
             for delete in deletes:
                 batch.delete(delete)
+        stats.incr('archive.delete.success')
 
     def archive(self, credentials, force):
-        services = [
-            service for service in Service.data_type_date_index.query('service')
-        ]
+        services = list(Service.data_type_date_index.query('service'))
         for credential in credentials:
             if self.credential_in_service(credential.id, services):
                 msg = ('Skipping archival of disabled credential {}, as it'
@@ -105,11 +107,9 @@ class ArchiveCredentials(Command):
             )
             saves.append(archive_credential)
             # fetch and save every revision
-            _range = range(1, credential.revision + 1)
-            ids = []
-            for i in _range:
-                ids.append("{0}-{1}".format(credential.id, i))
-            revisions = Credential.batch_get(ids)
+            revisions = Credential.batch_get(
+                credentialmanager.get_revision_ids_for_credential(credential)
+            )
             for revision in revisions:
                 archive_revision = CredentialArchive.from_credential(
                     revision,
@@ -125,6 +125,7 @@ class ArchiveCredentials(Command):
                         credential.id
                     )
                 )
+                stats.incr('archive.save.failure')
                 continue
             try:
                 self.delete(deletes, force=force)
@@ -132,6 +133,7 @@ class ArchiveCredentials(Command):
                 logger.exception(
                     'Failed to batch delete {}'.format(credential.id)
                 )
+                stats.incr('archive.delete.failure')
 
     def run(self, days, force, ids):
         if not settings.DYNAMODB_TABLE_ARCHIVE:

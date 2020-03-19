@@ -66,6 +66,17 @@ def lowercase_credential_pairs(credential_pairs):
     return {i.lower(): j for i, j in credential_pairs.items()}
 
 
+def get_revision_ids_for_credential(credential):
+    """
+    For the given credential, return a list of archive credential IDs.
+    """
+    _range = range(1, credential.revision + 1)
+    ids = []
+    for i in _range:
+        ids.append("{0}-{1}".format(credential.id, i))
+    return ids
+
+
 def get_latest_credential_revision(id, revision):
     i = revision + 1
     while True:

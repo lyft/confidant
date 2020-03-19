@@ -6,6 +6,7 @@ from pynamodb.exceptions import DoesNotExist
 
 from confidant import settings
 from confidant.models.credential import Credential, CredentialArchive
+from confidant.utils import stats
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +81,7 @@ class RestoreCredentials(Command):
         with Credential.batch_write() as batch:
             for save in _saves:
                 batch.save(save)
+        stats.incr('restore.save.success')
 
     def restore(self, archive_credentials, force):
         for archive_credential in archive_credentials:
@@ -108,6 +110,7 @@ class RestoreCredentials(Command):
                         credential.id
                     )
                 )
+                stats.incr('restore.save.failure')
                 continue
 
     def run(self, force, ids, _all):

@@ -384,12 +384,10 @@ def get_archive_credential_revisions(id):
     if (cred.data_type != 'credential' and
             cred.data_type != 'archive-credential'):
         return jsonify({}), 404
-    _range = range(1, cred.revision + 1)
-    ids = []
-    for i in _range:
-        ids.append("{0}-{1}".format(id, i))
     revisions_response = RevisionsResponse.from_credentials(
-        Credential.batch_get(ids)
+        Credential.batch_get(
+            credentialmanager.get_revision_ids_for_credential(cred)
+        )
     )
     return revisions_response_schema.dumps(revisions_response)
 
