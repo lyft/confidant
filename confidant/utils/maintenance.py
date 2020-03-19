@@ -7,6 +7,8 @@ from flask import make_response
 
 from confidant import settings
 
+logger = logging.getLogger(__name__)
+
 
 def in_maintenance_mode():
     # We're in maintenance mode if the config option is explicitly set, or if
@@ -24,7 +26,7 @@ def check_maintenance_mode(f):
         # Return an error if this function is called when the app is in
         # maintenance mode.
         if in_maintenance_mode():
-            logging.warning('Rejecting request due to maintenance mode.')
+            logger.warning('Rejecting request due to maintenance mode.')
             resp = make_response(
                 json.dumps({'error': 'Server in maintenance mode.'}),
                 403

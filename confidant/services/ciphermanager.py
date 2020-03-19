@@ -6,6 +6,8 @@ from cryptography.fernet import Fernet
 
 from confidant import settings
 
+logger = logging.getLogger(__name__)
+
 
 class CipherManager:
     '''
@@ -22,7 +24,7 @@ class CipherManager:
     def encrypt(self, raw):
         # Disabled encryption is dangerous, so we don't use falsiness here.
         if settings.USE_ENCRYPTION is False:
-            logging.warning('Not using encryption in CipherManager.encrypt'
+            logger.warning('Not using encryption in CipherManager.encrypt'
                             ' If you are not running in a development or test'
                             ' environment, this should not be happening!')
             return 'DANGER_NOT_ENCRYPTED_{0}'.format(
@@ -37,7 +39,7 @@ class CipherManager:
     def decrypt(self, enc):
         # Disabled encryption is dangerous, so we don't use falsiness here.
         if settings.USE_ENCRYPTION is False:
-            logging.warning('Not using encryption in CipherManager.decrypt'
+            logger.warning('Not using encryption in CipherManager.decrypt'
                             ' If you are not running in a development or test'
                             ' environment, this should not be happening!')
             return base64.b64decode(re.sub(r'^DANGER_NOT_ENCRYPTED_', '', enc))

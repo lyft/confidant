@@ -5,6 +5,7 @@ from flask import blueprints, jsonify, request, session
 
 from confidant import authnz, settings
 
+logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('saml', __name__)
 
 
@@ -56,7 +57,7 @@ def dump_session_info():
 
     if not settings.SAML_DEBUG:
         msg = "Cannot display /debug, not in DEBUG mode."
-        logging.info(msg)
+        logger.info(msg)
         return flask.make_response(msg, 403)
 
     return jsonify(session=session.items(), headers=request.headers.items())

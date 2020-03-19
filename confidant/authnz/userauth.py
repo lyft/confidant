@@ -24,6 +24,8 @@ from confidant.lib import cryptolib
 from confidant.utils.misc import dict_deep_update
 from confidant.authnz import errors
 
+logger = logging.getLogger(__name__)
+
 
 def init_user_auth_class(*args, **kwargs):
     if not settings.USE_AUTH:
@@ -44,7 +46,7 @@ def init_user_auth_class(*args, **kwargs):
                 'Unknown USER_AUTH_MODULE: {!r}'.format(module_name))
 
     auth = module(*args, **kwargs)
-    logging.info('Initializing {} user authenticator'.format(auth.auth_type))
+    logger.info('Initializing {} user authenticator'.format(auth.auth_type))
     return auth
 
 
@@ -63,7 +65,7 @@ class AbstractUserAuthenticator(object):
         if 'expiration' in session:
             # Paranoia case
             if session.get('max_expiration') is None:
-                logging.warning(
+                logger.warning(
                     'max_expiration unset on session, when expiration is set.'
                 )
                 return True
@@ -168,13 +170,13 @@ class AbstractUserAuthenticator(object):
         clear_session(), then redirect to the desired post-logout page
         (e.g. with redirect_to_goodbye()).
         """
-        logging.info('Using default log_out() method')
+        logger.info('Using default log_out() method')
         self.clear_session()
 
         return self.redirect_to_goodbye()
 
     def clear_session(self):
-        logging.info('Clearing flask session')
+        logger.info('Clearing flask session')
         session['user'] = {}
         session.clear()
 
@@ -378,7 +380,7 @@ class GoogleOauthAuthenticator(AbstractUserAuthenticator):
         if result:
             if result.error:
                 msg = 'Google auth failed with error: {0}'
-                logging.error(msg.format(result.error))
+                logger.error(msg.format(result.error))
                 return abort(403)
 
             # successful login
@@ -522,10 +524,10 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         # if SAML_RAW_JSON_SETTINGS is set, merge the settings in, doing one
         # level of deep merging.
         if settings.SAML_RAW_JSON_SETTINGS:
-            logging.debug('overriding SAML settings from JSON')
+            logger.debug('overriding SAML settings from JSON')
             dict_deep_update(data, settings.SAML_RAW_JSON_SETTINGS)
 
-        logging.debug('Rendered SAML settings: {!r}'.format(data))
+        logger.debug('Rendered SAML settings: {!r}'.format(data))
 
         return data
 
@@ -553,12 +555,12 @@ class SamlAuthenticator(AbstractUserAuthenticator):
 
         auth = self._saml_auth()
 
-        logging.debug('Processing SAML response')
+        logger.debug('Processing SAML response')
 
         try:
             request_id = session['saml_authn_request_id']
         except KeyError:
-            logging.warning('No saml_authn_request_id in session')
+            logger.warning('No saml_authn_request_id in session')
             resp = jsonify(errors=['invalid_response'],
                            message='SAML request failed',
                            reason=('No AuthNRequest ID from SP found '
@@ -574,16 +576,16 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         session.pop('saml_authn_request_id', None)
 
         if not auth.is_authenticated():
-            logging.warning('auth.is_authenticated() => False')
+            logger.warning('auth.is_authenticated() => False')
             resp = jsonify(error='Not Authenticated')
             resp.status_code = 401
             return resp
 
         nameid = auth.get_nameid()
-        logging.info('SAML user authenticated: {!r}'.format(nameid))
+        logger.info('SAML user authenticated: {!r}'.format(nameid))
 
         attributes = auth.get_attributes()
-        logging.info('SAML attributes: {!r}'.format(attributes))
+        logger.info('SAML attributes: {!r}'.format(attributes))
 
         # normalize attributes by flattening single-item arrays
         for key, val in attributes.items():
@@ -604,7 +606,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         # use first_name, last_name if present
         for key, val in attributes.items():
             if not getattr(key, 'lower', None):
-                logging.error('Bad list attr {!r}'.format({key: val}))
+                logger.error('Bad list attr {!r}'.format({key: val}))
             if key.lower() in ['firstname', 'first_name']:
                 kwargs['first_name'] = val
             if key.lower() in ['lastname', 'last_name']:
@@ -624,7 +626,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
                 redirect_url.endswith('/login')):
             redirect_url = default_redirect
 
-        logging.debug("Redirecting to {0}".format(redirect_url))
+        logger.debug("Redirecting to {0}".format(redirect_url))
         resp = flask.redirect(redirect_url)
         self.set_csrf_token(resp)
         return resp
@@ -634,14 +636,14 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         Initiate SAML SLO redirect.
         """
 
-        logging.info('Initiating SAML logout request')
+        logger.info('Initiating SAML logout request')
 
         try:
             current_nameid = self._current_user_nameid()
             current_session_id = self._current_saml_session_id()
         except errors.UserUnknownError:
             # must be already logged out
-            logging.warning('No SAML data in session. Cannot SLO log out')
+            logger.warning('No SAML data in session. Cannot SLO log out')
             self.clear_session()
             return self.redirect_to_goodbye()
 
@@ -649,7 +651,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
 
         # check for SLO support
         if not auth.get_slo_url():
-            logging.warning('No SingleLogOut endpoint defined for IdP')
+            logger.warning('No SingleLogOut endpoint defined for IdP')
             self.clear_session()
             return self.redirect_to_goodbye()
 
@@ -670,7 +672,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         On failure, renders error JSON. On success, redirects to /goodbye.
         """
 
-        logging.debug('Processing SAML logout response')
+        logger.debug('Processing SAML logout response')
 
         auth = self._saml_auth()
         errors = []
@@ -683,7 +685,7 @@ class SamlAuthenticator(AbstractUserAuthenticator):
 
             return self._render_saml_errors_json(auth)
 
-        logging.info('SAML SLO request was successful')
+        logger.info('SAML SLO request was successful')
         self.clear_session()
 
         return self.redirect_to_goodbye()
@@ -780,14 +782,14 @@ class SamlAuthenticator(AbstractUserAuthenticator):
         :rtype: flask.Response
         """
 
-        logging.warn('Handling SAML errors')
+        logger.warning('Handling SAML errors')
         data = {
             'message': 'SAML request failed',
             'errors': auth.get_errors(),
             'reason': auth.get_last_error_reason(),
             'request_id': auth.get_last_request_id(),
         }
-        logging.warn('Errors: {0}'.format(data))
+        logger.warning('Errors: {0}'.format(data))
 
         resp = jsonify(**data)
         resp.status_code = 500

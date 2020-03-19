@@ -18,6 +18,7 @@ from confidant.utils.dynamodb import (
 )
 from confidant.models.blind_credential import BlindCredential
 
+logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('blind_credentials', __name__)
 
 acl_module_check = misc.load_module(settings.ACL_MODULE)
@@ -46,7 +47,7 @@ def get_blind_credential(id):
     try:
         cred = BlindCredential.get(id)
     except DoesNotExist:
-        logging.warning(
+        logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
@@ -79,7 +80,7 @@ def get_archive_blind_credential_revisions(id):
         return jsonify({}), 404
     if (cred.data_type != 'blind-credential' and
             cred.data_type != 'archive-blind-credential'):
-        logging.warning(
+        logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
@@ -126,7 +127,7 @@ def get_archive_blind_credential_list():
         try:
             page = decode_last_evaluated_key(page)
         except Exception:
-            logging.exception('Failed to parse provided page')
+            logger.exception('Failed to parse provided page')
             return jsonify({'error': 'Failed to parse page'}), 400
     blind_credentials = []
     results = BlindCredential.data_type_date_index.query(
@@ -345,7 +346,7 @@ def update_blind_credential(id):
             documentation=update['documentation']
         ).save(id__null=True)
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify(
             {'error': 'Failed to add blind-credential to archive.'}
         ), 500
@@ -367,7 +368,7 @@ def update_blind_credential(id):
         )
         cred.save()
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify(
             {'error': 'Failed to update active blind-credential.'}
         ), 500
@@ -455,7 +456,7 @@ def revert_blind_credential_to_revision(id, to_revision):
             documentation=revert_credential.documentation
         ).save(id__null=True)
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify(
             {'error': 'Failed to add blind-credential to archive.'}
         ), 500
@@ -477,7 +478,7 @@ def revert_blind_credential_to_revision(id, to_revision):
         )
         cred.save()
     except PutError as e:
-        logging.error(e)
+        logger.error(e)
         return jsonify(
             {'error': 'Failed to update active blind-credential.'}
         ), 500

@@ -116,7 +116,7 @@ class MigrateBlindCredentialSetAttribute(Command):
             if is_old_unicode_set(new_cred.credential_keys):
                 fail += 1
             total += 1
-        print("Fail: {}, Total: {}".format(fail, total))
+        logger.info("Fail: {}, Total: {}".format(fail, total))
 
 
 class MigrateServiceSetAttribute(Command):
@@ -133,4 +133,4 @@ class MigrateServiceSetAttribute(Command):
                     is_old_unicode_set(new_service.blind_credentials)):
                 fail += 1
             total += 1
-        print("Fail: {}, Total: {}".format(fail, total))
+        logger.info("Fail: {}, Total: {}".format(fail, total))
