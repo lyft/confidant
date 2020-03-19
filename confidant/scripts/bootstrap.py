@@ -1,6 +1,5 @@
 import sys
 import os
-import logging
 import base64
 import json
 import yaml
@@ -10,10 +9,6 @@ from flask_script import Command, Option
 
 from confidant import settings
 from confidant.lib import cryptolib
-
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.StreamHandler(sys.stdout))
-logger.setLevel(logging.INFO)
 
 
 class GenerateSecretsBootstrap(Command):

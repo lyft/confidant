@@ -88,13 +88,13 @@ def _handle_update_exception(e, item):
         raise e
     code = e.cause.response['Error'].get('Code')
     if code == 'ConditionalCheckFailedException':
-        logger.warn(
+        logger.warning(
             'conditional update failed (concurrent writes?) for object:'
             ' (you will need to re-run migration)'
         )
         return True
     if code == 'ProvisionedThroughputExceededException':
-        logger.warn(
+        logger.warning(
             'provisioned write capacity exceeded at object:'
             ' backing off (you will need to re-run migration)'
         )

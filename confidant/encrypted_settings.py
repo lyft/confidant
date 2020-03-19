@@ -6,6 +6,8 @@ import json
 from cryptography.fernet import Fernet
 from confidant.lib import cryptolib
 
+logger = logging.getLogger(__name__)
+
 
 class EncryptedSettings(object):
 
@@ -43,14 +45,14 @@ class EncryptedSettings(object):
         Decrypt secrets and return a dict of secrets. Uses KMS to decrypt.
         """
         if not secrets:
-            logging.info('SECRETS_BOOTSTRAP not set, skipping bootstrapping.')
+            logger.info('SECRETS_BOOTSTRAP not set, skipping bootstrapping.')
             return {}
         if secrets.startswith('file://'):
             try:
                 with open(secrets[7:], 'r') as f:
                     _secrets = json.load(f)
             except IOError:
-                logging.error(
+                logger.error(
                     'Failed to load file specified in SECRETS_BOOTSTRAP.'
                 )
                 return {}
@@ -64,5 +66,5 @@ class EncryptedSettings(object):
         decrypted_secrets = yaml.safe_load(
             f.decrypt(_secrets['secrets'].encode('utf-8'))
         )
-        logging.info('Loaded SECRETS_BOOTSTRAP.')
+        logger.info('Loaded SECRETS_BOOTSTRAP.')
         return decrypted_secrets
