@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.services package &mdash; confidant 6.3.0-ac9de0 documentation</title>
+  <title>confidant.services package &mdash; confidant 6.3.0-4caa49 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.3.0-ac9de0
+                6.3.0-4caa49
               </div>
             
           
@@ -244,6 +244,11 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../data_schema.html">DynamoDB Data Schema</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../data_schema.html#at-rest-encryption-model">At-rest encryption model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance.html">Maintenance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../maintenance.html#permanantly-archiving-disabled-credentials-to-a-separate-dynamodb-table">Permanantly archiving disabled credentials to a separate DynamoDB table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../maintenance.html#restoring-archived-credentials-back-into-the-primary-dynamodb-table">Restoring archived credentials back into the primary DynamoDB table</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../upgrade.html">Upgrading</a><ul>
@@ -646,6 +651,12 @@ decrypted_text = cipher.decrypt(encrypted_text)</p>
 <dt id="confidant.services.credentialmanager.get_latest_credential_revision">
 <code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">get_latest_credential_revision</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">revision</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.get_latest_credential_revision" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="confidant.services.credentialmanager.get_revision_ids_for_credential">
+<code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">get_revision_ids_for_credential</code><span class="sig-paren">(</span><em class="sig-param">credential</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.get_revision_ids_for_credential" title="Permalink to this definition">¶</a></dt>
+<dd><p>For the given credential, return a list of archive credential IDs.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="confidant.services.credentialmanager.lowercase_credential_pairs">

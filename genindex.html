@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; confidant 6.3.0-ac9de0 documentation</title>
+  <title>Index &mdash; confidant 6.3.0-4caa49 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                6.3.0-ac9de0
+                6.3.0-4caa49
               </div>
             
           
@@ -247,6 +247,11 @@
 <li class="toctree-l2"><a class="reference internal" href="data_schema.html#at-rest-encryption-model">At-rest encryption model</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="maintenance.html">Maintenance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="maintenance.html#permanantly-archiving-disabled-credentials-to-a-separate-dynamodb-table">Permanantly archiving disabled credentials to a separate DynamoDB table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maintenance.html#restoring-archived-credentials-back-into-the-primary-dynamodb-table">Restoring archived credentials back into the primary DynamoDB table</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="upgrade.html">Upgrading</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="upgrade.html#upgrading-to-2-0-0-or-3-0-0">Upgrading to 2.0.0 or 3.0.0</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="upgrade.html#performing-the-data-migration">Performing the data migration</a></li>
@@ -405,6 +410,16 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.allowed_email_whitelist">allowed_email_whitelist() (confidant.authnz.userauth.AbstractUserAuthenticator property)</a>
 </li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials.archive">archive() (confidant.scripts.archive.ArchiveCredentials method)</a>
+</li>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.archive_date">archive_date (confidant.models.credential.CredentialArchive attribute)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials">ArchiveCredentials (class in confidant.scripts.archive)</a>
+</li>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.ArchiveDataTypeDateIndex">ArchiveDataTypeDateIndex (class in confidant.models.credential)</a>
+</li>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.ArchiveDataTypeDateIndex.Meta">ArchiveDataTypeDateIndex.Meta (class in confidant.models.credential)</a>
+</li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.HeaderAuthenticator.assert_headers">assert_headers() (confidant.authnz.userauth.HeaderAuthenticator method)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate.NewUnicodeSetAttribute.attr_type">attr_type (confidant.scripts.migrate.NewUnicodeSetAttribute attribute)</a>
@@ -412,11 +427,15 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.DataTypeDateIndex.Meta.attributes">attributes (confidant.models.blind_credential.DataTypeDateIndex.Meta attribute)</a>
 
       <ul>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.ArchiveDataTypeDateIndex.Meta.attributes">(confidant.models.credential.ArchiveDataTypeDateIndex.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.DataTypeDateIndex.Meta.attributes">(confidant.models.credential.DataTypeDateIndex.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.DataTypeDateIndex.Meta.attributes">(confidant.models.service.DataTypeDateIndex.Meta attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.auth_type">auth_type() (confidant.authnz.userauth.AbstractUserAuthenticator property)</a>
 
       <ul>
@@ -429,8 +448,6 @@
         <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator.auth_type">(confidant.authnz.userauth.SamlAuthenticator property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.errors.AuthenticationError">AuthenticationError</a>
 </li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.AutobuildSchema">AutobuildSchema (class in confidant.schema.auto_build_schema)</a>
@@ -439,6 +456,8 @@
 
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta.aws_access_key_id">(confidant.models.credential.Credential.Meta attribute)</a>
+</li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta.aws_access_key_id">(confidant.models.credential.CredentialArchive.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.Meta.aws_access_key_id">(confidant.models.service.Service.Meta attribute)</a>
 </li>
@@ -449,6 +468,8 @@
 
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta.aws_secret_access_key">(confidant.models.credential.Credential.Meta attribute)</a>
+</li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta.aws_secret_access_key">(confidant.models.credential.CredentialArchive.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.Meta.aws_secret_access_key">(confidant.models.service.Service.Meta attribute)</a>
 </li>
@@ -466,6 +487,8 @@
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta.base_backoff_ms">(confidant.models.credential.Credential.Meta attribute)</a>
 </li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta.base_backoff_ms">(confidant.models.credential.CredentialArchive.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.Meta.base_backoff_ms">(confidant.models.service.Service.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.base_backoff_ms">(confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
@@ -477,10 +500,10 @@
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate.GeneralServiceModel.blind_credentials">(confidant.scripts.migrate.GeneralServiceModel attribute)</a>
 </li>
       </ul></li>
-      <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential">BlindCredential (class in confidant.models.blind_credential)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential">BlindCredential (class in confidant.models.blind_credential)</a>
+</li>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.DoesNotExist">BlindCredential.DoesNotExist</a>
 </li>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.Meta">BlindCredential.Meta (class in confidant.models.blind_credential)</a>
@@ -556,7 +579,7 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.cipher_version">cipher_version (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.cipher_version">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.cipher_version">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
       </ul></li>
       <li><a href="autogen/confidant.services.html#confidant.services.ciphermanager.CipherManager">CipherManager (class in confidant.services.ciphermanager)</a>
@@ -629,9 +652,9 @@
 </li>
       <li><a href="autogen/confidant.schema.html#module-confidant.schema.services">confidant.schema.services (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts">confidant.scripts (module)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.archive">confidant.scripts.archive (module)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.bootstrap">confidant.scripts.bootstrap (module)</a>
 </li>
@@ -639,7 +662,11 @@
 </li>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.migrate">confidant.scripts.migrate (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.migrate_bool">confidant.scripts.migrate_bool (module)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.restore">confidant.scripts.restore (module)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.utils">confidant.scripts.utils (module)</a>
 </li>
@@ -678,6 +705,8 @@
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta.connection_cls">(confidant.models.credential.Credential.Meta attribute)</a>
 </li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta.connection_cls">(confidant.models.credential.CredentialArchive.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.Meta.connection_cls">(confidant.models.service.Service.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.connection_cls">(confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
@@ -715,6 +744,10 @@
 </li>
       <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta">Credential.Meta (class in confidant.models.credential)</a>
 </li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials.credential_exists">credential_exists() (confidant.scripts.restore.RestoreCredentials method)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials.credential_in_service">credential_in_service() (confidant.scripts.archive.ArchiveCredentials method)</a>
+</li>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.credential_keys">credential_keys (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
@@ -728,9 +761,19 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.credential_pairs">credential_pairs (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.credential_pairs">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.credential_pairs">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
       </ul></li>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive">CredentialArchive (class in confidant.models.credential)</a>
+</li>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.DoesNotExist">CredentialArchive.DoesNotExist</a>
+</li>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta">CredentialArchive.Meta (class in confidant.models.credential)</a>
+</li>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase">CredentialBase (class in confidant.models.credential)</a>
+</li>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.DoesNotExist">CredentialBase.DoesNotExist</a>
+</li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.credentials.CredentialResponse">CredentialResponse (class in confidant.schema.credentials)</a>
 </li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.credentials.CredentialResponseSchema">CredentialResponseSchema (class in confidant.schema.credentials)</a>
@@ -778,7 +821,7 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.data_key">data_key (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.data_key">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.data_key">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
       </ul></li>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.data_type">data_type (confidant.models.blind_credential.BlindCredential attribute)</a>
@@ -786,7 +829,9 @@
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.DataTypeDateIndex.data_type">(confidant.models.blind_credential.DataTypeDateIndex attribute)</a>
 </li>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.data_type">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.ArchiveDataTypeDateIndex.data_type">(confidant.models.credential.ArchiveDataTypeDateIndex attribute)</a>
+</li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.data_type">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.DataTypeDateIndex.data_type">(confidant.models.credential.DataTypeDateIndex attribute)</a>
 </li>
@@ -799,6 +844,8 @@
 
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.data_type_date_index">(confidant.models.credential.Credential attribute)</a>
+</li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.data_type_date_index">(confidant.models.credential.CredentialArchive attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.data_type_date_index">(confidant.models.service.Service attribute)</a>
 </li>
@@ -845,6 +892,8 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.rbac.default_acl">default_acl() (in module confidant.authnz.rbac)</a>
 </li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials.delete">delete() (confidant.scripts.archive.ArchiveCredentials method)</a>
+</li>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate.NewUnicodeSetAttribute.deserialize">deserialize() (confidant.scripts.migrate.NewUnicodeSetAttribute method)</a>
 
       <ul>
@@ -868,7 +917,7 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.documentation">documentation (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.documentation">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.documentation">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
       </ul></li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.saml.dump_session_info">dump_session_info() (in module confidant.routes.saml)</a>
@@ -886,7 +935,7 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.enabled">enabled (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.enabled">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.enabled">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.enabled">(confidant.models.service.Service attribute)</a>
 </li>
@@ -949,12 +998,18 @@
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.fonts">fonts() (in module confidant.routes.static_files)</a>
 </li>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.from_archive_credential">from_archive_credential() (confidant.models.credential.Credential class method)</a>
+</li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.blind_credentials.BlindCredentialResponse.from_blind_credential">from_blind_credential() (confidant.schema.blind_credentials.BlindCredentialResponse class method)</a>
 </li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthoritiesResponse.from_cas">from_cas() (confidant.schema.certificates.CertificateAuthoritiesResponse class method)</a>
 </li>
-      <li><a href="autogen/confidant.schema.html#confidant.schema.credentials.CredentialResponse.from_credential">from_credential() (confidant.schema.credentials.CredentialResponse class method)</a>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.from_credential">from_credential() (confidant.models.credential.CredentialArchive class method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.credentials.CredentialResponse.from_credential">(confidant.schema.credentials.CredentialResponse class method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.schema.html#confidant.schema.credentials.CredentialsResponse.from_credentials">from_credentials() (confidant.schema.credentials.CredentialsResponse class method)</a>
@@ -1107,6 +1162,8 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.get_logged_in_user">get_logged_in_user() (in module confidant.authnz)</a>
 </li>
+      <li><a href="autogen/confidant.services.html#confidant.services.credentialmanager.get_revision_ids_for_credential">get_revision_ids_for_credential() (in module confidant.services.credentialmanager)</a>
+</li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.saml.get_saml_metadata">get_saml_metadata() (in module confidant.routes.saml)</a>
 </li>
       <li><a href="autogen/confidant.html#confidant.encrypted_settings.EncryptedSettings.get_secret">get_secret() (confidant.encrypted_settings.EncryptedSettings method)</a>
@@ -1144,6 +1201,8 @@
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta.host">(confidant.models.credential.Credential.Meta attribute)</a>
 </li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta.host">(confidant.models.credential.CredentialArchive.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.Meta.host">(confidant.models.service.Service.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.host">(confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
@@ -1158,7 +1217,7 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.id">id (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.id">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.id">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.id">(confidant.models.service.Service attribute)</a>
 </li>
@@ -1176,6 +1235,8 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.DataTypeDateIndex.Meta.index_name">index_name (confidant.models.blind_credential.DataTypeDateIndex.Meta attribute)</a>
 
       <ul>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.ArchiveDataTypeDateIndex.Meta.index_name">(confidant.models.credential.ArchiveDataTypeDateIndex.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.DataTypeDateIndex.Meta.index_name">(confidant.models.credential.DataTypeDateIndex.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.DataTypeDateIndex.Meta.index_name">(confidant.models.service.DataTypeDateIndex.Meta attribute)</a>
@@ -1247,9 +1308,9 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.last_decrypted_date">last_decrypted_date (confidant.models.credential.Credential attribute)</a>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.last_decrypted_date">last_decrypted_date (confidant.models.credential.CredentialBase attribute)</a>
 </li>
-      <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.last_rotation_date">last_rotation_date (confidant.models.credential.Credential attribute)</a>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.last_rotation_date">last_rotation_date (confidant.models.credential.CredentialBase attribute)</a>
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.certificates.list_cas">list_cas() (in module confidant.routes.certificates)</a>
 
@@ -1324,15 +1385,19 @@
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta.max_retry_attempts">(confidant.models.credential.Credential.Meta attribute)</a>
 </li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta.max_retry_attempts">(confidant.models.credential.CredentialArchive.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.Meta.max_retry_attempts">(confidant.models.service.Service.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.max_retry_attempts">(confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
 </li>
       </ul></li>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.Meta">Meta (confidant.models.credential.CredentialBase attribute)</a>
+</li>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.metadata">metadata (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.metadata">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.metadata">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
       </ul></li>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.migrate_boolean_attributes">migrate_boolean_attributes() (in module confidant.scripts.migrate_bool)</a>
@@ -1352,6 +1417,8 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.DataTypeDateIndex.Meta.model">model (confidant.models.blind_credential.DataTypeDateIndex.Meta attribute)</a>
 
       <ul>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.ArchiveDataTypeDateIndex.Meta.model">(confidant.models.credential.ArchiveDataTypeDateIndex.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.DataTypeDateIndex.Meta.model">(confidant.models.credential.DataTypeDateIndex.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.DataTypeDateIndex.Meta.model">(confidant.models.service.DataTypeDateIndex.Meta attribute)</a>
@@ -1360,7 +1427,7 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.modified_by">modified_by (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.modified_by">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.modified_by">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.modified_by">(confidant.models.service.Service attribute)</a>
 </li>
@@ -1370,7 +1437,9 @@
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.DataTypeDateIndex.modified_date">(confidant.models.blind_credential.DataTypeDateIndex attribute)</a>
 </li>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.modified_date">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.ArchiveDataTypeDateIndex.modified_date">(confidant.models.credential.ArchiveDataTypeDateIndex attribute)</a>
+</li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.modified_date">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.DataTypeDateIndex.modified_date">(confidant.models.credential.DataTypeDateIndex attribute)</a>
 </li>
@@ -1390,7 +1459,7 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.name">name (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.name">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.name">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
       </ul></li>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate.NewUnicodeSetAttribute">NewUnicodeSetAttribute (class in confidant.scripts.migrate)</a>
@@ -1417,12 +1486,16 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.DecryptSecretsBootstrap.option_list">option_list (confidant.scripts.bootstrap.DecryptSecretsBootstrap attribute)</a>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials.option_list">option_list (confidant.scripts.archive.ArchiveCredentials attribute)</a>
 
       <ul>
+        <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.DecryptSecretsBootstrap.option_list">(confidant.scripts.bootstrap.DecryptSecretsBootstrap attribute)</a>
+</li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.GenerateSecretsBootstrap.option_list">(confidant.scripts.bootstrap.GenerateSecretsBootstrap attribute)</a>
 </li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.MigrateBooleanAttribute.option_list">(confidant.scripts.migrate_bool.MigrateBooleanAttribute attribute)</a>
+</li>
+        <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials.option_list">(confidant.scripts.restore.RestoreCredentials attribute)</a>
 </li>
       </ul></li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.auto_build_schema.AutobuildSchema.opts">opts (confidant.schema.auto_build_schema.AutobuildSchema attribute)</a>
@@ -1467,13 +1540,15 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.passes_email_suffix">passes_email_suffix() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.passes_email_whitelist">passes_email_whitelist() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.DataTypeDateIndex.Meta.projection">projection (confidant.models.blind_credential.DataTypeDateIndex.Meta attribute)</a>
 
       <ul>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.ArchiveDataTypeDateIndex.Meta.projection">(confidant.models.credential.ArchiveDataTypeDateIndex.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.DataTypeDateIndex.Meta.projection">(confidant.models.credential.DataTypeDateIndex.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.DataTypeDateIndex.Meta.projection">(confidant.models.service.DataTypeDateIndex.Meta attribute)</a>
@@ -1488,6 +1563,8 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.DataTypeDateIndex.Meta.read_capacity_units">read_capacity_units (confidant.models.blind_credential.DataTypeDateIndex.Meta attribute)</a>
 
       <ul>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.ArchiveDataTypeDateIndex.Meta.read_capacity_units">(confidant.models.credential.ArchiveDataTypeDateIndex.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.DataTypeDateIndex.Meta.read_capacity_units">(confidant.models.credential.DataTypeDateIndex.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.DataTypeDateIndex.Meta.read_capacity_units">(confidant.models.service.DataTypeDateIndex.Meta attribute)</a>
@@ -1505,6 +1582,8 @@
 
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta.region">(confidant.models.credential.Credential.Meta attribute)</a>
+</li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta.region">(confidant.models.credential.CredentialArchive.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.Meta.region">(confidant.models.service.Service.Meta attribute)</a>
 </li>
@@ -1526,6 +1605,8 @@
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta.request_timeout_seconds">(confidant.models.credential.Credential.Meta attribute)</a>
 </li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta.request_timeout_seconds">(confidant.models.credential.CredentialArchive.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.Meta.request_timeout_seconds">(confidant.models.service.Service.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.request_timeout_seconds">(confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
@@ -1537,9 +1618,13 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.require_logout_for_goodbye">require_logout_for_goodbye() (in module confidant.authnz)</a>
 </li>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CachedCertificate.response">response() (confidant.services.certificatemanager.CachedCertificate property)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CachedCertificate.response">response() (confidant.services.certificatemanager.CachedCertificate property)</a>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials.restore">restore() (confidant.scripts.restore.RestoreCredentials method)</a>
+</li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials">RestoreCredentials (class in confidant.scripts.restore)</a>
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.blind_credentials.revert_blind_credential_to_revision">revert_blind_credential_to_revision() (in module confidant.routes.blind_credentials)</a>
 </li>
@@ -1550,7 +1635,7 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.revision">revision (confidant.models.blind_credential.BlindCredential attribute)</a>
 
       <ul>
-        <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.revision">(confidant.models.credential.Credential attribute)</a>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.revision">(confidant.models.credential.CredentialBase attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.revision">(confidant.models.service.Service attribute)</a>
 </li>
@@ -1577,9 +1662,11 @@
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.robots">robots() (in module confidant.routes.static_files)</a>
 </li>
-      <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.DecryptSecretsBootstrap.run">run() (confidant.scripts.bootstrap.DecryptSecretsBootstrap method)</a>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials.run">run() (confidant.scripts.archive.ArchiveCredentials method)</a>
 
       <ul>
+        <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.DecryptSecretsBootstrap.run">(confidant.scripts.bootstrap.DecryptSecretsBootstrap method)</a>
+</li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.GenerateSecretsBootstrap.run">(confidant.scripts.bootstrap.GenerateSecretsBootstrap method)</a>
 </li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate.MigrateBlindCredentialSetAttribute.run">(confidant.scripts.migrate.MigrateBlindCredentialSetAttribute method)</a>
@@ -1587,6 +1674,8 @@
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate.MigrateServiceSetAttribute.run">(confidant.scripts.migrate.MigrateServiceSetAttribute method)</a>
 </li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.MigrateBooleanAttribute.run">(confidant.scripts.migrate_bool.MigrateBooleanAttribute method)</a>
+</li>
+        <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials.run">(confidant.scripts.restore.RestoreCredentials method)</a>
 </li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.utils.CreateDynamoTables.run">(confidant.scripts.utils.CreateDynamoTables method)</a>
 </li>
@@ -1605,6 +1694,12 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator">SamlAuthenticator (class in confidant.authnz.userauth)</a>
 </li>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials.save">save() (confidant.scripts.archive.ArchiveCredentials method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials.save">(confidant.scripts.restore.RestoreCredentials method)</a>
+</li>
+      </ul></li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.scripts">scripts() (in module confidant.routes.static_files)</a>
 </li>
       <li><a href="autogen/confidant.services.html#confidant.services.graphite.send_event">send_event() (in module confidant.services.graphite)</a>
@@ -1645,16 +1740,18 @@
 </li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServicesResponse">ServicesResponse (class in confidant.schema.services)</a>
 </li>
-      <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServicesResponseSchema">ServicesResponseSchema (class in confidant.schema.services)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServicesResponseSchema">ServicesResponseSchema (class in confidant.schema.services)</a>
+</li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServicesResponseSchema.Meta">ServicesResponseSchema.Meta (class in confidant.schema.services)</a>
 </li>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.Meta.session_cls">session_cls (confidant.models.blind_credential.BlindCredential.Meta attribute)</a>
 
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta.session_cls">(confidant.models.credential.Credential.Meta attribute)</a>
+</li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta.session_cls">(confidant.models.credential.CredentialArchive.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.Meta.session_cls">(confidant.models.service.Service.Meta attribute)</a>
 </li>
@@ -1708,12 +1805,14 @@
       <ul>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta.table_name">(confidant.models.credential.Credential.Meta attribute)</a>
 </li>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.Meta.table_name">(confidant.models.credential.CredentialArchive.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.Service.Meta.table_name">(confidant.models.service.Service.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate_bool.GenericCredential.Meta.table_name">(confidant.scripts.migrate_bool.GenericCredential.Meta attribute)</a>
 </li>
       </ul></li>
-      <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.tags">tags (confidant.models.credential.Credential attribute)</a>
+      <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialBase.tags">tags (confidant.models.credential.CredentialBase attribute)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test__get_cached_certificate_with_key">test__get_cached_certificate_with_key() (in module tests.unit.confidant.services.certificatemanager_test)</a>
 </li>
@@ -1752,6 +1851,8 @@
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.keymanager_test.test_create_datakey_mocked">test_create_datakey_mocked() (in module tests.unit.confidant.services.keymanager_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.keymanager_test.test_create_datakey_with_encryption">test_create_datakey_with_encryption() (in module tests.unit.confidant.services.keymanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.models.html#tests.unit.confidant.models.credential_test.test_credential_archive">test_credential_archive() (in module tests.unit.confidant.models.credential_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_decode_csr">test_decode_csr() (in module tests.unit.confidant.services.certificatemanager_test)</a>
 </li>
@@ -1821,10 +1922,10 @@
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.credentialmanager_test.test_get_latest_blind_credential_revision">test_get_latest_blind_credential_revision() (in module tests.unit.confidant.services.credentialmanager_test)</a>
 </li>
-      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.credentialmanager_test.test_get_latest_credential_revision">test_get_latest_credential_revision() (in module tests.unit.confidant.services.credentialmanager_test)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.credentialmanager_test.test_get_latest_credential_revision">test_get_latest_credential_revision() (in module tests.unit.confidant.services.credentialmanager_test)</a>
+</li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.servicemanager_test.test_get_latest_service_revision">test_get_latest_service_revision() (in module tests.unit.confidant.services.servicemanager_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.authnz.html#tests.unit.confidant.authnz.authnz_test.test_get_logged_in_user">test_get_logged_in_user() (in module tests.unit.confidant.authnz.authnz_test)</a>
@@ -1834,6 +1935,8 @@
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_get_registered">test_get_registered() (in module tests.unit.confidant.encrypted_settings_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_get_registered_default">test_get_registered_default() (in module tests.unit.confidant.encrypted_settings_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.credentialmanager_test.test_get_revision_ids_for_credential">test_get_revision_ids_for_credential() (in module tests.unit.confidant.services.credentialmanager_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.identity_test.test_get_user_info">test_get_user_info() (in module tests.unit.confidant.routes.identity_test)</a>
 </li>
@@ -1968,6 +2071,8 @@
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.DataTypeDateIndex.Meta.write_capacity_units">write_capacity_units (confidant.models.blind_credential.DataTypeDateIndex.Meta attribute)</a>
 
       <ul>
+        <li><a href="autogen/confidant.models.html#confidant.models.credential.ArchiveDataTypeDateIndex.Meta.write_capacity_units">(confidant.models.credential.ArchiveDataTypeDateIndex.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.models.html#confidant.models.credential.DataTypeDateIndex.Meta.write_capacity_units">(confidant.models.credential.DataTypeDateIndex.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.models.html#confidant.models.service.DataTypeDateIndex.Meta.write_capacity_units">(confidant.models.service.DataTypeDateIndex.Meta attribute)</a>

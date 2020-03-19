@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Threat model &mdash; confidant 6.3.0-4caa49 documentation</title>
+  <title>Maintenance &mdash; confidant 6.3.0-4caa49 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Contributing" href="contributing.html" />
-    <link rel="prev" title="KMS authentication" href="kms_auth.html" /> 
+    <link rel="next" title="Upgrading" href="upgrade.html" />
+    <link rel="prev" title="DynamoDB Data Schema" href="data_schema.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -202,29 +202,29 @@
 <li class="toctree-l2"><a class="reference internal" href="kms_auth.html#multi-account-kms-authentication">Multi-account KMS authentication</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Threat model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#web-client-threat-model">Web client threat model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#assumptions">Assumptions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#what-an-authenticated-user-can-achieve">What an authenticated user can achieve</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#what-compromise-of-an-authenticated-user-s-computer-can-achieve">What compromise of an authenticated user’s computer can achieve</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#what-an-unauthenticated-local-network-attacker-who-can-observe-network-traffic-can-achieve">What an unauthenticated local network attacker who can observe network traffic can achieve</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#what-an-unauthenticated-attacker-from-the-internet-can-achieve">What an unauthenticated attacker from the Internet can achieve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="threat_model.html">Threat model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-client-threat-model">Web client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#assumptions">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-authenticated-user-can-achieve">What an authenticated user can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-compromise-of-an-authenticated-user-s-computer-can-achieve">What compromise of an authenticated user’s computer can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-local-network-attacker-who-can-observe-network-traffic-can-achieve">What an unauthenticated local network attacker who can observe network traffic can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-unauthenticated-attacker-from-the-internet-can-achieve">What an unauthenticated attacker from the Internet can achieve</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#web-server-threat-model">Web server threat model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Assumptions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#what-an-attacker-can-achieve-through-compromise-of-the-confidant-web-server">What an attacker can achieve through compromise of the Confidant web server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#web-server-threat-model">Web server threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id1">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-through-compromise-of-the-confidant-web-server">What an attacker can achieve through compromise of the Confidant web server</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#service-client-threat-model">Service client threat model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Assumptions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#what-the-service-can-achieve">What the service can achieve</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#what-an-attacker-can-achieve-with-a-filesystem-read-vulnerability">What an attacker can achieve with a filesystem read vulnerability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#service-client-threat-model">Service client threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id2">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-the-service-can-achieve">What the service can achieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-can-achieve-with-a-filesystem-read-vulnerability">What an attacker can achieve with a filesystem read vulnerability</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#storage-threat-model">Storage threat model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Assumptions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#what-an-attacker-with-dynamodb-access-can-achieve">What an attacker with DynamoDB access can achieve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="threat_model.html#storage-threat-model">Storage threat model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#id3">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="threat_model.html#what-an-attacker-with-dynamodb-access-can-achieve">What an attacker with DynamoDB access can achieve</a></li>
 </ul>
 </li>
 </ul>
@@ -248,9 +248,9 @@
 <li class="toctree-l2"><a class="reference internal" href="data_schema.html#at-rest-encryption-model">At-rest encryption model</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="maintenance.html">Maintenance</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="maintenance.html#permanantly-archiving-disabled-credentials-to-a-separate-dynamodb-table">Permanantly archiving disabled credentials to a separate DynamoDB table</a></li>
-<li class="toctree-l2"><a class="reference internal" href="maintenance.html#restoring-archived-credentials-back-into-the-primary-dynamodb-table">Restoring archived credentials back into the primary DynamoDB table</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Maintenance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#permanantly-archiving-disabled-credentials-to-a-separate-dynamodb-table">Permanantly archiving disabled credentials to a separate DynamoDB table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#restoring-archived-credentials-back-into-the-primary-dynamodb-table">Restoring archived credentials back into the primary DynamoDB table</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="upgrade.html">Upgrading</a><ul>
@@ -355,13 +355,13 @@
     
       <li><a href="contents.html">Docs</a> &raquo;</li>
         
-      <li>Threat model</li>
+      <li>Maintenance</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/threat_model.md.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/maintenance.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -374,129 +374,66 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="threat-model">
-<h1>Threat model<a class="headerlink" href="#threat-model" title="Permalink to this headline">¶</a></h1>
-<p>The threat model is written in terms of what an attacker can accomplish from
-various perspectives. It’s meant to be exhaustive, and anything missing should
-be reported as an issue in the github project.</p>
-<div class="section" id="web-client-threat-model">
-<h2>Web client threat model<a class="headerlink" href="#web-client-threat-model" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="assumptions">
-<h3>Assumptions<a class="headerlink" href="#assumptions" title="Permalink to this headline">¶</a></h3>
+  <div class="section" id="maintenance">
+<h1>Maintenance<a class="headerlink" href="#maintenance" title="Permalink to this headline">¶</a></h1>
+<p>Confidant comes with a number of maintenance scripts that can be used by
+admins to handle special maintenance tasks. It’s recommended that prior to
+running these scripts, that Confidant be put into maintenance mode using the
+<code class="docutils literal notranslate"><span class="pre">MAINTENANCE_MODE</span></code> configuration option, or by using the touch file defined
+by the <code class="docutils literal notranslate"><span class="pre">MAINTENANCE_MODE_TOUCH_FILE</span></code> configuration option.</p>
+<div class="section" id="permanantly-archiving-disabled-credentials-to-a-separate-dynamodb-table">
+<h2>Permanantly archiving disabled credentials to a separate DynamoDB table<a class="headerlink" href="#permanantly-archiving-disabled-credentials-to-a-separate-dynamodb-table" title="Permalink to this headline">¶</a></h2>
+<p>By design, confidant never deletes data. You may have a need to permanantly
+archive credentials (and revisions of that credential) out of your primary
+dynamodb table, so that end-users can no longer access them through the API.</p>
+<p>Confidant includes a maintenance script to archive credentials:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python manage.py archive_credentials --help
+usage: manage.py archive_credentials <span class="o">[</span>-?<span class="o">]</span> <span class="o">[</span>--days DAYS<span class="o">]</span> <span class="o">[</span>--force<span class="o">]</span> <span class="o">[</span>--ids IDS<span class="o">]</span>
+
+Command to permanently archive credentials to an archive dynamodb table.
+
+optional arguments:
+  -?, --help   show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  --days DAYS  Permanently archive disabled credentials last modified greater
+               than this many days <span class="o">(</span>mutually exclusive with --ids<span class="o">)</span>
+  --force      By default, this script runs in dry-run mode, this option
+               forces the run and makes the changes indicated by the dry run
+  --ids IDS    Archive a comma separated list of credential IDs. <span class="o">(</span>mutually
+               exclusive with --days<span class="o">)</span>
+</pre></div>
+</div>
+<p>To use this, you must have the <code class="docutils literal notranslate"><span class="pre">DYNAMODB_TABLE_ARCHIVE</span></code> configuration set,
+the table it points at must be created, and IAM settings must be updated to
+allow confidant access to this table.</p>
+<p>Confidant also has some sanity checks here:</p>
 <ol class="arabic simple">
-<li><p>Valid authenticated and authorized users act in good faith.</p></li>
-<li><p>Users’ computers are not infected by malware.</p></li>
-<li><p>TLS is being used for http connections and is configured in a secure manner.</p></li>
+<li><p>The script will not permanently archive a credential if it’s currently
+mapped to a service.</p></li>
+<li><p>The script will not permanently archive a credential if it’s still enabled.</p></li>
 </ol>
 </div>
-<div class="section" id="what-an-authenticated-user-can-achieve">
-<h3>What an authenticated user can achieve<a class="headerlink" href="#what-an-authenticated-user-can-achieve" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li><p>A user can view all secrets, but can not view the credential pairs of blind
-secrets.</p></li>
-<li><p>A user can view all secret to service mappings.</p></li>
-<li><p>A user can create new revisions of a secret or blind secret.</p></li>
-<li><p>A user can create new revisions of a service mapping.</p></li>
-</ol>
+<div class="section" id="restoring-archived-credentials-back-into-the-primary-dynamodb-table">
+<h2>Restoring archived credentials back into the primary DynamoDB table<a class="headerlink" href="#restoring-archived-credentials-back-into-the-primary-dynamodb-table" title="Permalink to this headline">¶</a></h2>
+<p>If you’ve permanently archived a credential, and realise you want it back,
+(along with all of its revisions) you can use the <code class="docutils literal notranslate"><span class="pre">restore_credentials</span></code>
+maintenance script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python manage.py restore_credentials --help
+usage: manage.py restore_credentials <span class="o">[</span>-?<span class="o">]</span> <span class="o">[</span>--force<span class="o">]</span> <span class="o">[</span>--ids IDS<span class="o">]</span> <span class="o">[</span>--all<span class="o">]</span>
+
+Command to restore credentials from the permanent archive dynamodb table back
+into the primary storage table.
+
+optional arguments:
+  -?, --help  show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  --force     By default, this script runs in dry-run mode, this option forces
+              the run and makes the changes indicated by the dry run
+  --ids IDS   Restore a comma separated list of credential IDs. <span class="o">(</span>mutually
+              exclusive with --days<span class="o">)</span>
+  --all       Restore all credentials from the permanent archive dynamodb
+              table back into the primary store table.
+</pre></div>
 </div>
-<div class="section" id="what-compromise-of-an-authenticated-user-s-computer-can-achieve">
-<h3>What compromise of an authenticated user’s computer can achieve<a class="headerlink" href="#what-compromise-of-an-authenticated-user-s-computer-can-achieve" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li><p>Compromise of a user’s computer can give the attacker access to all actions
-achievable by the authenticated user.</p></li>
-</ol>
-</div>
-<div class="section" id="what-an-unauthenticated-local-network-attacker-who-can-observe-network-traffic-can-achieve">
-<h3>What an unauthenticated local network attacker who can observe network traffic can achieve<a class="headerlink" href="#what-an-unauthenticated-local-network-attacker-who-can-observe-network-traffic-can-achieve" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li><p>The passive attacker can learn which client IP addresses are using Confidant.</p></li>
-<li><p>The passive attacker can block access to Confidant.</p></li>
-<li><p>The passive attacker can observe the approximate size of secrets.</p></li>
-</ol>
-</div>
-<div class="section" id="what-an-unauthenticated-attacker-from-the-internet-can-achieve">
-<h3>What an unauthenticated attacker from the Internet can achieve<a class="headerlink" href="#what-an-unauthenticated-attacker-from-the-internet-can-achieve" title="Permalink to this headline">¶</a></h3>
-<p>Note: It’s highly suggested to run Confidant on a private network or VPN,
-rather than directly accessible on the internet.</p>
-<ol class="arabic simple">
-<li><p>An attacker from the internet can DoS the Confidant server.</p></li>
-</ol>
-</div>
-</div>
-<div class="section" id="web-server-threat-model">
-<h2>Web server threat model<a class="headerlink" href="#web-server-threat-model" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>Assumptions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li><p>The web service is given the least amount of AWS IAM privilege allowed to
-run properly, as defined in the configuration guide.</p></li>
-<li><p>The web service is given only the network access necessary to run properly.</p></li>
-</ol>
-</div>
-<div class="section" id="what-an-attacker-can-achieve-through-compromise-of-the-confidant-web-server">
-<h3>What an attacker can achieve through compromise of the Confidant web server<a class="headerlink" href="#what-an-attacker-can-achieve-through-compromise-of-the-confidant-web-server" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li><p>An attacker who successfully compromises the Confidant flask server has full
-control of the service’s IAM credentials and can read secrets, corrupt or
-delete secrets, remap secrets to other services, manipulate web server logs,
-and modify KMS AUTH_KEY grants. The attacker can not read blind secrets
-that confidant’s IAM credentials do not allow access to.</p></li>
-</ol>
-</div>
-</div>
-<div class="section" id="service-client-threat-model">
-<h2>Service client threat model<a class="headerlink" href="#service-client-threat-model" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id2">
-<h3>Assumptions<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li><p>IAM policy is properly configured for the KMS AUTH_KEY, if using KMS auth.</p></li>
-<li><p>IAM policy is properly configured for the S3 locations, if S3 auth is used.</p></li>
-<li><p>TLS with a valid trust is being used for http connections.</p></li>
-<li><p>IAM policy is properly configured for DynamoDB</p></li>
-</ol>
-</div>
-<div class="section" id="what-the-service-can-achieve">
-<h3>What the service can achieve<a class="headerlink" href="#what-the-service-can-achieve" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li><p>A service can retrieve the unencrypted secrets mapped to it.</p></li>
-<li><p>A service can read blind secrets mapped to it, assuming the service’s IAM
-policy allows it to decrypt the blind secrets.</p></li>
-</ol>
-</div>
-<div class="section" id="what-an-attacker-can-achieve-with-a-filesystem-read-vulnerability">
-<h3>What an attacker can achieve with a filesystem read vulnerability<a class="headerlink" href="#what-an-attacker-can-achieve-with-a-filesystem-read-vulnerability" title="Permalink to this headline">¶</a></h3>
-<p>Client management and storage of secrets is an implementation detail outside of
-the scope of the Confidant service itself, but the following threat models
-could apply.</p>
-<ol class="arabic simple">
-<li><p>If a service is storing the authentication token on the filesystem, an
-attacker would be able to steal the token, which would give them the access
-level of the service for the lifetime of the token.</p></li>
-<li><p>If a service is storing the secrets on the filesystem unencrypted, an
-attacker would be able to steal the service secrets.</p></li>
-</ol>
-</div>
-</div>
-<div class="section" id="storage-threat-model">
-<h2>Storage threat model<a class="headerlink" href="#storage-threat-model" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
-<h3>Assumptions<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li><p>cryptography.io’s Fernet implementation is secure.</p></li>
-<li><p>KMS’s AES implementation is secure.</p></li>
-<li><p>Attackers don’t have access to the KMS master key.</p></li>
-</ol>
-</div>
-<div class="section" id="what-an-attacker-with-dynamodb-access-can-achieve">
-<h3>What an attacker with DynamoDB access can achieve<a class="headerlink" href="#what-an-attacker-with-dynamodb-access-can-achieve" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic simple">
-<li><p>An attacker with full DynamoDB access can delete or corrupt all service and
-secrets.</p></li>
-<li><p>An attacker with full DynamoDB access could map secrets to other services.</p></li>
-<li><p>An attacker with read DynamoDB access can read service mapping data and
-the metadata (friendly name, modified date, modified by, etc.) of secrets.</p></li>
-</ol>
-</div>
+<p>The script will skip any records that already exist in the primary table.</p>
 </div>
 </div>
 
@@ -508,10 +445,10 @@ the metadata (friendly name, modified date, modified by, etc.) of secrets.</p></
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="upgrade.html" class="btn btn-neutral float-right" title="Upgrading" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="kms_auth.html" class="btn btn-neutral float-left" title="KMS authentication" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="data_schema.html" class="btn btn-neutral float-left" title="DynamoDB Data Schema" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

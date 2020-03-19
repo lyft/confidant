@@ -4,6 +4,14 @@ confidant.scripts package
 Submodules
 ----------
 
+confidant.scripts.archive module
+--------------------------------
+
+.. automodule:: confidant.scripts.archive
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 confidant.scripts.bootstrap module
 ----------------------------------
 
@@ -32,6 +40,14 @@ confidant.scripts.migrate\_bool module
 --------------------------------------
 
 .. automodule:: confidant.scripts.migrate_bool
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+confidant.scripts.restore module
+--------------------------------
+
+.. automodule:: confidant.scripts.restore
    :members:
    :undoc-members:
    :show-inheritance:

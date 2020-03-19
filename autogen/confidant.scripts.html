@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.scripts package &mdash; confidant 6.3.0-ac9de0 documentation</title>
+  <title>confidant.scripts package &mdash; confidant 6.3.0-4caa49 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.3.0-ac9de0
+                6.3.0-4caa49
               </div>
             
           
@@ -246,6 +246,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../data_schema.html#at-rest-encryption-model">At-rest encryption model</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance.html">Maintenance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../maintenance.html#permanantly-archiving-disabled-credentials-to-a-separate-dynamodb-table">Permanantly archiving disabled credentials to a separate DynamoDB table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../maintenance.html#restoring-archived-credentials-back-into-the-primary-dynamodb-table">Restoring archived credentials back into the primary DynamoDB table</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../upgrade.html">Upgrading</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../upgrade.html#upgrading-to-2-0-0-or-3-0-0">Upgrading to 2.0.0 or 3.0.0</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../upgrade.html#performing-the-data-migration">Performing the data migration</a></li>
@@ -371,6 +376,48 @@
 <h1>confidant.scripts package<a class="headerlink" href="#confidant-scripts-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-confidant.scripts.archive">
+<span id="confidant-scripts-archive-module"></span><h2>confidant.scripts.archive module<a class="headerlink" href="#module-confidant.scripts.archive" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="confidant.scripts.archive.ArchiveCredentials">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.archive.</code><code class="sig-name descname">ArchiveCredentials</code><span class="sig-paren">(</span><em class="sig-param">func=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.archive.ArchiveCredentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_script.commands.Command</span></code></p>
+<p>Command to permanently archive credentials to an archive dynamodb table.</p>
+<dl class="method">
+<dt id="confidant.scripts.archive.ArchiveCredentials.archive">
+<code class="sig-name descname">archive</code><span class="sig-paren">(</span><em class="sig-param">credentials</em>, <em class="sig-param">force</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.archive.ArchiveCredentials.archive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.archive.ArchiveCredentials.credential_in_service">
+<code class="sig-name descname">credential_in_service</code><span class="sig-paren">(</span><em class="sig-param">_id</em>, <em class="sig-param">services</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.archive.ArchiveCredentials.credential_in_service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.archive.ArchiveCredentials.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">deletes</em>, <em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.archive.ArchiveCredentials.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.archive.ArchiveCredentials.option_list">
+<code class="sig-name descname">option_list</code><em class="property"> = [&lt;flask_script.commands.Option object&gt;, &lt;flask_script.commands.Option object&gt;, &lt;flask_script.commands.Option object&gt;]</em><a class="headerlink" href="#confidant.scripts.archive.ArchiveCredentials.option_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.archive.ArchiveCredentials.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">days</em>, <em class="sig-param">force</em>, <em class="sig-param">ids</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.archive.ArchiveCredentials.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a command. This must be implemented by the subclass. Should take
+arguments as configured by the Command options.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.archive.ArchiveCredentials.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">saves</em>, <em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.archive.ArchiveCredentials.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-confidant.scripts.bootstrap">
 <span id="confidant-scripts-bootstrap-module"></span><h2>confidant.scripts.bootstrap module<a class="headerlink" href="#module-confidant.scripts.bootstrap" title="Permalink to this headline">¶</a></h2>
@@ -747,6 +794,44 @@ results returned.</p></li>
 number_of_them_that_failed_due_to_conditional_update)</p>
 </dd>
 </dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-confidant.scripts.restore">
+<span id="confidant-scripts-restore-module"></span><h2>confidant.scripts.restore module<a class="headerlink" href="#module-confidant.scripts.restore" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="confidant.scripts.restore.RestoreCredentials">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.restore.</code><code class="sig-name descname">RestoreCredentials</code><span class="sig-paren">(</span><em class="sig-param">func=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.restore.RestoreCredentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_script.commands.Command</span></code></p>
+<p>Command to restore credentials from the permanent archive dynamodb table
+back into the primary storage table.</p>
+<dl class="method">
+<dt id="confidant.scripts.restore.RestoreCredentials.credential_exists">
+<code class="sig-name descname">credential_exists</code><span class="sig-paren">(</span><em class="sig-param">credential_id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.restore.RestoreCredentials.credential_exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.restore.RestoreCredentials.option_list">
+<code class="sig-name descname">option_list</code><em class="property"> = [&lt;flask_script.commands.Option object&gt;, &lt;flask_script.commands.Option object&gt;, &lt;flask_script.commands.Option object&gt;]</em><a class="headerlink" href="#confidant.scripts.restore.RestoreCredentials.option_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.restore.RestoreCredentials.restore">
+<code class="sig-name descname">restore</code><span class="sig-paren">(</span><em class="sig-param">archive_credentials</em>, <em class="sig-param">force</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.restore.RestoreCredentials.restore" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.restore.RestoreCredentials.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">force</em>, <em class="sig-param">ids</em>, <em class="sig-param">_all</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.restore.RestoreCredentials.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a command. This must be implemented by the subclass. Should take
+arguments as configured by the Command options.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confidant.scripts.restore.RestoreCredentials.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">saves</em>, <em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.restore.RestoreCredentials.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
