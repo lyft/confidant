@@ -35,6 +35,7 @@ def _get_validator():
             scoped_auth_keys=settings.SCOPED_AUTH_KEYS,
             token_cache_size=settings.KMS_AUTH_TOKEN_CACHE_SIZE,
             stats=stats,
+            endpoint_url=settings.KMS_URL,
         )
     return _VALIDATOR
 
