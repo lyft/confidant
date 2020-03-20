@@ -69,11 +69,6 @@ class Credential(CredentialBase):
 
     data_type_date_index = DataTypeDateIndex()
 
-    # Classification info (eg: FINANCIALLY_SENSITIVE)
-    tags = ListAttribute(default=list)
-    last_decrypted_date = UTCDateTimeAttribute(null=True)
-    last_rotation_date = UTCDateTimeAttribute(null=True)
-
     def equals(self, other_cred):
         if self.name != other_cred.name:
             return False

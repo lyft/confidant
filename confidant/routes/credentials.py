@@ -1,4 +1,3 @@
-from datetime import datetime
 import base64
 import json
 import logging
@@ -597,7 +596,7 @@ def create_credential():
     data_key = keymanager.create_datakey(encryption_context={'id': id})
     cipher = CipherManager(data_key['plaintext'], version=2)
     credential_pairs = cipher.encrypt(credential_pairs)
-    last_rotation_date = datetime.utcnow()
+    last_rotation_date = datetime.now()
     cred = Credential(
         id='{0}-{1}'.format(id, revision),
         data_type='archive-credential',
@@ -769,22 +768,34 @@ def update_credential(id):
     if _cred.data_type != 'credential':
         msg = 'id provided is not a credential.'
         return jsonify({'error': msg}), 400
+
     data = request.get_json()
-    update = {}
-    revision = credentialmanager.get_latest_credential_revision(
-        id,
-        _cred.revision
-    )
-    update['name'] = data.get('name', _cred.name)
+    if not isinstance(data.get('metadata', {}), dict):
+        return jsonify({'error': 'metadata must be a dict'}), 400
+
+    update = {
+        'name': data.get('name', _cred.name),
+        'last_rotation_date': _cred.last_rotation_date,
+        'credential_pairs': _cred.credential_pairs,
+        'enabled': _cred.enabled,
+        'metadata': data.get('metadata', _cred.metadata),
+        'documentation': data.get('documentation', _cred.documentation),
+    }
+    # Enforce documentation, EXCEPT if we are restoring an old revision
+    if (not update['documentation'] and
+            settings.get('ENFORCE_DOCUMENTATION') and
+            not data.get('revision')):
+        return jsonify({'error': 'documentation is a required field'}), 400
     if 'enabled' in data:
         if not isinstance(data['enabled'], bool):
             return jsonify({'error': 'Enabled must be a boolean.'}), 400
         update['enabled'] = data['enabled']
-    else:
-        update['enabled'] = _cred.enabled
-    if not isinstance(data.get('metadata', {}), dict):
-        return jsonify({'error': 'metadata must be a dict'}), 400
+
     services = servicemanager.get_services_for_credential(id)
+    revision = credentialmanager.get_latest_credential_revision(
+        id,
+        _cred.revision
+    )
     if 'credential_pairs' in data:
         # Ensure credential pair keys are lowercase
         credential_pairs = credentialmanager.lowercase_credential_pairs(
@@ -808,21 +819,17 @@ def update_credential(id):
                 'conflicts': conflicts
             }
             return jsonify(ret), 400
+
+        # If the credential pair passed in the update is different from the
+        # decrypted credential pair of the most recent revision, assume that
+        # this is a new credential pair and update last_rotation_date
+        if credential_pairs != _cred.decrypted_credential_pairs:
+            update['last_rotation_date'] = datetime.now()
         update['credential_pairs'] = json.dumps(credential_pairs)
-        update['last_rotation_date'] = datetime.utcnow()
-    else:
-        update['last_rotation_date'] = _cred.last_rotation_date
-        update['credential_pairs'] = _cred.decrypted_credential_pairs
+
     data_key = keymanager.create_datakey(encryption_context={'id': id})
     cipher = CipherManager(data_key['plaintext'], version=2)
     credential_pairs = cipher.encrypt(update['credential_pairs'])
-    update['metadata'] = data.get('metadata', _cred.metadata)
-    update['documentation'] = data.get('documentation', _cred.documentation)
-    # Enforce documentation, EXCEPT if we are restoring an old revision
-    if (not update['documentation'] and
-            settings.get('ENFORCE_DOCUMENTATION') and
-            not data.get('revision')):
-        return jsonify({'error': 'documentation is a required field'}), 400
     # Try to save to the archive
     try:
         Credential(
@@ -861,6 +868,7 @@ def update_credential(id):
     except PutError as e:
         logger.error(e)
         return jsonify({'error': 'Failed to update active credential.'}), 500
+
     if services:
         service_names = [x.id for x in services]
         msg = 'Updated credential "{0}" ({1}); Revision {2}'
