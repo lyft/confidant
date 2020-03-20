@@ -2,7 +2,7 @@ from confidant.services import keymanager
 
 
 def test_get_key_id(mocker):
-    mocker.patch('confidant.services.keymanager.KEY_METADATA', {})
+    mocker.patch('confidant.services.keymanager._KEY_METADATA', {})
     kms_mock = mocker.patch(
         'confidant.services.keymanager.auth_kms_client.describe_key'
     )
@@ -12,7 +12,7 @@ def test_get_key_id(mocker):
 
 def test_get_key_id_cached(mocker):
     mocker.patch(
-        'confidant.services.keymanager.KEY_METADATA',
+        'confidant.services.keymanager._KEY_METADATA',
         {'mockalias': {'KeyMetadata': {'KeyId': 'mockid'}}}
     )
     mocker.patch(
