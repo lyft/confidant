@@ -32,3 +32,14 @@ def load_module(module_path):
     function = getattr(module, function_name)
 
     return function
+
+
+def get_boolean(val, default=False):
+    """
+    Given a value, check if if corresponds to True or False.
+    Python's bool() does not behave as expected for strings so we
+    have a helper function here
+    """
+    if val is None:
+        return default
+    return val in ['True', 'true', '1']

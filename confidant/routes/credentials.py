@@ -157,7 +157,7 @@ def get_credential(id):
                      the provided ID.
     :statuscode 404: The provided credential ID does not exist.
     """
-    metadata_only = settings.bool_env(request.args.get('metadata_only'))
+    metadata_only = misc.get_boolean(request.args.get('metadata_only'))
 
     if not acl_module_check(resource_type='credential',
                             action='metadata',
@@ -209,8 +209,8 @@ def get_credential(id):
                         id, credential.revision)
                 )
                 return jsonify({}), 404
-                archived_credential.last_decrypted_date = now
-                archived_credential.save()
+            archived_credential.last_decrypted_date = now
+            archived_credential.save()
 
         log_line = "{0} get credential {1}".format(
             authnz.get_logged_in_user(),
