@@ -202,14 +202,16 @@ def get_credential(id):
                     '{}-{}'.format(id, credential.revision)
                 )
             except DoesNotExist:
+                archived_credential = None
                 logger.error('Archived credential {}-{} not found'.format(
                         id, credential.revision)
                 )
             now = datetime.now()
             credential.last_decrypted_date = now
-            archived_credential.last_decrypted_date = now
             credential.save()
-            archived_credential.save()
+            if archived_credential:
+                archived_credential.last_decrypted_date = now
+                archived_credential.save()
 
         log_line = "{0} get credential {1}".format(
             authnz.get_logged_in_user(),
