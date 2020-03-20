@@ -183,6 +183,7 @@ def test_get_credential(mocker, credential):
     assert mock_save.call_count == 0
 
     # Archive credential not found
+    # Fail open - still return a 200
     mocker.patch(
         'confidant.routes.credentials.Credential.get',
         side_effect=[credential, DoesNotExist()]
@@ -192,7 +193,7 @@ def test_get_credential(mocker, credential):
         follow_redirects=False
     )
     json_data = json.loads(ret.data)
-    assert ret.status_code == 404
+    assert ret.status_code == 200
 
     mocker.patch(
         'confidant.routes.credentials.Credential.get',

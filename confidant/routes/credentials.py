@@ -196,20 +196,19 @@ def get_credential(id):
         include_credential_pairs = True
 
         if settings.ENABLE_SAVE_LAST_DECRYPTION_TIME:
-            now = datetime.now()
-            credential.last_decrypted_date = now
-            credential.save()
             # Also try to save the archived credential to stay consistent
             try:
                 archived_credential = Credential.get(
                     '{}-{}'.format(id, credential.revision)
                 )
             except DoesNotExist:
-                logger.warning('Archived credential {}-{} not found'.format(
+                logger.error('Archived credential {}-{} not found'.format(
                         id, credential.revision)
                 )
-                return jsonify({}), 404
+            now = datetime.now()
+            credential.last_decrypted_date = now
             archived_credential.last_decrypted_date = now
+            credential.save()
             archived_credential.save()
 
         log_line = "{0} get credential {1}".format(
