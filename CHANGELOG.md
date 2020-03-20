@@ -1,29 +1,8 @@
 # Changelog
 
-## 6.4.1
-
-* When the environment variable `ENABLE_SAVE_LAST_DECRYPTION_TIME` is set to true, this change will
-  save the archived credential in addition to the credential itself, which was saved in v6.4.0.
-  The archived credential will not be saved if the ID specified in the endpoint is already an
-  archived credential.
-
-## 6.4.0
-
-* This release adds support for 2 small features:
-
-  * Add a `metadata_only` param to `GET /v1/credentials/<ID>`. For instance, if the request is
-    `GET /v1/credentials/123?metadata_only=true`, the response will not contain the credential pairs.
-    `metadata_only` defaults to `false` so that it is backwards compatible. The purpose of this
-    is to give users finer controls when deciding whether to send back `credential_pairs`.
-  * Automatically update the `last_decrypted_date` on a credential when the `credential_pairs` are
-    sent back to the client. Sending `credential_pairs` to the client implies that a credential has been
-    decrypted and is likely to have been read by a human. This is also an OPT IN change.
-    An environment variable `ENABLE_SAVE_LAST_DECRYPTION_TIME` must be set to true in order to
-    update `last_decrypted_date`.
-
 ## 6.3.0
 
-* This release adds support for keeping track of when credentials should be rotated.
+* Added support for keeping track of when credentials should be rotated.
   Three new fields have been added to the Credential model:
 
   * tags: `tags` are a set of strings that can be used to categorize a credential. For instance
@@ -46,6 +25,29 @@
      config where the key represents a tag (eg: "ADMIN_PRIV") and the value represents the number of days
      that keys with this tag should be rotated. For instance, we could have a `ROTATION_DAYS_CONFIG` that
      looks something like '{"ADMIN_PRIV": 30, "FINANCIAL_DATA": 10}'
+
+* When the environment variable `ENABLE_SAVE_LAST_DECRYPTION_TIME` is set to true, this change will
+  save the archived credential in addition to the credential itself, which was saved in v6.4.0.
+  The archived credential will not be saved if the ID specified in the endpoint is already an
+  archived credential.
+
+* Add a `metadata_only` param to `GET /v1/credentials/<ID>`. For instance, if the request is
+  `GET /v1/credentials/123?metadata_only=true`, the response will not contain the credential pairs.
+  `metadata_only` defaults to `false` so that it is backwards compatible. The purpose of this
+  is to give users finer controls when deciding whether to send back `credential_pairs`.
+
+* Automatically update the `last_decrypted_date` on a credential when the `credential_pairs` are
+  sent back to the client. Sending `credential_pairs` to the client implies that a credential has been
+  decrypted and is likely to have been read by a human. This is also an OPT IN change.
+  An environment variable `ENABLE_SAVE_LAST_DECRYPTION_TIME` must be set to true in order to
+  update `last_decrypted_date`.
+
+* Added `config/gunicorn.conf` and `config/logging.conf` files, which can be used to enable structured
+  json logs for logging output.
+
+* Updated the docker-compose setup to have a fully functional production-like environment, with
+  local dynamodb, local kms, and a local simplesamlphp IDP. The developer environment also has a
+  configuration for the PKI, which will generate self-signed certificates.
 
 ## 6.2.0
 
