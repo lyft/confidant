@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.4.1
+
+* When the environment variable `ENABLE_SAVE_LAST_DECRYPTION_TIME` is set to true, this change will
+  save the archived credential in addition to the credential itself, which was saved in v6.4.0.
+  The archived credential will not be saved if the ID specified in the endpoint is already an
+  archived credential.
+
 ## 6.4.0
 
 * This release adds support for 2 small features:
