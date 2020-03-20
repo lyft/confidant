@@ -157,11 +157,7 @@ def get_credential(id):
                      the provided ID.
     :statuscode 404: The provided credential ID does not exist.
     """
-    metadata_only = request.args.get(
-        'metadata_only',
-        default=False,
-        type=bool,
-    )
+    metadata_only = misc.get_boolean(request.args.get('metadata_only'))
 
     if not acl_module_check(resource_type='credential',
                             action='metadata',
@@ -180,8 +176,7 @@ def get_credential(id):
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
-    if (credential.data_type != 'credential' and
-            credential.data_type != 'archive-credential'):
+    if credential.data_type != 'credential':
         return jsonify({}), 404
 
     permissions = {
@@ -201,8 +196,22 @@ def get_credential(id):
         include_credential_pairs = True
 
         if settings.ENABLE_SAVE_LAST_DECRYPTION_TIME:
-            credential.last_decrypted_date = datetime.now()
+            # Also try to save the archived credential to stay consistent
+            try:
+                archived_credential = Credential.get(
+                    '{}-{}'.format(id, credential.revision)
+                )
+            except DoesNotExist:
+                archived_credential = None
+                logger.error('Archived credential {}-{} not found'.format(
+                        id, credential.revision)
+                )
+            now = datetime.now()
+            credential.last_decrypted_date = now
             credential.save()
+            if archived_credential:
+                archived_credential.last_decrypted_date = now
+                archived_credential.save()
 
         log_line = "{0} get credential {1}".format(
             authnz.get_logged_in_user(),
