@@ -73,6 +73,9 @@
                 name = _.result(_.find($scope.$parent.credentialList, function(cred) {
                     return cred.id.indexOf(credId) === 0;
                 }), 'name');
+                if (!name) {
+                    name = credId + ' (archived?)';
+                }
                 return name;
             };
 

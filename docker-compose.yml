@@ -1,25 +1,46 @@
-confidant:
-  image: lyft/confidant
-  #build: .
-  #volumes:
-  #  - .:/srv/confidant:rw
-  ports:
-   - "80:80"
-  links:
-   - redis
-   - dynamo
-  env_file: ./service.env
-  environment:
-    HOST: '0.0.0.0'
-    PORT: 80
-redis:
-  ports:
-    - "6379:6379"
-  image: redis
-dynamo:
-  volumes:
-    - /mnt/dynamo:/mnt/dynamo:rw,Z
-  ports:
-    - "7777:7777"
-  image: tray/dynamodb-local
-  command: -port 7777 -dbPath /mnt/dynamo
+version: "3.7"
+networks:
+  confidant:
+    name: confidant
+services:
+  saml-idp:
+    image: kristophjunge/test-saml-idp
+    env_file: ./config/development/saml-idp.env
+    networks:
+      - default
+      - confidant
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    volumes:
+      - ./config/development/saml-authsources.php:/var/www/simplesamlphp/config/authsources.php
+  dynamodb:
+    image: amazon/dynamodb-local
+    init: true
+    restart: on-failure
+    env_file: ./config/development/dynamodb.env
+    command: "-Xmx512m -jar DynamoDBLocal.jar -port 8080 -sharedDb"
+  kms:
+    image: nsmithuk/local-kms
+    init: true
+    restart: on-failure
+    volumes:
+      - ./config/development/kms-seed.yaml:/init/seed.yaml
+  confidant:
+    image: lyft/confidant
+    init: true
+    restart: on-failure
+    networks:
+      - default
+      - confidant
+    ports:
+      - "80:80"
+    depends_on:
+      - dynamodb
+      - kms
+    env_file: ./config/development/confidant.env
+    volumes:
+      - ./config/development/logging.conf:/etc/confidant/logging.conf
+      - ./config/development/idp.crt:/etc/confidant/idp.crt
+      - ./config/gunicorn.conf:/etc/confidant/gunicorn.conf
+    command: "gunicorn --config /etc/confidant/gunicorn.conf confidant.wsgi:app --workers=2 -k gevent --access-logfile=- --error-logfile=-"

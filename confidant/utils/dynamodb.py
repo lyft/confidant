@@ -4,7 +4,8 @@ import time
 
 from pynamodb.exceptions import TableError
 
-from confidant.models.credential import Credential
+from confidant import settings
+from confidant.models.credential import Credential, CredentialArchive
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
 
@@ -16,6 +17,13 @@ def create_dynamodb_tables():
         try:
             if not Credential.exists():
                 Credential.create_table(
+                    read_capacity_units=10,
+                    write_capacity_units=10,
+                    wait=True
+                )
+            if (settings.DYNAMODB_TABLE_ARCHIVE
+                    and not CredentialArchive.exists()):
+                CredentialArchive.create_table(
                     read_capacity_units=10,
                     write_capacity_units=10,
                     wait=True

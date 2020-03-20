@@ -6,6 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from confidant import authnz, settings
 
+logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('static_files', __name__)
 
 
@@ -78,7 +79,7 @@ def custom_modules(path):
             path
         )
     except NotFound:
-        logging.warning(
+        logger.warning(
             'Client requested missing custom module {0}.'.format(path)
         )
         return '', 200

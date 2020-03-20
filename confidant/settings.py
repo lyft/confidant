@@ -4,6 +4,8 @@ from os import getenv
 
 from confidant.encrypted_settings import EncryptedSettings
 
+logger = logging.getLogger(__name__)
+
 
 class SettingsError(Exception):
     pass
@@ -256,6 +258,8 @@ KMS_AUTH_MANAGE_GRANTS = bool_env('KMS_AUTH_MANAGE_GRANTS', True)
 # equivalent to the number of tokens you expect to generate within the lifetime
 # of your tokens.
 KMS_AUTH_TOKEN_CACHE_SIZE = int_env('KMS_AUTH_TOKEN_CACHE_SIZE', 4096)
+# A custom endpoint url for KMS, for use in development
+KMS_URL = str_env('KMS_URL', None)
 
 # SSL redirection and HSTS
 
@@ -324,6 +328,10 @@ DYNAMODB_URL = str_env('DYNAMODB_URL')
 # The DynamoDB table to use for storage.
 # Example: mydynamodbtable
 DYNAMODB_TABLE = str_env('DYNAMODB_TABLE')
+# The DynamoDB table to use for permanently archiving old credentials and
+# services.
+# Example: mydynamodbtable-archive
+DYNAMODB_TABLE_ARCHIVE = str_env('DYNAMODB_TABLE_ARCHIVE')
 # Have PynamoDB automatically generate the DynamoDB table if it doesn't exist.
 # Note that you need to give Confidant's IAM user or role enough privileges for
 # this to occur.
@@ -585,11 +593,17 @@ TAGS_EXCLUDING_ROTATION = json.loads(str_env('TAGS_EXCLUDING_ROTATION', '[]'))
 # be rotated
 ROTATION_DAYS_CONFIG = json.loads(str_env('ROTATION_DAYS_CONFIG', '{}'))
 
+# If this is eanbled, update credential.last_decrypted_date
+# when credential.credential_pairs is sent back to the client
+# in GET /v1/credentials/<ID> to keep track of when a human
+# last saw a credential pair
+ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPT_TIME')
+
 
 # Configuration validation
 _settings_failures = False
 if len(set(SCOPED_AUTH_KEYS.values())) != len(SCOPED_AUTH_KEYS.values()):
-    logging.error('SCOPED_AUTH_KEYS values are not unique.')
+    logger.error('SCOPED_AUTH_KEYS values are not unique.')
     _settings_failures = True
 
 if _settings_failures:

@@ -4,12 +4,14 @@ import logging
 
 from confidant import settings
 
+logger = logging.getLogger(__name__)
+
 
 def send_event(event_type, services, credential_ids):
     try:
         webhook_url = settings.WEBHOOK_URL
         if not webhook_url:
-            logging.debug('Failed to find a WEBHOOK_URL in config')
+            logger.debug('Failed to find a WEBHOOK_URL in config')
             return
         username = settings.WEBHOOK_USERNAME
         password = settings.WEBHOOK_PASSWORD
@@ -29,7 +31,7 @@ def send_event(event_type, services, credential_ids):
         )
         if response.status_code != 200:
             msg = 'Post to webhook returned non-200 status ({0}).'
-            logging.warning(msg.format(response.status_code))
-        logging.warning("webhook triggered: {}".format(event))
+            logger.warning(msg.format(response.status_code))
+        logger.warning("webhook triggered: {}".format(event))
     except Exception as e:
-        logging.warning('Failed to post webhook event. {0}'.format(e))
+        logger.warning('Failed to post webhook event. {0}'.format(e))

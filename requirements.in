@@ -11,6 +11,12 @@ Flask==1.1.1
 # Use: For CLI scripts.
 Flask-Script==2.0.5
 
+# Dispatching system for parties to subscribe to events
+# Supports per-endpoint timing in flask
+# License: MIT
+# Upstream url: https://pypi.python.org/pypi/blinker
+blinker==1.4
+
 # A low-level interface to a growing number of Amazon Web Services. The
 # botocore package is the foundation for the AWS CLI as well as boto3.
 # License: Apache2
@@ -146,6 +152,11 @@ toastedmarshmallow==2.15.2.post1
 # License: MIT
 # Use: more-efficient LRU dictionary implementation
 lru-dict==1.1.6
+
+# A python library adding a json log formatter
+# License: BSD
+# Upstream url: http://github.com/madzak/python-json-logger
+python-json-logger==0.1.11
 
 # Testing library
 # License: MIT

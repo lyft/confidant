@@ -15,6 +15,8 @@ import confidant.clients
 from confidant import settings
 from confidant.utils import stats
 
+logger = logging.getLogger(__name__)
+
 
 class CachedCertificate(object):
     def __init__(self, lock=False, response=None):
@@ -66,7 +68,7 @@ class CertificateCache(object):
         if cache_id in self.certificates:
             self.certificates[cache_id].lock = False
         else:
-            logging.warning(
+            logger.warning(
                 'Attempting to release a non-existent lock in the certificate'
                 ' cache.'
             )
@@ -347,7 +349,7 @@ class CertificateAuthority(object):
             cached_response = self._get_cached_certificate_with_key(cache_id)
             if cached_response:
                 stats.incr('get_cached_certificate_with_key.hit')
-                logging.debug('Used cached response for {}'.format(cache_id))
+                logger.debug('Used cached response for {}'.format(cache_id))
                 return cached_response
             stats.incr('get_cached_certificate_with_key.miss')
             key = self.generate_key()
@@ -400,7 +402,7 @@ class CertificateAuthority(object):
                     # Sleep for a maximum of 10 seconds
                     if i >= 50:
                         raise
-                    logging.debug(
+                    logger.debug(
                         'Sleeping in get_certificate_from_arn for {}'.format(
                             certificate_arn,
                         )

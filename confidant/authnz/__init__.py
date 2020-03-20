@@ -17,6 +17,7 @@ from confidant.authnz import userauth
 
 _VALIDATOR = None
 
+logger = logging.getLogger(__name__)
 user_mod = userauth.init_user_auth_class()
 
 
@@ -34,6 +35,7 @@ def _get_validator():
             scoped_auth_keys=settings.SCOPED_AUTH_KEYS,
             token_cache_size=settings.KMS_AUTH_TOKEN_CACHE_SIZE,
             stats=stats,
+            endpoint_url=settings.KMS_URL,
         )
     return _VALIDATOR
 
@@ -144,7 +146,7 @@ def require_auth(f):
         try:
             kms_auth_data = _get_kms_auth_data()
         except AuthenticationError:
-            logging.exception('Failed to authenticate request.')
+            logger.exception('Failed to authenticate request.')
             return abort(403)
         if kms_auth_data:
             validator = _get_validator()
@@ -160,28 +162,31 @@ def require_auth(f):
                 if _user_type not in settings.KMS_AUTH_USER_TYPES:
                     msg = '{0} is not an allowed user type for KMS auth.'
                     msg = msg.format(_user_type)
-                    logging.warning(msg)
+                    logger.warning(msg)
                     return abort(403)
                 with stats.timer('decrypt_token'):
                     token_data = validator.decrypt_token(
                         kms_auth_data['username'],
                         kms_auth_data['token']
                     )
-                logging.debug('Auth request had the following token_data:'
-                              ' {0}'.format(token_data))
+                logger.debug(
+                    'Auth request had the following token_data: {0}'.format(
+                        token_data
+                    )
+                )
                 msg = 'Authenticated {0} with user_type {1} via kms auth'
                 msg = msg.format(_from, _user_type)
-                logging.debug(msg)
+                logger.debug(msg)
                 g.user_type = _user_type
                 g.auth_type = 'kms'
                 g.account = account_for_key_alias(token_data['key_alias'])
                 g.username = _from
                 return f(*args, **kwargs)
             except kmsauth.TokenValidationError:
-                logging.exception('Failed to decrypt authentication token.')
+                logger.exception('Failed to decrypt authentication token.')
                 msg = 'Access denied for {0}. Authentication Failed.'
                 msg = msg.format(_from)
-                logging.warning(msg)
+                logger.warning(msg)
                 return abort(403)
 
         # If not using kms auth, require auth using the user_mod authn module.
@@ -195,7 +200,7 @@ def require_auth(f):
                 try:
                     user_mod.check_authorization()
                 except NotAuthorized as e:
-                    logging.warning('Not authorized -- {}'.format(e))
+                    logger.warning('Not authorized -- {}'.format(e))
                     return abort(403)
                 else:
                     # User took an action, extend the expiration time.
@@ -229,7 +234,7 @@ def require_logout_for_goodbye(f):
             # ok, not logged in
             return f(*args, **kwargs)
 
-        logging.warning('require_logout(): calling log_out()')
+        logger.warning('require_logout(): calling log_out()')
         resp = user_mod.log_out()
 
         if resp.headers.get('Location') == url_for('static_files.goodbye'):

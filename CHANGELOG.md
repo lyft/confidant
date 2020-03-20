@@ -1,5 +1,53 @@
 # Changelog
 
+## 6.3.0
+
+* Added support for keeping track of when credentials should be rotated.
+  Three new fields have been added to the Credential model:
+
+  * tags: `tags` are a set of strings that can be used to categorize a credential. For instance
+  "ADMIN_PRIV" or "EXEMPT_FROM_ROTATION" could be potential tags. We choose to have a list of tags
+  rather than a single string because some credentials might fall into multiple categories
+  * last_decrypted_date: `last_decrypted_date` explicitly stores when someone viewed a credential.
+  Certain credentials can potentially be highly vulnerable and could benefit from being rotated
+  the moment the credential pair is viewed.
+  * last_rotation_date: `last_rotation_date` stores when a credential was last rotated. Some credentials
+  might need to periodically be rotated for security purposes.
+
+  There is also additional logic for calculating when a credential should next be rotated
+  given its previous rotation history. This logic lives as the `next_rotation_date` property on the
+  Credential object and is not persisted into the DB layer.  To use this logic:
+
+  1. Set an env variable `MAXIMUM_ROTATION_DAYS` which determines how the maximum amount of time before
+     a credential should be rotated. By default, `MAXIMUM_ROTATION_DAYS` is 0 so people using this feature
+     must explicitly set it.
+  1. Set an env variable `ROTATION_DAYS_CONFIG` which is a JSON serialized string. This is just a key value
+     config where the key represents a tag (eg: "ADMIN_PRIV") and the value represents the number of days
+     that keys with this tag should be rotated. For instance, we could have a `ROTATION_DAYS_CONFIG` that
+     looks something like '{"ADMIN_PRIV": 30, "FINANCIAL_DATA": 10}'
+
+* Add a `metadata_only` param to `GET /v1/credentials/<ID>`. For instance, if the request is
+  `GET /v1/credentials/123?metadata_only=true`, the response will not contain the credential pairs.
+  `metadata_only` defaults to `false` so that it is backwards compatible. The purpose of this
+  is to give users finer controls when deciding whether to send back `credential_pairs`.
+
+* Automatically update the `last_decrypted_date` on a credential when the `credential_pairs` are
+  sent back to the client. Sending `credential_pairs` to the client implies that a credential has been
+  decrypted and is likely to have been read by a human. This is also an OPT IN change.
+  An environment variable `ENABLE_SAVE_LAST_DECRYPTION_TIME` must be set to true in order to
+  update `last_decrypted_date`.
+
+* Added `config/gunicorn.conf` and `config/logging.conf` files, which can be used to enable structured
+  json logs for logging output.
+
+* Updated the docker-compose setup to have a fully functional production-like environment, with
+  local dynamodb, local kms, and a local simplesamlphp IDP. The developer environment also has a
+  configuration for the PKI, which will generate self-signed certificates.
+
+## 6.2.0
+
+* This release fixes a python3 stacktrace in SAML auth, when using the `SAML_SP_KEY_FILE` setting.
+
 ## 6.1.0
 
 * This release adds support for confidant acting as a Certificate Authority,

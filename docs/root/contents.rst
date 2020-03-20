@@ -13,12 +13,14 @@ Confidant
 .. toctree::
   :caption: Advanced
 
+  api
   acls
   blind_secrets
   kms_auth
   threat_model
   contributing
   data_schema
+  maintenance
   upgrade
   changelog
 

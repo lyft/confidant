@@ -9,40 +9,55 @@ from confidant import settings
 from confidant.utils import stats
 from confidant.lib import cryptolib
 
-config = botocore.config.Config(
-    connect_timeout=settings.KMS_CONNECTION_TIMEOUT,
-    read_timeout=settings.KMS_READ_TIMEOUT,
-    max_pool_connections=settings.KMS_MAX_POOL_CONNECTIONS
-)
-auth_kms_client = confidant.clients.get_boto_client(
-    'kms',
-    config={'name': 'keymanager', 'config': config}
-)
-at_rest_kms_client = confidant.clients.get_boto_client(
-    'kms',
-    config={'name': 'keymanager', 'config': config}
-)
-iam_resource = confidant.clients.get_boto_resource('iam')
+logger = logging.getLogger(__name__)
 
-DATAKEYS = {}
-KEY_METADATA = {}
+_DATAKEYS = {}
+_KEY_METADATA = {}
+
+
+def _get_boto_config():
+    return botocore.config.Config(
+        connect_timeout=settings.KMS_CONNECTION_TIMEOUT,
+        read_timeout=settings.KMS_READ_TIMEOUT,
+        max_pool_connections=settings.KMS_MAX_POOL_CONNECTIONS,
+    )
+
+
+def _get_auth_kms_client():
+    return confidant.clients.get_boto_client(
+        'kms',
+        config={'name': 'keymanager_auth', 'config': _get_boto_config()},
+        endpoint_url=settings.KMS_URL,
+    )
+
+
+def _get_at_rest_kms_client():
+    return confidant.clients.get_boto_client(
+        'kms',
+        config={'name': 'keymanager_at_rest', 'config': _get_boto_config()},
+        endpoint_url=settings.KMS_URL,
+    )
 
 
 def get_key_id(key_alias):
-    if key_alias not in KEY_METADATA:
-        KEY_METADATA[key_alias] = auth_kms_client.describe_key(KeyId=key_alias)
-    return KEY_METADATA[key_alias]['KeyMetadata']['KeyId']
+    auth_kms_client = _get_auth_kms_client()
+    if key_alias not in _KEY_METADATA:
+        _KEY_METADATA[key_alias] = auth_kms_client.describe_key(KeyId=key_alias)
+    return _KEY_METADATA[key_alias]['KeyMetadata']['KeyId']
 
 
 def create_datakey(encryption_context):
     '''
     Create a datakey from KMS.
     '''
+    at_rest_kms_client = _get_at_rest_kms_client()
     # Disabled encryption is dangerous, so we don't use falsiness here.
     if settings.USE_ENCRYPTION is False:
-        logging.warning('Creating a mock datakey in keymanager.create_datakey.'
-                        ' If you are not running in a development or test'
-                        ' environment, this should not be happening!')
+        logger.warning(
+            'Creating a mock datakey in keymanager.create_datakey. If you are'
+            ' not running in a development or test environment, this should not'
+            ' be happening!'
+        )
         return cryptolib.create_mock_datakey()
     # underlying lib does generate random and encrypt, so increment by 2
     stats.incr('at_rest_action', 2)
@@ -57,26 +72,29 @@ def decrypt_datakey(data_key, encryption_context=None):
     '''
     Decrypt a datakey.
     '''
+    at_rest_kms_client = _get_at_rest_kms_client()
     # Disabled encryption is dangerous, so we don't use falsiness here.
     if settings.USE_ENCRYPTION is False:
-        logging.warning('Decrypting a mock data key in'
-                        ' keymanager.decrypt_datakey. If you are not running'
-                        ' in a development or test environment, this should'
-                        ' not be happening!')
+        logger.warning(
+            'Decrypting a mock data key in keymanager.decrypt_datakey. If you'
+            ' are not running in a development or test environment, this should'
+            ' not be happening!'
+        )
         return cryptolib.decrypt_mock_datakey(data_key)
     sha = hashlib.sha256(data_key).hexdigest()
-    if sha not in DATAKEYS:
+    if sha not in _DATAKEYS:
         stats.incr('at_rest_action')
         plaintext = cryptolib.decrypt_datakey(
             data_key,
             encryption_context,
             client=at_rest_kms_client
         )
-        DATAKEYS[sha] = plaintext
-    return DATAKEYS[sha]
+        _DATAKEYS[sha] = plaintext
+    return _DATAKEYS[sha]
 
 
 def get_grants():
+    auth_kms_client = _get_auth_kms_client()
     _grants = []
     next_marker = None
     while True:
@@ -106,6 +124,7 @@ def ensure_grants(service_name):
     TODO: We should probably orchestrate this, rather than doing it in
           confidant.
     '''
+    iam_resource = confidant.clients.get_boto_resource('iam')
     if not settings.KMS_AUTH_MANAGE_GRANTS:
         return
     try:
@@ -114,13 +133,14 @@ def ensure_grants(service_name):
         grants = get_grants()
         _ensure_grants(role, grants)
     except ClientError:
-        logging.exception(
+        logger.exception(
             'Failed to ensure grants for {0}.'.format(service_name)
         )
         raise ServiceCreateGrantError()
 
 
 def grants_exist(service_name):
+    iam_resource = confidant.clients.get_boto_resource('iam')
     try:
         role = iam_resource.Role(name=service_name)
         role.load()
@@ -133,7 +153,7 @@ def grants_exist(service_name):
         grants = get_grants()
         encrypt_grant, decrypt_grant = _grants_exist(role, grants)
     except ClientError:
-        logging.exception('Failed to get grants for {0}.'.format(service_name))
+        logger.exception('Failed to get grants for {0}.'.format(service_name))
         raise ServiceGetGrantError()
     return {
         'encrypt_grant': encrypt_grant,
@@ -170,6 +190,7 @@ def _grants_exist(role, grants):
 
 
 def _ensure_grants(role, grants):
+    auth_kms_client = _get_auth_kms_client()
     encrypt_constraint = {
         'EncryptionContextSubset': {
             'from': role.role_name
@@ -186,7 +207,7 @@ def _ensure_grants(role, grants):
     }
     encrypt_grant, decrypt_grant = _grants_exist(role, grants)
     if not encrypt_grant:
-        logging.info('Creating encrypt grant for {0}'.format(role.arn))
+        logger.info('Creating encrypt grant for {0}'.format(role.arn))
         auth_kms_client.create_grant(
             KeyId=get_key_id(settings.AUTH_KEY),
             GranteePrincipal=role.arn,
@@ -194,7 +215,7 @@ def _ensure_grants(role, grants):
             Constraints=encrypt_constraint
         )
     if not decrypt_grant:
-        logging.info('Creating decrypt grant for {0}'.format(role.arn))
+        logger.info('Creating decrypt grant for {0}'.format(role.arn))
         auth_kms_client.create_grant(
             KeyId=get_key_id(settings.AUTH_KEY),
             GranteePrincipal=role.arn,
