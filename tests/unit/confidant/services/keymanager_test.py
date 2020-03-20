@@ -11,7 +11,7 @@ def mock_auth_client(mocker):
 
 def test_get_key_id(mocker, mock_auth_client):
     mocker.patch('confidant.services.keymanager._KEY_METADATA', {})
-    mock_auth_client.describe_key = mocker.mock(
+    mock_auth_client.describe_key = mocker.Mock(
         return_value={'KeyMetadata': {'KeyId': 'mockid'}}
     )
     assert keymanager.get_key_id('mockalias') == 'mockid'
@@ -22,7 +22,7 @@ def test_get_key_id_cached(mocker, mock_auth_client):
         'confidant.services.keymanager._KEY_METADATA',
         {'mockalias': {'KeyMetadata': {'KeyId': 'mockid'}}}
     )
-    mock_auth_client.describe_key = mocker.mock()
+    mock_auth_client.describe_key = mocker.Mock()
     assert keymanager.get_key_id('mockalias') == 'mockid'
 
 
