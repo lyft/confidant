@@ -825,18 +825,19 @@ def update_credential(id):
         # this is a new credential pair and update last_rotation_date
         if credential_pairs != _cred.decrypted_credential_pairs:
             update['last_rotation_date'] = datetime.now()
-        update['credential_pairs'] = json.dumps(credential_pairs)
+        data_key = keymanager.create_datakey(encryption_context={'id': id})
+        cipher = CipherManager(data_key['plaintext'], version=2)
+        update['credential_pairs'] = cipher.encrypt(
+            json.dumps(credential_pairs)
+        )
 
-    data_key = keymanager.create_datakey(encryption_context={'id': id})
-    cipher = CipherManager(data_key['plaintext'], version=2)
-    credential_pairs = cipher.encrypt(update['credential_pairs'])
     # Try to save to the archive
     try:
         Credential(
             id='{0}-{1}'.format(id, revision),
             name=update['name'],
             data_type='archive-credential',
-            credential_pairs=credential_pairs,
+            credential_pairs=update['credential_pairs'],
             metadata=update['metadata'],
             enabled=update['enabled'],
             revision=revision,
@@ -854,7 +855,7 @@ def update_credential(id):
             id=id,
             name=update['name'],
             data_type='credential',
-            credential_pairs=credential_pairs,
+            credential_pairs=update['credential_pairs'],
             metadata=update['metadata'],
             enabled=update['enabled'],
             revision=revision,
