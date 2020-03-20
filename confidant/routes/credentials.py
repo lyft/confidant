@@ -6,7 +6,6 @@ import uuid
 
 from datetime import datetime
 from flask import blueprints, jsonify, request
-from flask_restful import inputs
 from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, clients, settings
@@ -158,11 +157,7 @@ def get_credential(id):
                      the provided ID.
     :statuscode 404: The provided credential ID does not exist.
     """
-    metadata_only = request.args.get(
-        'metadata_only',
-        default=False,
-        type=inputs.boolean,
-    )
+    metadata_only = settings.bool_env(request.args.get('metadata_only'))
 
     if not acl_module_check(resource_type='credential',
                             action='metadata',
@@ -181,8 +176,7 @@ def get_credential(id):
             'Item with id {0} does not exist.'.format(id)
         )
         return jsonify({}), 404
-    if (credential.data_type != 'credential' and
-            credential.data_type != 'archive-credential'):
+    if credential.data_type != 'credential':
         return jsonify({}), 404
 
     permissions = {
@@ -205,18 +199,16 @@ def get_credential(id):
             now = datetime.now()
             credential.last_decrypted_date = now
             credential.save()
-            # Also try to save the archived credential if ID
-            # corresponds to a 'credential'
-            if credential.data_type == 'credential':
-                try:
-                    archived_credential = Credential.get(
-                        '{}-{}'.format(id, credential.revision)
-                    )
-                except DoesNotExist:
-                    logger.warning('Archived credential {}-{} not found'.format(
-                            id, credential.revision)
-                    )
-                    return jsonify({}), 404
+            # Also try to save the archived credential to stay consistent
+            try:
+                archived_credential = Credential.get(
+                    '{}-{}'.format(id, credential.revision)
+                )
+            except DoesNotExist:
+                logger.warning('Archived credential {}-{} not found'.format(
+                        id, credential.revision)
+                )
+                return jsonify({}), 404
                 archived_credential.last_decrypted_date = now
                 archived_credential.save()
 

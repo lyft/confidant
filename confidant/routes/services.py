@@ -206,7 +206,7 @@ def get_service(id):
         'get': False,
         'update': False,
     }
-    metadata_only = request.args.get('metadata_only', default=False, type=bool)
+    metadata_only = settings.bool_env(request.args.get('metadata_only'))
     logged_in_user = authnz.get_logged_in_user()
     action = 'metadata' if metadata_only else 'get'
     permissions['metadata'] = acl_module_check(
