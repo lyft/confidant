@@ -661,6 +661,21 @@ ACM_PRIVATE_CA_CERTIFICATE_USE_CACHE_CA1=True
 ACM_PRIVATE_CA_CERTIFICATE_CACHE_SIZE_CA1=1028
 ```
 
+### Settings for local development
+
+It's possible to point confidant at local versions of AWS services for testing.
+
+```
+# The local versions of the AWS services don't use real AWS credentials, so
+# you probably want to fake these
+AWS_ACCESS_KEY_ID=1
+AWS_SECRET_ACCESS_KEY=1
+# The url to your local dynamodb server
+DYNAMODB_URL=http://dynamodb:8080
+# The url to your local kms server
+KMS_URL=http://kms:8080
+```
+
 ## KMS key policy configuration
 
 Confidant needs to have special KMS key policy for both the at-rest

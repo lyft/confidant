@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Contributing &mdash; confidant 6.4.1-eb9e5d documentation</title>
+  <title>Contributing &mdash; confidant 6.3.0-861589 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.4.1-eb9e5d
+                6.3.0-861589
               </div>
             
           
@@ -128,6 +128,7 @@
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#maintenance-mode-settings">Maintenance mode settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#confidant-performance-settings">Confidant performance settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="configuration.html#certificate-authority-settings">Certificate Authority settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#settings-for-local-development">Settings for local development</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#kms-key-policy-configuration">KMS key policy configuration</a></li>
@@ -238,8 +239,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#development-guide">Development guide</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#development-using-docker">Development using docker</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#quickstart-for-testing-or-development">Quickstart for testing or development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#development-using-docker-compose">Development using docker-compose</a></li>
 </ul>
 </li>
 </ul>
@@ -265,44 +265,42 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">6.4.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">6.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">6.3.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">6.2.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">6.1.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">6.0.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">5.2.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id8">5.1.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">5.0.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id10">5.0.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">4.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">4.3.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">4.3.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id14">4.2.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">4.1.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">4.0.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id17">3.0.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">2.0.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id19">2.0.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">1.11.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id21">1.10.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id22">1.10.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id23">1.9.0</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id24">1.8.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id25">1.7.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id26">1.6.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id27">1.5.1</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id28">1.5.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id29">1.4.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id30">1.3.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id31">1.2.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id32">1.1.21</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id33">1.1.20</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id34">1.1.19</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id35">1.1.16 - 1.1.18</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id36">1.1.15</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id37">1.1.14</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id38">1.1.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">6.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">6.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">6.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">6.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">5.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">5.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">5.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id8">5.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">4.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id10">4.3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">4.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">4.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">4.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id14">4.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">3.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">2.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id17">2.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">1.11.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id19">1.10.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">1.10.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id21">1.9.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id22">1.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id23">1.7.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id24">1.6.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id25">1.5.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id26">1.5.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id27">1.4.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id28">1.3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id29">1.2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id30">1.1.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id31">1.1.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id32">1.1.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id33">1.1.16 - 1.1.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id34">1.1.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id35">1.1.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id36">1.1.13</a></li>
 </ul>
 </li>
 </ul>
@@ -406,79 +404,22 @@ easily reproduce your bug.</p>
 </div>
 <div class="section" id="development-guide">
 <h2>Development guide<a class="headerlink" href="#development-guide" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="development-using-docker">
-<h3>Development using docker<a class="headerlink" href="#development-using-docker" title="Permalink to this headline">¶</a></h3>
-<p>Confidant comes with Dockerfile and docker-compose.yml files. You can use these
-to run a local development environment. This environment will launch a local
-dynamo (accessible through <a class="reference external" href="http://dynamo:7777">http://dynamo:7777</a>) a local redis (accessible
-through redis://redis:6379) and a local confidant container.</p>
-</div>
-<div class="section" id="quickstart-for-testing-or-development">
-<h3>Quickstart for testing or development<a class="headerlink" href="#quickstart-for-testing-or-development" title="Permalink to this headline">¶</a></h3>
-<p>It’s possible to start Confidant with authentication and encryption disabled,
-to make it easier to test or to do development on portions of confidant that
-don’t require these features. It’s very important to never use this
-configuration outside of a testing or development environment, as it disables
-everything that makes Confidant safe!</p>
-<p>Here’s a basic configuration that can be used for test/development:</p>
-<p><strong>service.env</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use fake AWS credentials</span>
-<span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span><span class="m">1</span>
-<span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="m">1</span>
-<span class="c1"># Disable all forms of authentication.</span>
-<span class="c1"># NEVER USE THIS IN PRODUCTION!</span>
-<span class="nv">USE_AUTH</span><span class="o">=</span><span class="nb">false</span>
-<span class="c1"># Disable any use of at-rest encryption.</span>
-<span class="c1"># NEVER USE THIS IN PRODUCTION!</span>
-<span class="nv">USE_ENCRYPTION</span><span class="o">=</span><span class="nb">false</span>
-<span class="c1"># The region our service is running in.</span>
-<span class="nv">AWS_DEFAULT_REGION</span><span class="o">=</span>us-east-1
-<span class="c1"># The DynamoDB table name for storage.</span>
-<span class="nv">DYNAMODB_TABLE</span><span class="o">=</span>confidant-development
-<span class="c1"># A local dynamodb service.</span>
-<span class="nv">DYNAMODB_URL</span><span class="o">=</span>http://dynamo:7777
-<span class="c1"># Auto-generate the dynamodb table.</span>
-<span class="nv">DYNAMODB_CREATE_TABLE</span><span class="o">=</span><span class="nb">true</span>
-<span class="c1"># Set the gevent resolver to ares; see:</span>
-<span class="c1">#   https://github.com/surfly/gevent/issues/468</span>
-<span class="nv">GEVENT_RESOLVER</span><span class="o">=</span>ares
-<span class="c1"># Enable debug mode, which will also disable SSLify.</span>
-<span class="c1"># NEVER USE THIS IN PRODUCTION!</span>
-<span class="nv">DEBUG</span><span class="o">=</span><span class="nb">true</span>
-<span class="c1"># Add a sessions secret, for CSRF protection</span>
-<span class="nv">SESSION_SECRET</span><span class="o">=</span>lo8TouG7Bee1ahx7caeyoa6Aic6ku1johjoiyiey
-<span class="c1"># For ease of development, use frontend code that does not always require</span>
-<span class="c1"># a grunt build.</span>
-<span class="nv">STATIC_FOLDER</span><span class="o">=</span>public
-</pre></div>
-</div>
-<p>Place that configuration into a file called <strong>service.env</strong> in the root of
-Confidant’s repo and run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose up
-</pre></div>
-</div>
-<p>Confidant will be available for testing at <a class="reference external" href="http://localhost">http://localhost</a>.</p>
-<p>By default the docker-compose.yml file has a couple arguments commented that
-can be used to make development quicker (<strong>build</strong> and <strong>volumes</strong>). If you
-uncomment <strong>volumes</strong> the confidant repo will be volume mounted into the
-container, which will let you make live modifications to the code without doing
-a full docker build. If you uncomment build, and comment out image,
-docker-compose up will build the confidant image before starting the
-containers.</p>
-<p>A reasonable development process is as follows:</p>
+<div class="section" id="development-using-docker-compose">
+<h3>Development using docker-compose<a class="headerlink" href="#development-using-docker-compose" title="Permalink to this headline">¶</a></h3>
+<p>A full developer configuration is available, using docker-compose, which uses
+local dynamodb, local kms, and a local simplesamplephp.</p>
+<p>To start: <code class="docutils literal notranslate"><span class="pre">docker-compose</span> <span class="pre">up</span></code></p>
+<p>To test code changes:</p>
 <ol class="arabic simple">
-<li><p>Uncomment build, comment out image and uncomment volume.</p></li>
-<li><p>Run: docker-compose build</p></li>
-<li><p>Comment out build and uncomment image.</p></li>
-<li><p>Run: docker-compose up</p></li>
-<li><p>Test.</p></li>
-<li><p>Run: docker-compose stop</p></li>
-<li><p>Make changes.</p></li>
-<li><p>Run: docker-compose up</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">lyft/confidant</span> <span class="pre">.</span></code></p></li>
+<li><p>Kill docker-compose (ctrl-c)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docker-compose</span> <span class="pre">up</span></code></p></li>
 </ol>
-<p>Note that in the above, for most changes you should be able to stop/start the
-containers and your changes will apply; however, some changes require a
-build. In that case, you can repeat the entire above process.</p>
+<p>Confidant will be accessible at <code class="docutils literal notranslate"><span class="pre">http://localhost</span></code>. The username is <code class="docutils literal notranslate"><span class="pre">confidant</span></code>
+and the password is <code class="docutils literal notranslate"><span class="pre">confidant</span></code>.</p>
+<p>All configuration settings for this environment are in the <code class="docutils literal notranslate"><span class="pre">config/development</span></code>
+directory. If you wish to change any settings, kill the docker compose, make the
+change, and start the docker-compose environment back up.</p>
 </div>
 </div>
 </div>
