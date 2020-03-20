@@ -1,0 +1,18 @@
+Keys:
+  - Metadata:
+      KeyId: bc436485-5092-42b8-92a3-0aa8b93536dc
+    BackingKeys:
+      - 34743777217A25432A46294A404E635266556A586E3272357538782F413F4428
+
+  - Metadata:
+      KeyId: 49c5492b-b1bc-42a8-9a5c-b2015e810c1c
+    BackingKeys:
+      - 5cdaead27fe7da2de47945d73cd6d79e36494e73802f3cd3869f1d2cb0b5d7a9
+
+
+Aliases:
+  - AliasName: alias/atrest
+    TargetKeyId: bc436485-5092-42b8-92a3-0aa8b93536dc
+
+  - AliasName: alias/auth
+    TargetKeyId: 49c5492b-b1bc-42a8-9a5c-b2015e810c1c
