@@ -26,7 +26,7 @@ def _get_boto_config():
 def _get_auth_kms_client():
     return confidant.clients.get_boto_client(
         'kms',
-        config={'name': 'keymanager', 'config': _get_boto_config()},
+        config={'name': 'keymanager_auth', 'config': _get_boto_config()},
         endpoint_url=settings.KMS_URL,
     )
 
@@ -34,7 +34,7 @@ def _get_auth_kms_client():
 def _get_at_rest_kms_client():
     return confidant.clients.get_boto_client(
         'kms',
-        config={'name': 'keymanager', 'config': _get_boto_config()},
+        config={'name': 'keymanager_at_rest', 'config': _get_boto_config()},
         endpoint_url=settings.KMS_URL,
     )
 
