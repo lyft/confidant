@@ -26,11 +26,6 @@
      that keys with this tag should be rotated. For instance, we could have a `ROTATION_DAYS_CONFIG` that
      looks something like '{"ADMIN_PRIV": 30, "FINANCIAL_DATA": 10}'
 
-* When the environment variable `ENABLE_SAVE_LAST_DECRYPTION_TIME` is set to true, this change will
-  save the archived credential in addition to the credential itself, which was saved in v6.4.0.
-  The archived credential will not be saved if the ID specified in the endpoint is already an
-  archived credential.
-
 * Add a `metadata_only` param to `GET /v1/credentials/<ID>`. For instance, if the request is
   `GET /v1/credentials/123?metadata_only=true`, the response will not contain the credential pairs.
   `metadata_only` defaults to `false` so that it is backwards compatible. The purpose of this
