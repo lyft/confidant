@@ -2,25 +2,29 @@ import pytest
 from confidant.services import keymanager
 
 
-@pytest.fixture
-def mock_auth_client(mocker):
-    return mocker.patch(
-        'confidant.services.keymanager._get_auth_kms_client',
-    )
-
-
-def test_get_key_id(mocker, mock_auth_client):
+def test_get_key_id(mocker):
     mocker.patch('confidant.services.keymanager._KEY_METADATA', {})
+    mock_auth_client = mocker.Mock()
     mock_auth_client.describe_key = mocker.Mock(
         return_value={'KeyMetadata': {'KeyId': 'mockid'}}
+    )
+    mocker.patch(
+        'confidant.services.keymanager._get_auth_kms_client',
+        return_value=mock_auth_client,
     )
     assert keymanager.get_key_id('mockalias') == 'mockid'
 
 
-def test_get_key_id_cached(mocker, mock_auth_client):
+def test_get_key_id_cached(mocker):
     mocker.patch(
         'confidant.services.keymanager._KEY_METADATA',
         {'mockalias': {'KeyMetadata': {'KeyId': 'mockid'}}}
+    )
+    mock_auth_client = mocker.Mock()
+    mock_auth_client.describe_key = mocker.Mock()
+    mocker.patch(
+        'confidant.services.keymanager._get_auth_kms_client',
+        return_value=mock_auth_client,
     )
     mock_auth_client.describe_key = mocker.Mock()
     assert keymanager.get_key_id('mockalias') == 'mockid'
