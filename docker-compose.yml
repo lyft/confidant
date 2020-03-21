@@ -18,17 +18,12 @@ services:
     image: amazon/dynamodb-local
     init: true
     restart: on-failure
+    env_file: ./config/development/dynamodb.env
     command: "-Xmx512m -jar DynamoDBLocal.jar -port 8080 -sharedDb"
-    env:
-      AWS_ACCESS_KEY_ID: "1"
-      AWS_SECRET_ACCESS_KEY: "1"
-      AWS_REGION: "us-east-1"
   kms:
     image: nsmithuk/local-kms
     init: true
     restart: on-failure
-    env:
-      KMS_REGION: "us-east-1"
     volumes:
       - ./config/development/kms-seed.yaml:/init/seed.yaml
   confidant:
