@@ -66,15 +66,12 @@ jobs:
           - "8443:8443"
         volumes:
           - ./config/development/saml-authsources.php:/var/www/simplesamlphp/config/authsources.php
-        options:
-          - "--env-file=./config/development/saml-idp.env"
+        options: "--env-file=./config/development/saml-idp.env"
       dynamodb:
         image: amazon/dynamodb-local
         ports:
           - "8080:8080"
-        options:
-          - "--env-file=./config/development/dynamodb.env"
-          - "--command='-Xmx512m -jar DynamoDBLocal.jar -port 8080 -sharedDb'"
+        options: "--env-file=./config/development/dynamodb.env --command='-Xmx512m -jar DynamoDBLocal.jar -port 8080 -sharedDb'"
       kms:
         image: nsmithuk/local-kms
         volumes:
