@@ -63,6 +63,8 @@ jobs:
   test-frontend:
     runs-on: ubuntu-18.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
           node-version: '8.x'
