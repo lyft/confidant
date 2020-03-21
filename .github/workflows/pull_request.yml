@@ -35,7 +35,7 @@ jobs:
   #      run: pip install -r piptools_requirements3.txt && pip install -r requirements3.txt
   #    - name: Run license finder
   #      run: license_finder
-  test:
+  test-unit:
     runs-on: ubuntu-18.04
     strategy:
         matrix:
@@ -43,9 +43,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '8.x'
       - name: Setup python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
@@ -54,8 +51,52 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y python3-dev openssl libssl-dev gcc pkg-config libffi-dev libxml2-dev libxmlsec1-dev
       - name: Install dependencies
         run: pip install -r piptools_requirements3.txt && pip install -r requirements3.txt
-      - run: "npm install grunt-cli && npm install"
-      - name: Run python tests
-        run: make test
+      - name: Run python unit tests
+        run: make test_unit
+  test-integration:
+    runs-on: ubuntu-18.04
+    strategy:
+        matrix:
+          python-version: ['3.6.x']
+    services:
+      saml-idp:
+        image: kristophjunge/test-saml-idp
+        ports:
+          - "8080:8080"
+          - "8443:8443"
+        volumes:
+          - ./config/development/saml-authsources.php:/var/www/simplesamlphp/config/authsources.php
+        options:
+          - "--env-file=./config/development/saml-idp.env"
+      dynamodb:
+        image: amazon/dynamodb-local
+        ports:
+          - "8080:8080"
+        options:
+          - "--env-file=./config/development/dynamodb.env"
+          - "--command='-Xmx512m -jar DynamoDBLocal.jar -port 8080 -sharedDb'"
+      kms:
+        image: nsmithuk/local-kms
+        volumes:
+          - ./config/development/kms-seed.yaml:/init/seed.yaml
+        ports:
+          - "8080:8080"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install apt dependencies
+        run: sudo apt-get update && sudo apt-get install -y python3-dev openssl libssl-dev gcc pkg-config libffi-dev libxml2-dev libxmlsec1-dev
+      - name: Install dependencies
+        run: pip install -r piptools_requirements3.txt && pip install -r requirements3.txt
+      - name: Run python unit tests
+        run: make test_integration
+  test-frontend:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '8.x'
       - name: Run frontend tests
-        run: grunt test
+        run: "npm install grunt-cli && npm install && grunt test"
