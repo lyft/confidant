@@ -78,6 +78,13 @@ make docker_build
 make docker_test_integration
 ```
 
+To run only frontend tests:
+
+```bash
+make docker_build
+make docker_test_frontend
+```
+
 Lint tests are through pre-commit, so it's necessary to [install/run precommit](https://pre-commit.com/#install)
 first. To run pre-commit:
 
