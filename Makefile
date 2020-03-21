@@ -21,6 +21,9 @@ docker_test_unit:
 docker_test_integration:
 	docker-compose run --rm confidant make test_integration
 
+actions_test_integration:
+	docker-compose -f docker-compose.yml -f docker-compose.integration.yml run confidant bash /srv/confidant/actions_run_integration.sh
+
 docker_test_frontend:
 	docker-compose run --rm confidant make test_frontend
 
