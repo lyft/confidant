@@ -41,6 +41,7 @@ def archive_credential(mocker):
         modified_date=datetime.now(),
         modified_by='test@example.com',
         documentation='',
+        tags=['OLD TAG'],
     )
 
 
@@ -378,10 +379,12 @@ def test_create_credential(mocker, credential):
             'documentation': 'doc',
             'credential_pairs': {'key': 'value'},
             'name': 'shiny new key',
+            'tags': ['ADMIN_PRIV', 'MY_SPECIAL_TAG'],
         }),
     )
     json_data = json.loads(ret.data)
     assert ret.status_code == 200
+    assert ['ADMIN_PRIV', 'MY_SPECIAL_TAG'] == json_data['tags']
     assert 'shiny new key' == json_data['name']
     assert mock_save.call_count == 2
 
@@ -500,10 +503,12 @@ def test_update_credential(mocker, credential):
             'credential_pairs': {'key': 'value'},
             'name': 'shiny new name',
             'documentation': 'doc',
+            'tags': ['NEW SPECIAL TAG', 'DB_AUTH'],
         }),
     )
     json_data = json.loads(ret.data)
     assert ret.status_code == 200
+    assert ['NEW SPECIAL TAG', 'DB_AUTH'] == json_data['tags']
     assert 'shiny new name' == json_data['name']
     assert mock_save.call_count == 2
 
@@ -626,5 +631,6 @@ def test_revise_credential(mocker, credential, archive_credential):
     )
     json_data = json.loads(ret.data)
     assert ret.status_code == 200
+    assert ['OLD TAG'] == json_data['tags']
     assert 'Archive credential' == json_data['name']
     assert mock_save.call_count == 2

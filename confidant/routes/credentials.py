@@ -609,7 +609,8 @@ def create_credential():
         cipher_version=2,
         modified_by=authnz.get_logged_in_user(),
         documentation=data.get('documentation'),
-        last_rotation_date=last_rotation_date
+        tags=data.get('tags'),
+        last_rotation_date=last_rotation_date,
     ).save(id__null=True)
     # Make this the current revision
     cred = Credential(
@@ -624,7 +625,8 @@ def create_credential():
         cipher_version=2,
         modified_by=authnz.get_logged_in_user(),
         documentation=data.get('documentation'),
-        last_rotation_date=last_rotation_date
+        tags=data.get('tags'),
+        last_rotation_date=last_rotation_date,
     )
     cred.save()
     permissions = {
@@ -780,6 +782,7 @@ def update_credential(id):
         'enabled': _cred.enabled,
         'metadata': data.get('metadata', _cred.metadata),
         'documentation': data.get('documentation', _cred.documentation),
+        'tags': data.get('tags', _cred.tags),
     }
     # Enforce documentation, EXCEPT if we are restoring an old revision
     if (not update['documentation'] and
@@ -845,7 +848,8 @@ def update_credential(id):
             cipher_version=2,
             modified_by=authnz.get_logged_in_user(),
             documentation=update['documentation'],
-            last_rotation_date=update['last_rotation_date']
+            tags=update['tags'],
+            last_rotation_date=update['last_rotation_date'],
         ).save(id__null=True)
     except PutError as e:
         logger.error(e)
@@ -863,7 +867,8 @@ def update_credential(id):
             cipher_version=2,
             modified_by=authnz.get_logged_in_user(),
             documentation=update['documentation'],
-            last_rotation_date=update['last_rotation_date']
+            tags=update['tags'],
+            last_rotation_date=update['last_rotation_date'],
         )
         cred.save()
     except PutError as e:
@@ -1017,6 +1022,7 @@ def revert_credential_to_revision(id, to_revision):
             cipher_version=revert_credential.cipher_version,
             modified_by=authnz.get_logged_in_user(),
             documentation=revert_credential.documentation,
+            tags=revert_credential.tags,
             last_rotation_date=revert_credential.last_rotation_date,
         ).save(id__null=True)
     except PutError as e:
@@ -1035,6 +1041,7 @@ def revert_credential_to_revision(id, to_revision):
             cipher_version=revert_credential.cipher_version,
             modified_by=authnz.get_logged_in_user(),
             documentation=revert_credential.documentation,
+            tags=revert_credential.tags,
             last_rotation_date=revert_credential.last_rotation_date,
         )
         cred.save()

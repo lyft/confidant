@@ -19,6 +19,7 @@ class CredentialResponse(object):
     credential_keys = attr.ib(default=list)
     credential_pairs = attr.ib(default=dict)
     permissions = attr.ib(default=dict)
+    tags = attr.ib(default=list)
 
     @classmethod
     def from_credential(
@@ -36,6 +37,7 @@ class CredentialResponse(object):
             documentation=credential.documentation,
             modified_date=credential.modified_date,
             modified_by=credential.modified_by,
+            tags=credential.tags,
         )
         if include_credential_keys:
             ret.credential_keys = credential.credential_keys
@@ -61,6 +63,7 @@ class CredentialResponseSchema(AutobuildSchema):
     modified_date = fields.DateTime(required=True)
     modified_by = fields.Str(required=True)
     permissions = fields.Dict(keys=fields.Str(), values=fields.Boolean())
+    tags = fields.List(fields.Str())
 
 
 @attr.s
