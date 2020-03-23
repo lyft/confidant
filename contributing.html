@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Contributing &mdash; confidant 6.3.0-79e1f7 documentation</title>
+  <title>Contributing &mdash; confidant 6.3.0-dba8aa documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.3.0-79e1f7
+                6.3.0-dba8aa
               </div>
             
           
@@ -239,7 +239,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#development-guide">Development guide</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#development-using-docker-compose">Development using docker-compose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#starting-confidant">Starting confidant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-tests">Running tests</a></li>
 </ul>
 </li>
 </ul>
@@ -404,22 +405,59 @@ easily reproduce your bug.</p>
 </div>
 <div class="section" id="development-guide">
 <h2>Development guide<a class="headerlink" href="#development-guide" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="development-using-docker-compose">
-<h3>Development using docker-compose<a class="headerlink" href="#development-using-docker-compose" title="Permalink to this headline">¶</a></h3>
-<p>A full developer configuration is available, using docker-compose, which uses
-local dynamodb, local kms, and a local simplesamplephp.</p>
-<p>To start: <code class="docutils literal notranslate"><span class="pre">docker-compose</span> <span class="pre">up</span></code></p>
+<p>This guide assumes you’re using docker desktop, which includes docker, and
+docker-compose.</p>
+<p>A full developer configuration is available, using compose, which uses
+local dynamodb, local kms, and a local simplesamplephp. We have quick make
+aliases, so it’s not necessary to learn the details of docker-compose.</p>
+<div class="section" id="starting-confidant">
+<h3>Starting confidant<a class="headerlink" href="#starting-confidant" title="Permalink to this headline">¶</a></h3>
+<p>To start: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">up</span></code></p>
 <p>To test code changes:</p>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">lyft/confidant</span> <span class="pre">.</span></code></p></li>
 <li><p>Kill docker-compose (ctrl-c)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">docker-compose</span> <span class="pre">up</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docker_build</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">up</span></code></p></li>
 </ol>
 <p>Confidant will be accessible at <code class="docutils literal notranslate"><span class="pre">http://localhost</span></code>. The username is <code class="docutils literal notranslate"><span class="pre">confidant</span></code>
 and the password is <code class="docutils literal notranslate"><span class="pre">confidant</span></code>.</p>
 <p>All configuration settings for this environment are in the <code class="docutils literal notranslate"><span class="pre">config/development</span></code>
 directory. If you wish to change any settings, kill the docker compose, make the
 change, and start the docker-compose environment back up.</p>
+</div>
+<div class="section" id="running-tests">
+<h3>Running tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h3>
+<p>The easiest way to run the tests is through docker-compose as well, as both unit
+and integration test suites can be run via compose.</p>
+<p>To run the full test suite (minus pre-commit):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># See the target in the make file; this runs build, unit, integration and down</span>
+make docker_test
+</pre></div>
+</div>
+<p>To run only unit tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make docker_build
+make docker_test_unit
+</pre></div>
+</div>
+<p>To run only integration tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make docker_build
+make docker_test_integration
+</pre></div>
+</div>
+<p>To run only frontend tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make docker_build
+make docker_test_frontend
+</pre></div>
+</div>
+<p>Lint tests are through pre-commit, so it’s necessary to <a class="reference external" href="https://pre-commit.com/#install">install/run precommit</a>
+first. To run pre-commit:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit run --all-files
+</pre></div>
+</div>
+<p>If you want to have pre-commit auto-run when committing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit install
+</pre></div>
+</div>
 </div>
 </div>
 </div>
