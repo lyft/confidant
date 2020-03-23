@@ -38,6 +38,7 @@ services:
     depends_on:
       - dynamodb
       - kms
+      - saml-idp
     env_file: ./config/development/confidant.env
     volumes:
       - ./config/development/logging.conf:/etc/confidant/logging.conf

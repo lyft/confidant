@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  confidant:
+    image: python:3.6
+    init: true
+    restart: "no"
+    networks:
+      - default
+      - confidant
+    ports:
+      - "80:80"
+    depends_on:
+      - dynamodb
+      - kms
+    env_file: ./config/development/confidant.env
+    volumes:
+      - .:/srv/confidant
+      - ./config/development/logging.conf:/etc/confidant/logging.conf
+      - ./config/development/idp.crt:/etc/confidant/idp.crt
+      - ./config/gunicorn.conf:/etc/confidant/gunicorn.conf
+    command: "bash /srv/confidant/actions_run_integration.sh"
