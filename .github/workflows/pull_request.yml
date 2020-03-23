@@ -58,7 +58,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Run python unit tests
+      - name: Run python integration tests
         run: "make actions_test_integration"
   test-frontend:
     runs-on: ubuntu-18.04
