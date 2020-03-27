@@ -34,8 +34,9 @@ class GenerateSecretsBootstrap(Command):
             app.config['KMS_MASTER_KEY'],
         )
         f = Fernet(data_key['plaintext'])
+        encoded_ciphertext = base64.b64encode(data_key['ciphertext'])
         data = {
-            'data_key': base64.b64encode(data_key['ciphertext']),
+            'data_key': encoded_ciphertext.decode('utf-8'),
             'secrets': f.encrypt(secrets.encode('utf-8'))
         }
         data = json.dumps(data)
