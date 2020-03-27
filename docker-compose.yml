@@ -41,6 +41,7 @@ services:
       - saml-idp
     env_file: ./config/development/confidant.env
     volumes:
+      - .:/srv/confidant
       - ./config/development/logging.conf:/etc/confidant/logging.conf
       - ./config/development/idp.crt:/etc/confidant/idp.crt
       - ./config/gunicorn.conf:/etc/confidant/gunicorn.conf

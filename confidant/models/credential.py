@@ -53,7 +53,7 @@ class CredentialBase(Model):
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
     # Classification info (eg: FINANCIALLY_SENSITIVE)
-    tags = ListAttribute(default=list)
+    tags = ListAttribute(default=list, null=True)
     last_decrypted_date = UTCDateTimeAttribute(null=True)
     last_rotation_date = UTCDateTimeAttribute(null=True)
 

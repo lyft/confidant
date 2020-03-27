@@ -50,32 +50,17 @@
             $scope.credentialPairConflicts = null;
             $scope.hasMetadata = false;
             $scope.permissions = $scope.clientconfig.generated.permissions;
+            $scope.credentialId = $stateParams.credentialId;
+            $scope.showCredentials = false;
 
-            if ($stateParams.credentialId) {
-                CredentialServices.get({'id': $stateParams.credentialId}).$promise.then(function(credentialServices) {
+            if ($scope.credentialId) {
+                CredentialServices.get({'id': $scope.credentialId}).$promise.then(function(credentialServices) {
                     $scope.credentialServices = credentialServices.services;
                 });
 
-                Credential.get({'id': $stateParams.credentialId}).$promise.then(function(credential) {
-                    var _credentialPairs = [],
-                        _metadata = [];
-                    if (!angular.equals({}, credential.credential_pairs)) {
-                        angular.forEach(credential.credential_pairs, function(value, key) {
-                            this.push({'key': key, 'value': value});
-                        }, _credentialPairs);
-                        credential.credentialPairs = _credentialPairs;
-                    }
-                    if (credential.credential_keys.length) {
-                        $scope.hasMetadata = true;
-                    }
-                    angular.forEach(credential.metadata, function(value, key) {
-                        this.push({'key': key, 'value': value});
-                    }, _metadata);
-                    credential.credentialPairs = _credentialPairs;
-                    credential.mungedMetadata = _metadata;
-                    $scope.credential = credential;
-                    credentialCopy = angular.copy($scope.credential);
+                Credential.get({'id': $scope.credentialId, 'metadata_only': true}).$promise.then(function(credential) {
                     $scope.shown = false;
+                    populateCredential(credential);
                 }, function(res) {
                     if (res.status === 500) {
                         $scope.getError = 'Unexpected server error.';
@@ -97,19 +82,41 @@
                 $scope.shown = true;
             }
 
+            function populateCredential(credential) {
+                var _credentialPairs = [],
+                    _metadata = [];
+                if (!angular.equals({}, credential.credential_pairs)) {
+                    angular.forEach(credential.credential_pairs, function(value, key) {
+                        this.push({'key': key, 'value': value});
+                    }, _credentialPairs);
+                    credential.credentialPairs = _credentialPairs;
+                }
+                if (credential.credential_keys.length) {
+                    $scope.hasMetadata = true;
+                }
+                angular.forEach(credential.metadata, function(value, key) {
+                    this.push({'key': key, 'value': value});
+                }, _metadata);
+                credential.credentialPairs = _credentialPairs;
+                credential.mungedMetadata = _metadata;
+                $scope.credential = credential;
+                credentialCopy = angular.copy($scope.credential);
+            };
+
             $scope.showValue = function(credentialPair) {
-                if (credentialPair.shown) {
+                if ($scope.showCredentials) {
                     return credentialPair.value;
                 } else {
                     return '***************';
                 }
             };
 
-            $scope.toggleCredentialMask = function(credentialPair) {
-                if (credentialPair.shown) {
-                    credentialPair.shown = false;
+            $scope.toggleCredentialMask = function() {
+                if ($scope.showCredentials) {
+                    $scope.showCredentials = false;
                 } else {
-                    credentialPair.shown = true;
+                    $scope.loadCredentials();
+                    $scope.showCredentials = true;
                 }
             };
 
@@ -157,6 +164,24 @@
                     value: '',
                     isNew: true
                 });
+            };
+
+            $scope.loadCredentials = function() {
+                // To edit a credential, we need to fetch the credential with the credential pairs.
+                if (angular.equals({}, $scope.credential.credential_pairs)) {
+                    Credential.get({'id': $scope.credentialId, 'metadata_only': false}).$promise.then(function(credential) {
+                        populateCredential(credential);
+                        $scope.showCredentials = true;
+                    }, function(res) {
+                        if (res.status === 500) {
+                            $scope.getError = 'Unexpected server error.';
+                            $log.error(res);
+                        } else {
+                            $scope.getError = res.data.error;
+                        }
+                        deferred.reject();
+                    });
+                }
             };
 
             $scope.cancel = function() {
