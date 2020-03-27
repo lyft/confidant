@@ -53,6 +53,27 @@
             $scope.credentialId = $stateParams.credentialId;
             $scope.showCredentials = false;
 
+            function populateCredential(credential) {
+                var _credentialPairs = [],
+                    _metadata = [];
+                if (!angular.equals({}, credential.credential_pairs)) {
+                    angular.forEach(credential.credential_pairs, function(value, key) {
+                        this.push({'key': key, 'value': value});
+                    }, _credentialPairs);
+                    credential.credentialPairs = _credentialPairs;
+                }
+                if (credential.credential_keys.length) {
+                    $scope.hasMetadata = true;
+                }
+                angular.forEach(credential.metadata, function(value, key) {
+                    this.push({'key': key, 'value': value});
+                }, _metadata);
+                credential.credentialPairs = _credentialPairs;
+                credential.mungedMetadata = _metadata;
+                $scope.credential = credential;
+                credentialCopy = angular.copy($scope.credential);
+            }
+
             if ($scope.credentialId) {
                 CredentialServices.get({'id': $scope.credentialId}).$promise.then(function(credentialServices) {
                     $scope.credentialServices = credentialServices.services;
@@ -81,27 +102,6 @@
                 credentialCopy = angular.copy($scope.credential);
                 $scope.shown = true;
             }
-
-            function populateCredential(credential) {
-                var _credentialPairs = [],
-                    _metadata = [];
-                if (!angular.equals({}, credential.credential_pairs)) {
-                    angular.forEach(credential.credential_pairs, function(value, key) {
-                        this.push({'key': key, 'value': value});
-                    }, _credentialPairs);
-                    credential.credentialPairs = _credentialPairs;
-                }
-                if (credential.credential_keys.length) {
-                    $scope.hasMetadata = true;
-                }
-                angular.forEach(credential.metadata, function(value, key) {
-                    this.push({'key': key, 'value': value});
-                }, _metadata);
-                credential.credentialPairs = _credentialPairs;
-                credential.mungedMetadata = _metadata;
-                $scope.credential = credential;
-                credentialCopy = angular.copy($scope.credential);
-            };
 
             $scope.showValue = function(credentialPair) {
                 if ($scope.showCredentials) {
