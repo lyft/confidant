@@ -609,7 +609,7 @@ def create_credential():
         cipher_version=2,
         modified_by=authnz.get_logged_in_user(),
         documentation=data.get('documentation'),
-        tags=data.get('tags'),
+        tags=data.get('tags', []),
         last_rotation_date=last_rotation_date,
     ).save(id__null=True)
     # Make this the current revision
@@ -625,7 +625,7 @@ def create_credential():
         cipher_version=2,
         modified_by=authnz.get_logged_in_user(),
         documentation=data.get('documentation'),
-        tags=data.get('tags'),
+        tags=data.get('tags', []),
         last_rotation_date=last_rotation_date,
     )
     cred.save()
