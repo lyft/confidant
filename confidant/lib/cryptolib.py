@@ -1,5 +1,4 @@
 import base64
-import boto3
 from cryptography import x509
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
