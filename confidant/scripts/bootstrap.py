@@ -7,6 +7,7 @@ import yaml
 from cryptography.fernet import Fernet
 from flask_script import Command, Option
 
+import confidant.clients
 from confidant import settings
 from confidant.lib import cryptolib
 
@@ -24,9 +25,14 @@ class GenerateSecretsBootstrap(Command):
         else:
             with open(os.path.join(_in), 'r') as f:
                 secrets = f.read()
+        client = confidant.clients.get_boto_client(
+            'kms',
+            endpoint_url=settings.KMS_URL,
+        )
         data_key = cryptolib.create_datakey(
             {'type': 'bootstrap'},
             settings.KMS_MASTER_KEY,
+            client=client,
         )
         f = Fernet(data_key['plaintext'])
         data = {

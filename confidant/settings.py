@@ -75,6 +75,9 @@ PORT = int_env('PORT', 8080)
 # to 'dist'.
 STATIC_FOLDER = str_env('STATIC_FOLDER', 'public')
 
+# A custom endpoint url for KMS, for use in development
+KMS_URL = str_env('KMS_URL', None)
+
 # Bootstrapping
 
 # A base64 encoded and KMS encrypted YAML string that contains secrets that
@@ -84,7 +87,7 @@ STATIC_FOLDER = str_env('STATIC_FOLDER', 'public')
 # If SECRETS_BOOTSTRAP starts with file://, then it will load the blob from a
 # file, rather than reading the blob from the environment.
 SECRETS_BOOTSTRAP = str_env('SECRETS_BOOTSTRAP')
-encrypted_settings = EncryptedSettings(SECRETS_BOOTSTRAP)
+encrypted_settings = EncryptedSettings(SECRETS_BOOTSTRAP, KMS_URL)
 
 # User authentication method switcher.
 # Supported methods:
@@ -258,8 +261,8 @@ KMS_AUTH_MANAGE_GRANTS = bool_env('KMS_AUTH_MANAGE_GRANTS', True)
 # equivalent to the number of tokens you expect to generate within the lifetime
 # of your tokens.
 KMS_AUTH_TOKEN_CACHE_SIZE = int_env('KMS_AUTH_TOKEN_CACHE_SIZE', 4096)
-# A custom endpoint url for KMS, for use in development
-KMS_URL = str_env('KMS_URL', None)
+# See also KMS_URL, defined above, for use in the EncryptedSettings
+# initialization, which can be used to point boto at a local KMS.
 
 # SSL redirection and HSTS
 
