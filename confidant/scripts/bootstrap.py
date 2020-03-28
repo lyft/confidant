@@ -30,8 +30,10 @@ class GenerateSecretsBootstrap(Command):
         )
         f = Fernet(data_key['plaintext'])
         data = {
-            'data_key': base64.b64encode(data_key['ciphertext']),
-            'secrets': f.encrypt(secrets.encode('utf-8'))
+            'data_key': base64.b64encode(
+                data_key['ciphertext'],
+            ).decode('utf-8'),
+            'secrets': f.encrypt(secrets.encode('utf-8')).decode('utf-8'),
         }
         data = json.dumps(data)
         if _out == '-':

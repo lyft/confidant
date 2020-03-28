@@ -1087,7 +1087,7 @@ def generate_value():
     :resheader Content-Type: application/json
     :statuscode 200: Success
     """
-    kms_client = clients.get_boto_client('kms')
+    kms_client = clients.get_boto_client('kms', endpoint_url=settings.KMS_URL)
     value = kms_client.generate_random(NumberOfBytes=128)['Plaintext']
     value = base64.urlsafe_b64encode(value).decode('UTF-8')
     value = re.sub(r'[\W_]+', '', value)

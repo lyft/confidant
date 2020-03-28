@@ -9,9 +9,6 @@ from confidant.services import keymanager
 from confidant.models.service import Service
 from confidant.utils.dynamodb import create_dynamodb_tables
 
-iam_resource = confidant.clients.get_boto_resource('iam')
-kms_client = confidant.clients.get_boto_client('kms')
-
 logger = logging.getLogger(__name__)
 
 logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -21,6 +18,8 @@ logger.setLevel(logging.INFO)
 class ManageGrants(Command):
 
     def run(self):
+        iam_resource = confidant.clients.get_boto_resource('iam')
+
         grants = keymanager.get_grants()
         try:
             roles = [x for x in iam_resource.roles.all()]
@@ -40,6 +39,10 @@ class ManageGrants(Command):
 class RevokeGrants(Command):
 
     def run(self):
+        kms_client = confidant.clients.get_boto_client(
+            'kms',
+            settings.KMS_URL,
+        )
         grants = keymanager.get_grants()
         for grant in grants:
             kms_client.revoke_grant(
