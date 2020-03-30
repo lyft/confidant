@@ -42,7 +42,7 @@ test_unit: clean
 	pytest --strict --junitxml=build/unit.xml --cov=confidant --cov-report=html --cov-report=xml --cov-report=term --no-cov-on-fail tests/unit
 
 test_frontend:
-	grunt test
+	node_modules/grunt-cli/bin/grunt test
 
 .PHONY: compile_deps # freeze requirements.in to requirements3.txt
 compile_deps:
