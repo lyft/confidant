@@ -4,6 +4,8 @@ import logging
 import json
 
 from cryptography.fernet import Fernet
+
+import confidant.clients
 from confidant.lib import cryptolib
 
 logger = logging.getLogger(__name__)
@@ -11,11 +13,12 @@ logger = logging.getLogger(__name__)
 
 class EncryptedSettings(object):
 
-    def __init__(self, secret_string):
+    def __init__(self, secret_string, kms_url):
         self.secret_names = []
         self.secret_defaults = {}
         self.secret_string = secret_string
         self.decrypted_secrets = None
+        self.kms_url = kms_url
 
     def register(self, name, default):
         """
@@ -58,9 +61,14 @@ class EncryptedSettings(object):
                 return {}
         else:
             _secrets = json.loads(secrets)
+        client = confidant.clients.get_boto_client(
+            'kms',
+            endpoint_url=self.kms_url,
+        )
         key = cryptolib.decrypt_datakey(
             base64.b64decode(_secrets['data_key']),
-            {'type': 'bootstrap'}
+            {'type': 'bootstrap'},
+            client=client,
         )
         f = Fernet(key)
         decrypted_secrets = yaml.safe_load(

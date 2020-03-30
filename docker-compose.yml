@@ -24,6 +24,7 @@ services:
     image: nsmithuk/local-kms
     init: true
     restart: on-failure
+    env_file: ./config/development/kms.env
     volumes:
       - ./config/development/kms-seed.yaml:/init/seed.yaml
   confidant:
