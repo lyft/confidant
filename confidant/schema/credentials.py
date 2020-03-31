@@ -20,6 +20,7 @@ class CredentialResponse(object):
     credential_pairs = attr.ib(default=dict)
     permissions = attr.ib(default=dict)
     tags = attr.ib(default=list)
+    last_rotation_date = attr.ib(default=None)
 
     @classmethod
     def from_credential(
@@ -38,6 +39,7 @@ class CredentialResponse(object):
             modified_date=credential.modified_date,
             modified_by=credential.modified_by,
             tags=credential.tags,
+            last_rotation_date=credential.last_rotation_date,
         )
         if include_credential_keys:
             ret.credential_keys = credential.credential_keys
@@ -64,6 +66,7 @@ class CredentialResponseSchema(AutobuildSchema):
     modified_by = fields.Str(required=True)
     permissions = fields.Dict(keys=fields.Str(), values=fields.Boolean())
     tags = fields.List(fields.Str())
+    last_rotation_date = fields.DateTime()
 
 
 @attr.s

@@ -23,6 +23,7 @@ def credential(mocker):
         modified_date=datetime.now(),
         modified_by='test@example.com',
         documentation='',
+        last_rotation_date=datetime(2020, 1, 1),
     )
 
 
@@ -511,6 +512,7 @@ def test_update_credential(mocker, credential):
     assert ['NEW SPECIAL TAG', 'DB_AUTH'] == json_data['tags']
     assert 'shiny new name' == json_data['name']
     assert mock_save.call_count == 2
+    assert 'last_rotation_date' in json_data
 
 
 def test_revise_credential(mocker, credential, archive_credential):
