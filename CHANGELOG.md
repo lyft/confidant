@@ -68,7 +68,7 @@
   the CA in AWS.
 
   The implementation supports multiple CAs. For configuration information, see [the
-  certificate authority settings section in the docs](https://lyft.github.io/confidant/configuration.html#certificate-authority-settings).
+  certificate authority settings section in the docs](configuration.html#certificate-authority-settings).
 
 ## 6.0.0
 
@@ -90,7 +90,7 @@
 * Confidant now includes an access control plugin framework, with a default
   plugin, `confidant.authnz.rbac:default_acl`, which implements the existing
   access control behavior of confidant. The `ACL_MODULE` setting can be used
-  to define your own ACL behavior; see the [ACL docs](https://lyft.github.io/confidant/advanced/acls/)
+  to define your own ACL behavior; see the [ACL docs](acls.html)
   for information about how to apply fine-grained access controls to specific
   resources and actions.
 * kmsauth was upgraded with a more efficient LRU implementation, which allows
@@ -211,7 +211,7 @@ WARNING: If you upgrade to this version, any new writes to blind credentials
 will be in a format that is only compatible in 1.11.0 forward. If you've
 upgraded and need to downgrade, you should downgrade to 1.11.0. This is only
 a concern if you're using blind credentials. If you're using blind credentials,
-see the [upgrade instructions](https://github.com/lyft/confidant/blob/master/docs/source/basics/upgrade.html.markdown)
+see the [upgrade instructions](upgrade.html)
 for more detailed information about this breaking change.
 
 * Added support for a maintenance mode, which will disable all writes to

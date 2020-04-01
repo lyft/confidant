@@ -38,7 +38,7 @@ to enable when upgrading to 2.0.0. Putting Confidant into maintenance mode
 will disallow any writes via the API, ensuring that blind credentials with the
 new data format aren't written until you've run the maintenance script. This
 is useful to allow you to downgrade to an older version, if necessary. See the
-[maintenance mode settings docs](https://lyft.github.io/confidant/basics/configuration/#maintenance-mode-settings)
+[maintenance mode settings docs](configuration.html#maintenance-mode-settings)
 for how to enable maintenance mode.
 
 ## Upgrading to 4.0.0
