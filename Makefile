@@ -48,6 +48,6 @@ test_frontend:
 compile_deps:
 	./pip-compile.sh
 
-.PHONY: build_docs
-build_docs:
+.PHONY: docs
+docs:
 	./docs/build.sh
