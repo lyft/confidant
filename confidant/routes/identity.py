@@ -121,7 +121,9 @@ def get_client_config():
             ),
         },
     }
-    # TODO: add more config in here.
+    tags = set()
+    tags.update(settings.TAGS_EXCLUDING_ROTATION)
+    tags.update(settings.ROTATION_DAYS_CONFIG.keys())
     response = jsonify({
         'defined': settings.CLIENT_CONFIG,
         'generated': {
@@ -130,6 +132,7 @@ def get_client_config():
             'xsrf_cookie_name': settings.XSRF_COOKIE_NAME,
             'maintenance_mode': settings.MAINTENANCE_MODE,
             'history_page_limit': settings.HISTORY_PAGE_LIMIT,
+            'defined_tags': list(tags),
             'permissions': permissions,
         }
     })
