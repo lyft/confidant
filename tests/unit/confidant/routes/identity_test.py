@@ -59,6 +59,7 @@ def test_get_client_config(mocker):
             'xsrf_cookie_name': 'CSRF_TOKEN',
             'maintenance_mode': True,
             'history_page_limit': 50,
+            'defined_tags': [],
             'permissions': {
                 'credentials': {
                     'list': True,
