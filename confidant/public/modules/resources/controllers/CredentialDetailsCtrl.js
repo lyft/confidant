@@ -257,7 +257,12 @@
                         $scope.credential.mungedTags.splice(i, 1);
                         continue;
                     }
+                    // strip duplicates
                     if (tagItem.id in _credential.tags) {
+                        continue;
+                    }
+                    // strip empty tag selection
+                    if (tagItem.id === '') {
                         continue;
                     }
                     _credential.tags.push(tagItem.id);
