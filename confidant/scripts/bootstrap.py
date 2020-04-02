@@ -15,7 +15,12 @@ from confidant.lib import cryptolib
 class GenerateSecretsBootstrap(Command):
 
     option_list = [
-        Option('--in', dest='_in', default='-'),
+        Option(
+            '--in',
+            dest='_in',
+            default='-',
+            help='Path to YAML file containing all the secrets',
+        ),
         Option('--out', dest='_out', default='-')
     ]
 
