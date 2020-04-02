@@ -35,7 +35,7 @@ class EncryptedSettings(object):
     def get_secret(self, name):
         if self.decrypted_secrets is None:
             self.decrypted_secrets = self._bootstrap(self.secret_string)
-        return self.decrypted_secrets.get(name, self.secret_defaults[name])
+        return self.decrypted_secrets.get(name, self.secret_defaults.get(name))
 
     def get_all_secrets(self):
         secrets = {}
