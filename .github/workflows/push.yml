@@ -21,7 +21,7 @@ jobs:
       - name: Install xmlsec
         run: sudo apt-get update -y && sudo apt-get install -y libxmlsec1-dev pkg-config
       - name: Build docs
-        run: make build_docs
+        run: make docs
       - name: Remove docs folder, so github will ignore it
         run: rm -rf docs
       - name: Deploy docs
