@@ -258,7 +258,7 @@
                         continue;
                     }
                     // strip duplicates
-                    if (tagItem.id in _credential.tags) {
+                    if (_credential.tags.includes(tagItem.id)) {
                         continue;
                     }
                     // strip empty tag selection
