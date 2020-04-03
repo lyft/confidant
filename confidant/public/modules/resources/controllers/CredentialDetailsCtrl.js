@@ -76,6 +76,8 @@
                 credential.credentialPairs = _credentialPairs;
                 credential.mungedMetadata = _metadata;
                 credential.mungedTags = _tags;
+                credential.mungedNextRotationDate = new Date(credential.next_rotation_date);
+                credential.daysTillRotation = Math.round((credential.mungedNextRotationDate.getTime() - Date.now()) / 1000 / 60 / 60 / 24);
                 $scope.credential = credential;
                 credentialCopy = angular.copy($scope.credential);
             }
