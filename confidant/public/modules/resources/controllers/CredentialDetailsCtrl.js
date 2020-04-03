@@ -50,12 +50,14 @@
             $scope.credentialPairConflicts = null;
             $scope.hasMetadata = false;
             $scope.permissions = $scope.clientconfig.generated.permissions;
+            $scope.definedTags = $scope.clientconfig.generated.defined_tags;
             $scope.credentialId = $stateParams.credentialId;
             $scope.showCredentials = false;
 
             function populateCredential(credential) {
                 var _credentialPairs = [],
-                    _metadata = [];
+                    _metadata = [],
+                    _tags = [];
                 if (!angular.equals({}, credential.credential_pairs)) {
                     angular.forEach(credential.credential_pairs, function(value, key) {
                         this.push({'key': key, 'value': value});
@@ -68,8 +70,12 @@
                 angular.forEach(credential.metadata, function(value, key) {
                     this.push({'key': key, 'value': value});
                 }, _metadata);
+                angular.forEach(credential.tags, function(value) {
+                    this.push({'id': value});
+                }, _tags);
                 credential.credentialPairs = _credentialPairs;
                 credential.mungedMetadata = _metadata;
+                credential.mungedTags = _tags;
                 $scope.credential = credential;
                 credentialCopy = angular.copy($scope.credential);
             }
@@ -97,7 +103,8 @@
                     name: '',
                     enabled: true,
                     credentialPairs: [{'key': '', 'value': ''}],
-                    mungedMetadata: []
+                    mungedMetadata: [],
+                    mungedTags: []
                 };
                 credentialCopy = angular.copy($scope.credential);
                 $scope.shown = true;
@@ -128,6 +135,10 @@
                 return metadataItem.isDeleted !== true;
             };
 
+            $scope.filterTags = function(tagItem) {
+                return tagItem.isDeleted !== true;
+            };
+
             $scope.getCredentialByID = function(id) {
                 return $filter('filter')($scope.$parent.credentialList, {'id': id})[0];
             };
@@ -146,8 +157,7 @@
             $scope.addCredentialPair = function() {
                 $scope.credential.credentialPairs.push({
                     key: '',
-                    value: '',
-                    isNew: true
+                    value: ''
                 });
             };
 
@@ -161,8 +171,20 @@
             $scope.addMetadata = function() {
                 $scope.credential.mungedMetadata.push({
                     key: '',
-                    value: '',
-                    isNew: true
+                    value: ''
+                });
+            };
+
+            $scope.deleteTag = function($$hashKey) {
+                var filtered = $filter('filter')($scope.credential.mungedTags, {'$$hashKey': $$hashKey});
+                if (filtered.length) {
+                    filtered[0].isDeleted = true;
+                }
+            };
+
+            $scope.addTag = function() {
+                $scope.credential.mungedTags.push({
+                    id: '',
                 });
             };
 
@@ -199,6 +221,7 @@
                 _credential.documentation = $scope.credential.documentation;
                 _credential.credential_pairs = {};
                 _credential.metadata = {};
+                _credential.tags = [];
                 $scope.saveError = '';
                 // Ensure credential pair keys are unique and transform them
                 // into key/value dict.
@@ -228,6 +251,22 @@
                     }
                     _credential.metadata[metadataItem.key] = metadataItem.value;
                 }
+                for (i = $scope.credential.mungedTags.length; i--;) {
+                    var tagItem = $scope.credential.mungedTags[i];
+                    if (tagItem.isDeleted) {
+                        $scope.credential.mungedTags.splice(i, 1);
+                        continue;
+                    }
+                    // strip duplicates
+                    if (tagItem.id in _credential.tags) {
+                        continue;
+                    }
+                    // strip empty tag selection
+                    if (tagItem.id === '') {
+                        continue;
+                    }
+                    _credential.tags.push(tagItem.id);
+                }
                 if (angular.equals(credentialCopy, $scope.credential)) {
                     $scope.saveError = 'No changes made.';
                     deferred.reject();
@@ -236,17 +275,7 @@
                 // Update an existing credential.
                 if ($scope.credential.id) {
                     Credential.update({'id': $scope.credential.id}, _credential).$promise.then(function(newCredential) {
-                        var _credentialPairs = [],
-                            _metadata = [];
-                        angular.forEach(newCredential.credential_pairs, function(value, key) {
-                            this.push({'key': key, 'value': value});
-                        }, _credentialPairs);
-                        angular.forEach(newCredential.metadata, function(value, key) {
-                            this.push({'key': key, 'value': value});
-                        }, _metadata);
-                        newCredential.credentialPairs = _credentialPairs;
-                        newCredential.mungedMetadata = _metadata;
-                        $scope.credential = newCredential;
+                        populateCredential(newCredential);
                         if (credentialCopy.name !== $scope.credential.name ||
                             credentialCopy.enabled !== $scope.credential.enabled) {
                             $scope.$emit('updateCredentialList');
