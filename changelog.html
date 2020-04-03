@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Changelog &mdash; confidant 6.3.0-520730 documentation</title>
+  <title>Changelog &mdash; confidant 6.3.0-ae11f2 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.3.0-520730
+                6.3.0-ae11f2
               </div>
             
           
@@ -447,7 +447,7 @@ and a dictionary of key/value tags set on the CA in AWS.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/v1/cas/&lt;ca&gt;</span></code>: Get the certificate, certificate chain, and a dict of tags set on
 the CA in AWS.</p></li>
 </ul>
-<p>The implementation supports multiple CAs. For configuration information, see <a class="reference external" href="https://lyft.github.io/confidant/configuration.html#certificate-authority-settings">the
+<p>The implementation supports multiple CAs. For configuration information, see <a class="reference external" href="configuration.html#certificate-authority-settings">the
 certificate authority settings section in the docs</a>.</p>
 </li>
 </ul>
@@ -473,7 +473,7 @@ control (ACL) support hooks to provide fine-grained access control.</p></li>
 <li><p>Confidant now includes an access control plugin framework, with a default
 plugin, <code class="docutils literal notranslate"><span class="pre">confidant.authnz.rbac:default_acl</span></code>, which implements the existing
 access control behavior of confidant. The <code class="docutils literal notranslate"><span class="pre">ACL_MODULE</span></code> setting can be used
-to define your own ACL behavior; see the <a class="reference external" href="https://lyft.github.io/confidant/advanced/acls/">ACL docs</a>
+to define your own ACL behavior; see the <a class="reference external" href="acls.html">ACL docs</a>
 for information about how to apply fine-grained access controls to specific
 resources and actions.</p></li>
 <li><p>kmsauth was upgraded with a more efficient LRU implementation, which allows
@@ -619,7 +619,7 @@ migrations, as well as checks to ensure the migration was successful.</p></li>
 will be in a format that is only compatible in 1.11.0 forward. If you’ve
 upgraded and need to downgrade, you should downgrade to 1.11.0. This is only
 a concern if you’re using blind credentials. If you’re using blind credentials,
-see the <a class="reference external" href="https://github.com/lyft/confidant/blob/master/docs/source/basics/upgrade.html.markdown">upgrade instructions</a>
+see the <a class="reference external" href="upgrade.html">upgrade instructions</a>
 for more detailed information about this breaking change.</p>
 <ul class="simple">
 <li><p>Added support for a maintenance mode, which will disable all writes to
