@@ -100,6 +100,19 @@ def user_type_has_privilege(user_type, privilege):
     return False
 
 
+def user_is_authorized(groupname):
+    # Fail open if:
+    # - the principal is not a human user
+    # - authz checks are disabled globally
+    # - OR there is no group specified
+    return (
+        not user_is_user_type('user')
+        or not app.config.get('USE_GROUPS')
+        or not groupname
+        or user_is_member(groupname)
+    )
+
+
 def require_csrf_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):

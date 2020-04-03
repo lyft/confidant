@@ -114,7 +114,10 @@ class AbstractUserAuthenticator(object):
                 max_expiration = now + datetime.timedelta(seconds=max_lifetime)
                 session['max_expiration'] = max_expiration
 
-    def set_current_user(self, email, first_name=None, last_name=None):
+    def set_current_user(self, email, first_name=None, last_name=None, username=None):
+        if email is None or email == '':
+            raise errors.UserUnknownError('No email provided')
+
         session['user'] = {
             'email': email,
             'first_name': first_name,
@@ -122,10 +125,12 @@ class AbstractUserAuthenticator(object):
             'groups': []
         }
 
+        if username is None:
+            username = email.strip().split('@')[0]
+
         if app.config.get('USE_GROUPS'):
             all_groups = grp.getgrall()
             session['user']['groups'] = [g.gr_name for g in all_groups if email in g.gr_mem]
-
 
     def current_email(self):
         ret = self.current_user()['email'].lower()
@@ -139,7 +144,11 @@ class AbstractUserAuthenticator(object):
         return self.current_user()['last_name']
 
     def current_groups(self):
-        return self.current_user().get('groups')
+        groups = self.current_user().get('groups')
+        if groups is None:
+            return []
+        else:
+            return groups
 
     def redirect_to_index(self):
         return redirect(flask.url_for('index'))
@@ -264,18 +273,6 @@ class NullUserAuthenticator(AbstractUserAuthenticator):
             'groups': []
         }
 
-    def current_email(self):
-        return self.current_user()['email'].lower()
-
-    def current_first_name(self):
-        return self.current_user()['first_name']
-
-    def current_last_name(self):
-        return self.current_user()['last_name']
-
-    def current_groups(self):
-        return self.current_user().get('groups')
-
     def is_authenticated(self):
         """Null users are always authenticated"""
         return True
@@ -322,22 +319,27 @@ class HeaderAuthenticator(AbstractUserAuthenticator):
     def current_user(self):
         self.assert_headers()
 
-        info = {
-            'email': request.headers[self.email_header],
-
-            # TODO: should we use a string like "unknown", fall back to the
-            # email/username, ...?
-            'first_name': '',
-            'last_name': '',
-        }
-
+        first_name = None
         if self.first_name_header and self.first_name_header in request.headers:
-            info['first_name'] = request.headers[self.first_name_header]
+            first_name = request.headers[self.first_name_header]
 
+        last_name = None
         if self.last_name_header and self.last_name_header in request.headers:
-            info['last_name'] = request.headers[self.last_name_header]
+            last_name = request.headers[self.last_name_header]
 
-        return info
+        username = None
+        if self.username_header and self.username_header in request.headers:
+            username = request.headers[self.username_header]
+
+        # Set current user on every request to ensure that the user's group
+        # list is updated (TODO: caching?)
+        self.set_current_user(
+            request.headers[self.email_header],
+            first_name = first_name,
+            last_name = last_name,
+            username = username
+        )
+        return session['user']
 
     def is_authenticated(self):
         """Any user that is able to make requests is authenticated"""

@@ -283,6 +283,22 @@ def map_service_credentials(id):
         ret = {'error': '{0} is not a valid account.'}
         return jsonify(ret), 400
 
+    added = list(set(data.get('credentials', [])) - set(_service_credential_ids))
+    removed = list(set(_service_credential_ids) - set(data.get('credentials', [])))
+
+    if added or removed:
+        # Only check the delta so that users can modify assignments for
+        # any credentials they have access to, even if the service has others
+        # assigned that they can't access
+        unauthorized_creds = []
+        for cred in _get_credentials(added + removed):
+            if not cred.get('authorized', False):
+                unauthorized_creds.append(cred['name'])
+        if len(unauthorized_creds) > 0:
+            msg = 'User not authorized to modify credentials: {0}'
+            ret = {'error': msg.format(", ".join(unauthorized_creds))}
+            return jsonify(ret), 403
+
     # If this is the first revision, we should attempt to create a grant for
     # this service.
     if revision == 1:
@@ -322,8 +338,6 @@ def map_service_credentials(id):
     except PutError as e:
         logging.error(e)
         return jsonify({'error': 'Failed to update active service.'}), 500
-    added = list(set(service.credentials) - set(_service_credential_ids))
-    removed = list(set(_service_credential_ids) - set(service.credentials))
     msg = 'Added credentials: {0}; Removed credentials {1}; Revision {2}'
     msg = msg.format(added, removed, service.revision)
     graphite.send_event([id], msg)
@@ -387,11 +401,10 @@ def get_credential(id):
     else:
         context = id.split('-')[0]
 
-    _authorized_user = (not app.config.get('USE_GROUPS') or not cred.group
-            or authnz.user_is_member(cred.group))
-
-    _credential_pairs = None
-    if _authorized_user:
+    _credential_pairs = {}
+    _is_authorized = False
+    if authnz.user_is_authorized(cred.group):
+        _is_authorized = True
         data_key = keymanager.decrypt_datakey(
             cred.data_key,
             encryption_context={'id': context}
@@ -412,7 +425,7 @@ def get_credential(id):
         'modified_by': cred.modified_by,
         'documentation': cred.documentation,
         'group': cred.group,
-        'authorized': _authorized_user
+        'authorized': _is_authorized
     })
 
 
@@ -477,15 +490,18 @@ def _get_credentials(credential_ids):
     credentials = []
     with stats.timer('service_batch_get_credentials'):
         for cred in Credential.batch_get(copy.deepcopy(credential_ids)):
-            #TODO: add check for group membership here
-            data_key = keymanager.decrypt_datakey(
-                cred.data_key,
-                encryption_context={'id': cred.id}
-            )
-            cipher_version = cred.cipher_version
-            cipher = CipherManager(data_key, cipher_version)
-            _credential_pairs = cipher.decrypt(cred.credential_pairs)
-            _credential_pairs = json.loads(_credential_pairs)
+            _credential_pairs = {}
+            _is_authorized = False
+            if authnz.user_is_authorized(cred.group):
+                _is_authorized = True
+                data_key = keymanager.decrypt_datakey(
+                    cred.data_key,
+                    encryption_context={'id': cred.id}
+                )
+                cipher_version = cred.cipher_version
+                cipher = CipherManager(data_key, cipher_version)
+                _credential_pairs = cipher.decrypt(cred.credential_pairs)
+                _credential_pairs = json.loads(_credential_pairs)
             credentials.append({
                 'id': cred.id,
                 'data_type': 'credential',
@@ -495,7 +511,8 @@ def _get_credentials(credential_ids):
                 'credential_pairs': _credential_pairs,
                 'metadata': cred.metadata,
                 'documentation': cred.documentation,
-                'group': cred.group
+                'group': cred.group,
+                'authorized': _is_authorized
             })
     return credentials
 
@@ -757,10 +774,9 @@ def update_credential(id):
     if _cred.data_type != 'credential':
         msg = 'id provided is not a credential.'
         return jsonify({'error': msg}), 400
-    if app.config.get('USE_GROUPS'):
-        logging.warning('DEBUG: checking group membership for id {0}: group is {1}'.format(id, _cred.group))
-        if _cred.group and not authnz.user_is_member(_cred.group):
-            return jsonify({'error': 'User not authorized to view cred'}), 403
+    if not authnz.user_is_authorized(_cred.group):
+        msg = 'User not authorized to modify credential'
+        return jsonify({'error': msg}), 403
     data = request.get_json()
     update = {}
     revision = _get_latest_credential_revision(id, _cred.revision)
