@@ -1,6 +1,8 @@
 from confidant.app import create_app
 from confidant.authnz import rbac
+from confidant.models.credential import Credential
 
+from datetime import datetime
 
 def test_default_acl(mocker):
     mocker.patch('confidant.settings.USE_AUTH', True)
@@ -113,7 +115,33 @@ def test_default_acl(mocker):
         # Test for bad user type
         g_mock.user_type = 'badtype'
         assert rbac.default_acl(resource_type='service', action='get') is False
-
+        # Test groups
+        g_mock.user_type = 'user'
+        g_mock.username = 'test-user'
+        mocker.patch('confidant.authnz.user_in_group', lambda _: False)
+        credential = Credential(
+            id='1234',
+            revision=1,
+            data_type='credential',
+            enabled=True,
+            name='Test credential',
+            credential_pairs='akjlaklkaj==',
+            data_key='slkjlksfjklsdjf==',
+            cipher_version=2,
+            metadata={},
+            modified_date=datetime.now(),
+            modified_by='test@example.com',
+            documentation='',
+            last_rotation_date=datetime(2020, 1, 1),
+            group='testgroup'
+        )
+        mocker.patch(
+            'confidant.routes.credentials.Credential.get',
+            return_value=credential,
+        )
+        assert rbac.default_acl(resource_type='credential', resource_id='cred', action='get') is False
+        mocker.patch('confidant.authnz.user_in_group', lambda _: True)
+        assert rbac.default_acl(resource_type='credential', resource_id='cred', action='get') is True
 
 def test_no_acl():
     app = create_app()

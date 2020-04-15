@@ -24,6 +24,7 @@ def credential(mocker):
         modified_by='test@example.com',
         documentation='',
         last_rotation_date=datetime(2020, 1, 1),
+        group='testgroup'
     )
 
 
@@ -43,6 +44,7 @@ def archive_credential(mocker):
         modified_by='test@example.com',
         documentation='',
         tags=['OLD TAG'],
+        group='archivegroup'
     )
 
 
@@ -62,6 +64,7 @@ def credential_list(mocker):
             modified_date=datetime.now(),
             modified_by='test@example.com',
             documentation='',
+            group='g1',
         ),
         Credential(
             id='5678',
@@ -76,6 +79,7 @@ def credential_list(mocker):
             modified_date=datetime.now(),
             modified_by='test@example.com',
             documentation='',
+            group='g2',
         ),
     ]
     return credentials
@@ -294,6 +298,7 @@ def test_diff_credential(mocker, credential):
 
 
 def test_create_credential(mocker, credential):
+    # CRTODO: user can create a credential with a group they are not in
     app = create_app()
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch(
@@ -381,6 +386,7 @@ def test_create_credential(mocker, credential):
             'credential_pairs': {'key': 'value'},
             'name': 'shiny new key',
             'tags': ['ADMIN_PRIV', 'MY_SPECIAL_TAG'],
+            'group': 'g1'
         }),
     )
     json_data = json.loads(ret.data)

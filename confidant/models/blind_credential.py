@@ -51,6 +51,7 @@ class BlindCredential(Model):
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
+    group = UnicodeAttribute(null=True)
 
     def equals(self, other_cred):
         if self.name != other_cred.name:
@@ -70,5 +71,7 @@ class BlindCredential(Model):
         if self.metadata != other_cred.metadata:
             return False
         if self.documentation != other_cred.documentation:
+            return False
+        if self.group != other_cred.group:
             return False
         return True

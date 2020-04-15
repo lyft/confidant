@@ -15,6 +15,7 @@ def test_equals(mocker):
         documentation='',
         metadata={},
         tags=['ADMIN_PRIV'],
+        group='testgroup',
     )
     cred2 = Credential(
         name='test',
@@ -22,6 +23,7 @@ def test_equals(mocker):
         documentation='',
         metadata={},
         tags=['ADMIN_PRIV'],
+        group='testgroup',
     )
     assert cred1.equals(cred2) is True
 
@@ -69,6 +71,29 @@ def test_not_equals_different_tags(mocker):
     assert cred1.equals(cred2) is False
 
 
+def test_not_equals_different_groups(mocker):
+    decrypted_pairs_mock = mocker.patch(
+        'confidant.models.credential.Credential.decrypted_credential_pairs'
+    )
+    decrypted_pairs_mock.return_value = {'test': 'me'}
+    cred1 = Credential(
+        name='test',
+        enabled=True,
+        documentation='',
+        metadata={},
+        tags=['ADMIN_PRIV'],
+        group='g1',
+    )
+    cred2 = Credential(
+        name='test',
+        enabled=True,
+        documentation='',
+        metadata={},
+        tags=['ADMIN_PRIV'],
+        group='g2',
+    )
+    assert cred1.equals(cred2) is False
+
 def test_diff(mocker):
     mocker.patch(
         'confidant.models.credential.Credential'
@@ -87,6 +112,7 @@ def test_diff(mocker):
         modified_by=modified_by,
         modified_date=modified_date_old,
         tags=['FINANCIALLY_SENSITIVE', 'IMPORTANT'],
+        group='g1',
     )
     new = Credential(
         name='test2',
@@ -97,6 +123,7 @@ def test_diff(mocker):
         modified_by=modified_by,
         modified_date=modified_date_new,
         tags=['ADMIN_PRIV', 'IMPORTANT'],
+        group='g2',
     )
     # TODO: figure out how to test decrypted_credential_pairs. Mocking
     # it is turning out to be difficult.
@@ -124,6 +151,10 @@ def test_diff(mocker):
         'tags': {
             'removed': ['FINANCIALLY_SENSITIVE'],
             'added': ['ADMIN_PRIV'],
+        },
+        'group': {
+            'removed': 'g1',
+            'added': 'g2',
         },
     }
     assert old.diff(new) == expectedDiff

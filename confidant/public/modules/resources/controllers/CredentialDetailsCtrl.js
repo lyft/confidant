@@ -106,7 +106,8 @@
                     enabled: true,
                     credentialPairs: [{'key': '', 'value': ''}],
                     mungedMetadata: [],
-                    mungedTags: []
+                    mungedTags: [],
+                    group: "",
                 };
                 credentialCopy = angular.copy($scope.credential);
                 $scope.shown = true;
@@ -221,6 +222,7 @@
                 _credential.name = $scope.credential.name;
                 _credential.enabled = $scope.credential.enabled;
                 _credential.documentation = $scope.credential.documentation;
+                _credential.group = $scope.credential.group;
                 _credential.credential_pairs = {};
                 _credential.metadata = {};
                 _credential.tags = [];

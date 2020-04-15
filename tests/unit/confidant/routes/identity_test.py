@@ -1,6 +1,6 @@
 from confidant.authnz import UserUnknownError
 from confidant.app import create_app
-
+from confidant import settings
 
 def test_get_user_info(mocker):
     mocker.patch('confidant.settings.USE_AUTH', False)
@@ -24,7 +24,6 @@ def test_get_user_info_no_user(mocker):
     ret = app.test_client().get('/v1/user/email', follow_redirects=False)
     assert ret.status_code == 200
     assert ret.json == {'email': None}
-
 
 def test_get_client_config(mocker):
     def acl_module_check(resource_type, action):
@@ -59,7 +58,7 @@ def test_get_client_config(mocker):
             'xsrf_cookie_name': 'CSRF_TOKEN',
             'maintenance_mode': True,
             'history_page_limit': 50,
-            'defined_tags': [],
+            'defined_tags': set(['ROTATION_EXCLUDED', 'FINANCIALLY_SENSITIVE']),
             'permissions': {
                 'credentials': {
                     'list': True,
@@ -79,5 +78,7 @@ def test_get_client_config(mocker):
 
     app = create_app()
     ret = app.test_client().get('/v1/client_config', follow_redirects=False)
+    ret_json = dict(ret.json)
+    ret_json['generated']['defined_tags'] = set(ret_json['generated']['defined_tags'])
     assert ret.status_code == 200
     assert ret.json == expected

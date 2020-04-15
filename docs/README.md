@@ -18,3 +18,5 @@ The output can be found in `generated/docs`.
 2. The docs are published to [docs/confidant](https://github.com/lyft/confidant.github.io/tree/master/docs/confidant)
    in a directory named after every tagged commit in this repo. Thus, on every tagged release there
    are snapped docs.
+
+// CRTODO: add documentation and CHANGELOG for group support

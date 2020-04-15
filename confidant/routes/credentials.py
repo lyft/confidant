@@ -76,7 +76,8 @@ def get_credential_list():
              "documentation": "Example documentation",
              "modified_date": "2019-12-16T23:16:11.413299+00:00",
              "modified_by": "rlane@example.com",
-             "permissions": {}
+             "permissions": {},
+             "group": "security-group"
            },
            ...
          ],
@@ -144,6 +145,7 @@ def get_credential(id):
          "documentation": "Example documentation",
          "modified_date": "2019-12-16T23:16:11.413299+00:00",
          "modified_by": "rlane@example.com",
+         "group": "security-group",
          "permissions": {
            "metadata": true,
            "get": true,
@@ -611,6 +613,7 @@ def create_credential():
         documentation=data.get('documentation'),
         tags=data.get('tags', []),
         last_rotation_date=last_rotation_date,
+        group=data.get('group', None),
     ).save(id__null=True)
     # Make this the current revision
     cred = Credential(
@@ -627,6 +630,7 @@ def create_credential():
         documentation=data.get('documentation'),
         tags=data.get('tags', []),
         last_rotation_date=last_rotation_date,
+        group=data.get('group', None)
     )
     cred.save()
     permissions = {
@@ -783,6 +787,7 @@ def update_credential(id):
         'metadata': data.get('metadata', _cred.metadata),
         'documentation': data.get('documentation', _cred.documentation),
         'tags': data.get('tags', _cred.tags),
+        'group': data.get('group', _cred.group),
     }
     # Enforce documentation, EXCEPT if we are restoring an old revision
     if (not update['documentation'] and
@@ -850,6 +855,7 @@ def update_credential(id):
             documentation=update['documentation'],
             tags=update['tags'],
             last_rotation_date=update['last_rotation_date'],
+            group=update['group'],
         ).save(id__null=True)
     except PutError as e:
         logger.error(e)
@@ -869,6 +875,7 @@ def update_credential(id):
             documentation=update['documentation'],
             tags=update['tags'],
             last_rotation_date=update['last_rotation_date'],
+            group=update['group'],
         )
         cred.save()
     except PutError as e:
@@ -1024,6 +1031,7 @@ def revert_credential_to_revision(id, to_revision):
             documentation=revert_credential.documentation,
             tags=revert_credential.tags,
             last_rotation_date=revert_credential.last_rotation_date,
+            group=revert_credential.group,
         ).save(id__null=True)
     except PutError as e:
         logger.error(e)
@@ -1043,6 +1051,7 @@ def revert_credential_to_revision(id, to_revision):
             documentation=revert_credential.documentation,
             tags=revert_credential.tags,
             last_rotation_date=revert_credential.last_rotation_date,
+            group=revert_credential.group,
         )
         cred.save()
     except PutError as e:

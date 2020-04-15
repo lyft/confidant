@@ -15,11 +15,12 @@ from confidant.authnz.errors import (
 )
 from confidant.authnz import userauth
 
+import grp
+
 _VALIDATOR = None
 
 logger = logging.getLogger(__name__)
 user_mod = userauth.init_user_auth_class()
-
 
 def _get_validator():
     global _VALIDATOR
@@ -58,7 +59,6 @@ def user_is_user_type(user_type):
         return True
     return False
 
-
 def user_is_service(service):
     if not settings.USE_AUTH:
         return True
@@ -66,6 +66,13 @@ def user_is_service(service):
         return True
     return False
 
+def user_in_group(groupname):
+    try:
+        group = grp.getgrnam(groupname)
+    except KeyError:
+        return False
+    user = get_logged_in_user()
+    return user in group[3]
 
 def service_in_account(account):
     # We only scope to account, if an account is specified.

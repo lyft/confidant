@@ -1,6 +1,5 @@
 # authentication / authorization related error classes
 
-
 class UserUnknownError(Exception):
     pass
 

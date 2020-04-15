@@ -2,7 +2,7 @@ import re
 
 from confidant import authnz
 from confidant.services import certificatemanager
-
+from confidant.models.credential import Credential
 
 def default_acl(*args, **kwargs):
     """ Default ACLs for confidant: Allow access to all resource types
@@ -25,6 +25,13 @@ def default_acl(*args, **kwargs):
     action = kwargs.get('action')
     resource_id = kwargs.get('resource_id')
     resource_kwargs = kwargs.get('kwargs')
+    if resource_type == 'credential' and resource_id is not None:
+        try:
+            cred = Credential.get(resource_id)
+        except:
+            return False
+        if cred.group is not None and not authnz.user_in_group(cred.group):
+            return False
     if authnz.user_is_user_type('user'):
         if resource_type == 'certificate':
             return False

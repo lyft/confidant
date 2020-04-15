@@ -248,7 +248,6 @@ def list_cas():
        GET /v1/cas
 
     **Example response**:
-
     .. sourcecode:: http
 
        HTTP/1.1 200 OK
@@ -310,7 +309,6 @@ def get_ca(ca):
     :type ca: str
 
     **Example response**:
-
     .. sourcecode:: http
 
        HTTP/1.1 200 OK

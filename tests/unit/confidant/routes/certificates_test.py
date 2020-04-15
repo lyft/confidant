@@ -8,6 +8,8 @@ def test_get_certificate(mocker):
     app = create_app()
 
     mocker.patch('confidant.settings.USE_AUTH', False)
+    # making sure that group settings for credentials don't affect certs
+    mocker.patch('confidant.authnz.user_in_group', lambda _: False)
     mocker.patch(
         'confidant.authnz.get_logged_in_user',
         return_value='badservice',
