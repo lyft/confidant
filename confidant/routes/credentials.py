@@ -4,7 +4,6 @@ import logging
 import re
 import uuid
 
-from datetime import datetime
 from flask import blueprints, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
@@ -206,7 +205,7 @@ def get_credential(id):
                 logger.error('Archived credential {}-{} not found'.format(
                         id, credential.revision)
                 )
-            now = datetime.now()
+            now = misc.utcnow()
             credential.last_decrypted_date = now
             credential.save()
             if archived_credential:
@@ -596,7 +595,7 @@ def create_credential():
     data_key = keymanager.create_datakey(encryption_context={'id': id})
     cipher = CipherManager(data_key['plaintext'], version=2)
     credential_pairs = cipher.encrypt(credential_pairs)
-    last_rotation_date = datetime.now()
+    last_rotation_date = misc.utcnow()
     cred = Credential(
         id='{0}-{1}'.format(id, revision),
         data_type='archive-credential',
@@ -827,7 +826,7 @@ def update_credential(id):
         # decrypted credential pair of the most recent revision, assume that
         # this is a new credential pair and update last_rotation_date
         if credential_pairs != _cred.decrypted_credential_pairs:
-            update['last_rotation_date'] = datetime.now()
+            update['last_rotation_date'] = misc.utcnow()
         data_key = keymanager.create_datakey(encryption_context={'id': id})
         cipher = CipherManager(data_key['plaintext'], version=2)
         update['credential_pairs'] = cipher.encrypt(

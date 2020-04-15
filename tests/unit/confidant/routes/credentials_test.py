@@ -1,4 +1,5 @@
 import json
+import pytz
 from datetime import datetime
 
 import pytest
@@ -23,7 +24,7 @@ def credential(mocker):
         modified_date=datetime.now(),
         modified_by='test@example.com',
         documentation='',
-        last_rotation_date=datetime(2020, 1, 1),
+        last_rotation_date=datetime(2020, 1, 1, tzinfo=pytz.utc),
     )
 
 
@@ -179,6 +180,7 @@ def test_get_credential(mocker, credential):
 
     # Make sure credential is saved when ENABLE_SAVE_LAST_DECRYPTION_TIME=True
     # and metadata_only=False
+    credential.last_rotation_date = datetime(2020, 1, 1, tzinfo=pytz.UTC)
     mock_save = mocker.patch.object(Credential, 'save', return_value=None)
     credential.id = '9012'
     ret = app.test_client().get(
@@ -188,6 +190,7 @@ def test_get_credential(mocker, credential):
     json_data = json.loads(ret.data)
     assert ret.status_code == 200
     assert json_data['permissions']['update'] is True
+    assert 'next_rotation_date' in json_data
     assert mock_save.call_count == 2  # Once for credential, once for archive
 
     # Make sure credential is NOT saved when
@@ -391,6 +394,7 @@ def test_create_credential(mocker, credential):
 
 
 def test_update_credential(mocker, credential):
+    credential.last_rotation_date = datetime(2020, 1, 1, tzinfo=pytz.UTC)
     app = create_app()
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch(
@@ -513,6 +517,7 @@ def test_update_credential(mocker, credential):
     assert 'shiny new name' == json_data['name']
     assert mock_save.call_count == 2
     assert 'last_rotation_date' in json_data
+    assert 'next_rotation_date' in json_data
 
 
 def test_revise_credential(mocker, credential, archive_credential):

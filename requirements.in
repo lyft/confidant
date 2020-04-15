@@ -187,3 +187,6 @@ pytest-env==0.6.2
 # License: MIT
 # Upstream url: https://github.com/asottile/pytest-gevent
 pytest-gevent==1.0.0
+
+# Timezones
+pytz
