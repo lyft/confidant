@@ -1,4 +1,6 @@
 import importlib
+import pytz
+from datetime import datetime
 
 
 def dict_deep_update(a, b):
@@ -43,3 +45,12 @@ def get_boolean(val, default=False):
     if val is None:
         return default
     return val in ['True', 'true', '1']
+
+
+def utcnow():
+    """
+    Returns the current time with tzinfo='UTC'.
+    datetime.utcnow() currently does not populate tzinfo
+    """
+    now = datetime.utcnow()
+    return now.replace(tzinfo=pytz.utc)
