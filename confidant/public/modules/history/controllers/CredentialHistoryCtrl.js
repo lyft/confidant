@@ -54,11 +54,23 @@
                             $scope.noDiff = true;
                         }
                     }, function(res) {
-                        $scope.getError = res.data.error;
+                        if (res.status === 500) {
+                            $scope.getError = 'Unexpected server error.';
+                            $log.error(res);
+                        } else {
+                            $scope.getError = res.data.error;
+                        }
                     });
                 }
                 if ($scope.currentRevision === $scope.credentialRevision) {
                     $scope.isCurrentRevision = true;
+                }
+            }, function(res) {
+                if (res.status === 500) {
+                    $scope.getError = 'Unexpected server error.';
+                    $log.error(res);
+                } else {
+                    $scope.getError = res.data.error;
                 }
             });
 
