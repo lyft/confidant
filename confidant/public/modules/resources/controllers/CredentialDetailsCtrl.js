@@ -85,11 +85,18 @@
             if ($scope.credentialId) {
                 CredentialServices.get({'id': $scope.credentialId}).$promise.then(function(credentialServices) {
                     $scope.credentialServices = credentialServices.services;
-                });
-
-                Credential.get({'id': $scope.credentialId, 'metadata_only': true}).$promise.then(function(credential) {
-                    $scope.shown = false;
-                    populateCredential(credential);
+                    Credential.get({'id': $scope.credentialId, 'metadata_only': true}).$promise.then(function(credential) {
+                        $scope.shown = false;
+                        populateCredential(credential);
+                        }, function(res) {
+                            if (res.status === 500) {
+                                $scope.getError = 'Unexpected server error.';
+                                $log.error(res);
+                            } else {
+                                $scope.getError = res.data.error;
+                            }
+                            deferred.reject();
+                        });
                 }, function(res) {
                     if (res.status === 500) {
                         $scope.getError = 'Unexpected server error.';
@@ -97,7 +104,6 @@
                     } else {
                         $scope.getError = res.data.error;
                     }
-                    deferred.reject();
                 });
             } else {
                 // A new credential is being created
@@ -107,7 +113,7 @@
                     credentialPairs: [{'key': '', 'value': ''}],
                     mungedMetadata: [],
                     mungedTags: [],
-                    group: "",
+                    group: '',
                 };
                 credentialCopy = angular.copy($scope.credential);
                 $scope.shown = true;
