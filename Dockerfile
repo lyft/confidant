@@ -19,9 +19,6 @@ RUN apt-get update \
 
 COPY package.json /srv/confidant/
 
-RUN npm install grunt-cli && \
-    npm install
-
 COPY piptools_requirements*.txt requirements*.txt /srv/confidant/
 
 ENV PATH=/venv/bin:$PATH
@@ -33,8 +30,6 @@ COPY .jshintrc Gruntfile.js /srv/confidant/
 COPY confidant/public /srv/confidant/confidant/public
 
 COPY . /srv/confidant
-
-RUN node_modules/grunt-cli/bin/grunt build
 
 EXPOSE 80
 

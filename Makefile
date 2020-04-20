@@ -11,6 +11,8 @@ down:
 	docker-compose down
 
 docker_build: clean
+	npm install grunt-cli && npm install
+	node_modules/grunt-cli/bin/grunt build
 	docker build -t lyft/confidant .
 
 docker_test: docker_build docker_test_unit docker_test_integration docker_test_frontend down
@@ -42,8 +44,6 @@ test_unit: clean
 	pytest --strict --junitxml=build/unit.xml --cov=confidant --cov-report=html --cov-report=xml --cov-report=term --no-cov-on-fail tests/unit
 
 test_frontend:
-	npm install grunt-cli && npm install
-	node_modules/grunt-cli/bin/grunt build
 	./node_modules/grunt-cli/bin/grunt test
 
 .PHONY: compile_deps # freeze requirements.in to requirements3.txt
