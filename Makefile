@@ -13,7 +13,7 @@ down:
 docker_build: clean
 	npm install grunt-cli && npm install
 	node_modules/grunt-cli/bin/grunt build
-	docker build -t lyft/confidant . --no-cache
+	docker build -t lyft/confidant .
 
 docker_test: docker_build docker_test_unit docker_test_integration docker_test_frontend down
 
