@@ -33,4 +33,9 @@ COPY . /srv/confidant
 
 EXPOSE 80
 
+# added this to test the saml stuff
+RUN groupadd confidantTestGroup
+RUN useradd confidant-user
+RUN usermod -a -G confidantTestGroup confidant-user
+
 CMD ["gunicorn", "confidant.wsgi:app", "--workers=2", "-k", "gevent", "--access-logfile=-", "--error-logfile=-"]
