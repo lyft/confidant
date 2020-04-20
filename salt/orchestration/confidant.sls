@@ -11,33 +11,6 @@
 {% endif %}
 {% endfor %}
 
-Ensure DynamoDB table exists:
-  boto_dynamodb.present:
-    - name: {{ grains.cluster_name }}
-    - read_capacity_units: 10
-    - write_capacity_units: 10
-    - hash_key: id
-    - hash_key_data_type: S
-    - global_indexes:
-      - data_type_date_index:
-        - name: "data_type_date_index"
-        - read_capacity_units: 10
-        - write_capacity_units: 10
-        - hash_key: data_type
-        - hash_key_data_type: S
-        - range_key: modified_date
-        - range_key_data_type: S
-      # TODO: get rid of this index
-      - data_type_revision_index:
-        - name: "data_type_revision_index"
-        - read_capacity_units: 10
-        - write_capacity_units: 10
-        - hash_key: data_type
-        - hash_key_data_type: S
-        - range_key: revision
-        - range_key_data_type: N
-    - profile: orchestration_profile
-
 Ensure {{ grains.cluster_name }} security group exists:
   boto_secgroup.present:
     - name: {{ grains.cluster_name }}
