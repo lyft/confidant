@@ -298,7 +298,6 @@ def test_diff_credential(mocker, credential):
 
 
 def test_create_credential(mocker, credential):
-    # CRTODO: user can create a credential with a group they are not in
     app = create_app()
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch(
