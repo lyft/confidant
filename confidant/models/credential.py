@@ -56,8 +56,8 @@ class CredentialBase(Model):
     tags = ListAttribute(default=list)
     last_decrypted_date = UTCDateTimeAttribute(null=True)
     last_rotation_date = UTCDateTimeAttribute(null=True)
-    # if a user is not in the group, cannot interact w credential
-    group = UnicodeAttribute(null=True)
+    # if a user is not in one of the groups, cannot interact w credential
+    groups = ListAttribute(default=list)
 
 
 class Credential(CredentialBase):
@@ -84,7 +84,7 @@ class Credential(CredentialBase):
             return False
         if set(self.tags) != set(other_cred.tags):
             return False
-        if self.group != other_cred.group:
+        if set(self.groups) != set(other_cred.groups):
             return False
         return True
 
@@ -135,8 +135,11 @@ class Credential(CredentialBase):
             'added': new.modified_date,
             'removed': old.modified_date,
         }
-        if old.group != new.group:
-            diff['group'] = {'added': new.group, 'removed': old.group}
+        if set(old.groups) != set(new.groups):
+            diff['groups'] = {
+                'added': list(set(new.groups) - set(old.groups)),
+                'removed': list(set(old.groups) - set(new.groups)),
+            }
         return diff
 
     def _diff_dict(self, old, new):
@@ -234,7 +237,7 @@ class Credential(CredentialBase):
             tags=archive_credential.tags,
             last_decrypted_date=archive_credential.last_decrypted_date,
             last_rotation_date=archive_credential.last_rotation_date,
-            group=archive_credential.group,
+            groups=archive_credential.groups,
         )
 
 
@@ -268,5 +271,5 @@ class CredentialArchive(CredentialBase):
             tags=credential.tags,
             last_decrypted_date=credential.last_decrypted_date,
             last_rotation_date=credential.last_rotation_date,
-            group=credential.group,
+            groups=credential.groups,
         )

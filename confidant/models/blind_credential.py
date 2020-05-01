@@ -6,7 +6,8 @@ from pynamodb.attributes import (
     NumberAttribute,
     BooleanAttribute,
     UTCDateTimeAttribute,
-    JSONAttribute
+    JSONAttribute,
+    ListAttribute
 )
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
@@ -51,7 +52,7 @@ class BlindCredential(Model):
     modified_date = UTCDateTimeAttribute(default=datetime.now)
     modified_by = UnicodeAttribute()
     documentation = UnicodeAttribute(null=True)
-    group = UnicodeAttribute(null=True)
+    groups = ListAttribute(default=list)
 
     def equals(self, other_cred):
         if self.name != other_cred.name:
@@ -72,6 +73,6 @@ class BlindCredential(Model):
             return False
         if self.documentation != other_cred.documentation:
             return False
-        if self.group != other_cred.group:
+        if set(self.groups) != set(other_cred.groups):
             return False
         return True

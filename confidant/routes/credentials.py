@@ -77,7 +77,7 @@ def get_credential_list():
              "modified_date": "2019-12-16T23:16:11.413299+00:00",
              "modified_by": "rlane@example.com",
              "permissions": {},
-             "group": "security-group"
+             "groups": []
            },
            ...
          ],
@@ -88,10 +88,16 @@ def get_credential_list():
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to list credentials.
     """
-    if not acl_module_check(resource_type='credential', action='list'):
+    sub_error_msg = ""
+    def set_sub_error(x):
+        nonlocal sub_error_msg
+        sub_error_msg = x
+    if not acl_module_check(resource_type='credential', action='list', error_message_handler=set_sub_error):
         msg = "{} does not have access to list credentials".format(
             authnz.get_logged_in_user()
         )
+        if sub_error_msg:
+            msg = "{} : {}".format(msg, sub_error_msg)
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
 
@@ -145,7 +151,7 @@ def get_credential(id):
          "documentation": "Example documentation",
          "modified_date": "2019-12-16T23:16:11.413299+00:00",
          "modified_by": "rlane@example.com",
-         "group": "security-group",
+         "groups": ["security-group"],
          "permissions": {
            "metadata": true,
            "get": true,
@@ -161,13 +167,20 @@ def get_credential(id):
     """
     metadata_only = misc.get_boolean(request.args.get('metadata_only'))
 
+    sub_error_msg = ""
+    def set_sub_error(x):
+        nonlocal sub_error_msg
+        sub_error_msg = x
     if not acl_module_check(resource_type='credential',
                             action='metadata',
-                            resource_id=id):
+                            resource_id=id,
+                            error_message_handler=set_sub_error):
         msg = "{} does not have access to credential {}".format(
             authnz.get_logged_in_user(),
             id
         )
+        if sub_error_msg:
+            msg = "{} : {}".format(msg, sub_error_msg)
         error_msg = {'error': msg, 'reference': id}
         return jsonify(error_msg), 403
 
@@ -304,13 +317,20 @@ def diff_credential(id, old_revision, new_revision):
     :statuscode 404: The provided credential ID or one of the provided
                      revisions does not exist.
     """
+    sub_error_msg = ""
+    def set_sub_error(x):
+        nonlocal sub_error_msg
+        sub_error_msg = x
     if not acl_module_check(resource_type='credential',
                             action='metadata',
-                            resource_id=id):
+                            resource_id=id,
+                            error_message_handler=set_sub_error):
         msg = "{} does not have access to diff credential {}".format(
             authnz.get_logged_in_user(),
             id
         )
+        if sub_error_msg:
+            msg = "{} : {}".format(msg, sub_error_msg)
         error_msg = {'error': msg, 'reference': id}
         return jsonify(error_msg), 403
 
@@ -388,13 +408,20 @@ def get_archive_credential_revisions(id):
                      metadata for the provided credential ID.
     :statuscode 404: The provided credential ID does not exist.
     """
+    sub_error_msg = ""
+    def set_sub_error(x):
+        nonlocal sub_error_msg
+        sub_error_msg = x
     if not acl_module_check(resource_type='credential',
                             action='metadata',
-                            resource_id=id):
+                            resource_id=id,
+                            error_message_handler=set_sub_error):
         msg = "{} does not have access to credential {} revisions".format(
             authnz.get_logged_in_user(),
             id
         )
+        if sub_error_msg:
+            msg = "{} : {}".format(msg, sub_error_msg)
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
 
@@ -467,10 +494,16 @@ def get_archive_credential_list():
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to list credentials
     """
-    if not acl_module_check(resource_type='credential', action='list'):
+    sub_error_msg = ""
+    def set_sub_error(x):
+        nonlocal sub_error_msg
+        sub_error_msg = x
+    if not acl_module_check(resource_type='credential', action='list', error_message_handler=set_sub_error):
         msg = "{} does not have access to list credentials".format(
             authnz.get_logged_in_user()
         )
+        if sub_error_msg:
+            msg = "{} : {}".format(msg, sub_error_msg)
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
 
@@ -562,10 +595,16 @@ def create_credential():
                      correct format, or a required field was not provided.
     :statuscode 403: Client does not have access to create credentials.
     '''
-    if not acl_module_check(resource_type='credential', action='create'):
+    sub_error_msg = ""
+    def set_sub_error(x):
+        nonlocal sub_error_msg
+        sub_error_msg = x
+    if not acl_module_check(resource_type='credential', action='create', error_message_handler=set_sub_error):
         msg = "{} does not have access to create credentials".format(
             authnz.get_logged_in_user()
         )
+        if sub_error_msg:
+            msg = "{} : {}".format(msg, sub_error_msg)
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
 
@@ -613,7 +652,7 @@ def create_credential():
         documentation=data.get('documentation'),
         tags=data.get('tags', []),
         last_rotation_date=last_rotation_date,
-        group=data.get('group', None),
+        groups=data.get('groups', None),
     ).save(id__null=True)
     # Make this the current revision
     cred = Credential(
@@ -630,7 +669,7 @@ def create_credential():
         documentation=data.get('documentation'),
         tags=data.get('tags', []),
         last_rotation_date=last_rotation_date,
-        group=data.get('group', None)
+        groups=data.get('groups', [])
     )
     cred.save()
     permissions = {
@@ -678,11 +717,18 @@ def get_credential_dependencies(id):
     :statuscode 403: Client does not have permissions to get metadata for the
                      provided credential.
     """
+    sub_error_msg = ""
+    def set_sub_error(x):
+        nonlocal sub_error_msg
+        sub_error_msg = x
     if not acl_module_check(resource_type='credential',
                             action='metadata',
-                            resource_id=id):
+                            resource_id=id,
+                            error_message_handler=set_sub_error):
         msg = "{} does not have access to get dependencies for credential {}"
         msg = msg.format(authnz.get_logged_in_user(), id)
+        if sub_error_msg:
+            msg = "{} : {}".format(msg, sub_error_msg)
         error_msg = {'error': msg, 'reference': id}
         return jsonify(error_msg), 403
 
@@ -757,13 +803,20 @@ def update_credential(id):
     :statuscode 403: Client does not have access to update the provided
                      credential ID.
     '''
+    sub_error_msg = ""
+    def set_sub_error(x):
+        nonlocal sub_error_msg
+        sub_error_msg = x
     if not acl_module_check(resource_type='credential',
                             action='update',
-                            resource_id=id):
+                            resource_id=id,
+                            error_message_handler=set_sub_error):
         msg = "{} does not have access to update credential {}".format(
             authnz.get_logged_in_user(),
             id
         )
+        if sub_error_msg:
+            msg = "{} : {}".format(msg, sub_error_msg)
         error_msg = {'error': msg, 'reference': id}
         return jsonify(error_msg), 403
 
@@ -787,7 +840,7 @@ def update_credential(id):
         'metadata': data.get('metadata', _cred.metadata),
         'documentation': data.get('documentation', _cred.documentation),
         'tags': data.get('tags', _cred.tags),
-        'group': data.get('group', _cred.group),
+        'groups': data.get('groups', _cred.groups),
     }
     # Enforce documentation, EXCEPT if we are restoring an old revision
     if (not update['documentation'] and
@@ -855,7 +908,7 @@ def update_credential(id):
             documentation=update['documentation'],
             tags=update['tags'],
             last_rotation_date=update['last_rotation_date'],
-            group=update['group'],
+            groups=update['groups'],
         ).save(id__null=True)
     except PutError as e:
         logger.error(e)
@@ -875,7 +928,7 @@ def update_credential(id):
             documentation=update['documentation'],
             tags=update['tags'],
             last_rotation_date=update['last_rotation_date'],
-            group=update['group'],
+            groups=update['groups'],
         )
         cred.save()
     except PutError as e:
@@ -958,13 +1011,20 @@ def revert_credential_to_revision(id, to_revision):
     :statuscode 403: Client does not have access to revert the provided
                      credential ID.
     '''
+    sub_error_msg = ""
+    def set_sub_error(x):
+        nonlocal sub_error_msg
+        sub_error_msg = x
     if not acl_module_check(resource_type='credential',
                             action='revert',
-                            resource_id=id):
+                            resource_id=id,
+                            error_message_handler=set_sub_error):
         msg = "{} does not have access to revert credential {}".format(
             authnz.get_logged_in_user(),
             id
         )
+        if sub_error_msg:
+            msg = "{} : {}".format(msg, sub_error_msg)
         error_msg = {'error': msg, 'reference': id}
         return jsonify(error_msg), 403
 
@@ -1031,7 +1091,7 @@ def revert_credential_to_revision(id, to_revision):
             documentation=revert_credential.documentation,
             tags=revert_credential.tags,
             last_rotation_date=revert_credential.last_rotation_date,
-            group=revert_credential.group,
+            groups=revert_credential.groups,
         ).save(id__null=True)
     except PutError as e:
         logger.error(e)
@@ -1051,7 +1111,7 @@ def revert_credential_to_revision(id, to_revision):
             documentation=revert_credential.documentation,
             tags=revert_credential.tags,
             last_rotation_date=revert_credential.last_rotation_date,
-            group=revert_credential.group,
+            groups=revert_credential.groups,
         )
         cred.save()
     except PutError as e:

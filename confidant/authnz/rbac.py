@@ -30,7 +30,9 @@ def default_acl(*args, **kwargs):
             cred = Credential.get(resource_id)
         except:
             return False
-        if cred.group is not None and not authnz.user_in_group(cred.group):
+        if len(cred.groups) and not authnz.user_in_groups(cred.groups):
+            if 'error_message_handler' in kwargs:
+                kwargs['error_message_handler']("Not a member of any of the following groups: {}".format(cred.groups))
             return False
     if authnz.user_is_user_type('user'):
         if resource_type == 'certificate':
@@ -69,7 +71,6 @@ def default_acl(*args, **kwargs):
     else:
         # This should never happen, but paranoia wins out
         return False
-
 
 def no_acl(*args, **kwargs):
     """ Stub function that always returns true

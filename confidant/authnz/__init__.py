@@ -68,15 +68,18 @@ def user_is_service(service):
 
 # TODO: ASK STRIPE ABOUT THIS!
 # IF GET_LOGGED_IN_USER IS AN EMAIL, WE CHECK THE GROUP MEMBERSHIP OF THE EMAIL PREFIX!
-def user_in_group(groupname):
-    try:
-        group = grp.getgrnam(groupname)
-    except KeyError:
-        return False
-    user = get_logged_in_user()
-    if '@' in user:
-        user = user.split('@')[0]
-    return user in group[3]
+def user_in_groups(groupnames):
+    for groupname in groupnames:
+        try:
+            group = grp.getgrnam(groupname)
+        except KeyError:
+            continue
+        user = get_logged_in_user()
+        if '@' in user:
+            user = user.split('@')[0]
+        if user in group[3]:
+            return True
+    return False
 
 def service_in_account(account):
     # We only scope to account, if an account is specified.

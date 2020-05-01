@@ -113,7 +113,7 @@
                     credentialPairs: [{'key': '', 'value': ''}],
                     mungedMetadata: [],
                     mungedTags: [],
-                    group: '',
+                    groups: [],
                 };
                 credentialCopy = angular.copy($scope.credential);
                 $scope.shown = true;
@@ -228,7 +228,7 @@
                 _credential.name = $scope.credential.name;
                 _credential.enabled = $scope.credential.enabled;
                 _credential.documentation = $scope.credential.documentation;
-                _credential.group = $scope.credential.group;
+                _credential.groups = [];
                 _credential.credential_pairs = {};
                 _credential.metadata = {};
                 _credential.tags = [];
@@ -260,6 +260,14 @@
                         return $scope.saveError;
                     }
                     _credential.metadata[metadataItem.key] = metadataItem.value;
+                }
+                // Remove whitespace from group names
+                var unmungedGroups = $scope.credential.groups.split(",");
+                for (i = 0; i < unmungedGroups.length; i++) {
+                    var grp = unmungedGroups[i].trim();
+                    if (grp.length > 0) {
+                        _credential.groups.push(grp);
+                    }
                 }
                 for (i = $scope.credential.mungedTags.length; i--;) {
                     var tagItem = $scope.credential.mungedTags[i];

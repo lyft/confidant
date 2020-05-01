@@ -22,7 +22,7 @@ class CredentialResponse(object):
     tags = attr.ib(default=list)
     last_rotation_date = attr.ib(default=None)
     next_rotation_date = attr.ib(default=None)
-    group = attr.ib(default=None)
+    groups = attr.ib(default=list)
 
     @classmethod
     def from_credential(
@@ -43,7 +43,7 @@ class CredentialResponse(object):
             tags=credential.tags,
             last_rotation_date=credential.last_rotation_date,
             next_rotation_date=credential.next_rotation_date,
-            group=credential.group,
+            groups=credential.groups,
         )
         if include_credential_keys:
             ret.credential_keys = credential.credential_keys
@@ -72,7 +72,7 @@ class CredentialResponseSchema(AutobuildSchema):
     tags = fields.List(fields.Str())
     last_rotation_date = fields.DateTime()
     next_rotation_date = fields.DateTime()
-    group = fields.Str()
+    groups = fields.List(fields.Str())
 
 
 @attr.s
