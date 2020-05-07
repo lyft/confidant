@@ -24,7 +24,7 @@ def credential(mocker):
         modified_by='test@example.com',
         documentation='',
         last_rotation_date=datetime(2020, 1, 1),
-        group='testgroup'
+        groups=['testgroup']
     )
 
 
@@ -44,7 +44,7 @@ def archive_credential(mocker):
         modified_by='test@example.com',
         documentation='',
         tags=['OLD TAG'],
-        group='archivegroup'
+        groups=['archivegroup']
     )
 
 
@@ -64,7 +64,7 @@ def credential_list(mocker):
             modified_date=datetime.now(),
             modified_by='test@example.com',
             documentation='',
-            group='g1',
+            groups=['g1'],
         ),
         Credential(
             id='5678',
@@ -79,7 +79,7 @@ def credential_list(mocker):
             modified_date=datetime.now(),
             modified_by='test@example.com',
             documentation='',
-            group='g2',
+            groups=['g2'],
         ),
     ]
     return credentials
@@ -132,7 +132,7 @@ def test_get_credential(mocker, credential):
     ret = app.test_client().get('/v1/credentials/1234', follow_redirects=False)
     assert ret.status_code == 403
 
-    def acl_module_check(resource_type, action, resource_id):
+    def acl_module_check(resource_type, action, resource_id, **kwargs):
         if action == 'metadata':
             if resource_id == '5678':
                 return False
@@ -385,7 +385,7 @@ def test_create_credential(mocker, credential):
             'credential_pairs': {'key': 'value'},
             'name': 'shiny new key',
             'tags': ['ADMIN_PRIV', 'MY_SPECIAL_TAG'],
-            'group': 'g1'
+            'groups': ['g1']
         }),
     )
     json_data = json.loads(ret.data)

@@ -262,7 +262,7 @@
                     _credential.metadata[metadataItem.key] = metadataItem.value;
                 }
                 // Remove whitespace from group names
-                var unmungedGroups = $scope.credential.groups.split(",");
+                var unmungedGroups = $scope.credential.groups.split(',');
                 for (i = 0; i < unmungedGroups.length; i++) {
                     var grp = unmungedGroups[i].trim();
                     if (grp.length > 0) {

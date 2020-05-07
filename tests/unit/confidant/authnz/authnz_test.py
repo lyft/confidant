@@ -97,13 +97,13 @@ def test_user_is_service(mocker):
         assert authnz.user_is_service('notconfidant-unitttest') is False
 
 
-def test_user_in_group(mocker):
+def test_user_in_groups(mocker):
     my_group = ('my_group', '', 1337, ['user1'])
     mocker.patch('grp.getgrnam', return_value=my_group)
     mocker.patch('confidant.authnz.get_logged_in_user', return_value='user1')
-    assert authnz.user_in_group('my_group')
+    assert authnz.user_in_groups(['my_group'])
     mocker.patch('confidant.authnz.get_logged_in_user', return_value='user2')
-    assert not authnz.user_in_group('my_group')
+    assert not authnz.user_in_groups(['my_group'])
 
 def test_service_in_account(mocker):
     # If we aren't scoping, this should pass

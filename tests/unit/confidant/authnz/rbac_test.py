@@ -118,7 +118,7 @@ def test_default_acl(mocker):
         # Test groups
         g_mock.user_type = 'user'
         g_mock.username = 'test-user'
-        mocker.patch('confidant.authnz.user_in_group', lambda _: False)
+        mocker.patch('confidant.authnz.user_in_groups', lambda _: False)
         credential = Credential(
             id='1234',
             revision=1,
@@ -133,14 +133,14 @@ def test_default_acl(mocker):
             modified_by='test@example.com',
             documentation='',
             last_rotation_date=datetime(2020, 1, 1),
-            group='testgroup'
+            groups=['testgroup']
         )
         mocker.patch(
             'confidant.routes.credentials.Credential.get',
             return_value=credential,
         )
         assert rbac.default_acl(resource_type='credential', resource_id='cred', action='get') is False
-        mocker.patch('confidant.authnz.user_in_group', lambda _: True)
+        mocker.patch('confidant.authnz.user_in_groups', lambda _: True)
         assert rbac.default_acl(resource_type='credential', resource_id='cred', action='get') is True
 
 def test_no_acl():
