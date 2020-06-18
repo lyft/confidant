@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@uirouter/angularjs": "~1.0.23",
-    "angular": "~1.7.9",
+    "angular": "~1.8.0",
     "angular-animate": "~1.7.9",
     "angular-cookies": "~1.7.9",
     "angular-resource": "~1.7.9",
