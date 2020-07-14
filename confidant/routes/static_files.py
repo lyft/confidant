@@ -68,6 +68,11 @@ def fonts(path):
     return current_app.send_static_file(os.path.join('fonts', path))
 
 
+@blueprint.route('/images/<path:path>')
+def images(path):
+    return current_app.send_static_file(os.path.join('images', path))
+
+
 @blueprint.route('/custom/modules/<path:path>')
 @authnz.require_auth
 def custom_modules(path):
