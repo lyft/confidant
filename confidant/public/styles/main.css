@@ -9,17 +9,28 @@ body {
   background-color: #F4F5F5;
 }
 
+a {
+  color: #8f91ff;
+}
+
+/* For higher constrast, set the link in the navbar to a lighter color */
+.navbar-text > a {
+  color: #86a4ca;
+}
+
+#site-navigation > a:hover {
+  color: #658ABB;
+}
+
 #site-navigation {
   position: relative;
 }
 
 #page-header {
   color: #F4F5F5;
-  background-color: #333D47;
+  background-color: #585C70;
 }
 #page-header h1 {
-  color: #F4F5F5;
-  background-color: #333D47;
   margin-top: -2px;
 }
 #page-header .nav li a:hover {
@@ -142,18 +153,43 @@ body {
   content: "+ ";
 }
 
-.active {
-  color: #337ab7;
+.btn:hover {
+  background-color: #D0D4D4;
 }
 
+.active {
+  background-color: #8f91ff;
+  color: #F4F5F5;
+}
+
+.active:hover {
+  background-color: #8f91ff;
+  color: #F4F5F5;
+}
+
+.nav-pills > li.active > a, .nav-pills > li > a {
+  color: #424554;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus {
+  color: #F4F5F5;
+  background-color: #8f91ff;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover {
+  color: #F4F5F5;
+  background-color: #8f91ff;
+}
+
+
 .call-to-action {
-  background-color: rgb(51, 102, 204);
-  color: #FFF;
+  background-color: #6bdfab;
+  color: #424554;
 }
 
 .call-to-action:hover {
-  background-color: #337ab7;
-  color: #FFF;
+  background-color: #229B65;
+  color: #F4F5F5;
 }
 
 /*
@@ -164,7 +200,7 @@ body {
   height: 100%;
   position: fixed;
   z-index: 6000;
-  background-color: #333D47;
+  background-color: #424554;
 }
 #loading-spinner .spinner:before {
   content: '';
