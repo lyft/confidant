@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Changelog &mdash; confidant 6.3.0-385fb2 documentation</title>
+  <title>Changelog &mdash; confidant 6.3.0-c37bed documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.3.0-385fb2
+                6.3.0-c37bed
               </div>
             
           
@@ -419,6 +419,8 @@ json logs for logging output.</p></li>
 <li><p>Updated the docker-compose setup to have a fully functional production-like environment, with
 local dynamodb, local kms, and a local simplesamlphp IDP. The developer environment also has a
 configuration for the PKI, which will generate self-signed certificates.</p></li>
+<li><p>Fix for issue with <code class="docutils literal notranslate"><span class="pre">HISTORY_PAGE_LIMIT</span></code>, where when unset, the client would not load any history. If
+<code class="docutils literal notranslate"><span class="pre">HISTORY_PAGE_LIMIT</span></code> is now unset, it will correctly use the default behavior of not paging.</p></li>
 </ul>
 </div>
 <div class="section" id="id2">

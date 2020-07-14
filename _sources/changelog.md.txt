@@ -44,6 +44,9 @@
   local dynamodb, local kms, and a local simplesamlphp IDP. The developer environment also has a
   configuration for the PKI, which will generate self-signed certificates.
 
+* Fix for issue with `HISTORY_PAGE_LIMIT`, where when unset, the client would not load any history. If
+  `HISTORY_PAGE_LIMIT` is now unset, it will correctly use the default behavior of not paging.
+
 ## 6.2.0
 
 * This release fixes a python3 stacktrace in SAML auth, when using the `SAML_SP_KEY_FILE` setting.
