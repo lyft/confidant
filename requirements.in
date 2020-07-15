@@ -115,7 +115,7 @@ guard==1.0.1
 # License: MIT
 # Upstream url: http://pyyaml.org/wiki/PyYAML
 # Use: For parsing users.yaml
-PyYAML==5.1.2
+PyYAML==5.3.1
 
 # License: MIT
 # Upstream url: http://gunicorn.org/
