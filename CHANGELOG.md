@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.4.0
+
+* Updated client with a new logo and updated CSS to match design style guide. The new CSS coloring should
+  be more consistent across the client, and should have higher contrast.
+
 ## 6.3.0
 
 * Added support for keeping track of when credentials should be rotated.

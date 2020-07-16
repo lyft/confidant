@@ -18,6 +18,11 @@ a {
   color: #86a4ca;
 }
 
+.site-logo {
+  width: 200px;
+  height: 70px;
+}
+
 #site-navigation > a:hover {
   color: #658ABB;
 }
