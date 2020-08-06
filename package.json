@@ -50,6 +50,6 @@
   },
   "scripts": {
     "test": "grunt test",
-    "dist": "grunt build",
+    "dist": "grunt build"
   }
 }
