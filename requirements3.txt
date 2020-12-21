@@ -4,7 +4,6 @@
 #
 #    pip-compile --output-file=./requirements3.txt ./requirements.in
 #
---extra-index-url https://pypi.lyft.net/pypi
 
 asn1crypto==0.24.0        # via cryptography
 attrs==19.3.0             # via pytest, toastedmarshmallow
