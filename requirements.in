@@ -161,12 +161,12 @@ python-json-logger==0.1.11
 # Testing library
 # License: MIT
 # Upstream url: https://github.com/pytest-dev/pytest
-pytest==4.6.9
+pytest==6.2.1
 
 # Thin-wrapper around the mock package for easier use with py.test
 # License: MIT
 # Upstream url: https://github.com/pytest-dev/pytest-mock/
-pytest-mock==1.11.2
+pytest-mock==3.4.0
 
 # Code coverage plugin for py.test
 # License: MIT
