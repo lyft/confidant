@@ -1,4 +1,4 @@
-Confidant
+![pidgeon](./confidant/public/images/logo.svg)
 =========
 
 Your secret keeper. Stores secrets in DynamoDB, encrypted at rest.
