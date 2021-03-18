@@ -36,7 +36,7 @@ jinja2==2.10.1            # via flask
 jmespath==0.9.4           # via boto3, botocore
 kmsauth==0.6.0            # via -r ./requirements.in
 lru-dict==1.1.6           # via -r ./requirements.in
-lxml==4.4.1               # via xmlsec
+lxml==4.6.2               # via xmlsec
 markupsafe==1.1.1         # via jinja2
 more-itertools==8.0.2     # via zipp
 ndg-httpsclient==0.5.1    # via -r ./requirements.in
