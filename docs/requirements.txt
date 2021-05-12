@@ -1,6 +1,6 @@
 -r ../requirements3.txt
 GitPython==2.0.8
-Jinja2==2.10.1
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 Pygments==2.2.0
 alabaster==0.7.10
