@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using the Confidant client &mdash; confidant 6.3.0-29999e documentation</title>
+  <title>Using the Confidant client &mdash; confidant 6.3.0-47c7a0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.3.0-29999e
+                6.3.0-47c7a0
               </div>
             
           
@@ -394,60 +394,60 @@ in order for its configuration. The client does not merge the config. If
 ~/.confidant is found, it will use that and ignore the file in /etc. Config can
 be specified in either YAML or JSON format. The following configuration is
 supported, with the listed defaults:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
-  <span class="l l-Scalar l-Scalar-Plain">auth_key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
-  <span class="l l-Scalar l-Scalar-Plain">auth_context</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{}</span>
-  <span class="l l-Scalar l-Scalar-Plain">token_lifetime</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
-  <span class="l l-Scalar l-Scalar-Plain">token_version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-  <span class="l l-Scalar l-Scalar-Plain">token_cache_file</span><span class="p p-Indicator">:</span> <span class="s">&#39;/run/confidant/confidant_token&#39;</span>
-  <span class="l l-Scalar l-Scalar-Plain">assume_role</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
-  <span class="l l-Scalar l-Scalar-Plain">region</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
-  <span class="l l-Scalar l-Scalar-Plain">retries</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-  <span class="l l-Scalar l-Scalar-Plain">backoff</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">default</span><span class="p">:</span>
+  <span class="nt">url</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
+  <span class="nt">auth_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
+  <span class="nt">auth_context</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
+  <span class="nt">token_lifetime</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+  <span class="nt">token_version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+  <span class="nt">token_cache_file</span><span class="p">:</span> <span class="s">&#39;/run/confidant/confidant_token&#39;</span>
+  <span class="nt">assume_role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
+  <span class="nt">region</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">None</span>
+  <span class="nt">retries</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+  <span class="nt">backoff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
 </pre></div>
 </div>
 <p>The configuration file supports profiles, which let you specify multiple
 environments in the same file. For instance:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">https://confidant-production.example.com</span>
-  <span class="l l-Scalar l-Scalar-Plain">auth_key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">authnz-production</span>
-  <span class="l l-Scalar l-Scalar-Plain">auth_context</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rlane</span>
-    <span class="l l-Scalar l-Scalar-Plain">to</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">confidant-production</span>
-    <span class="l l-Scalar l-Scalar-Plain">user_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">user</span>
-  <span class="l l-Scalar l-Scalar-Plain">token_cache_file</span><span class="p p-Indicator">:</span> <span class="s">&#39;/run/confidant/default_confidant_token&#39;</span>
-  <span class="l l-Scalar l-Scalar-Plain">region</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
-<span class="l l-Scalar l-Scalar-Plain">staging</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">https://confidant-staging.example.com</span>
-  <span class="l l-Scalar l-Scalar-Plain">auth_key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">authnz-staging</span>
-  <span class="l l-Scalar l-Scalar-Plain">auth_context</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rlane</span>
-    <span class="l l-Scalar l-Scalar-Plain">to</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">confidant-staging</span>
-    <span class="l l-Scalar l-Scalar-Plain">user_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">user</span>
-  <span class="l l-Scalar l-Scalar-Plain">token_cache_file</span><span class="p p-Indicator">:</span> <span class="s">&#39;/run/confidant/staging_confidant_token&#39;</span>
-  <span class="l l-Scalar l-Scalar-Plain">region</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
-<span class="l l-Scalar l-Scalar-Plain">development</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">https://confidant-development.example.com</span>
-  <span class="l l-Scalar l-Scalar-Plain">auth_key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">authnz-development</span>
-  <span class="l l-Scalar l-Scalar-Plain">auth_context</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rlane</span>
-    <span class="l l-Scalar l-Scalar-Plain">to</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">confidant-development</span>
-    <span class="l l-Scalar l-Scalar-Plain">user_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">user</span>
-  <span class="l l-Scalar l-Scalar-Plain">token_cache_file</span><span class="p p-Indicator">:</span> <span class="s">&#39;/run/confidant/staging_confidant_token&#39;</span>
-  <span class="l l-Scalar l-Scalar-Plain">region</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">default</span><span class="p">:</span>
+  <span class="nt">url</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://confidant-production.example.com</span>
+  <span class="nt">auth_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">authnz-production</span>
+  <span class="nt">auth_context</span><span class="p">:</span>
+    <span class="nt">from</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rlane</span>
+    <span class="nt">to</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">confidant-production</span>
+    <span class="nt">user_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user</span>
+  <span class="nt">token_cache_file</span><span class="p">:</span> <span class="s">&#39;/run/confidant/default_confidant_token&#39;</span>
+  <span class="nt">region</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="nt">staging</span><span class="p">:</span>
+  <span class="nt">url</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://confidant-staging.example.com</span>
+  <span class="nt">auth_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">authnz-staging</span>
+  <span class="nt">auth_context</span><span class="p">:</span>
+    <span class="nt">from</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rlane</span>
+    <span class="nt">to</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">confidant-staging</span>
+    <span class="nt">user_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user</span>
+  <span class="nt">token_cache_file</span><span class="p">:</span> <span class="s">&#39;/run/confidant/staging_confidant_token&#39;</span>
+  <span class="nt">region</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="nt">development</span><span class="p">:</span>
+  <span class="nt">url</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://confidant-development.example.com</span>
+  <span class="nt">auth_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">authnz-development</span>
+  <span class="nt">auth_context</span><span class="p">:</span>
+    <span class="nt">from</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rlane</span>
+    <span class="nt">to</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">confidant-development</span>
+    <span class="nt">user_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user</span>
+  <span class="nt">token_cache_file</span><span class="p">:</span> <span class="s">&#39;/run/confidant/staging_confidant_token&#39;</span>
+  <span class="nt">region</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
 </pre></div>
 </div>
 <p>Here’s an example for a client configuration for a service:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">https://confidant-production.example.com</span>
-  <span class="l l-Scalar l-Scalar-Plain">auth_key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">authnz-production</span>
-  <span class="l l-Scalar l-Scalar-Plain">auth_context</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">serviceA-production</span>
-    <span class="l l-Scalar l-Scalar-Plain">to</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">confidant-production</span>
-    <span class="l l-Scalar l-Scalar-Plain">user_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service</span>
-  <span class="l l-Scalar l-Scalar-Plain">token_cache_file</span><span class="p p-Indicator">:</span> <span class="s">&#39;/run/confidant/default_confidant_token&#39;</span>
-  <span class="l l-Scalar l-Scalar-Plain">region</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">default</span><span class="p">:</span>
+  <span class="nt">url</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://confidant-production.example.com</span>
+  <span class="nt">auth_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">authnz-production</span>
+  <span class="nt">auth_context</span><span class="p">:</span>
+    <span class="nt">from</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">serviceA-production</span>
+    <span class="nt">to</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">confidant-production</span>
+    <span class="nt">user_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service</span>
+  <span class="nt">token_cache_file</span><span class="p">:</span> <span class="s">&#39;/run/confidant/default_confidant_token&#39;</span>
+  <span class="nt">region</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
 </pre></div>
 </div>
 </div>

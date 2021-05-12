@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Access Controls (ACLs) &mdash; confidant 6.3.0-29999e documentation</title>
+  <title>Access Controls (ACLs) &mdash; confidant 6.3.0-47c7a0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.3.0-29999e
+                6.3.0-47c7a0
               </div>
             
           
@@ -417,17 +417,17 @@
     <span class="c1"># access via:</span>
     <span class="c1">#    resource_kwargs = kwargs.get(&#39;kwargs&#39;)</span>
     <span class="k">if</span> <span class="n">authnz</span><span class="o">.</span><span class="n">user_is_user_type</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="kc">True</span>
     <span class="k">elif</span> <span class="n">authnz</span><span class="o">.</span><span class="n">user_is_user_type</span><span class="p">(</span><span class="s1">&#39;service&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resource_type</span> <span class="o">==</span> <span class="s1">&#39;service&#39;</span> <span class="ow">and</span> <span class="n">action</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="s1">&#39;get&#39;</span><span class="p">]:</span>
             <span class="c1"># Does the resource ID match the authenticated username?</span>
             <span class="k">if</span> <span class="n">authnz</span><span class="o">.</span><span class="n">user_is_service</span><span class="p">(</span><span class="n">resource_id</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">return</span> <span class="kc">True</span>
         <span class="c1"># We currently only allow services to access service get/metadata</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># This should never happen, but paranoia wins out</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
 </pre></div>
 </div>
 <p>This function is defined by the <code class="docutils literal notranslate"><span class="pre">ACL_MODULE</span></code> setting, which by default is <code class="docutils literal notranslate"><span class="pre">confidant.authnz.rbac:default_acl</span></code>. The format is <code class="docutils literal notranslate"><span class="pre">python.path.to.module:function_in_module</span></code>. You can use this to implement an ACL approach that integrates with your own enviroment, or adjusts confidant’s behavior to your needs.</p>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KMS authentication &mdash; confidant 6.3.0-29999e documentation</title>
+  <title>KMS authentication &mdash; confidant 6.3.0-47c7a0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.3.0-29999e
+                6.3.0-47c7a0
               </div>
             
           
@@ -408,7 +408,7 @@ you may want to take a look at the following docs:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">not_after</span> <span class="o">=</span> <span class="n">not_after</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">T%H%M%SZ&quot;</span><span class="p">)</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kms</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;kms&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;{&quot;not_before&quot;: &quot;{0}&quot;, &quot;not_after&quot;: &quot;{1}&quot;}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">not_before</span><span class="p">,</span> <span class="n">not_after</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;{&quot;not_before&quot;: &quot;</span><span class="si">{0}</span><span class="s1">&quot;, &quot;not_after&quot;: &quot;</span><span class="si">{1}</span><span class="s1">&quot;}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">not_before</span><span class="p">,</span> <span class="n">not_after</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">token</span> <span class="o">=</span> <span class="n">kms</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">KeyId</span><span class="o">=</span><span class="s1">&#39;alias/authnz-testing&#39;</span><span class="p">,</span> <span class="n">Plaintext</span><span class="o">=</span><span class="n">plaintext</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">EncryptionContext</span><span class="o">=</span><span class="p">{</span>
@@ -471,7 +471,7 @@ server and the client. Here’s the server side (using flask):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_key_arn</span><span class="p">():</span>
     <span class="c1"># You should cache this.</span>
     <span class="n">key</span> <span class="o">=</span> <span class="n">kms</span><span class="o">.</span><span class="n">describe_key</span><span class="p">(</span>
-        <span class="n">KeyId</span><span class="o">=</span><span class="s1">&#39;alias/{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;MASTER_KEY_ID&#39;</span><span class="p">])</span>
+        <span class="n">KeyId</span><span class="o">=</span><span class="s1">&#39;alias/</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;MASTER_KEY_ID&#39;</span><span class="p">])</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">key</span><span class="p">[</span><span class="s1">&#39;KeyMetadata&#39;</span><span class="p">][</span><span class="s1">&#39;Arn&#39;</span><span class="p">]</span>
 
@@ -561,7 +561,7 @@ server and the client. Here’s the server side (using flask):</p>
     <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;serviceb-development&#39;</span><span class="p">,</span>
     <span class="s1">&#39;user_type&#39;</span><span class="p">:</span> <span class="s1">&#39;service&#39;</span>
 <span class="p">}</span>
-<span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;{&quot;not_before&quot;: &quot;{0}&quot;, &quot;not_after&quot;: &quot;{1}&quot;}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">not_before</span><span class="p">,</span> <span class="n">not_after</span><span class="p">)</span>
+<span class="n">plaintext</span> <span class="o">=</span> <span class="s1">&#39;{&quot;not_before&quot;: &quot;</span><span class="si">{0}</span><span class="s1">&quot;, &quot;not_after&quot;: &quot;</span><span class="si">{1}</span><span class="s1">&quot;}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">not_before</span><span class="p">,</span> <span class="n">not_after</span><span class="p">)</span>
 <span class="n">kms</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;kms&#39;</span><span class="p">)</span>
 <span class="n">token</span> <span class="o">=</span> <span class="n">kms</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
     <span class="n">KeyId</span><span class="o">=</span><span class="s1">&#39;alias/authnz-testing&#39;</span><span class="p">,</span>
@@ -572,7 +572,7 @@ server and the client. Here’s the server side (using flask):</p>
 <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;X-Auth-Token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
     <span class="c1"># version: 2, user_type: service, username (2/service/username)</span>
-    <span class="s1">&#39;X-Auth-From&#39;</span><span class="p">:</span> <span class="s1">&#39;2/service/{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">auth_context</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">])</span>
+    <span class="s1">&#39;X-Auth-From&#39;</span><span class="p">:</span> <span class="s1">&#39;2/service/</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">auth_context</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">])</span>
 <span class="p">}</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/v1/services/servicea-development&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
 </pre></div>
