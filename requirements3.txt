@@ -67,7 +67,7 @@ six==1.12.0               # via cryptography, isodate, packaging, pynamodb, pyop
 statsd==3.2.1             # via -r ./requirements.in
 toastedmarshmallow==2.15.2.post1  # via -r ./requirements.in
 toml==0.10.2              # via pytest
-urllib3==1.25.8           # via botocore, requests
+urllib3==1.26.5           # via botocore, requests
 werkzeug==0.15.6          # via flask
 xmlsec==1.3.3             # via python3-saml
 zipp==0.6.0               # via importlib-metadata
