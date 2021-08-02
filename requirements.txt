@@ -44,18 +44,18 @@ defusedxml==0.6.0
     # via python3-saml
 docutils==0.15.2
     # via botocore
-flask-script==2.0.5
-    # via -r requirements.in
-flask-session==0.2.3
-    # via -r requirements.in
-flask-sslify==0.1.5
-    # via -r requirements.in
 flask==1.1.1
     # via
     #   -r requirements.in
     #   flask-script
     #   flask-session
     #   flask-sslify
+flask-script==2.0.5
+    # via -r requirements.in
+flask-session==0.2.3
+    # via -r requirements.in
+flask-sslify==0.1.5
+    # via -r requirements.in
 gevent==1.4.0
     # via
     #   -r requirements.in
@@ -114,6 +114,14 @@ pyopenssl==19.0.0
     #   ndg-httpsclient
 pyparsing==2.4.6
     # via packaging
+pytest==6.2.1
+    # via
+    #   -r requirements.in
+    #   pytest-cov
+    #   pytest-env
+    #   pytest-gevent
+    #   pytest-lazy-fixture
+    #   pytest-mock
 pytest-cov==2.8.1
     # via -r requirements.in
 pytest-env==0.6.2
@@ -124,14 +132,6 @@ pytest-lazy-fixture==0.6.1
     # via -r requirements.in
 pytest-mock==3.4.0
     # via -r requirements.in
-pytest==6.2.1
-    # via
-    #   -r requirements.in
-    #   pytest-cov
-    #   pytest-env
-    #   pytest-gevent
-    #   pytest-lazy-fixture
-    #   pytest-mock
 python-dateutil==2.8.0
     # via
     #   botocore
@@ -142,7 +142,7 @@ python3-saml==1.9.0
     # via -r requirements.in
 pytz==2019.1
     # via -r requirements.in
-pyyaml==5.3.1
+pyyaml==5.4
     # via -r requirements.in
 redis==2.10.3
     # via -r requirements.in
