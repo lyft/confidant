@@ -1,11 +1,11 @@
 import copy
-
-from pynamodb.exceptions import DoesNotExist
+import re
 
 from confidant import settings
-from confidant.utils import stats
-from confidant.models.credential import Credential
 from confidant.models.blind_credential import BlindCredential
+from confidant.models.credential import Credential
+from confidant.utils import stats
+from pynamodb.exceptions import DoesNotExist
 
 
 def get_credentials(credential_ids):
@@ -58,6 +58,9 @@ def check_credential_pair_values(credential_pairs):
     for key, val in credential_pairs.items():
         if isinstance(val, dict) or isinstance(val, list):
             ret = {'error': 'credential pairs must be key: value'}
+            return (False, ret)
+        if re.search(r'\s', key):
+            ret = {'error': 'credential key must not contain whitespace'}
             return (False, ret)
     return (True, {})
 

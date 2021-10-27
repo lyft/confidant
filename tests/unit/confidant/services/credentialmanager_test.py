@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from confidant.models.credential import Credential
 from confidant.services import credentialmanager
 from pynamodb.exceptions import DoesNotExist
@@ -47,9 +45,14 @@ def test_check_credential_pair_values(mocker):
     cred_pair_fail_2 = {
         'A': {'1': '2'}
     }
+    cred_pair_fail_3 = {
+        'A A': {'1': '2'}
+    }
     result = credentialmanager.check_credential_pair_values(cred_pairs_fail)
     assert result[0] is False
     result = credentialmanager.check_credential_pair_values(cred_pair_fail_2)
+    assert result[0] is False
+    result = credentialmanager.check_credential_pair_values(cred_pair_fail_3)
     assert result[0] is False
     result = credentialmanager.check_credential_pair_values(cred_pairs_success)
     assert result[0] is True
