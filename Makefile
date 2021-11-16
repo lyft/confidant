@@ -44,7 +44,7 @@ test_unit: clean
 test_frontend:
 	node_modules/grunt-cli/bin/grunt test
 
-.PHONY: compile_deps # freeze requirements.in to requirements3.txt
+.PHONY: compile_deps # freeze requirements.in to requirements.txt
 compile_deps:
 	./pip-compile.sh
 

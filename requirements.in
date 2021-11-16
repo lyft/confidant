@@ -3,19 +3,19 @@
 # License: BSD
 # Upstream url: http://github.com/mitsuhiko/flask/
 # Use: For API.
-Flask==1.1.1
+Flask
 
 # Flask Scripting support for Flask
 # License: BSD
 # Upstream url: http://github.com/techniq/flask-script
 # Use: For CLI scripts.
-Flask-Script==2.0.5
+Flask-Script
 
 # Dispatching system for parties to subscribe to events
 # Supports per-endpoint timing in flask
 # License: MIT
 # Upstream url: https://pypi.python.org/pypi/blinker
-blinker==1.4
+blinker
 
 # A low-level interface to a growing number of Amazon Web Services. The
 # botocore package is the foundation for the AWS CLI as well as boto3.
@@ -54,20 +54,20 @@ cffi>1.10.0
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
 # Use: For shared sessions
-Flask-Session==0.2.3
+Flask-Session
 
 # Redis
 # License: MIT
 # Upstream url: https://github.com/andymccurdy/redis-py
 # Use: For shared sessions
-redis==2.10.3
+redis
 
 # Flask extension that configures the Flask application to redirect all
 # incoming requests to https
 # License: BSD
 # Upstream url: https://github.com/kennethreitz/flask-sslify
 # Use: For SSL redirection and HSTS
-Flask-SSLify==0.1.5
+Flask-SSLify
 
 # Authomatic is a framework agnostic library for Python web applications
 # with a minimalistic but powerful interface which simplifies
@@ -76,7 +76,7 @@ Flask-SSLify==0.1.5
 # License: MIT
 # Upstream url: http://peterhudec.github.io/authomatic
 # Use: For google auth
-Authomatic==1.0.0
+Authomatic
 
 # License: MIT
 # Upstream url: https://github.com/onelogin/python3-saml
@@ -110,83 +110,83 @@ pyOpenSSL>16.2.0
 # WSGI middleware to add CSP headers
 # License: Apache2
 # Upstream url: https://github.com/dstufft/guard
-guard==1.0.1
+guard
 
 # License: MIT
 # Upstream url: http://pyyaml.org/wiki/PyYAML
 # Use: For parsing users.yaml
-PyYAML==5.4
+PyYAML
 
 # License: MIT
 # Upstream url: http://gunicorn.org/
 # Use: For wsgi running
-gunicorn>=19.9.0,<20.0.0
+gunicorn
 
 # License: MIT
 # Upstream url: http://www.gevent.org/
 # Use: For concurrency
-gevent==1.4.0
+gevent
 
 # License: MIT
 # Upstream url: https://github.com/python-greenlet/greenlet
 # Use: For concurrency
-greenlet==0.4.15
+greenlet
 
 # License: MIT
 # Upstream url: https://github.com/jsocol/pystatsd
 # Use: For metrics collection
-statsd==3.2.1
+statsd
 
 # License: Apache2
 # Upstream url: https://github.com/lyft/python-kmsauth
 # Use: kmsauth support library
-kmsauth==0.6.0
+kmsauth
 
 # License: Apache2
 # Upstream url: https://pypi.python.org/pypi/toasted-marshmallow
 # Use: input/output validation and json serialization
-toastedmarshmallow==2.15.2.post1
+toastedmarshmallow
 
 # A fixed size dict like container which evicts Least Recently Used (LRU)
 # items once size limit is exceeded.
 # License: MIT
 # Use: more-efficient LRU dictionary implementation
-lru-dict==1.1.6
+lru-dict
 
 # A python library adding a json log formatter
 # License: BSD
 # Upstream url: http://github.com/madzak/python-json-logger
-python-json-logger==0.1.11
+python-json-logger
 
 # Testing library
 # License: MIT
 # Upstream url: https://github.com/pytest-dev/pytest
-pytest==6.2.1
+pytest
 
 # Thin-wrapper around the mock package for easier use with py.test
 # License: MIT
 # Upstream url: https://github.com/pytest-dev/pytest-mock/
-pytest-mock==3.4.0
+pytest-mock
 
 # Code coverage plugin for py.test
 # License: MIT
 # Upstream url: https://github.com/pytest-dev/pytest-cov
-pytest-cov==2.8.1
+pytest-cov
 
 # Pytest plugin for using fixtures in pytest.mark.parametrize
 # License: MIT
 # Upstream url: https://github.com/tvorog/pytest-lazy-fixture
-pytest-lazy-fixture==0.6.1
+pytest-lazy-fixture
 
 # Environment Variable plugin for py.test
 # License: MIT
 # Upstream url: https://github.com/MobileDynasty/pytest-env/
-pytest-env==0.6.2
+pytest-env
 
 # Ensure that gevent is properly patched when invoking pytest
 # License: MIT
 # Upstream url: https://github.com/asottile/pytest-gevent
-pytest-gevent==1.0.0
+pytest-gevent
 
 # Timezones
 pytz

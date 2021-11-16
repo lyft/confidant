@@ -22,12 +22,12 @@ COPY package.json /srv/confidant/
 RUN npm install grunt-cli && \
     npm install
 
-COPY piptools_requirements*.txt requirements*.txt /srv/confidant/
+COPY piptools_requirements.txt requirements.txt /srv/confidant/
 
 ENV PATH=/venv/bin:$PATH
 RUN virtualenv /venv -ppython3 && \
-    pip install --no-cache -r piptools_requirements3.txt && \
-    pip install --no-cache -r requirements3.txt
+    pip install --no-cache -r piptools_requirements.txt && \
+    pip install --no-cache -r requirements.txt
 
 COPY .jshintrc Gruntfile.js /srv/confidant/
 COPY confidant/public /srv/confidant/confidant/public
