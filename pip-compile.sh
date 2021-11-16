@@ -9,7 +9,7 @@ source_venv() {
   VENV_DIR=$1
   if [[ "$VIRTUAL_ENV" == "" ]]; then
     if [[ ! -d "${VENV_DIR}"/venv ]]; then
-      virtualenv "${VENV_DIR}"/venv --no-site-packages --python=python3
+      virtualenv "${VENV_DIR}"/venv --python=python3
     fi
     source "${VENV_DIR}"/venv/bin/activate
   else
@@ -20,6 +20,7 @@ source_venv() {
 SCRIPT_DIR=$(dirname "$0")
 
 source_venv piptools_venv
-pip install -r "${SCRIPT_DIR}"/piptools_requirements3.txt
+pip install -r "${SCRIPT_DIR}"/piptools_requirements.txt
 pip install pip-tools
-pip-compile --output-file "${SCRIPT_DIR}"/requirements3.txt "${SCRIPT_DIR}"/requirements.in
+cd "${SCRIPT_DIR}"
+pip-compile

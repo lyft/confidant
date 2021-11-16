@@ -1,4 +1,4 @@
--r ../requirements3.txt
+-r ../requirements.txt
 GitPython==2.0.8
 Jinja2==2.11.3
 MarkupSafe==1.1.1
