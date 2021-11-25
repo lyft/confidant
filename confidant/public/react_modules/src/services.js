@@ -11,11 +11,21 @@ class Resources extends React.Component {
     };
   }
   
-  filter = resourceType => {
+  searchFilter = (searchText) => {
+    console.log('searching...' + searchText)
+    this.setState(
+      { 
+        searchText: searchText,
+      }
+    )
+    console.log(this.state)
+  }
+
+  toggleType = (resourceType) => {
     console.log('filtering...' + resourceType)
     this.setState(
       { 
-        resourceType: resourceType
+        resourceType: resourceType,
       }
     )
     console.log(this.state)
@@ -24,7 +34,8 @@ class Resources extends React.Component {
   render() {
       return (
         <div>
-          <Buttons onClickity={this.filter} />
+          <SearchFilter onSearch={this.searchFilter}/>
+          <Buttons onClickity={this.toggleType} />
           <table className="table table-hover">
             <thead>
               <tr>
@@ -41,6 +52,31 @@ class Resources extends React.Component {
             </tbody>
           </table>
         </div>
+      );
+  }
+}
+
+class SearchFilter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''}
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+    this.props.onSearch(event.target.value)
+  }
+
+  render() {
+      return (
+        <input 
+            type="search"
+            className="form-control"
+            value={this.state.value}
+            onChange={this.handleChange}
+            placeholder="filter (credential, blind-credential, or service name)"
+        />
       );
   }
 }
@@ -158,22 +194,29 @@ class CredentialsList extends React.Component {
       )
   }
 
+  searchFilter = (searchTxt, resources) => {
+    let re = new RegExp(searchTxt, "g");
+    let res = resources.filter(resource => re.test(resource.name))
+    return res
+  }
+
   render() {
-    const { error, isLoaded, resources } = this.state;
+    let { error, isLoaded, resources } = this.state;
     if (error) {
       return (<div>Error: {error.message}</div>);
     } else if (!isLoaded) {
       return <tr><td>Loading...</td></tr>;
     } else {
+      resources = this.searchFilter(this.props.filter.searchText, resources)
       return (
         resources.map(resource => (
-        <tr key={ resource.id } onClick={() => console.log('clicked') } style={{cursor: "pointer"}} className={ this.props.filter.resourceType!="credentials"? "ng-hide":""}>
-          <td className="dont-break-out">{ resource.id }</td>
-          <td>{ resource.revision }</td>
-          <td>{ resource.modified_date }</td>
-          <td>{ resource.modified_by }</td>
-          <td><span className="glyphicon glyphicon-menu-right"></span></td>
-        </tr>
+          <tr key={ resource.id } onClick={() => console.log('clicked') } style={{cursor: "pointer"}} className={ this.props.filter.resourceType!="credentials"? "ng-hide":""}>
+            <td>{ resource.name }</td>
+            <td>{ resource.revision }</td>
+            <td>{ resource.modified_date }</td>
+            <td>{ resource.modified_by }</td>
+            <td><span className="glyphicon glyphicon-menu-right"></span></td>
+          </tr>
         ))
       );
     }

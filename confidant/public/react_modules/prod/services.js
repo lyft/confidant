@@ -17,7 +17,15 @@ var Resources = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Resources.__proto__ || Object.getPrototypeOf(Resources)).call(this, props));
 
-    _this.filter = function (resourceType) {
+    _this.searchFilter = function (searchText) {
+      console.log('searching...' + searchText);
+      _this.setState({
+        searchText: searchText
+      });
+      console.log(_this.state);
+    };
+
+    _this.toggleType = function (resourceType) {
       console.log('filtering...' + resourceType);
       _this.setState({
         resourceType: resourceType
@@ -38,7 +46,8 @@ var Resources = function (_React$Component) {
       return React.createElement(
         'div',
         null,
-        React.createElement(Buttons, { onClickity: this.filter }),
+        React.createElement(SearchFilter, { onSearch: this.searchFilter }),
+        React.createElement(Buttons, { onClickity: this.toggleType }),
         React.createElement(
           'table',
           { className: 'table table-hover' },
@@ -85,31 +94,66 @@ var Resources = function (_React$Component) {
   return Resources;
 }(React.Component);
 
-var Buttons = function (_React$Component2) {
-  _inherits(Buttons, _React$Component2);
+var SearchFilter = function (_React$Component2) {
+  _inherits(SearchFilter, _React$Component2);
+
+  function SearchFilter(props) {
+    _classCallCheck(this, SearchFilter);
+
+    var _this2 = _possibleConstructorReturn(this, (SearchFilter.__proto__ || Object.getPrototypeOf(SearchFilter)).call(this, props));
+
+    _this2.state = { value: '' };
+    _this2.handleChange = _this2.handleChange.bind(_this2);
+    return _this2;
+  }
+
+  _createClass(SearchFilter, [{
+    key: 'handleChange',
+    value: function handleChange(event) {
+      this.setState({ value: event.target.value });
+      this.props.onSearch(event.target.value);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement('input', {
+        type: 'search',
+        className: 'form-control',
+        value: this.state.value,
+        onChange: this.handleChange,
+        placeholder: 'filter (credential, blind-credential, or service name)'
+      });
+    }
+  }]);
+
+  return SearchFilter;
+}(React.Component);
+
+var Buttons = function (_React$Component3) {
+  _inherits(Buttons, _React$Component3);
 
   function Buttons(props) {
     _classCallCheck(this, Buttons);
 
-    var _this2 = _possibleConstructorReturn(this, (Buttons.__proto__ || Object.getPrototypeOf(Buttons)).call(this, props));
+    var _this3 = _possibleConstructorReturn(this, (Buttons.__proto__ || Object.getPrototypeOf(Buttons)).call(this, props));
 
-    _this2.filterme = function (resourceType, index) {
+    _this3.filterme = function (resourceType, index) {
       console.log(resourceType);
-      _this2.setState({ activeIndex: index });
-      _this2.props.onClickity(resourceType);
+      _this3.setState({ activeIndex: index });
+      _this3.props.onClickity(resourceType);
     };
 
-    _this2.state = {
+    _this3.state = {
       buttons: [['credentials', 'Credentials'], ['blind_credentials', 'Blind Credentials'], ['services', 'Services']],
       activeIndex: 0
     };
-    return _this2;
+    return _this3;
   }
 
   _createClass(Buttons, [{
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       var _state = this.state,
           buttons = _state.buttons,
@@ -126,7 +170,7 @@ var Buttons = function (_React$Component2) {
               type: 'button',
               className: i == activeIndex ? "btn active" : "btn",
               onClick: function onClick() {
-                return _this3.filterme(type[0], i);
+                return _this4.filterme(type[0], i);
               } },
             type[1]
           );
@@ -138,28 +182,28 @@ var Buttons = function (_React$Component2) {
   return Buttons;
 }(React.Component);
 
-var ServicesList = function (_React$Component3) {
-  _inherits(ServicesList, _React$Component3);
+var ServicesList = function (_React$Component4) {
+  _inherits(ServicesList, _React$Component4);
 
   function ServicesList(props) {
     _classCallCheck(this, ServicesList);
 
-    var _this4 = _possibleConstructorReturn(this, (ServicesList.__proto__ || Object.getPrototypeOf(ServicesList)).call(this, props));
+    var _this5 = _possibleConstructorReturn(this, (ServicesList.__proto__ || Object.getPrototypeOf(ServicesList)).call(this, props));
 
-    _this4.state = {};
-    return _this4;
+    _this5.state = {};
+    return _this5;
   }
 
   _createClass(ServicesList, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this5 = this;
+      var _this6 = this;
 
       fetch("/v1/services").then(function (res) {
         return res.json();
       }).then(function (result) {
         console.log(result.services);
-        _this5.setState({
+        _this6.setState({
           isLoaded: true,
           resources: result.services
         });
@@ -168,7 +212,7 @@ var ServicesList = function (_React$Component3) {
       // instead of a catch() block so that we don't swallow
       // exceptions from actual bugs in components.
       function (error) {
-        _this5.setState({
+        _this6.setState({
           isLoaded: true,
           error: error
         });
@@ -177,7 +221,7 @@ var ServicesList = function (_React$Component3) {
   }, {
     key: 'render',
     value: function render() {
-      var _this6 = this;
+      var _this7 = this;
 
       var _state2 = this.state,
           error = _state2.error,
@@ -205,7 +249,7 @@ var ServicesList = function (_React$Component3) {
         return resources.map(function (resource) {
           return React.createElement(
             'tr',
-            { key: resource.id, style: { cursor: "pointer" }, className: _this6.props.filter.resourceType != "services" ? "ng-hide" : "" },
+            { key: resource.id, style: { cursor: "pointer" }, className: _this7.props.filter.resourceType != "services" ? "ng-hide" : "" },
             React.createElement(
               'td',
               null,
@@ -240,28 +284,36 @@ var ServicesList = function (_React$Component3) {
   return ServicesList;
 }(React.Component);
 
-var CredentialsList = function (_React$Component4) {
-  _inherits(CredentialsList, _React$Component4);
+var CredentialsList = function (_React$Component5) {
+  _inherits(CredentialsList, _React$Component5);
 
   function CredentialsList(props) {
     _classCallCheck(this, CredentialsList);
 
-    var _this7 = _possibleConstructorReturn(this, (CredentialsList.__proto__ || Object.getPrototypeOf(CredentialsList)).call(this, props));
+    var _this8 = _possibleConstructorReturn(this, (CredentialsList.__proto__ || Object.getPrototypeOf(CredentialsList)).call(this, props));
 
-    _this7.state = {};
-    return _this7;
+    _this8.searchFilter = function (searchTxt, resources) {
+      var re = new RegExp(searchTxt, "g");
+      var res = resources.filter(function (resource) {
+        return re.test(resource.name);
+      });
+      return res;
+    };
+
+    _this8.state = {};
+    return _this8;
   }
 
   _createClass(CredentialsList, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this8 = this;
+      var _this9 = this;
 
       fetch("/v1/credentials").then(function (res) {
         return res.json();
       }).then(function (result) {
         console.log(result);
-        _this8.setState({
+        _this9.setState({
           isLoaded: true,
           resources: result.credentials
         });
@@ -270,7 +322,7 @@ var CredentialsList = function (_React$Component4) {
       // instead of a catch() block so that we don't swallow
       // exceptions from actual bugs in components.
       function (error) {
-        _this8.setState({
+        _this9.setState({
           isLoaded: true,
           error: error
         });
@@ -279,7 +331,7 @@ var CredentialsList = function (_React$Component4) {
   }, {
     key: 'render',
     value: function render() {
-      var _this9 = this;
+      var _this10 = this;
 
       var _state3 = this.state,
           error = _state3.error,
@@ -304,16 +356,17 @@ var CredentialsList = function (_React$Component4) {
           )
         );
       } else {
+        resources = this.searchFilter(this.props.filter.searchText, resources);
         return resources.map(function (resource) {
           return React.createElement(
             'tr',
             { key: resource.id, onClick: function onClick() {
                 return console.log('clicked');
-              }, style: { cursor: "pointer" }, className: _this9.props.filter.resourceType != "credentials" ? "ng-hide" : "" },
+              }, style: { cursor: "pointer" }, className: _this10.props.filter.resourceType != "credentials" ? "ng-hide" : "" },
             React.createElement(
               'td',
-              { className: 'dont-break-out' },
-              resource.id
+              null,
+              resource.name
             ),
             React.createElement(
               'td',
