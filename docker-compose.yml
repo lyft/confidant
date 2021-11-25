@@ -45,4 +45,6 @@ services:
       - ./config/development/logging.conf:/etc/confidant/logging.conf
       - ./config/development/idp.crt:/etc/confidant/idp.crt
       - ./config/gunicorn.conf:/etc/confidant/gunicorn.conf
+      - /Users/dliu/src/confidant:/srv/confidant/
+      - /srv/confidant/confidant/public/components/
     command: "gunicorn --config /etc/confidant/gunicorn.conf confidant.wsgi:app --workers=2 -k gevent --access-logfile=- --error-logfile=-"

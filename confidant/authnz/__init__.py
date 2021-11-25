@@ -142,7 +142,7 @@ def require_auth(f):
         if not settings.USE_AUTH:
             return f(*args, **kwargs)
 
-        # User suppplied basic auth info
+        # User supplied basic auth info
         try:
             kms_auth_data = _get_kms_auth_data()
         except AuthenticationError:
