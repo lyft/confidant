@@ -16,6 +16,8 @@
     "angular-touch": "~1.7.9",
     "angular-ui-bootstrap": "~0.14.2",
     "angular-xeditable": "~0.1.9",
+    "babel-cli": "^6.26.0",
+    "babel-preset-react-app": "^3.1.2",
     "bootstrap": "3.4.1",
     "es5-shim": "~4.1.13",
     "json3": "~3.3.2",
