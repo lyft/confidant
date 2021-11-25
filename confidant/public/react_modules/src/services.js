@@ -1,15 +1,22 @@
+
 'use strict';
+
 
 class Resources extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { resourceType: 'credentials' };
+    this.state = { 
+      resourceType: 'credentials' ,
+      searchText: ''
+    };
   }
   
   filter = resourceType => {
     console.log('filtering...' + resourceType)
     this.setState(
-      { resourceType: resourceType}
+      { 
+        resourceType: resourceType
+      }
     )
     console.log(this.state)
   }
@@ -41,21 +48,31 @@ class Resources extends React.Component {
 class Buttons extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { liked: false };
+    this.state = {
+        buttons: [['credentials', 'Credentials'], ['blind_credentials', 'Blind Credentials'], ['services', 'Services']],
+        activeIndex: 0
+    }
   }
 
-  filterme = resourceType => {
+  filterme = (resourceType, index) => {
     console.log(resourceType)
+    this.setState({activeIndex: index})
     this.props.onClickity(resourceType)
-    // this.props.onClickity(event.target.value)
   }
-
+  
   render() {
+      const {buttons, activeIndex} = this.state;
       return (
         <div className="col-md-9">
-          <button type="button" className="btn" onClick={()=>this.filterme('credentials')} value='credentials'>Credentials</button>
-          <button type="button" className="btn" onClick={()=>this.filterme('blind_credentials')} value='credentials' >Blind Credentials</button>
-          <button type="button" className="btn" onClick={()=>this.filterme('services')} value='credentials'>Services</button>
+          {buttons.map((type, i) => (
+             <button 
+                key={type[0]}
+                type="button" 
+                className={i == activeIndex ? "btn active": "btn"}
+                onClick={()=>this.filterme(type[0], i)}>
+              {type[1]}  
+             </button>
+          ))}
         </div>
       );
   }
@@ -64,7 +81,7 @@ class Buttons extends React.Component {
 class ServicesList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { liked: false };
+    this.state = {};
   }
 
   componentDidMount() {
@@ -99,8 +116,8 @@ class ServicesList extends React.Component {
     } else {
       return (
         resources.map(resource => (
-        <tr key={ resource.id } ng-repeat="true" className={ this.props.filter.resourceType=="credentials"? "ng-hide":""}>
-          <td className="dont-break-out">{ resource.id }</td>
+        <tr key={ resource.id } style={{cursor: "pointer"}} className={ this.props.filter.resourceType != "services"? "ng-hide":""}>
+          <td>{ resource.id }</td>
           <td>{ resource.revision }</td>
           <td>{ resource.modified_date }</td>
           <td>{ resource.modified_by }</td>
@@ -115,7 +132,7 @@ class ServicesList extends React.Component {
 class CredentialsList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { liked: false };
+    this.state = {};
   }
 
   componentDidMount() {
@@ -150,7 +167,7 @@ class CredentialsList extends React.Component {
     } else {
       return (
         resources.map(resource => (
-        <tr key={ resource.id } ng-repeat="true">
+        <tr key={ resource.id } onClick={() => console.log('clicked') } style={{cursor: "pointer"}} className={ this.props.filter.resourceType!="credentials"? "ng-hide":""}>
           <td className="dont-break-out">{ resource.id }</td>
           <td>{ resource.revision }</td>
           <td>{ resource.modified_date }</td>
