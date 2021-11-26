@@ -190,6 +190,14 @@ var ServicesList = function (_React$Component4) {
 
     var _this5 = _possibleConstructorReturn(this, (ServicesList.__proto__ || Object.getPrototypeOf(ServicesList)).call(this, props));
 
+    _this5.searchFilter = function (searchTxt, resources) {
+      var re = new RegExp(searchTxt, "g");
+      var res = resources.filter(function (resource) {
+        return re.test(resource.id);
+      });
+      return res;
+    };
+
     _this5.state = {};
     return _this5;
   }
@@ -202,7 +210,6 @@ var ServicesList = function (_React$Component4) {
       fetch("/v1/services").then(function (res) {
         return res.json();
       }).then(function (result) {
-        console.log(result.services);
         _this6.setState({
           isLoaded: true,
           resources: result.services
@@ -246,6 +253,7 @@ var ServicesList = function (_React$Component4) {
           )
         );
       } else {
+        resources = this.searchFilter(this.props.filter.searchText, resources);
         return resources.map(function (resource) {
           return React.createElement(
             'tr',
@@ -312,7 +320,6 @@ var CredentialsList = function (_React$Component5) {
       fetch("/v1/credentials").then(function (res) {
         return res.json();
       }).then(function (result) {
-        console.log(result);
         _this9.setState({
           isLoaded: true,
           resources: result.credentials

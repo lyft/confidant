@@ -125,7 +125,6 @@ class ServicesList extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result.services)
           this.setState({
             isLoaded: true,
             resources: result.services
@@ -142,14 +141,21 @@ class ServicesList extends React.Component {
         }
       )
   }
-
+  
+  searchFilter = (searchTxt, resources) => {
+    let re = new RegExp(searchTxt, "g");
+    let res = resources.filter(resource => re.test(resource.id))
+    return res
+  }
+  
   render() {
-    const { error, isLoaded, resources } = this.state;
+    let { error, isLoaded, resources } = this.state;
     if (error) {
       return (<div>Error: {error.message}</div>);
     } else if (!isLoaded) {
       return <tr><td>Loading...</td></tr>;
     } else {
+      resources = this.searchFilter(this.props.filter.searchText, resources)
       return (
         resources.map(resource => (
         <tr key={ resource.id } style={{cursor: "pointer"}} className={ this.props.filter.resourceType != "services"? "ng-hide":""}>
@@ -176,7 +182,6 @@ class CredentialsList extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result)
           this.setState({
             isLoaded: true,
             resources: result.credentials
