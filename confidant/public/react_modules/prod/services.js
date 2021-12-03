@@ -1,5 +1,4 @@
-
-'use strict';
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -8,6 +7,30 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Link = ReactRouterDOM.Link;
+
+// let { BrowserRouter, Switch, Redirect, Route } = ReactRouterDOM;
+var _ReactRouterDOM = ReactRouterDOM,
+    BrowserRouter = _ReactRouterDOM.BrowserRouter,
+    Switch = _ReactRouterDOM.Switch,
+    Redirect = _ReactRouterDOM.Redirect,
+    Router = _ReactRouterDOM.Router;
+var _ReactRouterDOM2 = ReactRouterDOM,
+    useHistory = _ReactRouterDOM2.useHistory,
+    useLocation = _ReactRouterDOM2.useLocation;
+var _React = React,
+    useEffect = _React.useEffect,
+    useState = _React.useState;
+
+{/* <Resources /> */}
+var AppWrapper = function AppWrapper() {
+  return React.createElement(
+    BrowserRouter,
+    { forceRefresh: true },
+    React.createElement(Resources, null)
+  );
+};
 
 var Resources = function (_React$Component) {
   _inherits(Resources, _React$Component);
@@ -46,8 +69,24 @@ var Resources = function (_React$Component) {
       return React.createElement(
         'div',
         null,
-        React.createElement(SearchFilter, { onSearch: this.searchFilter }),
-        React.createElement(Buttons, { onClickity: this.toggleType }),
+        React.createElement(
+          'div',
+          { className: 'row' },
+          React.createElement(
+            'div',
+            { className: 'form-group col-md-12' },
+            React.createElement(SearchFilter, { onSearch: this.searchFilter })
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'row has-margin-bottom-lg' },
+          React.createElement(
+            'div',
+            { className: 'col-md-9' },
+            React.createElement(Buttons, { onClickity: this.toggleType })
+          )
+        ),
         React.createElement(
           'table',
           { className: 'table table-hover' },
@@ -94,314 +133,300 @@ var Resources = function (_React$Component) {
   return Resources;
 }(React.Component);
 
-var SearchFilter = function (_React$Component2) {
-  _inherits(SearchFilter, _React$Component2);
+function SearchFilter(props) {
+  var _useState = useState(''),
+      _useState2 = _slicedToArray(_useState, 2),
+      value = _useState2[0],
+      setValue = _useState2[1];
 
-  function SearchFilter(props) {
-    _classCallCheck(this, SearchFilter);
+  var handleChange = function handleChange(event) {
+    setValue(event.target.value);
+    props.onSearch(event.target.value);
+  };
 
-    var _this2 = _possibleConstructorReturn(this, (SearchFilter.__proto__ || Object.getPrototypeOf(SearchFilter)).call(this, props));
+  return React.createElement('input', {
+    type: 'search',
+    className: 'form-control',
+    value: value,
+    onChange: handleChange,
+    placeholder: 'filter (credential, blind-credential, or service name)'
+  });
+}
 
-    _this2.state = { value: '' };
-    _this2.handleChange = _this2.handleChange.bind(_this2);
-    return _this2;
-  }
-
-  _createClass(SearchFilter, [{
-    key: 'handleChange',
-    value: function handleChange(event) {
-      this.setState({ value: event.target.value });
-      this.props.onSearch(event.target.value);
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return React.createElement('input', {
-        type: 'search',
-        className: 'form-control',
-        value: this.state.value,
-        onChange: this.handleChange,
-        placeholder: 'filter (credential, blind-credential, or service name)'
-      });
-    }
-  }]);
-
-  return SearchFilter;
-}(React.Component);
-
-var Buttons = function (_React$Component3) {
-  _inherits(Buttons, _React$Component3);
+var Buttons = function (_React$Component2) {
+  _inherits(Buttons, _React$Component2);
 
   function Buttons(props) {
     _classCallCheck(this, Buttons);
 
-    var _this3 = _possibleConstructorReturn(this, (Buttons.__proto__ || Object.getPrototypeOf(Buttons)).call(this, props));
+    var _this2 = _possibleConstructorReturn(this, (Buttons.__proto__ || Object.getPrototypeOf(Buttons)).call(this, props));
 
-    _this3.filterme = function (resourceType, index) {
+    _this2.filterme = function (resourceType, index) {
       console.log(resourceType);
-      _this3.setState({ activeIndex: index });
-      _this3.props.onClickity(resourceType);
+      _this2.setState({ activeIndex: index });
+      _this2.props.onClickity(resourceType);
     };
 
-    _this3.state = {
+    _this2.state = {
       buttons: [['credentials', 'Credentials'], ['blind_credentials', 'Blind Credentials'], ['services', 'Services']],
       activeIndex: 0
     };
-    return _this3;
+    return _this2;
   }
 
   _createClass(Buttons, [{
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _this3 = this;
 
       var _state = this.state,
           buttons = _state.buttons,
           activeIndex = _state.activeIndex;
 
-      return React.createElement(
-        'div',
-        { className: 'col-md-9' },
-        buttons.map(function (type, i) {
-          return React.createElement(
-            'button',
-            {
-              key: type[0],
-              type: 'button',
-              className: i == activeIndex ? "btn active" : "btn",
-              onClick: function onClick() {
-                return _this4.filterme(type[0], i);
-              } },
-            type[1]
-          );
-        })
-      );
+      return buttons.map(function (type, i) {
+        return React.createElement(
+          'button',
+          {
+            key: type[0],
+            type: 'button',
+            className: i == activeIndex ? "btn active" : "btn",
+            onClick: function onClick() {
+              return _this3.filterme(type[0], i);
+            } },
+          type[1]
+        );
+      });
     }
   }]);
 
   return Buttons;
 }(React.Component);
 
-var ServicesList = function (_React$Component4) {
-  _inherits(ServicesList, _React$Component4);
+function ServicesList(props) {
+  var _useState3 = useState(),
+      _useState4 = _slicedToArray(_useState3, 2),
+      resources = _useState4[0],
+      setResources = _useState4[1];
 
-  function ServicesList(props) {
-    _classCallCheck(this, ServicesList);
+  var _useState5 = useState(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      isLoaded = _useState6[0],
+      setIsLoaded = _useState6[1];
 
-    var _this5 = _possibleConstructorReturn(this, (ServicesList.__proto__ || Object.getPrototypeOf(ServicesList)).call(this, props));
+  var _useState7 = useState(),
+      _useState8 = _slicedToArray(_useState7, 2),
+      error = _useState8[0],
+      setError = _useState8[1];
 
-    _this5.searchFilter = function (searchTxt, resources) {
-      var re = new RegExp(searchTxt, "g");
-      var res = resources.filter(function (resource) {
-        return re.test(resource.id);
-      });
-      return res;
-    };
+  var history = useHistory();
 
-    _this5.state = {};
-    return _this5;
-  }
+  useEffect(function () {
+    fetch("/v1/services").then(function (res) {
+      return res.json();
+    }).then(function (result) {
+      setResources(result.services);
+      setIsLoaded(true);
+    },
+    // Note: it's important to handle errors here
+    // instead of a catch() block so that we don't swallow
+    // exceptions from actual bugs in components.
+    function (error) {
+      setIsLoaded(true);
+      setError(error);
+    });
+  }, []);
 
-  _createClass(ServicesList, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _this6 = this;
+  var searchFilter = function searchFilter(searchTxt, resources) {
+    var re = new RegExp(searchTxt, "g");
+    var res = resources.filter(function (resource) {
+      return re.test(resource.name);
+    });
+    return res;
+  };
 
-      fetch("/v1/services").then(function (res) {
-        return res.json();
-      }).then(function (result) {
-        _this6.setState({
-          isLoaded: true,
-          resources: result.services
-        });
-      },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      function (error) {
-        _this6.setState({
-          isLoaded: true,
-          error: error
-        });
-      });
+  if (!isLoaded) return React.createElement(
+    'tr',
+    null,
+    React.createElement(
+      'td',
+      null,
+      'Loading...'
+    )
+  );
+  if (error) return React.createElement(
+    'div',
+    null,
+    'Error: ',
+    error.message
+  );
+  return searchFilter(props.filter.searchText, resources).map(function (resource) {
+    return React.createElement(
+      'tr',
+      { key: resource.id,
+        onClick: function onClick() {
+          return history.push('#/resources/services/' + resource.id);
+        },
+        style: { cursor: "pointer" },
+        className: props.filter.resourceType != "services" ? "ng-hide" : "" },
+      React.createElement(
+        'td',
+        null,
+        resource.id
+      ),
+      React.createElement(
+        'td',
+        null,
+        resource.revision
+      ),
+      React.createElement(
+        'td',
+        null,
+        resource.modified_date
+      ),
+      React.createElement(
+        'td',
+        null,
+        resource.modified_by
+      ),
+      React.createElement(
+        'td',
+        null,
+        React.createElement('span', { className: 'glyphicon glyphicon-menu-right' })
+      )
+    );
+  });
+}
+
+function CredentialsList(props) {
+  var _useState9 = useState(),
+      _useState10 = _slicedToArray(_useState9, 2),
+      resources = _useState10[0],
+      setResources = _useState10[1];
+
+  var _useState11 = useState(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      isLoaded = _useState12[0],
+      setIsLoaded = _useState12[1];
+
+  var _useState13 = useState(),
+      _useState14 = _slicedToArray(_useState13, 2),
+      error = _useState14[0],
+      setError = _useState14[1];
+
+  var history = useHistory();
+
+  useEffect(function () {
+    fetch("/v1/credentials").then(function (res) {
+      return res.json();
+    }).then(function (result) {
+      setResources(result.credentials);
+      setIsLoaded(true);
+    },
+    // Note: it's important to handle errors here
+    // instead of a catch() block so that we don't swallow
+    // exceptions from actual bugs in components.
+    function (error) {
+      setIsLoaded(true);
+      setError(error);
+    });
+  }, []);
+
+  var searchFilter = function searchFilter(searchTxt, resources) {
+    var re = new RegExp(searchTxt, "g");
+    var res = resources.filter(function (resource) {
+      return re.test(resource.name);
+    });
+    console.log(searchTxt);
+    console.log(resources);
+    return res;
+  };
+
+  if (!isLoaded) return React.createElement(
+    'tr',
+    null,
+    React.createElement(
+      'td',
+      null,
+      'Loading...'
+    )
+  );
+  if (error) return React.createElement(
+    'div',
+    null,
+    'Error: ',
+    error.message
+  );
+  return searchFilter(props.filter.searchText, resources).map(function (resource) {
+    return React.createElement(
+      'tr',
+      { key: resource.id,
+        onClick: function onClick() {
+          return history.push('#/resources/credentials/' + resource.id);
+        },
+        style: { cursor: "pointer" },
+        className: props.filter.resourceType != "credentials" ? "ng-hide" : "" },
+      React.createElement(
+        'td',
+        null,
+        resource.name
+      ),
+      React.createElement(
+        'td',
+        null,
+        resource.revision
+      ),
+      React.createElement(
+        'td',
+        null,
+        resource.modified_date
+      ),
+      React.createElement(
+        'td',
+        null,
+        resource.modified_by
+      ),
+      React.createElement(
+        'td',
+        null,
+        React.createElement('span', { className: 'glyphicon glyphicon-menu-right' })
+      )
+    );
+  });
+}
+
+function ButtonTest() {
+  console.log('test!!');
+  var history = useHistory();
+  // debugger
+  console.log(history);
+  var handleOnClick = function handleOnClick() {
+    history.push('/#/resources/credentials/9d49d735c5a84510a332b8c929d3d265');
+  };
+  return React.createElement(
+    'button',
+    { type: 'button', onClick: handleOnClick },
+    'Go home'
+  );
+}
+
+function waitForElm(selector) {
+  return new Promise(function (resolve) {
+    if (document.querySelector(selector)) {
+      return resolve(document.querySelector(selector));
     }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this7 = this;
 
-      var _state2 = this.state,
-          error = _state2.error,
-          isLoaded = _state2.isLoaded,
-          resources = _state2.resources;
-
-      if (error) {
-        return React.createElement(
-          'div',
-          null,
-          'Error: ',
-          error.message
-        );
-      } else if (!isLoaded) {
-        return React.createElement(
-          'tr',
-          null,
-          React.createElement(
-            'td',
-            null,
-            'Loading...'
-          )
-        );
-      } else {
-        resources = this.searchFilter(this.props.filter.searchText, resources);
-        return resources.map(function (resource) {
-          return React.createElement(
-            'tr',
-            { key: resource.id, style: { cursor: "pointer" }, className: _this7.props.filter.resourceType != "services" ? "ng-hide" : "" },
-            React.createElement(
-              'td',
-              null,
-              resource.id
-            ),
-            React.createElement(
-              'td',
-              null,
-              resource.revision
-            ),
-            React.createElement(
-              'td',
-              null,
-              resource.modified_date
-            ),
-            React.createElement(
-              'td',
-              null,
-              resource.modified_by
-            ),
-            React.createElement(
-              'td',
-              null,
-              React.createElement('span', { className: 'glyphicon glyphicon-menu-right' })
-            )
-          );
-        });
+    var observer = new MutationObserver(function (mutations) {
+      if (document.querySelector(selector)) {
+        resolve(document.querySelector(selector));
+        observer.disconnect();
       }
-    }
-  }]);
+    });
 
-  return ServicesList;
-}(React.Component);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  });
+}
 
-var CredentialsList = function (_React$Component5) {
-  _inherits(CredentialsList, _React$Component5);
-
-  function CredentialsList(props) {
-    _classCallCheck(this, CredentialsList);
-
-    var _this8 = _possibleConstructorReturn(this, (CredentialsList.__proto__ || Object.getPrototypeOf(CredentialsList)).call(this, props));
-
-    _this8.searchFilter = function (searchTxt, resources) {
-      var re = new RegExp(searchTxt, "g");
-      var res = resources.filter(function (resource) {
-        return re.test(resource.name);
-      });
-      return res;
-    };
-
-    _this8.state = {};
-    return _this8;
-  }
-
-  _createClass(CredentialsList, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _this9 = this;
-
-      fetch("/v1/credentials").then(function (res) {
-        return res.json();
-      }).then(function (result) {
-        _this9.setState({
-          isLoaded: true,
-          resources: result.credentials
-        });
-      },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      function (error) {
-        _this9.setState({
-          isLoaded: true,
-          error: error
-        });
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this10 = this;
-
-      var _state3 = this.state,
-          error = _state3.error,
-          isLoaded = _state3.isLoaded,
-          resources = _state3.resources;
-
-      if (error) {
-        return React.createElement(
-          'div',
-          null,
-          'Error: ',
-          error.message
-        );
-      } else if (!isLoaded) {
-        return React.createElement(
-          'tr',
-          null,
-          React.createElement(
-            'td',
-            null,
-            'Loading...'
-          )
-        );
-      } else {
-        resources = this.searchFilter(this.props.filter.searchText, resources);
-        return resources.map(function (resource) {
-          return React.createElement(
-            'tr',
-            { key: resource.id, onClick: function onClick() {
-                return console.log('clicked');
-              }, style: { cursor: "pointer" }, className: _this10.props.filter.resourceType != "credentials" ? "ng-hide" : "" },
-            React.createElement(
-              'td',
-              null,
-              resource.name
-            ),
-            React.createElement(
-              'td',
-              null,
-              resource.revision
-            ),
-            React.createElement(
-              'td',
-              null,
-              resource.modified_date
-            ),
-            React.createElement(
-              'td',
-              null,
-              resource.modified_by
-            ),
-            React.createElement(
-              'td',
-              null,
-              React.createElement('span', { className: 'glyphicon glyphicon-menu-right' })
-            )
-          );
-        });
-      }
-    }
-  }]);
-
-  return CredentialsList;
-}(React.Component);
-
-ReactDOM.render(React.createElement(Resources, null), document.getElementById('like_button_container'));
+export default AppWrapper;

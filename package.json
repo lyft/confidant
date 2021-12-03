@@ -24,6 +24,7 @@
     "grunt-cli": "^1.4.3",
     "json3": "~3.3.2",
     "lodash": "~4.17.15",
+    "react-router-dom": "^6.0.2",
     "spin.js": "~2.3.2"
   },
   "devDependencies": {
