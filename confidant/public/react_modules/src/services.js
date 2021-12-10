@@ -1,12 +1,10 @@
 
-
 const Link = ReactRouterDOM.Link
 
-// let { BrowserRouter, Switch, Redirect, Route } = ReactRouterDOM;
 let { BrowserRouter, Switch, Redirect, Router } = ReactRouterDOM;
 let { useHistory, useLocation } = ReactRouterDOM;
 let {useEffect, useState} = React
-{/* <Resources /> */}
+
 const AppWrapper = () => {
   return (
       <BrowserRouter forceRefresh={true}>
@@ -15,74 +13,70 @@ const AppWrapper = () => {
   );
 };
 
-class Resources extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { 
-      resourceType: 'credentials' ,
-      searchText: ''
-    };
-  }
-  
-  searchFilter = (searchText) => {
-    console.log('searching...' + searchText)
-    this.setState(
-      { 
-        searchText: searchText,
-      }
-    )
-    console.log(this.state)
+const Resources = (props) => {
+  const [resourceType, setResourceType] = useState('credentials');
+  const [searchText, setSearchText] = useState('')
+  const [showDisabled, setShowDisabled] = useState(false)
+    
+  const searchFilter = (searchText) => {
+    setSearchText(searchText)
   }
 
-  toggleType = (resourceType) => {
-    console.log('filtering...' + resourceType)
-    this.setState(
-      { 
-        resourceType: resourceType,
-      }
-    )
-    console.log(this.state)
+  const toggleDisableResources = () => {
+    setShowDisabled(!showDisabled)
+  }
+
+  const toggleType = (resourceType) => {
+    setResourceType(resourceType)
   }
   
-  render() {
-      return (
-        <div>
-          <div className="row">
-            <div className="form-group col-md-12">
-              <SearchFilter onSearch={this.searchFilter}/>
-            </div>
-          </div>
-          <div className="row has-margin-bottom-lg">
-            <div className="col-md-9">
-              <Buttons onClickity={this.toggleType} />
-            </div>
-            {/* <div className="btn-group dropdown col-md-3">
-              <button type="button" className="btn dropdown-toggle call-to-action" data-toggle="dropdown" aria-expanded="false">Create <span className="glyphicon glyphicon-chevron-down glyphicon-xs"></span></button>
-              <ul className="dropdown-menu" role="menu">
-                <li ng-show="globalPermissions.credentials.create"><a href="#/resources/new/credential">Create credential</a></li>
-                <li ng-show="globalPermissions.services.create"><a href="#/resources/new/service">Create service</a></li>
-              </ul>
-            </div> */}
-          </div>
-
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Revision</th>
-                <th>Modified</th>
-                <th>Modified By</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <ServicesList filter={this.state}/>
-              <CredentialsList filter={this.state}/>
-            </tbody>
-          </table>
+  return (
+    <div>
+      <div className="row">
+        <div className="form-group col-md-12">
+          <SearchFilter onSearch={searchFilter}/>
         </div>
-      );
-  }
+      </div>
+      <div className="row has-margin-bottom-lg">
+        <div className="col-md-9">
+          <DisableEnableCheckBox checked={showDisabled} onClickity={toggleDisableResources} />
+          <Buttons onClickity={toggleType} />
+        </div>
+        {/* <div className="btn-group dropdown col-md-3">
+          <button type="button" className="btn dropdown-toggle call-to-action" data-toggle="dropdown" aria-expanded="false">Create <span className="glyphicon glyphicon-chevron-down glyphicon-xs"></span></button>
+          <ul className="dropdown-menu" role="menu">
+            <li ng-show="globalPermissions.credentials.create"><a href="#/resources/new/credential">Create credential</a></li>
+            <li ng-show="globalPermissions.services.create"><a href="#/resources/new/service">Create service</a></li>
+          </ul>
+        </div> */}
+      </div>
+
+      <table className="table table-hover">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Revision</th>
+            <th>Modified</th>
+            <th>Modified By</th>
+            <th></th>
+          </tr> 
+        </thead>
+        <tbody>
+          <ResourcesList resourceType='services' filterSearchText={searchText} filterResourceType={resourceType} filterDisabled={showDisabled} />
+          <ResourcesList resourceType='credentials' filterSearchText={searchText} filterResourceType={resourceType} filterDisabled={showDisabled} />
+        </tbody>
+      </table>
+    </div>
+  );
+
+}
+
+function DisableEnableCheckBox(props) {
+  return (
+    <label>
+      <input type="checkbox" checked={props.checked} onChange={() => props.onClickity()} /> disabled resources
+    </label>
+  );
 }
 
 function SearchFilter(props) {
@@ -169,11 +163,11 @@ function ServicesList(props) {
   if(!isLoaded) return <tr><td>Loading...</td></tr>;
   if(error) return (<div>Error: {error.message}</div>); 
   return (
-    searchFilter(props.filter.searchText, resources).map(resource => (
+    searchFilter(props.searchText, resources).map(resource => (
         <tr key={ resource.id }
             onClick={ () => history.push(`#/resources/services/${resource.id}`) }
             style={{cursor: "pointer"}}
-            className={ props.filter.resourceType!="services"? "ng-hide":""}>
+            className={ props.resourceType!="services"? "ng-hide":""}>
           <td>{ resource.id }</td>
           <td>{ resource.revision }</td>
           <td>{ resource.modified_date }</td>
@@ -185,21 +179,27 @@ function ServicesList(props) {
   );
 }
 
-
-
-function CredentialsList(props) {
+function ResourcesList(props) {
 
   const [resources, setResources] = useState();
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState();
+  const resourceType = (props.resourceType == 'credentials') ? 'credentials' : 'services';
   let history = useHistory();
 
   useEffect(() =>  {
-    fetch("/v1/credentials")
+    // console.log(`resource type: ${resourceType}`)
+    console.log(props.filterResourceType)
+    fetch(`/v1/${resourceType}`)
       .then(res => res.json())
       .then(
         (result) => {
-          setResources(result.credentials);
+          if (resourceType == 'credentials') {
+            setResources(result.credentials);
+          }
+          else {
+            setResources(result.services);
+          }
           setIsLoaded(true);
         },
         // Note: it's important to handle errors here
@@ -212,23 +212,27 @@ function CredentialsList(props) {
       )
   }, [])
 
-  const searchFilter = (searchTxt, resources) => {
-    let re = new RegExp(searchTxt, "g");
-    let res = resources.filter(resource => re.test(resource.name))
-    console.log(searchTxt)
-    console.log(resources)
-    return res
+  let filterResources = (searchTxt, showDisabled, resources) => {
+    let re = new RegExp(searchTxt);
+    let filtered = []
+    if (resourceType == 'credentials') {
+      filtered = resources.filter(resource => re.test(resource.name) && (!resource.enabled == showDisabled || resource.enabled ))
+    }
+    else {
+      filtered = resources.filter(resource => re.test(resource.id) && (!resource.enabled == showDisabled || resource.enabled ))
+    }
+    return filtered
   }
 
   if(!isLoaded) return <tr><td>Loading...</td></tr>;
   if(error) return (<div>Error: {error.message}</div>); 
   return (
-      searchFilter(props.filter.searchText, resources).map(resource => (
+      filterResources(props.filterSearchText, props.filterDisabled, resources).map(resource => (
         <tr key={ resource.id }
-            onClick={ () => history.push(`#/resources/credentials/${resource.id}`) }
+            onClick={ () => history.push(`#/resources/${resourceType}/${resource.id}`) }
             style={{cursor: "pointer"}}
-            className={ props.filter.resourceType!="credentials"? "ng-hide":""}>
-          <td>{ resource.name }</td>
+            className={ props.filterResourceType!=resourceType? "ng-hide":""}>
+          <td>{ resourceType=='credentials'? resource.name : resource.id }</td>
           <td>{ resource.revision }</td>
           <td>{ resource.modified_date }</td>
           <td>{ resource.modified_by }</td>
@@ -240,7 +244,6 @@ function CredentialsList(props) {
 }
 
 function ButtonTest() {
-  console.log('test!!')
   let history = useHistory();
   // debugger
   console.log(history)
@@ -252,26 +255,6 @@ function ButtonTest() {
       Go home
     </button>
   );
-}
-
-function waitForElm(selector) {
-  return new Promise(resolve => {
-      if (document.querySelector(selector)) {
-          return resolve(document.querySelector(selector));
-      }
-
-      const observer = new MutationObserver(mutations => {
-          if (document.querySelector(selector)) {
-              resolve(document.querySelector(selector));
-              observer.disconnect();
-          }
-      });
-
-      observer.observe(document.body, {
-          childList: true,
-          subtree: true
-      });
-  });
 }
 
 export default AppWrapper
