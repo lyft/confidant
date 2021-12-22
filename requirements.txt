@@ -4,7 +4,6 @@
 #
 #    pip-compile
 #
---index-url https://pypi.lyft.net/simple/
 
 asn1crypto==0.24.0
     # via cryptography
