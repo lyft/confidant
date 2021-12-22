@@ -13,7 +13,7 @@ RUN apt-get update \
         make nodejs git-core \
         # For backend
         gcc pkg-config \
-        python3-dev virtualenv \
+        python3.8-dev virtualenv \
         libffi-dev libxml2-dev libxmlsec1-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -25,7 +25,7 @@ RUN npm install grunt-cli && \
 COPY piptools_requirements.txt requirements.txt /srv/confidant/
 
 ENV PATH=/venv/bin:$PATH
-RUN virtualenv /venv -ppython3 && \
+RUN virtualenv /venv --python=/usr/bin/python3.8 && \
     pip install --no-cache -r piptools_requirements.txt && \
     pip install --no-cache -r requirements.txt
 
