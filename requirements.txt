@@ -4,6 +4,7 @@
 #
 #    pip-compile
 #
+--index-url https://pypi.lyft.net/simple/
 
 asn1crypto==0.24.0
     # via cryptography
@@ -165,7 +166,7 @@ toastedmarshmallow==2.15.2.post1
     # via -r requirements.in
 toml==0.10.2
     # via pytest
-tomli==2.0.0
+tomli==1.2.3
     # via coverage
 urllib3==1.25.3
     # via
