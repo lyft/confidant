@@ -180,7 +180,11 @@ def get_credential(id):
 
     permissions = {
         'metadata': True,
-        'get': False,
+        'get': acl_module_check(
+            resource_type='credential',
+            action='get',
+            resource_id=id
+        ),
         'update': acl_module_check(
             resource_type='credential',
             action='update',
