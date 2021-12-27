@@ -54,7 +54,7 @@ def test_encode_key(ca_object):
 def test_generate_x509_name(ca_object):
     x509_name = ca_object.generate_x509_name('test.example.com')
     assert x509_name.rfc4514_string() == (
-        'CN=test.example.com,C=US,ST=California,L=San Francisco,O=Example Inc.'
+        'O=Example Inc.,L=San Francisco,ST=California,C=US,CN=test.example.com'
     )
 
 
@@ -64,7 +64,7 @@ def test_generate_csr(ca_object):
     csr = ca_object.generate_csr(key, 'test.example.com', san)
     assert csr.is_signature_valid is True
     assert csr.subject.rfc4514_string() == (
-        'CN=test.example.com,C=US,ST=California,L=San Francisco,O=Example Inc.'
+        'O=Example Inc.,L=San Francisco,ST=California,C=US,CN=test.example.com'
     )
 
 
@@ -114,7 +114,7 @@ def test_generate_self_signed_certificate(ca_object):
     delta = datetime.timedelta(days=7)
     assert cert.not_valid_after - cert.not_valid_before == delta
     assert cert.subject.rfc4514_string() == (
-        'CN=test.example.com,C=US,ST=California,L=San Francisco,O=Example Inc.'
+        'O=Example Inc.,L=San Francisco,ST=California,C=US,CN=test.example.com'
     )
     assert isinstance(cert.signature_hash_algorithm, hashes.SHA256)
 

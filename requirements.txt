@@ -5,8 +5,6 @@
 #    pip-compile
 #
 
-asn1crypto==0.24.0
-    # via cryptography
 attrs==19.3.0
     # via
     #   pytest
@@ -37,7 +35,7 @@ click==7.0
     # via flask
 coverage==4.5.4
     # via pytest-cov
-cryptography==2.7
+cryptography==36.0.1
     # via
     #   -r requirements.in
     #   pyopenssl
