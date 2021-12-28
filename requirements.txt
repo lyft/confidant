@@ -4,7 +4,6 @@
 #
 #    pip-compile
 #
-
 attrs==19.3.0
     # via
     #   pytest
@@ -85,7 +84,7 @@ kmsauth==0.6.0
     # via -r requirements.in
 lru-dict==1.1.6
     # via -r requirements.in
-lxml==4.4.1
+lxml==4.6.5
     # via xmlsec
 markupsafe==1.1.1
     # via jinja2
@@ -151,7 +150,6 @@ s3transfer==0.2.1
     # via boto3
 six==1.12.0
     # via
-    #   cryptography
     #   isodate
     #   packaging
     #   pynamodb
