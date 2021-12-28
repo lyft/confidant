@@ -53,6 +53,7 @@
             $scope.definedTags = $scope.clientconfig.generated.defined_tags;
             $scope.credentialId = $stateParams.credentialId;
             $scope.showCredentials = false;
+            $scope.decryptedCredential = false;
 
             function populateCredential(credential) {
                 var _credentialPairs = [],
@@ -196,6 +197,7 @@
                     Credential.get({'id': $scope.credentialId, 'metadata_only': false}).$promise.then(function(credential) {
                         populateCredential(credential);
                         $scope.showCredentials = true;
+                        $scope.decryptedCredential = true;
                     }, function(res) {
                         if (res.status === 500) {
                             $scope.getError = 'Unexpected server error.';
