@@ -100,10 +100,42 @@ var Header = function Header(props) {
 };
 
 var Navigation = function Navigation(props) {
+    var _useState3 = useState(0),
+        _useState4 = _slicedToArray(_useState3, 2),
+        activeIndex = _useState4[0],
+        setActiveIndex = _useState4[1];
+
     return React.createElement(
         'div',
         null,
-        React.createElement(Header, null)
+        React.createElement(
+            'ul',
+            { className: 'nav nav-pills has-margin-bottom' },
+            React.createElement(
+                'li',
+                { role: 'presentation', className: activeIndex == 0 ? "active" : "" },
+                React.createElement(
+                    'a',
+                    { href: '#/resources', onClick: function onClick() {
+                            return setActiveIndex(0);
+                        } },
+                    'Resources ',
+                    React.createElement('span', { className: 'glyphicon glyphicon-lock' })
+                )
+            ),
+            React.createElement(
+                'li',
+                { role: 'presentation', className: activeIndex == 1 ? "active" : "" },
+                React.createElement(
+                    'a',
+                    { href: '#/history', onClick: function onClick() {
+                            return setActiveIndex(1);
+                        } },
+                    'History ',
+                    React.createElement('span', { className: 'glyphicon glyphicon-time' })
+                )
+            )
+        )
     );
 };
 
@@ -111,6 +143,7 @@ var Wrap = function Wrap() {
     return React.createElement(
         BrowserRouter,
         { forceRefresh: true },
+        React.createElement(Header, null),
         React.createElement(Navigation, null)
     );
 };

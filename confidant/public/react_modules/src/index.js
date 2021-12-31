@@ -68,14 +68,21 @@ const Header = (props) => {
 }
 
 const Navigation = (props) => {
+    const [activeIndex, setActiveIndex] = useState(0)
     return (
-        <div><Header/></div>
+        <div>
+            <ul className="nav nav-pills has-margin-bottom">
+                <li role="presentation" className={activeIndex == 0 ? "active": ""} ><a href="#/resources" onClick={()=>setActiveIndex(0)}>Resources <span className="glyphicon glyphicon-lock"></span></a></li>
+                <li role="presentation" className={activeIndex == 1 ? "active": ""}><a href="#/history" onClick={()=>setActiveIndex(1)}>History <span className="glyphicon glyphicon-time"></span></a></li>
+            </ul>
+        </div>
     )
 }
 
 const Wrap = () => {
     return (
         <BrowserRouter forceRefresh={true}>
+          <Header />
           <Navigation />
         </BrowserRouter>
     );
