@@ -39,16 +39,16 @@ const Resources = (props) => {
       </div>
       <div className="row has-margin-bottom-lg">
         <div className="col-md-9">
-          <DisableEnableCheckBox checked={showDisabled} onClickity={toggleDisableResources} />
-          <Buttons onClickity={toggleType} />
+          <ResourceButtons onClickity={toggleType} />
         </div>
-        {/* <div className="btn-group dropdown col-md-3">
-          <button type="button" className="btn dropdown-toggle call-to-action" data-toggle="dropdown" aria-expanded="false">Create <span className="glyphicon glyphicon-chevron-down glyphicon-xs"></span></button>
-          <ul className="dropdown-menu" role="menu">
-            <li ng-show="globalPermissions.credentials.create"><a href="#/resources/new/credential">Create credential</a></li>
-            <li ng-show="globalPermissions.services.create"><a href="#/resources/new/service">Create service</a></li>
-          </ul>
-        </div> */}
+        <div className="btn-group dropdown col-md-3">
+          <CreateButton />
+        </div>
+        <div className="row has-margin-bottom-lg">
+          <div className="simple-form col-md-12">
+            <DisableEnableCheckBox checked={showDisabled} onClickity={toggleDisableResources} />
+          </div>
+        </div>
       </div>
 
       <table className="table table-hover">
@@ -68,7 +68,18 @@ const Resources = (props) => {
       </table>
     </div>
   );
+}
 
+function CreateButton(props) {
+   return (
+    <div>
+      <button type="button" className="btn dropdown-toggle call-to-action" data-toggle="dropdown" aria-expanded="false">Create <span className="glyphicon glyphicon-chevron-down glyphicon-xs"></span></button>
+      <ul className="dropdown-menu" role="menu">
+        <li ng-show="globalPermissions.credentials.create"><a href="#/resources/new/credential">Create credential</a></li>
+        <li ng-show="globalPermissions.services.create"><a href="#/resources/new/service">Create service</a></li>
+      </ul>
+    </div>
+   )
 }
 
 function DisableEnableCheckBox(props) {
@@ -98,7 +109,7 @@ function SearchFilter(props) {
   );
 }
 
-function Buttons(props)  {
+function ResourceButtons(props)  {
 
   const [buttons, setButtons] = useState([['credentials', 'Credentials'], ['blind_credentials', 'Blind Credentials'], ['services', 'Services']])
   const [activeIndex, setActiveIndex] = useState(0)
