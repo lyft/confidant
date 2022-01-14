@@ -54,6 +54,7 @@
             $scope.credentialId = $stateParams.credentialId;
             $scope.showCredentials = false;
             $scope.decryptedCredential = false;
+            $scope.isCreating = $location.path() === '/resources/new/credential';
 
             function populateCredential(credential) {
                 var _credentialPairs = [],
