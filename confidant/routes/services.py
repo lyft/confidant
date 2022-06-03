@@ -554,7 +554,8 @@ def map_service_credentials(id):
           }
     ):
         msg = ("{} does not have access to map the credentials "
-               "because they do not own the credentials being added")
+               "because they do not own the credentials being added. "
+               "See https://infradocs.lyft.net/develop/credentials/credential-access.html#accessing-credentials-in-confidant")
         msg = msg.format(authnz.get_logged_in_user())
         error_msg = {'error': msg, 'reference': id}
         return jsonify(error_msg), 403
