@@ -52,7 +52,9 @@ def get_token():
         elif 'production' in user:
             token = jwk_manager.get_jwt('production', payload)
         else:
-            error_msg = 'JWTs are not supported for this user ({0})'.format(authnz.get_logged_in_user())
+            error_msg = 'JWTs are not supported for this user ({0})'.format(
+                authnz.get_logged_in_user()
+            )
             response = jsonify(error_msg)
             return response, 400
 
@@ -61,7 +63,9 @@ def get_token():
         )
         logger.info(log_line)
     else:
-        error_msg = 'JWTs are not supported for this user ({0})'.format(authnz.get_logged_in_user())
+        error_msg = 'JWTs are not supported for this user ({0})'.format(
+            authnz.get_logged_in_user()
+        )
         response = jsonify(error_msg)
         return response, 400
 
