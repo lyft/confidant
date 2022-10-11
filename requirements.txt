@@ -109,7 +109,7 @@ pyasn1==0.4.6
     #   ndg-httpsclient
 pycparser==2.19
     # via cffi
-pyjwt==2.5.0
+pyjwt==2.4.0
     # via -r requirements.in
 pynamodb==3.4.1
     # via -r requirements.in
