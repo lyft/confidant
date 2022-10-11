@@ -608,8 +608,6 @@ ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPTION_TIME')
 # Add any certificate authorities
 decoded_cas = b64decode(str_env('CA_AUTHORITIES', ''))
 CERTIFICATE_AUTHORITIES = json.loads(decoded_cas) if decoded_cas else {}
-logging.info('CERTIFICATE_AUTHORITIES')
-logging.info(CERTIFICATE_AUTHORITIES)
 
 # Configuration validation
 _settings_failures = False
