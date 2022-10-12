@@ -135,7 +135,7 @@ pytest-gevent==1.0.0
     # via -r requirements.in
 pytest-lazy-fixture==0.6.1
     # via -r requirements.in
-pytest-mock==3.4.0
+pytest-mock==3.3.0
     # via -r requirements.in
 python-dateutil==2.8.0
     # via
