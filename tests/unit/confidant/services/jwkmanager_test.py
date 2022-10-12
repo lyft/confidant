@@ -43,6 +43,7 @@ class TestJWKManager:
         result = jwk_manager.get_jwks('test-key')
         assert result == test_jwks
 
-    def test_get_jwks_not_found(self, test_key_pair, test_jwk_payload, test_jwt):
+    def test_get_jwks_not_found(self, test_key_pair, test_jwk_payload,
+                                test_jwt):
         result = jwk_manager.get_jwks('non-existent')
         assert not result
