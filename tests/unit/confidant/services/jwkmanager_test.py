@@ -3,7 +3,7 @@ import pytest
 from confidant.services.jwkmanager import jwk_manager
 
 
-class TestJWKService:
+class TestJWKManager:
     def test_set_key(self, test_key_pair):
         test_private_key = test_key_pair.export_to_pem(private_key=True,
                                                        password=None)
@@ -34,3 +34,15 @@ class TestJWKService:
         result = jwk_manager.get_payload(test_certificate.decode('utf-8'),
                                          test_jwt)
         assert result == test_jwk_payload
+
+    def test_get_jwks(self, test_key_pair, test_jwk_payload, test_jwt,
+                      test_jwks):
+        test_private_key = test_key_pair.export_to_pem(private_key=True,
+                                                       password=None)
+        jwk_manager.set_key('test-key', test_private_key.decode('utf-8'))
+        result = jwk_manager.get_jwks('test-key')
+        assert result == test_jwks
+
+    def test_get_jwks_not_found(self, test_key_pair, test_jwk_payload, test_jwt):
+        result = jwk_manager.get_jwks('non-existent')
+        assert not result

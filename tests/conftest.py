@@ -91,3 +91,18 @@ def test_certificate():
         b'rxaukysD4sNgVHKptTq0fJ+2CjM=\n' \
         b'-----END CERTIFICATE-----\n'
     return cert
+
+
+@pytest.fixture
+def test_jwks():
+    return {
+        'e': 'AQAB',
+        'kid': 'test-key',
+        'kty': 'RSA',
+        'n': '1LtU2hUlTSRC32IlfvtWQwG60P35aK-uFzsCvUSLc2Kr5xFFNfmh8OELwzci'
+             'ibMh-_7qr-Nrw2YgogB-k9UVSw99AHSLMDkKVUrEHDxF3CX5CCd2UElqbk1T'
+             'G7ybpK1ivUnDxZFMgQuxaZGf0SeqcIhNp1R43K8rAJitvygdR5PzZjvn8Hry'
+             'HGF8K8TS5vZOlzOcciXJe2StxiJ2W7hHB-DXUWJwKO3Qi7bsERVFuH4EkVI48'
+             'RVxiS3fN9Ig4B8zNFck6u-4MyqZ-VRGWyLw1oHPKMSh7KySm8r91BngtKtOCt'
+             'hEEerau9YG0v4b_UAsZkesoDaqvG89HbJmV3nmMQ'
+    }

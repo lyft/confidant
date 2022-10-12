@@ -86,5 +86,12 @@ class JWKManager:
 
         return self._payload_cache[certificate_hash][token_hash]
 
+    def get_jwks(self, key_id: str) -> Dict[str, str]:
+        key = self._keys.get_key(key_id)
+        if key:
+            return key.export_public(as_dict=True)
+        else:
+            return {}
+
 
 jwk_manager = JWKManager()
