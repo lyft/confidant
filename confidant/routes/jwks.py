@@ -1,11 +1,11 @@
 import logging
 
-from flask import blueprints, jsonify
+from flask import blueprints, jsonify, request
 
 from confidant import authnz
 from confidant.services.jwkmanager import jwk_manager
 from confidant.schema.jwks import jwt_response_schema, JWTResponse, \
-    jwks_response_schema, JWKSResponse
+    jwks_list_response_schema, JWKSListResponse
 
 
 logger = logging.getLogger(__name__)
@@ -40,34 +40,19 @@ def get_token():
     :statuscode 400: JWTs are not supported for this user
     """
     user = authnz.get_logged_in_user()
-    if authnz.user_is_service(user):
-        payload = {
-            'service': user,
-            'namespace': user.replace('-iad', '')
-        }
+    environment = request.args.get('environment', type=str)
 
-        if 'development' in user or 'unauthenticated' in user:
-            token = jwk_manager.get_jwt('localdev', payload)
-        elif 'staging' in user:
-            token = jwk_manager.get_jwt('staging', payload)
-        elif 'production' in user:
-            token = jwk_manager.get_jwt('production', payload)
-        else:
-            error_msg = 'JWTs are not supported for this user ({0})'.format(
-                authnz.get_logged_in_user()
-            )
-            response = jsonify(error_msg)
-            return response, 400
+    if not environment:
+        return jsonify({'error': 'Please specify an environment'}), 400
 
-        log_line = "{0} get JWT".format(
-            authnz.get_logged_in_user(),
-        )
-        logger.info(log_line)
-    else:
-        error_msg = 'JWTs are not supported for this user ({0})'.format(
-            authnz.get_logged_in_user()
-        )
-        response = jsonify(error_msg)
+    payload = {
+        'user': user,
+        'is_service': authnz.user_is_service(user),
+    }
+    try:
+        token = jwk_manager.get_jwt(environment, payload)
+    except ValueError:
+        response = jsonify({'error': 'Key not available for this environment'})
         return response, 400
 
     return jwt_response_schema.dumps(JWTResponse(token=token))
@@ -96,6 +81,7 @@ def get_public_jwks(environment):
          "kid": "staging",
          "n": "123...",
          "e": "AQAB",
+         "alg" "RS256",
        }
 
     :resheader Content-Type: application/json
@@ -104,7 +90,7 @@ def get_public_jwks(environment):
     """
     jwks = jwk_manager.get_jwks(environment)
     if jwks:
-        return jwks_response_schema.dumps(JWKSResponse(**jwks))
+        return jwks_list_response_schema.dumps(JWKSListResponse(keys=[jwks]))
 
     response = jsonify({
         'error': 'Public key not found for this environment'

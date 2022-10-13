@@ -13,6 +13,40 @@ def encrypted_settings_mock(mocker):
 
 
 @pytest.fixture
+def test_encrypted_key():
+    return '-----BEGIN RSA PRIVATE KEY-----\n' \
+        'Proc-Type: 4,ENCRYPTED\n' \
+        'DEK-Info: AES-256-CBC,685402D4E755777F605320365C4D5036\n' \
+        '\n' \
+        '63er0s88QhGVf0qip7xtX8T9qPY0QzU1QP7o+lnv5rlCFFwQuIMMR7DdBRh0a4HH\n' \
+        'H7P0jsxWZO4Cof565CDlu6Gyv0g4myvFwm0BSI1O6Lyo0ZYdnK7ZLDtymj5TxT9A\n' \
+        'KtL498Ptg78RdMLgMaT5qyqS+aMfVYmQnpvHHKQOvfvVdQC+AomcXHvFCmq3j7/g\n' \
+        'vqGHwFEqqzhf76VikKbTKz0KnrIpceG0FdK4N6IXksrKg5jytRyKMQwkvsH3f3uG\n' \
+        'S/7C7FjLJyojv+1umhDyHlAi60uGQyME52hC0auBStXOeWHcGPgTMBu39BQ2QttY\n' \
+        '8WZylkxxHfe0DF+MeatT83fh9c6aFMQZXcJVSVnTJfvpyTDM3VQfXdso78fsv7iU\n' \
+        '7Toyrcr/8817hLDp51Wn0ZkiiacQcxm6rVUr+lXUMfCZHWVLtcs2Kkx68egCBnE5\n' \
+        '2LqIQU86YgVurXLxtdAcRBvMLC2nO8P7y4RM202xpgB7nnnfIqa1p0ACIpCWo+Ti\n' \
+        'WJp0Sm9Gk7Y4m5GX+Bk8XiW1EDk1VZKp0iXdl6if0kR30cmdr1wHevbyLDSzsK+E\n' \
+        'qiQKtV47XFBiUIVhfWO+eOCPcpmWwbVD8pBze5P4Swldzd8HLVQ2jLAWINRQVQQI\n' \
+        'tqUgfph0dNf4Zyk/DchoCmHv/0z7/SkgW4PFJhiviPCKVIejCH5gKDNjVfrvMczZ\n' \
+        'G0OaBSW+uQoWKp/XTZl0SuBOK551oTbCJwsnb4ZTXv1bG73M0sJffxwh/rEdoJ3o\n' \
+        'iwhzdh6JUFeak4gcD3C4qOwRyQhSiKYlLbiP38+dAJhb5jtXRc5TYZOAEnY9LzXs\n' \
+        'gBK4IlzWUSdOf3ppSQP2Ff5WeGE10NbUuoSOBkfIQB0H3hi2EO8TnPcYgjZkMHMf\n' \
+        'pljthTyuPepXPh16EdqV4qtFbO/XYroQ2WPYPyJyxA9sbNsFfTBn35oJBTBzk6Yk\n' \
+        'Hnq4ENCiPJKbuF02HBu7vNitf9/dhhYLjAupXco5jWz9H9ZL5QQGY2oWDucJxBTs\n' \
+        'rd31FZ1DCJwvHb9a9aTMNoZFv2AbqfmvJs9r/8S1cb3L7bgJmKqbjgFmWPTG8McJ\n' \
+        'zthX44V/TOVWAKC5O//TPBD7jTHuboFwEuZ0k16HFX14Ko4SPVrmK6noWfGUM9RB\n' \
+        'hDoEv40k1Vz8NW1n1/1rBKHM7mtYKW8lkcY+qrdlT5LStIPS7jhiTbYjFKyT1Jvv\n' \
+        'sQE+S+Pbp5zTtrF9njFnhbFPxYn+3td3Uggl/IDC2prfkDc2ztwKgBlgR4jIxgHv\n' \
+        'pi2i32qFwwImSr0/D7z+sMHnOC3ubOBiCZs/7fv8LIS7L32mayeaIqLWHxh0OQfB\n' \
+        'ThrBnqEXfmacchmK8wWX0vKtcva8y/W+DBDFIREYKWMDetB9ZMT1jHLgo6AJOnE0\n' \
+        'Hfxw1/hOjr8p1EBQzRz4wK+FbTQWiyByBBv/6wzarB4zP0ii9PV5NqotipJyD3Ux\n' \
+        'g2LB+Bq6DCZRC4sq/WJQQVrcuth5n2N5dpjk//JZVP0+w9C2orUWQsN07DwwkjLf\n' \
+        'x0yCcyW7+BgDu1TI+VzzHx1C+rP5GU03JCTfufeM8XP3idp1htEqAMXXXLPYLISX\n' \
+        '-----END RSA PRIVATE KEY-----\n'
+
+
+@pytest.fixture
 def test_key_pair():
     test_private_key = \
         b'-----BEGIN PRIVATE KEY-----\n' \
@@ -57,12 +91,13 @@ def test_jwk_payload():
 def test_jwt():
     return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjBoN1I4ZEwwclUtYjN' \
            'wM29uZnRfQlBmdVJXMUxkN1lqc0ZuT1dKdUZYVUUifQ.eyJ0ZXN0Ijoic29tZXR' \
-           'oaW5nIn0.l4nS_90uFYfDYnz8L3cz2Tv7MOfo-ez8Ikes9SIV8Teb0_yLR8j_Gr' \
-           'WctFellL1aHOwLZI_SWg-Xor2qdIC9CBtTCvpv22NS6PyUnfonKJ52f87Nm7u_u' \
-           'bOc-CIF-tGsklKbJ21S8trPm059mx4hJE-kbNOT0HsdT8xpMauRspDxhCOeaWzR' \
-           'YRUlNW0PPIiOcgooBJktjctGPpWNCkXS8eofrk53DCY3vItloIg6g_DfuGl3qPP' \
-           'asPDLwXPbFX42EYsFu-ZOWjnlE2b99EaOQMSx_C7Wt04zX6Ipv6iHQdUuE1TOFC' \
-           'eKVxtAX5dTf3lVqr9uLnOrvx_g8uO7WcZHPg'
+           'oaW5nIiwiaWF0IjoxNjAyMjg4MDAwLCJuYmYiOjE2MDIyODgwMDAsImV4cCI6MT' \
+           'YwMjI5MTYwMH0.N_RsiWGLXB57NxPPT2G4HaXokRlAzpDBazjWYQtfcOZo-8EX-' \
+           'acLSJj8f006jWIwk29eF1yj96q-B5-0fmPgwsR7JwT-2HoiuoscZ1eYkRF5OIEG' \
+           'aT3ebHs6Ootp039g6dmZK-P_fNpCQv5MyPPKwUEGZJ3yzav9uXajrkGdU9AKQs8' \
+           'opKjB0m2XlIuTNTSNdGxTjwZSopYQpwObJeGbBA76Pe7HWZf6DCGSmlIpSkwO6Z' \
+           'QdcBChYNPkIVttkMqC_RKE4bwFQU2oUc1Hdgmljhhg7IuZ9EjR5ZDoR8keMC1ih' \
+           'DT10e4sFY2JUqKuqRhNEa2p6EnzysXpFGT6C5l9Xw'
 
 
 @pytest.fixture
@@ -96,6 +131,7 @@ def test_certificate():
 @pytest.fixture
 def test_jwks():
     return {
+        'alg': 'RS256',
         'e': 'AQAB',
         'kid': 'test-key',
         'kty': 'RSA',

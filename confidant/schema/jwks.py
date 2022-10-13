@@ -19,6 +19,11 @@ class JWTResponseSchema(AutobuildSchema):
 
 
 @attr.s
+class JWKSListResponse(object):
+    keys = attr.ib()
+
+
+@attr.s
 class JWKSResponse(object):
     kty = attr.ib()
     kid = attr.ib()
@@ -31,11 +36,21 @@ class JWKSResponseSchema(AutobuildSchema):
         jit = toastedmarshmallow.Jit
 
     _class_to_load = JWKSResponse
+
     kty = fields.Str(required=True)
     kid = fields.Str(required=True)
     n = fields.Str(required=True)
     e = fields.Str(required=True)
+    alg = fields.Str(required=True)
+
+
+class JWKSListResponseSchema(AutobuildSchema):
+    class Meta:
+        jit = toastedmarshmallow.Jit
+
+    _class_to_load = JWKSListResponse
+    keys = fields.List(fields.Nested(JWKSResponseSchema))
 
 
 jwt_response_schema = JWTResponseSchema()
-jwks_response_schema = JWKSResponseSchema()
+jwks_list_response_schema = JWKSListResponseSchema()

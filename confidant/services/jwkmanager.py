@@ -6,7 +6,9 @@ from typing import Any, Dict, Optional
 from hashlib import sha1
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.primitives import serialization
-from confidant.settings import CERTIFICATE_AUTHORITIES
+from confidant.settings import CERTIFICATE_AUTHORITIES, \
+    DEFAULT_JWT_EXPIRATION_SECONDS
+from datetime import datetime, timezone, timedelta
 
 
 class JWKManager:
@@ -36,13 +38,22 @@ class JWKManager:
             self._keys.add(key)
         return kid
 
-    def get_jwt(self, kid: str, payload: dict) -> str:
+    def get_jwt(self, kid: str, payload: dict,
+                expiration_seconds: int = DEFAULT_JWT_EXPIRATION_SECONDS,
+                algorithm: str = 'RS256') -> str:
         key = self._keys.get_key(kid)
         if not key:
             raise ValueError('This private key is not stored!')
 
+        now = datetime.now(tz=timezone.utc)
+        payload.update({
+            'iat': now,
+            'nbf': now,
+            'exp': now + timedelta(seconds=expiration_seconds),
+        })
+
         payload_hash = sha1(
-            json.dumps(payload, sort_keys=True).encode('utf-8')
+            json.dumps(payload, sort_keys=True, default=str).encode('utf-8')
         ).hexdigest()
         if kid not in self._token_cache:
             self._token_cache[kid] = {}
@@ -52,7 +63,7 @@ class JWKManager:
                 payload=payload,
                 headers={'kid': kid},
                 key=key.export_to_pem(private_key=True, password=None),
-                algorithm='RS256',
+                algorithm=algorithm,
             )
 
         return self._token_cache[kid][payload_hash]
@@ -81,15 +92,16 @@ class JWKManager:
             self._payload_cache[certificate_hash] = {}
 
         if token_hash not in self._payload_cache[certificate_hash]:
+            headers = jwt.get_unverified_header(token)
             self._payload_cache[certificate_hash][token_hash] = \
-                jwt.decode(token, public_key, algorithms=['RS256'])
+                jwt.decode(token, public_key, algorithms=headers['alg'])
 
         return self._payload_cache[certificate_hash][token_hash]
 
-    def get_jwks(self, key_id: str) -> Dict[str, str]:
+    def get_jwks(self, key_id: str, algorithm: str = 'RS256') -> Dict[str, str]:
         key = self._keys.get_key(key_id)
         if key:
-            return key.export_public(as_dict=True)
+            return {**key.export_public(as_dict=True), 'alg': algorithm}
         else:
             return {}
 
