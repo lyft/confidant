@@ -62,8 +62,9 @@ def user_is_user_type(user_type):
 def user_is_service(service):
     if not settings.USE_AUTH:
         return True
-    if g.username == service:
-        return True
+    if hasattr(g, 'username'):
+        if g.username == service:
+            return True
     return False
 
 
