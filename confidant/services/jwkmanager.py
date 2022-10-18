@@ -51,7 +51,8 @@ class JWKManager:
             self._token_cache[kid] = {}
 
         now = datetime.now(tz=timezone.utc)
-        if payload['user'] in self._token_cache[kid].keys() and JWT_CACHING_ENABLED:
+        if payload['user'] in self._token_cache[kid].keys() \
+                and JWT_CACHING_ENABLED:
             if now < self._token_cache[kid][payload['user']]['expiry']:
                 return self._token_cache[kid][payload['user']]['token']
 
