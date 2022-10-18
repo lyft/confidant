@@ -606,14 +606,10 @@ ROTATION_DAYS_CONFIG = json.loads(str_env('ROTATION_DAYS_CONFIG', '{}'))
 ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPTION_TIME')
 
 # Add any certificate authorities
-if str_env('SERVICE_INSTANCE') == 'development':
-    decoded_cas = b64decode(str_env('CA_AUTHORITIES', ''))
-else:
-    decrypted_cas = encrypted_settings.decrypted_secrets.get(
-        'CERTIFICATE_AUTHORITIES'
-    )
-    decoded_cas = b64decode(decrypted_cas) if decrypted_cas else ''
-CERTIFICATE_AUTHORITIES = json.loads(decoded_cas) if decoded_cas else {}
+decrypted_cas = encrypted_settings.decrypted_secrets.get(
+    'CERTIFICATE_AUTHORITIES'
+)
+CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) if decrypted_cas else {}
 
 # Configuration validation
 _settings_failures = False
