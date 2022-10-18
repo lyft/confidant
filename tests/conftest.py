@@ -84,20 +84,20 @@ def test_key_pair():
 
 @pytest.fixture
 def test_jwk_payload():
-    return {'test': 'something'}
+    return {'user': 'test', 'is_service': True}
 
 
 @pytest.fixture
 def test_jwt():
-    return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjBoN1I4ZEwwclUtYjN' \
-           'wM29uZnRfQlBmdVJXMUxkN1lqc0ZuT1dKdUZYVUUifQ.eyJ0ZXN0Ijoic29tZXR' \
-           'oaW5nIiwiaWF0IjoxNjAyMjg4MDAwLCJuYmYiOjE2MDIyODgwMDAsImV4cCI6MT' \
-           'YwMjI5MTYwMH0.N_RsiWGLXB57NxPPT2G4HaXokRlAzpDBazjWYQtfcOZo-8EX-' \
-           'acLSJj8f006jWIwk29eF1yj96q-B5-0fmPgwsR7JwT-2HoiuoscZ1eYkRF5OIEG' \
-           'aT3ebHs6Ootp039g6dmZK-P_fNpCQv5MyPPKwUEGZJ3yzav9uXajrkGdU9AKQs8' \
-           'opKjB0m2XlIuTNTSNdGxTjwZSopYQpwObJeGbBA76Pe7HWZf6DCGSmlIpSkwO6Z' \
-           'QdcBChYNPkIVttkMqC_RKE4bwFQU2oUc1Hdgmljhhg7IuZ9EjR5ZDoR8keMC1ih' \
-           'DT10e4sFY2JUqKuqRhNEa2p6EnzysXpFGT6C5l9Xw'
+    return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjBoN1I4ZEwwclUtYjNw' \
+           'M29uZnRfQlBmdVJXMUxkN1lqc0ZuT1dKdUZYVUUifQ.eyJ1c2VyIjoidGVzdCIsI' \
+           'mlzX3NlcnZpY2UiOnRydWUsImlhdCI6MTYwMjI4ODAwMCwibmJmIjoxNjAyMjg4M' \
+           'DAwLCJleHAiOjE2MDIyOTE2MDB9.yRpsDMPkPOKDNjfk7XiOqZ7epIyFHlWY2cC4' \
+           '_JLxuTq0vLnT0yRD8PlStI-WXkDC8Qaje9t3_sNMqBrwaWmh3L2Rr9NoBDnprbfL' \
+           'fyJhm4m9bN-q06LmDt-2YM7-F8U-1upD69g6FTmXt-pa5X_sUuYfVU6RhoMkhRdm' \
+           'tqeV_eolPC2Az8NUmeDNXVO0ml3aegkNyf5OdS7cvi0sNlMRtyWiYvgKv0FbGDnt' \
+           'uU4hLCTvAXtTIHRZV8khhLTS4vJxI7L7mQtemaxXOYVrYF23Z3gzNwVzYBY5Oz_U' \
+           'oOzv_cThQJlobE_tZ9OvXIgPkra1iq4R4x1fKYkI9WIFO6Qm5Q'
 
 
 @pytest.fixture

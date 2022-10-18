@@ -612,6 +612,8 @@ decrypted_cas = encrypted_settings.decrypted_secrets.get(
 CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) \
     if decrypted_cas else {}
 
+JWT_CACHING_ENABLED = bool_env('JWT_CACHING_ENABLED', False)
+
 # Configuration validation
 _settings_failures = False
 if len(set(SCOPED_AUTH_KEYS.values())) != len(SCOPED_AUTH_KEYS.values()):

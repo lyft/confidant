@@ -44,6 +44,80 @@ def test_get_jwt(test_key_pair, test_jwk_payload, test_jwt):
     assert result == test_jwt
 
 
+@patch.object(confidant.services.jwkmanager, 'datetime',
+              Mock(wraps=datetime.datetime))
+@patch.object(confidant.services.jwkmanager, 'JWT_CACHING_ENABLED', True)
+def test_get_jwt_caches_jwt(test_key_pair, test_jwk_payload, test_jwt):
+    test_private_key = test_key_pair.export_to_pem(private_key=True,
+                                                   password=None)
+    confidant.services.jwkmanager.datetime.now.return_value = \
+        datetime.datetime(
+            year=2020,
+            month=10,
+            day=10,
+            hour=0,
+            minute=0,
+            second=0,
+            microsecond=0
+        )
+    jwk_manager.set_key(test_key_pair.thumbprint(),
+                        test_private_key.decode('utf-8'))
+    result = jwk_manager.get_jwt(test_key_pair.thumbprint(),
+                                 test_jwk_payload)
+
+    confidant.services.jwkmanager.datetime.now.return_value = \
+        datetime.datetime(
+            year=2020,
+            month=10,
+            day=10,
+            hour=0,
+            minute=1,
+            second=0,
+            microsecond=0
+        )
+    cached_result = jwk_manager.get_jwt(test_key_pair.thumbprint(),
+                                        test_jwk_payload)
+    assert result == test_jwt
+    assert result == cached_result
+
+
+@patch.object(confidant.services.jwkmanager, 'datetime',
+              Mock(wraps=datetime.datetime))
+@patch.object(confidant.services.jwkmanager, 'JWT_CACHING_ENABLED', False)
+def test_get_jwt_does_not_cache_jwt(test_key_pair, test_jwk_payload, test_jwt):
+    test_private_key = test_key_pair.export_to_pem(private_key=True,
+                                                   password=None)
+    confidant.services.jwkmanager.datetime.now.return_value = \
+        datetime.datetime(
+            year=2020,
+            month=10,
+            day=10,
+            hour=0,
+            minute=0,
+            second=0,
+            microsecond=0
+        )
+    jwk_manager.set_key(test_key_pair.thumbprint(),
+                        test_private_key.decode('utf-8'))
+    result = jwk_manager.get_jwt(test_key_pair.thumbprint(),
+                                 test_jwk_payload)
+
+    confidant.services.jwkmanager.datetime.now.return_value = \
+        datetime.datetime(
+            year=2020,
+            month=10,
+            day=10,
+            hour=0,
+            minute=1,
+            second=1,
+            microsecond=0
+        )
+    not_cached_result = jwk_manager.get_jwt(test_key_pair.thumbprint(),
+                                            test_jwk_payload)
+    assert result == test_jwt
+    assert result != not_cached_result
+
+
 def test_get_jwt_raises_no_key_id(test_key_pair, test_jwk_payload):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
                                                    password=None)

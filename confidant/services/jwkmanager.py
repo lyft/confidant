@@ -1,5 +1,4 @@
 import jwt
-import json
 
 from jwcrypto import jwk
 from typing import Any, Dict, Optional
@@ -7,7 +6,7 @@ from hashlib import sha1
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.primitives import serialization
 from confidant.settings import CERTIFICATE_AUTHORITIES, \
-    DEFAULT_JWT_EXPIRATION_SECONDS
+    DEFAULT_JWT_EXPIRATION_SECONDS, JWT_CACHING_ENABLED
 from datetime import datetime, timezone, timedelta
 
 
@@ -45,28 +44,33 @@ class JWKManager:
         if not key:
             raise ValueError('This private key is not stored!')
 
-        now = datetime.now(tz=timezone.utc)
-        payload.update({
-            'iat': now,
-            'nbf': now,
-            'exp': now + timedelta(seconds=expiration_seconds),
-        })
+        if 'user' not in payload:
+            raise ValueError('Please include the user in the payload')
 
-        payload_hash = sha1(
-            json.dumps(payload, sort_keys=True, default=str).encode('utf-8')
-        ).hexdigest()
         if kid not in self._token_cache:
             self._token_cache[kid] = {}
 
-        if payload_hash not in self._token_cache[kid]:
-            self._token_cache[kid][payload_hash] = jwt.encode(
-                payload=payload,
-                headers={'kid': kid},
-                key=key.export_to_pem(private_key=True, password=None),
-                algorithm=algorithm,
-            )
+        now = datetime.now(tz=timezone.utc)
+        if payload['user'] in self._token_cache[kid].keys() and JWT_CACHING_ENABLED:
+            if now < self._token_cache[kid][payload['user']]['expiry']:
+                return self._token_cache[kid][payload['user']]['token']
 
-        return self._token_cache[kid][payload_hash]
+        expiry = now + timedelta(seconds=expiration_seconds)
+        payload.update({
+            'iat': now,
+            'nbf': now,
+            'exp': expiry,
+        })
+
+        self._token_cache[kid][payload['user']] = {}
+        self._token_cache[kid][payload['user']]['expiry'] = expiry
+        self._token_cache[kid][payload['user']]['token'] = jwt.encode(
+            payload=payload,
+            headers={'kid': kid},
+            key=key.export_to_pem(private_key=True, password=None),
+            algorithm=algorithm,
+        )
+        return self._token_cache[kid][payload['user']]['token']
 
     def _get_public_key(self, alias: str, certificate: str,
                         encoding: str = 'utf-8') -> bytes:
