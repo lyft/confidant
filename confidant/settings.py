@@ -609,7 +609,8 @@ ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPTION_TIME')
 decrypted_cas = encrypted_settings.decrypted_secrets.get(
     'CERTIFICATE_AUTHORITIES'
 )
-CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) if decrypted_cas else {}
+CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) \
+    if decrypted_cas else {}
 
 # Configuration validation
 _settings_failures = False
