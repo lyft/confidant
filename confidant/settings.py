@@ -1,6 +1,7 @@
 import json
 import logging
 from os import getenv
+from base64 import b64decode
 
 from confidant.encrypted_settings import EncryptedSettings
 
@@ -604,6 +605,14 @@ ROTATION_DAYS_CONFIG = json.loads(str_env('ROTATION_DAYS_CONFIG', '{}'))
 # last saw a credential pair
 ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPTION_TIME')
 
+# Add any certificate authorities
+decrypted_cas = encrypted_settings.decrypted_secrets.get(
+    'CERTIFICATE_AUTHORITIES'
+)
+CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) \
+    if decrypted_cas else {}
+
+JWT_CACHING_ENABLED = bool_env('JWT_CACHING_ENABLED', False)
 
 # Configuration validation
 _settings_failures = False
@@ -626,3 +635,4 @@ def get(name, default=None):
 
 # Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:default_acl')
+DEFAULT_JWT_EXPIRATION_SECONDS = 3600

@@ -14,6 +14,7 @@ from confidant.routes import (
     saml,
     services,
     static_files,
+    jwks,
 )
 
 if not settings.get('DEBUG'):
@@ -60,5 +61,6 @@ def create_app():
     app.register_blueprint(saml.blueprint)
     app.register_blueprint(services.blueprint)
     app.register_blueprint(static_files.blueprint)
+    app.register_blueprint(jwks.blueprint)
 
     return app

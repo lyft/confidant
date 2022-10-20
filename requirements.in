@@ -190,3 +190,7 @@ pytest-gevent
 
 # Timezones
 pytz
+
+# for jwt
+pyjwt
+jwcrypto
