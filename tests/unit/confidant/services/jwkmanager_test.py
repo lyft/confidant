@@ -133,7 +133,7 @@ def test_get_payload(mock_validate, test_key_pair, test_jwk_payload, test_jwt,
                                                    password=None)
     jwk_manager.set_key('test-key', test_private_key.decode('utf-8'))
     result = jwk_manager.get_payload(test_certificate.decode('utf-8'),
-                                     test_jwt)
+                                     test_jwt.decode('utf-8'))
     mocked_date = datetime.datetime(
         year=2020,
         month=10,
