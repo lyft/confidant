@@ -59,7 +59,6 @@ class JWKManager:
             if now < self._token_cache[kid][user]['expiry']:
                 return self._token_cache[kid][user]['token']
 
-
         # cache miss, generate new token and update cache
         expiry = now + timedelta(seconds=expiration_seconds)
         payload.update({
