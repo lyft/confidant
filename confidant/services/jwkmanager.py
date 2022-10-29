@@ -22,8 +22,11 @@ class JWKManager:
     def _load_certificate_authorities(self) -> None:
         if CERTIFICATE_AUTHORITIES:
             for ca in CERTIFICATE_AUTHORITIES:
-                self.set_key(ca['name'], ca['key'],
-                             passphrase=ca['passphrase'])
+                self.set_key(
+                    kid=ca['name'],
+                    private_key=ca['key'],
+                    passphrase=ca['passphrase']
+                )
 
     def set_key(self, kid: str, private_key: str,
                 passphrase: Optional[str] = None,
@@ -31,8 +34,10 @@ class JWKManager:
         if passphrase:
             passphrase = passphrase.encode(encoding)
         key = jwk.JWK()
-        key.import_from_pem(private_key.encode(encoding),
-                            password=passphrase, kid=kid)
+        key.import_from_pem(
+            private_key.encode(encoding),
+            password=passphrase,
+            kid=kid)
         if not self._keys.get_key(kid):
             self._keys.add(key)
         return kid

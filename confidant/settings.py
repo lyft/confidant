@@ -609,8 +609,13 @@ ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPTION_TIME')
 decrypted_cas = encrypted_settings.decrypted_secrets.get(
     'CERTIFICATE_AUTHORITIES'
 )
-CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) \
-    if decrypted_cas else {}
+
+if str_env('CERTIFICATE_AUTHORITIES'):
+    CERTIFICATE_AUTHORITIES = json.loads(b64decode(str_env('CERTIFICATE_AUTHORITIES')))
+elif decrypted_cas:
+    CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas))
+else:
+    CERTIFICATE_AUTHORITIES = {}
 
 JWT_CACHING_ENABLED = bool_env('JWT_CACHING_ENABLED', False)
 
