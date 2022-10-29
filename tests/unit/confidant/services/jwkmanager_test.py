@@ -77,7 +77,6 @@ def test_get_jwt_caches_jwt(test_key_pair, test_jwk_payload, test_jwt):
         )
     cached_result = jwk_manager.get_jwt(test_key_pair.thumbprint(),
                                         test_jwk_payload)
-
     assert result == test_jwt
     assert result == cached_result
 
