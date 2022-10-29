@@ -77,6 +77,7 @@ def test_get_jwt_caches_jwt(test_key_pair, test_jwk_payload, test_jwt):
         )
     cached_result = jwk_manager.get_jwt(test_key_pair.thumbprint(),
                                         test_jwk_payload)
+
     assert result == test_jwt
     assert result == cached_result
 
@@ -133,7 +134,7 @@ def test_get_payload(mock_validate, test_key_pair, test_jwk_payload, test_jwt,
                                                    password=None)
     jwk_manager.set_key('test-key', test_private_key.decode('utf-8'))
     result = jwk_manager.get_payload(test_certificate.decode('utf-8'),
-                                     test_jwt.decode('utf-8'))
+                                     test_jwt)
     mocked_date = datetime.datetime(
         year=2020,
         month=10,
