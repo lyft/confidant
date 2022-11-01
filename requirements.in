@@ -192,5 +192,5 @@ pytest-gevent
 pytz
 
 # for jwt
-pyjwt
+pyjwt>=2.4.0
 jwcrypto

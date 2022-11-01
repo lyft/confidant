@@ -50,12 +50,16 @@ class JWKManager:
         if kid not in self._token_cache:
             self._token_cache[kid] = {}
 
+        user = payload['user']
         now = datetime.now(tz=timezone.utc)
-        if payload['user'] in self._token_cache[kid].keys() \
-                and JWT_CACHING_ENABLED:
-            if now < self._token_cache[kid][payload['user']]['expiry']:
-                return self._token_cache[kid][payload['user']]['token']
 
+        # return token from cache
+        if user in self._token_cache[kid].keys() \
+                and JWT_CACHING_ENABLED:
+            if now < self._token_cache[kid][user]['expiry']:
+                return self._token_cache[kid][user]['token']
+
+        # cache miss, generate new token and update cache
         expiry = now + timedelta(seconds=expiration_seconds)
         payload.update({
             'iat': now,
@@ -63,15 +67,18 @@ class JWKManager:
             'exp': expiry,
         })
 
-        self._token_cache[kid][payload['user']] = {}
-        self._token_cache[kid][payload['user']]['expiry'] = expiry
-        self._token_cache[kid][payload['user']]['token'] = jwt.encode(
+        token = jwt.encode(
             payload=payload,
             headers={'kid': kid},
             key=key.export_to_pem(private_key=True, password=None),
             algorithm=algorithm,
         )
-        return self._token_cache[kid][payload['user']]['token']
+
+        self._token_cache[kid][user] = {
+            'expiry': expiry,
+            'token': token
+        }
+        return token
 
     def _get_public_key(self, alias: str, certificate: str,
                         encoding: str = 'utf-8') -> bytes:
