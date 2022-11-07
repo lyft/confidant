@@ -99,6 +99,7 @@ def test_jwt():
            '7sW-uEpSl0w5ugoaFuflfo9VG9wCrUhZrZPrRVknxyGSiSrKIm-ERKk8pfs6B01l' \
            '8L5901oeIhSpiwO5b_jpRDCqazE34_Vg853_nqJpLvxDMixgkg'
 
+
 @pytest.fixture
 def test_certificate():
     cert = \
