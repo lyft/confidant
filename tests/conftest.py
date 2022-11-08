@@ -89,15 +89,15 @@ def test_jwk_payload():
 
 @pytest.fixture
 def test_jwt():
-    return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjBoN1I4ZEwwclUtYjNw' \
-           'M29uZnRfQlBmdVJXMUxkN1lqc0ZuT1dKdUZYVUUifQ.eyJ1c2VyIjoidGVzdCIsI' \
+    return 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjBoN1I4ZEwwclUtYjNwM29uZnRfQlBmdVJX' \
+           'MUxkN1lqc0ZuT1dKdUZYVUUiLCJ0eXAiOiJKV1QifQ.eyJ1c2VyIjoidGVzdCIsI' \
            'mlzX3NlcnZpY2UiOnRydWUsImlhdCI6MTYwMjI4ODAwMCwibmJmIjoxNjAyMjg4M' \
-           'DAwLCJleHAiOjE2MDIyOTE2MDB9.yRpsDMPkPOKDNjfk7XiOqZ7epIyFHlWY2cC4' \
-           '_JLxuTq0vLnT0yRD8PlStI-WXkDC8Qaje9t3_sNMqBrwaWmh3L2Rr9NoBDnprbfL' \
-           'fyJhm4m9bN-q06LmDt-2YM7-F8U-1upD69g6FTmXt-pa5X_sUuYfVU6RhoMkhRdm' \
-           'tqeV_eolPC2Az8NUmeDNXVO0ml3aegkNyf5OdS7cvi0sNlMRtyWiYvgKv0FbGDnt' \
-           'uU4hLCTvAXtTIHRZV8khhLTS4vJxI7L7mQtemaxXOYVrYF23Z3gzNwVzYBY5Oz_U' \
-           'oOzv_cThQJlobE_tZ9OvXIgPkra1iq4R4x1fKYkI9WIFO6Qm5Q'
+           'DAwLCJleHAiOjE2MDIyOTE2MDB9.EazrexYWtbZJX4Jjl4KE7NLRojDWzVOPce8j' \
+           'xKj8XSGY_PBHauZhGoSuBG0fuEkQ5d2BrMHiizIwbB0s70SXwdHuBHGa9XtRZrV1' \
+           'C1FeCwHbxwSiP4tn_2_zDIhv-NPZaQDzcugmcstW2rdMDK7OfK0AfQ0Iw5wzwz1K' \
+           'wY7KEDRNY7MLYJmLL0bn5hvZNMXxKRbVBGLkLeeCODEsRoeULzxLgl79uDuGy3Jr' \
+           '7sW-uEpSl0w5ugoaFuflfo9VG9wCrUhZrZPrRVknxyGSiSrKIm-ERKk8pfs6B01l' \
+           '8L5901oeIhSpiwO5b_jpRDCqazE34_Vg853_nqJpLvxDMixgkg'
 
 
 @pytest.fixture

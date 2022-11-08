@@ -208,7 +208,7 @@ class Credential(CredentialBase):
 
     @property
     def decrypted_credential_pairs(self):
-        return(self._get_decrypted_credential_pairs())
+        return self._get_decrypted_credential_pairs()
 
     @classmethod
     def from_archive_credential(cls, archive_credential):

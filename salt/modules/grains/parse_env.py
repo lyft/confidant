@@ -8,7 +8,7 @@ def parse_env():
     service_name = os.environ.get('SERVICE_NAME')
     service_instance = os.environ.get('SERVICE_INSTANCE')
     region = os.environ.get('REGION')
-    service_group = '{0}-{1}'.format(service_name, service_instance, region)
+    service_group = '{0}-{1}'.format(service_name, service_instance)
     cluster_name = '{0}-{1}'.format(service_group, region)
     return {
         'service_name': service_name,
