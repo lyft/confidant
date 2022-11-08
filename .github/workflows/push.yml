@@ -12,10 +12,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Setup python 3.6
+      - name: Setup python 3.8
         uses: actions/setup-python@v1
         with:
-          python-version: 3.6
+          python-version: 3.8
       - name: Install virtualenv
         run: pip install virtualenv
       - name: Install xmlsec
@@ -37,10 +37,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Setup python 3.6
+      - name: Setup python 3.8
         uses: actions/setup-python@v1
         with:
-          python-version: 3.6
+          python-version: 3.8
       - name: Add wheel dependency
         run: pip install wheel
       - name: Generate dist

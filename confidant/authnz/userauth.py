@@ -215,7 +215,7 @@ class AbstractUserAuthenticator(object):
             raise errors.NotAuthorized(msg)
 
         if not self.passes_email_whitelist(email):
-            msg = 'User not in whitelist: {!r}'.format(
+            msg = 'User {!r} not in whitelist: {!r}'.format(
                 email, self.allowed_email_whitelist)
             raise errors.NotAuthorized(msg)
 
