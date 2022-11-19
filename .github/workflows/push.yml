@@ -41,8 +41,13 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '8.x'
       - name: Add wheel dependency
         run: pip install wheel
+      - name: Build front end
+        run: "npm install grunt-cli && npm install && grunt build"
       - name: Generate dist
         run: python setup.py sdist bdist_wheel
       - name: Publish to PyPI
