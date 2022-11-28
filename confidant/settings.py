@@ -635,4 +635,4 @@ def get(name, default=None):
 
 # Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:default_acl')
-DEFAULT_JWT_EXPIRATION_SECONDS = 3600
+DEFAULT_JWT_EXPIRATION_SECONDS = int_env('DEFAULT_JWT_EXPIRATION_SECONDS', 3600)
