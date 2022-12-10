@@ -7,6 +7,7 @@ from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.primitives import serialization
 from confidant.settings import CERTIFICATE_AUTHORITIES, \
     DEFAULT_JWT_EXPIRATION_SECONDS, JWT_CACHING_ENABLED
+from confidant.utils import stats
 from datetime import datetime, timezone, timedelta
 
 
@@ -57,6 +58,7 @@ class JWKManager:
         if user in self._token_cache[kid].keys() \
                 and JWT_CACHING_ENABLED:
             if now < self._token_cache[kid][user]['expiry']:
+                stats.incr('get_jwt.cache.hit')
                 return self._token_cache[kid][user]['token']
 
         # cache miss, generate new token and update cache
@@ -67,17 +69,20 @@ class JWKManager:
             'exp': expiry,
         })
 
-        token = jwt.encode(
-            payload=payload,
-            headers={'kid': kid},
-            key=key.export_to_pem(private_key=True, password=None),
-            algorithm=algorithm,
-        )
+        with stats.timer('get_jwt.encode'):
+            # XXX: TODO: cache export_to_pem
+            token = jwt.encode(
+                payload=payload,
+                headers={'kid': kid},
+                key=key.export_to_pem(private_key=True, password=None),
+                algorithm=algorithm,
+            )
 
         self._token_cache[kid][user] = {
             'expiry': expiry,
             'token': token
         }
+        stats.incr('get_jwt.cache.miss')
         return token
 
     def _get_public_key(self, alias: str, certificate: str,
@@ -113,8 +118,10 @@ class JWKManager:
     def get_jwks(self, key_id: str, algorithm: str = 'RS256') -> Dict[str, str]:
         key = self._keys.get_key(key_id)
         if key:
+            stats.incr(f'get_jwks.{key_id}.hit')
             return {**key.export_public(as_dict=True), 'alg': algorithm}
         else:
+            stats.incr(f'get_jwks.{key_id}.miss')
             return {}
 
 
