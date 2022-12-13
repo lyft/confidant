@@ -82,7 +82,7 @@ class JWKManager:
             'expiry': expiry,
             'token': token
         }
-        stats.incr('get_jwt.cache.miss')
+        stats.incr('get_jwt.create')
         return token
 
     def _get_public_key(self, alias: str, certificate: str,
