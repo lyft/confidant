@@ -89,8 +89,11 @@ def get_public_jwks(environment):
     :statuscode 404: Public key not found for this environment
     """
     jwks = jwk_manager.get_jwks(environment)
+
+    # look for backup key and serve if present (for rotations)
+    backup = jwk_manager.get_jwks(f'{environment}-backup')
     if jwks:
-        return jwks_list_response_schema.dumps(JWKSListResponse(keys=[jwks]))
+        return jwks_list_response_schema.dumps(JWKSListResponse(keys=[jwks, backup] if backup else [jwks]))
 
     response = jsonify({
         'error': 'Public key not found for this environment'
