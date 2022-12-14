@@ -6,7 +6,6 @@ import pytest
 from unittest.mock import patch, Mock
 
 from confidant.services.jwkmanager import jwk_manager
-from calendar import timegm
 
 
 def test_set_key(test_key_pair):
