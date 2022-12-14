@@ -39,7 +39,10 @@ class JWKManager:
             # setting either way to avoid further lookups when response is None
             self._pem_cache[kid] = self._keys.get_key(kid)
             if self._pem_cache[kid]:
-                self._pem_cache[kid] = self._pem_cache[kid].export_to_pem(private_key=True, password=None)
+                self._pem_cache[kid] = self._pem_cache[kid].export_to_pem(
+                    private_key=True,
+                    password=None
+                )
         return self._pem_cache[kid]
 
     def get_jwt(self, kid: str, payload: dict,
