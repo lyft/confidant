@@ -126,32 +126,6 @@ def test_get_jwt_raises_no_key_id(test_key_pair, test_jwk_payload):
         jwk_manager.get_jwt('non-existent', test_jwk_payload)
 
 
-@patch('jwt.api_jwt.PyJWT._validate_exp', return_value=True)
-def test_get_payload(mock_validate, test_key_pair, test_jwk_payload, test_jwt,
-                     test_certificate):
-    test_private_key = test_key_pair.export_to_pem(private_key=True,
-                                                   password=None)
-    jwk_manager.set_key('test-key', test_private_key.decode('utf-8'))
-    result = jwk_manager.get_payload(test_certificate.decode('utf-8'),
-                                     test_jwt)
-    mocked_date = datetime.datetime(
-        year=2020,
-        month=10,
-        day=10,
-        hour=0,
-        minute=0,
-        second=0,
-        microsecond=0
-    )
-    test_jwk_payload.update({
-        'iat': timegm(mocked_date.utctimetuple()),
-        'nbf': timegm(mocked_date.utctimetuple()),
-        'exp': timegm((mocked_date +
-                       datetime.timedelta(seconds=3600)).utctimetuple()),
-    })
-    assert result == test_jwk_payload
-
-
 def test_get_jwks(test_key_pair, test_jwk_payload, test_jwt,
                   test_jwks):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
