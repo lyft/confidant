@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 CA_SCHEMA = {
     'crt': {'type': 'string', 'required': True},
     'key': {'type': 'string', 'required': True},
-    'name': {'type': 'string', 'required': True},
     'passphrase': {'type': 'string', 'required': True},
     'kid': {'type': 'string', 'required': True},
 }
@@ -36,12 +35,13 @@ class JWKManager:
     def _load_certificate_authorities(self) -> None:
         validator = Validator(CA_SCHEMA)
         if CERTIFICATE_AUTHORITIES:
-            for ca in CERTIFICATE_AUTHORITIES:
-                if validator.validate(ca):
-                    self.set_key(ca['name'], ca['kid'], ca['key'],
-                                 passphrase=ca['passphrase'])
-                else:
-                    logger.error('Invalid entry in CERTIFICATE_AUTHORITIES')
+            for environment in CERTIFICATE_AUTHORITIES:
+                for ca in CERTIFICATE_AUTHORITIES[environment]:
+                    if validator.validate(ca):
+                        self.set_key(environment, ca['kid'], ca['key'],
+                                     passphrase=ca['passphrase'])
+                    else:
+                        logger.error(f'Invalid entry in {environment} in CERTIFICATE_AUTHORITIES')
 
     def set_key(self, environment: str, kid: str,
                 private_key: str,

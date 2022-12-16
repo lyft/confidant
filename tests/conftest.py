@@ -1,3 +1,4 @@
+import json
 import pytest
 
 from jwcrypto import jwk
@@ -142,3 +143,40 @@ def test_jwks():
              'RVxiS3fN9Ig4B8zNFck6u-4MyqZ-VRGWyLw1oHPKMSh7KySm8r91BngtKtOCt'
              'hEEerau9YG0v4b_UAsZkesoDaqvG89HbJmV3nmMQ'
     }
+
+
+@pytest.fixture
+def test_certificate_authorities():
+    return json.dumps({
+        'test': [
+            {
+                'crt': test_certificate().decode('utf-8'),
+                'key': test_key_pair.export_to_pem(
+                    private_key=True,
+                    password=None
+                ).decode('utf-8'),
+                'passphrase': None,
+                'kid': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE',
+            },
+            {
+                'crt': test_certificate().decode('utf-8'),
+                'key': test_key_pair.export_to_pem(
+                    private_key=True,
+                    password=None
+                ).decode('utf-8'),
+                'passphrase': None,
+                'kid': 'test-key',
+            },
+        ],
+        'dummy': [
+            {
+                'crt': test_certificate().decode('utf-8'),
+                'key': test_key_pair.export_to_pem(
+                    private_key=True,
+                    password=None
+                ).decode('utf-8'),
+                'passphrase': None,
+                'kid': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE',
+            },
+        ],
+    })

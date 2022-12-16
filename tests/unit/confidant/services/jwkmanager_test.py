@@ -179,3 +179,33 @@ def test_get_jwks_not_found(test_key_pair, test_jwk_payload,
                             test_jwt):
     result = jwk_manager.get_jwks('non-existent')
     assert not result
+
+
+@patch.object(confidant.services.jwkmanager, 'datetime',
+              Mock(wraps=datetime.datetime))
+@patch.object(confidant.services.jwkmanager, 'ACTIVE_SIGNING_KEYS',
+              {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
+def test_get_jwt(test_key_pair, test_jwk_payload, test_jwt, test_certificate_authorities):
+    test_private_key = test_key_pair.export_to_pem(private_key=True,
+                                                   password=None)
+    with patch.object(confidant.services.jwkmanager,
+                      'CERTIFICATE_AUTHORITIES',
+                      test_certificate_authorities):
+        confidant.services.jwkmanager.datetime.now.return_value = \
+            datetime.datetime(
+                year=2020,
+                month=10,
+                day=10,
+                hour=0,
+                minute=0,
+                second=0,
+                microsecond=0
+            )
+        result = jwk_manager.get_jwt('test',
+                                     test_jwk_payload)
+        assert result == test_jwt
+        jwk_manager.set_key.assert_called_with(
+            'test',
+            test_key_pair.thumbprint(),
+            test_private_key.decode('utf-8')
+        )
