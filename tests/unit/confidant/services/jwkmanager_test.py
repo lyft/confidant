@@ -169,7 +169,8 @@ def test_get_jwks(test_key_pair, test_jwk_payload, test_jwt,
                                                    password=None)
     jwk_manager.set_key('test', 'test-key', test_private_key.decode('utf-8'))
     result = jwk_manager.get_jwks('test')
-    assert result == [test_jwks]
+    assert len(result) == 1
+    assert result[0] == test_jwks
 
 
 def test_get_jwks_not_found(test_key_pair, test_jwk_payload,
