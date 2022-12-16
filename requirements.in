@@ -194,3 +194,4 @@ pytz
 # for jwt
 pyjwt>=2.6.0
 jwcrypto
+cerberus

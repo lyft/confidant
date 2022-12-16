@@ -23,6 +23,8 @@ botocore==1.12.227
     #   boto3
     #   pynamodb
     #   s3transfer
+cerberus==1.3.4
+    # via -r requirements.in
 certifi==2019.6.16
     # via requests
 cffi==1.14.5
