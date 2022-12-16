@@ -41,7 +41,8 @@ class JWKManager:
                         self.set_key(environment, ca['kid'], ca['key'],
                                      passphrase=ca['passphrase'])
                     else:
-                        logger.error(f'Invalid entry in {environment} in CERTIFICATE_AUTHORITIES')
+                        logger.error(f'Invalid entry in {environment} '
+                                     f'in CERTIFICATE_AUTHORITIES')
 
     def set_key(self, environment: str, kid: str,
                 private_key: str,
