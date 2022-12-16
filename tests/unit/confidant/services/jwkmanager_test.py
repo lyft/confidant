@@ -186,8 +186,8 @@ def test_get_jwks_not_found(test_key_pair, test_jwk_payload,
 @patch.object(confidant.services.jwkmanager, 'ACTIVE_SIGNING_KEYS',
               {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
 @patch('confidant.services.jwkmanager.jwk_manager')
-def test_get_jwt_with_ca(test_jwk_payload, test_jwt,
-                         test_certificate_authorities, mock_jwk_manager):
+def test_get_jwt_with_ca(mock_jwk_manager, test_jwk_payload,
+                         test_jwt, test_certificate_authorities):
     with patch.object(confidant.services.jwkmanager,
                       'CERTIFICATE_AUTHORITIES',
                       test_certificate_authorities):
@@ -202,6 +202,6 @@ def test_get_jwt_with_ca(test_jwk_payload, test_jwt,
                 microsecond=0
             )
         result = mock_jwk_manager.get_jwt('test',
-                                        test_jwk_payload)
+                                          test_jwk_payload)
     assert result == test_jwt
     mock_jwk_manager.get_active_key.assert_called_once_with('test')
