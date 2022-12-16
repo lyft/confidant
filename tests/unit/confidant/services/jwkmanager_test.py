@@ -167,10 +167,10 @@ def test_get_jwks(test_key_pair, test_jwk_payload, test_jwt,
                   test_jwks):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
                                                    password=None)
-    jwk_manager.set_key('test',
+    jwk_manager.set_key('testing',
                         '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE',
                         test_private_key.decode('utf-8'))
-    result = jwk_manager.get_jwks('test')
+    result = jwk_manager.get_jwks('testing')
     assert len(result) == 1
     assert result[0] == test_jwks
 
