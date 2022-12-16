@@ -12,7 +12,9 @@ from calendar import timegm
 def test_set_key(test_key_pair):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
                                                    password=None)
-    kid = jwk_manager.set_key('test', 'test-key', test_private_key.decode('utf-8'))
+    kid = jwk_manager.set_key('test',
+                              'test-key',
+                              test_private_key.decode('utf-8'))
     assert kid == 'test-key'
 
 
@@ -24,6 +26,8 @@ def test_set_key_encrypted(test_encrypted_key):
 
 @patch.object(confidant.services.jwkmanager, 'datetime',
               Mock(wraps=datetime.datetime))
+@patch.object(confidant.services.jwkmanager, 'ACTIVE_SIGNING_KEYS',
+              {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
 def test_get_jwt(test_key_pair, test_jwk_payload, test_jwt):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
                                                    password=None)
@@ -48,6 +52,8 @@ def test_get_jwt(test_key_pair, test_jwk_payload, test_jwt):
 @patch.object(confidant.services.jwkmanager, 'datetime',
               Mock(wraps=datetime.datetime))
 @patch.object(confidant.services.jwkmanager, 'JWT_CACHING_ENABLED', True)
+@patch.object(confidant.services.jwkmanager, 'ACTIVE_SIGNING_KEYS',
+              {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
 def test_get_jwt_caches_jwt(test_key_pair, test_jwk_payload, test_jwt):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
                                                    password=None)
@@ -86,6 +92,8 @@ def test_get_jwt_caches_jwt(test_key_pair, test_jwk_payload, test_jwt):
 @patch.object(confidant.services.jwkmanager, 'datetime',
               Mock(wraps=datetime.datetime))
 @patch.object(confidant.services.jwkmanager, 'JWT_CACHING_ENABLED', False)
+@patch.object(confidant.services.jwkmanager, 'ACTIVE_SIGNING_KEYS',
+              {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
 def test_get_jwt_does_not_cache_jwt(test_key_pair, test_jwk_payload, test_jwt):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
                                                    password=None)
@@ -100,6 +108,7 @@ def test_get_jwt_does_not_cache_jwt(test_key_pair, test_jwk_payload, test_jwt):
             microsecond=0
         )
     jwk_manager.set_key('test',
+                        test_key_pair.thumbprint(),
                         test_private_key.decode('utf-8'))
     result = jwk_manager.get_jwt('test',
                                  test_jwk_payload)
@@ -123,8 +132,8 @@ def test_get_jwt_does_not_cache_jwt(test_key_pair, test_jwk_payload, test_jwt):
 def test_get_jwt_raises_no_key_id(test_key_pair, test_jwk_payload):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
                                                    password=None)
-    jwk_manager.set_key('test-key', test_private_key.decode('utf-8'))
-    with pytest.raises(ValueError, match='This private key is not stored'):
+    jwk_manager.set_key('test', 'test-key', test_private_key.decode('utf-8'))
+    with pytest.raises(ValueError, match='No active key for this environment'):
         jwk_manager.get_jwt('non-existent', test_jwk_payload)
 
 
