@@ -133,7 +133,7 @@ def test_jwks():
     return {
         'alg': 'RS256',
         'e': 'AQAB',
-        'kid': 'test-key',
+        'kid': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE',
         'kty': 'RSA',
         'n': '1LtU2hUlTSRC32IlfvtWQwG60P35aK-uFzsCvUSLc2Kr5xFFNfmh8OELwzci'
              'ibMh-_7qr-Nrw2YgogB-k9UVSw99AHSLMDkKVUrEHDxF3CX5CCd2UElqbk1T'
