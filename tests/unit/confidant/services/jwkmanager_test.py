@@ -201,6 +201,7 @@ def test_get_jwt_with_ca(mock_jwk_manager, test_jwk_payload,
                 second=0,
                 microsecond=0
             )
+        mock_jwk_manager.return_value = jwk_manager
         result = mock_jwk_manager.get_jwt('test',
                                           test_jwk_payload)
     assert result == test_jwt
