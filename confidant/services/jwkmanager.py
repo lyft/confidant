@@ -1,10 +1,7 @@
 import jwt
 
 from jwcrypto import jwk
-from typing import Any, Dict, Optional
-from hashlib import sha1
-from cryptography.x509 import load_pem_x509_certificate
-from cryptography.hazmat.primitives import serialization
+from typing import Dict, Optional
 from confidant.settings import CERTIFICATE_AUTHORITIES, \
     DEFAULT_JWT_EXPIRATION_SECONDS, JWT_CACHING_ENABLED
 from confidant.utils import stats
@@ -14,9 +11,8 @@ from datetime import datetime, timezone, timedelta
 class JWKManager:
     def __init__(self) -> None:
         self._keys = jwk.JWKSet()
-        self._public_keys = {}
         self._token_cache = {}
-        self._payload_cache = {}
+        self._pem_cache = {}
 
         self._load_certificate_authorities()
 
@@ -38,10 +34,21 @@ class JWKManager:
             self._keys.add(key)
         return kid
 
+    def _get_key(self, kid: str):
+        if kid not in self._pem_cache:
+            # setting either way to avoid further lookups when response is None
+            self._pem_cache[kid] = self._keys.get_key(kid)
+            if self._pem_cache[kid]:
+                self._pem_cache[kid] = self._pem_cache[kid].export_to_pem(
+                    private_key=True,
+                    password=None
+                )
+        return self._pem_cache[kid]
+
     def get_jwt(self, kid: str, payload: dict,
                 expiration_seconds: int = DEFAULT_JWT_EXPIRATION_SECONDS,
                 algorithm: str = 'RS256') -> str:
-        key = self._keys.get_key(kid)
+        key = self._get_key(kid)
         if not key:
             raise ValueError('This private key is not stored!')
 
@@ -70,11 +77,10 @@ class JWKManager:
         })
 
         with stats.timer('get_jwt.encode'):
-            # XXX: TODO: cache export_to_pem
             token = jwt.encode(
                 payload=payload,
                 headers={'kid': kid},
-                key=key.export_to_pem(private_key=True, password=None),
+                key=key,
                 algorithm=algorithm,
             )
 
@@ -84,36 +90,6 @@ class JWKManager:
         }
         stats.incr('get_jwt.create')
         return token
-
-    def _get_public_key(self, alias: str, certificate: str,
-                        encoding: str = 'utf-8') -> bytes:
-        if alias not in self._public_keys:
-            imported_cert = load_pem_x509_certificate(
-                certificate.encode(encoding)
-            )
-            public_key = imported_cert.public_key().public_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.SubjectPublicKeyInfo
-            )
-            self._public_keys[alias] = public_key
-        return self._public_keys[alias]
-
-    def get_payload(self, certificate: str, token: str,
-                    encoding: str = 'utf-8') -> Dict[str, Any]:
-        certificate_hash = sha1(certificate.encode('utf-8')).hexdigest()
-        public_key = self._get_public_key(certificate_hash, certificate,
-                                          encoding=encoding)
-        token_hash = sha1(token.encode('utf-8')).hexdigest()
-
-        if certificate_hash not in self._payload_cache:
-            self._payload_cache[certificate_hash] = {}
-
-        if token_hash not in self._payload_cache[certificate_hash]:
-            headers = jwt.get_unverified_header(token)
-            self._payload_cache[certificate_hash][token_hash] = \
-                jwt.decode(token, public_key, algorithms=headers['alg'])
-
-        return self._payload_cache[certificate_hash][token_hash]
 
     def get_jwks(self, key_id: str, algorithm: str = 'RS256') -> Dict[str, str]:
         key = self._keys.get_key(key_id)
