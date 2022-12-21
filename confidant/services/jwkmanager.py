@@ -2,7 +2,7 @@ import logging
 import jwt
 
 from jwcrypto import jwk
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Tuple
 
 from confidant.settings import CERTIFICATE_AUTHORITIES, \
     DEFAULT_JWT_EXPIRATION_SECONDS, JWT_CACHING_ENABLED, ACTIVE_SIGNING_KEYS
@@ -76,25 +76,25 @@ class JWKManager:
     def get_jwt(self, environment: str, payload: dict,
                 expiration_seconds: int = DEFAULT_JWT_EXPIRATION_SECONDS,
                 algorithm: str = 'RS256') -> str:
-        key = self.get_active_key(environment)
+        kid, key = self.get_active_key(environment)
         if not key:
             raise ValueError('No active key for this environment')
 
         if 'user' not in payload:
             raise ValueError('Please include the user in the payload')
 
-        if key.key_id not in self._token_cache:
-            self._token_cache[key.key_id] = {}
+        if kid not in self._token_cache:
+            self._token_cache[kid] = {}
 
         user = payload['user']
         now = datetime.now(tz=timezone.utc)
 
         # return token from cache
-        if user in self._token_cache[key.key_id].keys() \
+        if user in self._token_cache[kid].keys() \
                 and JWT_CACHING_ENABLED:
-            if now < self._token_cache[key.key_id][user]['expiry']:
+            if now < self._token_cache[kid][user]['expiry']:
                 stats.incr('get_jwt.cache.hit')
-                return self._token_cache[key.key_id][user]['token']
+                return self._token_cache[kid][user]['token']
 
         # cache miss, generate new token and update cache
         expiry = now + timedelta(seconds=expiration_seconds)
@@ -107,24 +107,25 @@ class JWKManager:
         with stats.timer('get_jwt.encode'):
             token = jwt.encode(
                 payload=payload,
-                headers={'kid': key.key_id},
+                headers={'kid': kid},
                 key=key,
                 algorithm=algorithm,
             )
 
-        self._token_cache[key.key_id][user] = {
+        self._token_cache[kid][user] = {
             'expiry': expiry,
             'token': token
         }
         stats.incr('get_jwt.create')
         return token
 
-    def get_active_key(self, environment: str) -> jwk.JWK:
+    def get_active_key(self, environment: str) -> Tuple[str, Optional[jwk.JWK]]:
         if environment in ACTIVE_SIGNING_KEYS and environment in self._keys:
-            return self._get_key(
+            return ACTIVE_SIGNING_KEYS[environment], self._get_key(
                 ACTIVE_SIGNING_KEYS[environment],
                 environment
             )
+        return '', None
 
     def get_jwks(self, environment: str, algorithm: str = 'RS256') \
             -> List[Dict[str, str]]:
