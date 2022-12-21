@@ -606,6 +606,17 @@ ROTATION_DAYS_CONFIG = json.loads(str_env('ROTATION_DAYS_CONFIG', '{}'))
 ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPTION_TIME')
 
 # Add any certificate authorities
+# Should be in encrypted settings following this format (where name is
+# the name of the environment) and key ids must be unique:
+# [
+# {
+#   "key": "--- RSA...",
+#   "crt": "--- CERT...",
+#   "name": "staging",
+#   "passphrase": "some-key",
+#   "kid": "some-kid"
+# }, ...
+# ]
 decrypted_cas = encrypted_settings.decrypted_secrets.get(
     'CERTIFICATE_AUTHORITIES'
 )
@@ -636,3 +647,8 @@ def get(name, default=None):
 # Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:default_acl')
 DEFAULT_JWT_EXPIRATION_SECONDS = int_env('DEFAULT_JWT_EXPIRATION_SECONDS', 3600)
+
+# Key IDs from CERTIFICATE_AUTHORITIES that should be used to sign new JWTs,
+# provide a JSON with the following format:
+# {"staging": "some_kid", "production": "some_kid"}
+ACTIVE_SIGNING_KEYS = json.loads(str_env('ACTIVE_SIGNING_KEYS', '{}'))

@@ -90,7 +90,7 @@ def get_public_jwks(environment):
     """
     jwks = jwk_manager.get_jwks(environment)
     if jwks:
-        return jwks_list_response_schema.dumps(JWKSListResponse(keys=[jwks]))
+        return jwks_list_response_schema.dumps(JWKSListResponse(keys=jwks))
 
     response = jsonify({
         'error': 'Public key not found for this environment'
