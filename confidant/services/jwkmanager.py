@@ -2,10 +2,8 @@ import logging
 import jwt
 
 from jwcrypto import jwk
-from typing import Any, Dict, Optional, List
-from hashlib import sha1
-from cryptography.x509 import load_pem_x509_certificate
-from cryptography.hazmat.primitives import serialization
+from typing import Dict, Optional
+
 from confidant.settings import CERTIFICATE_AUTHORITIES, \
     DEFAULT_JWT_EXPIRATION_SECONDS, JWT_CACHING_ENABLED, ACTIVE_SIGNING_KEYS
 from confidant.utils import stats
@@ -26,9 +24,8 @@ CA_SCHEMA = {
 class JWKManager:
     def __init__(self) -> None:
         self._keys = {}
-        self._public_keys = {}
         self._token_cache = {}
-        self._payload_cache = {}
+        self._pem_cache = {}
 
         self._load_certificate_authorities()
 
@@ -59,6 +56,20 @@ class JWKManager:
         if not self._keys[environment].get_key(kid):
             self._keys[environment].add(key)
         return kid
+
+    def _get_key(self, kid: str, environment: str):
+        if environment not in self._pem_cache:
+            self._pem_cache[environment] = {}
+            
+        if kid not in self._pem_cache[environment]:
+            # setting either way to avoid further lookups when response is None
+            self._pem_cache[environment][kid] = self._keys[environment].get_key(kid)
+            if self._pem_cache[environment][kid]:
+                self._pem_cache[environment][kid] = self._pem_cache[environment][kid].export_to_pem(
+                    private_key=True,
+                    password=None
+                )
+        return self._pem_cache[environment][kid]
 
     def get_jwt(self, environment: str, payload: dict,
                 expiration_seconds: int = DEFAULT_JWT_EXPIRATION_SECONDS,
@@ -92,11 +103,10 @@ class JWKManager:
         })
 
         with stats.timer('get_jwt.encode'):
-            # XXX: TODO: cache export_to_pem
             token = jwt.encode(
                 payload=payload,
                 headers={'kid': key.key_id},
-                key=key.export_to_pem(private_key=True, password=None),
+                key=key,
                 algorithm=algorithm,
             )
 
@@ -107,40 +117,12 @@ class JWKManager:
         stats.incr('get_jwt.create')
         return token
 
-    def _get_public_key(self, alias: str, certificate: str,
-                        encoding: str = 'utf-8') -> bytes:
-        if alias not in self._public_keys:
-            imported_cert = load_pem_x509_certificate(
-                certificate.encode(encoding)
-            )
-            public_key = imported_cert.public_key().public_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.SubjectPublicKeyInfo
-            )
-            self._public_keys[alias] = public_key
-        return self._public_keys[alias]
-
-    def get_payload(self, certificate: str, token: str,
-                    encoding: str = 'utf-8') -> Dict[str, Any]:
-        certificate_hash = sha1(certificate.encode('utf-8')).hexdigest()
-        public_key = self._get_public_key(certificate_hash, certificate,
-                                          encoding=encoding)
-        token_hash = sha1(token.encode('utf-8')).hexdigest()
-
-        if certificate_hash not in self._payload_cache:
-            self._payload_cache[certificate_hash] = {}
-
-        if token_hash not in self._payload_cache[certificate_hash]:
-            headers = jwt.get_unverified_header(token)
-            self._payload_cache[certificate_hash][token_hash] = \
-                jwt.decode(token, public_key, algorithms=headers['alg'])
-
-        return self._payload_cache[certificate_hash][token_hash]
 
     def get_active_key(self, environment: str) -> jwk.JWK:
         if environment in ACTIVE_SIGNING_KEYS and environment in self._keys:
-            return self._keys[environment].get_key(
-                ACTIVE_SIGNING_KEYS[environment]
+            return self._keys[environment]._get_key(
+                ACTIVE_SIGNING_KEYS[environment],
+                environment
             )
 
     def get_jwks(self, environment: str, algorithm: str = 'RS256') \
