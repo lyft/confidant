@@ -121,7 +121,7 @@ class JWKManager:
 
     def get_active_key(self, environment: str) -> jwk.JWK:
         if environment in ACTIVE_SIGNING_KEYS and environment in self._keys:
-            return self._keys[environment]._get_key(
+            return self._keys[environment].get_key(
                 ACTIVE_SIGNING_KEYS[environment],
                 environment
             )
