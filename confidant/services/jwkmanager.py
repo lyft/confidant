@@ -63,9 +63,11 @@ class JWKManager:
 
         if kid not in self._pem_cache[environment]:
             # setting either way to avoid further lookups when response is None
-            self._pem_cache[environment][kid] = self._keys[environment].get_key(kid)
+            self._pem_cache[environment][kid] = \
+                self._keys[environment].get_key(kid)
             if self._pem_cache[environment][kid]:
-                self._pem_cache[environment][kid] = self._pem_cache[environment][kid].export_to_pem(
+                self._pem_cache[environment][kid] = \
+                    self._pem_cache[environment][kid].export_to_pem(
                     private_key=True,
                     password=None
                 )
@@ -116,7 +118,6 @@ class JWKManager:
         }
         stats.incr('get_jwt.create')
         return token
-
 
     def get_active_key(self, environment: str) -> jwk.JWK:
         if environment in ACTIVE_SIGNING_KEYS and environment in self._keys:
