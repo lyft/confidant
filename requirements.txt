@@ -4,7 +4,6 @@
 #
 #    pip-compile
 #
-
 attrs==19.3.0
     # via
     #   pytest
@@ -25,7 +24,7 @@ botocore==1.12.227
     #   s3transfer
 cerberus==1.3.4
     # via -r requirements.in
-certifi==2019.6.16
+certifi==2022.12.7
     # via requests
 cffi==1.14.5
     # via
