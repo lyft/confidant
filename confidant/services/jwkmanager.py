@@ -2,7 +2,7 @@ import logging
 import jwt
 
 from jwcrypto import jwk
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 from confidant.settings import CERTIFICATE_AUTHORITIES, \
     DEFAULT_JWT_EXPIRATION_SECONDS, JWT_CACHING_ENABLED, ACTIVE_SIGNING_KEYS
@@ -60,7 +60,7 @@ class JWKManager:
     def _get_key(self, kid: str, environment: str):
         if environment not in self._pem_cache:
             self._pem_cache[environment] = {}
-            
+
         if kid not in self._pem_cache[environment]:
             # setting either way to avoid further lookups when response is None
             self._pem_cache[environment][kid] = self._keys[environment].get_key(kid)
