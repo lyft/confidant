@@ -1,4 +1,10 @@
 include VERSION
 recursive-include confidant/dist *
+recursive-include tests *
+recursive-include config *
 include requirements.txt
 include requirements.in
+include .jshintrc
+include Gruntfile.js
+include package.json
+include pytest.ini
