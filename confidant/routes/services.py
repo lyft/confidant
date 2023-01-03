@@ -209,16 +209,18 @@ def get_service(id):
     metadata_only = misc.get_boolean(request.args.get('metadata_only'))
     logged_in_user = authnz.get_logged_in_user()
     action = 'metadata' if metadata_only else 'get'
-    permissions['metadata'] = acl_module_check(
-        resource_type='service',
-        action='metadata',
-        resource_id=id,
-    )
-    permissions['get'] = acl_module_check(
-        resource_type='service',
-        action='get',
-        resource_id=id,
-    )
+    if action == 'metadata':
+        permissions['metadata'] = acl_module_check(
+            resource_type='service',
+            action='metadata',
+            resource_id=id,
+        )
+    elif action == 'get':
+        permissions['get'] = acl_module_check(
+            resource_type='service',
+            action='get',
+            resource_id=id,
+        )
     if not permissions[action]:
         msg = "{} does not have access to get service {}".format(
             authnz.get_logged_in_user(),
