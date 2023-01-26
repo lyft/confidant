@@ -123,7 +123,8 @@ def get_credential_list():
     else:
         credentials_response = CredentialsResponse.from_credentials([
             credential
-            for credential in Credential.data_type_date_index.query('credential')
+            for credential in
+            Credential.data_type_date_index.query('credential')
         ])
     return credentials_response_schema.dumps(credentials_response)
 

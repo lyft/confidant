@@ -3,6 +3,7 @@ import pytz
 from datetime import datetime
 
 import pytest
+from unittest import mock
 from pynamodb.exceptions import DoesNotExist
 
 from confidant.app import create_app
@@ -109,6 +110,58 @@ def test_get_credential_list(mocker, credential_list):
     json_data = json.loads(ret.data)
     assert ret.status_code == 200
     assert len(json_data['credentials']) == len(credential_list)
+    assert json_data['next_page'] is None
+
+    # test with pagination
+    mock_credential_list = mock.Mock()
+    mock_credential_list.__iter__ = mock.Mock(
+        return_value=iter([credential_list[0]])
+    )
+    mock_credential_list.last_evaluated_key.return_value = {
+        'something': 'test'
+    }
+    mocker.patch(
+        'confidant.schema.credentials.encode_last_evaluated_key',
+        return_value='{"something":"test"}',
+    )
+    mocker.patch(
+        'confidant.models.credential.Credential.data_type_date_index.query',
+        return_value=mock_credential_list,
+    )
+    ret = app.test_client().get(
+        '/v1/credentials?limit=1',
+        follow_redirects=False,
+    )
+    json_data = json.loads(ret.data)
+    next_page = json_data['next_page']
+    assert ret.status_code == 200
+    assert len(json_data['credentials']) == 1
+    assert next_page == '{"something":"test"}'
+
+    # test second page
+    mock_credential_list.__iter__ = mock.Mock(
+        return_value=iter([credential_list[1]])
+    )
+    mock_credential_list.last_evaluated_key.return_value = None
+    mocker.patch(
+        'confidant.schema.credentials.encode_last_evaluated_key',
+        return_value=None,
+    )
+    mocker.patch(
+        'confidant.models.credential.Credential.data_type_date_index.query',
+        return_value=mock_credential_list,
+    )
+    mocker.patch(
+        'confidant.routes.credentials.decode_last_evaluated_key',
+        return_value='{"something":"test"}',
+    )
+    ret = app.test_client().get(
+        f'/v1/credentials?limit=1&page={next_page}',
+        follow_redirects=False,
+    )
+    json_data = json.loads(ret.data)
+    assert ret.status_code == 200
+    assert len(json_data['credentials']) == 1
     assert json_data['next_page'] is None
 
 
