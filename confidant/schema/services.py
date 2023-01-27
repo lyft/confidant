@@ -174,7 +174,9 @@ class ServiceCredentialsResponseSchema(AutobuildSchema):
     _class_to_load = ServiceResponse
 
     credentials = fields.List(fields.Nested(CredentialResponseSchema))
-    blind_credentials = fields.List(fields.Nested(BlindCredentialResponseSchema))
+    blind_credentials = fields.List(
+        fields.Nested(BlindCredentialResponseSchema)
+    )
     next_page = fields.Int()
 
 
