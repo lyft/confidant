@@ -124,6 +124,61 @@ class ServiceExpandedResponseSchema(AutobuildSchema):
 
 
 @attr.s
+class ServiceCredentialsResponse(object):
+    next_page = attr.ib()
+    credentials = attr.ib(default=list)
+    blind_credentials = attr.ib(default=list)
+
+    @classmethod
+    def from_credentials(
+        cls,
+        credentials=None,
+        blind_credentials=None,
+        next_page=None,
+        metadata_only=True,
+    ):
+        ret = cls(next_page)
+
+        if metadata_only:
+            include_sensitive = False
+        else:
+            include_sensitive = True
+
+        if credentials:
+            ret.credentials = [
+                CredentialResponse.from_credential(
+                    credential,
+                    include_credential_keys=True,
+                    include_credential_pairs=include_sensitive,
+                )
+                for credential in credentials
+            ]
+        if blind_credentials:
+            ret.blind_credentials = [
+                BlindCredentialResponse.from_blind_credential(
+                    blind_credential,
+                    include_credential_keys=True,
+                    include_credential_pairs=include_sensitive,
+                    include_data_key=include_sensitive,
+                )
+                for blind_credential in blind_credentials
+            ]
+
+        return ret
+
+
+class ServiceCredentialsResponseSchema(AutobuildSchema):
+    class Meta:
+        jit = toastedmarshmallow.Jit
+
+    _class_to_load = ServiceResponse
+
+    credentials = fields.List(fields.Nested(CredentialResponseSchema))
+    blind_credentials = fields.List(fields.Nested(BlindCredentialResponseSchema))
+    next_page = fields.Int()
+
+
+@attr.s
 class ServicesResponse(object):
     services = attr.ib()
     next_page = attr.ib()
@@ -228,5 +283,6 @@ class RevisionsResponseSchema(Schema):
 
 
 service_expanded_response_schema = ServiceExpandedResponseSchema()
+service_credentials_response_schema = ServiceCredentialsResponseSchema()
 services_response_schema = ServicesResponseSchema()
 revisions_response_schema = RevisionsResponseSchema()
