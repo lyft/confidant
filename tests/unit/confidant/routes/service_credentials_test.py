@@ -1,7 +1,6 @@
 import json
 import pytest
 
-from unittest import mock
 from datetime import datetime
 
 from confidant.app import create_app
