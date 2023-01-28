@@ -84,7 +84,8 @@ def test_get_services_list(mocker, service, credential_list):
         return_value=credential_list,
     )
     mocker.patch(
-        'confidant.models.credential.Credential._get_decrypted_credential_pairs',
+        'confidant.models.credential.'
+        'Credential._get_decrypted_credential_pairs',
         return_value={},
     )
     mocker.patch(
