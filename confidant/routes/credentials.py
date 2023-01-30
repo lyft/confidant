@@ -93,10 +93,39 @@ def get_credential_list():
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
 
-    credentials_response = CredentialsResponse.from_credentials([
-        credential
-        for credential in Credential.data_type_date_index.query('credential')
-    ])
+    limit = request.args.get(
+        'limit',
+        default=None,
+        type=int,
+    )
+    page = request.args.get(
+        'page',
+        default=None,
+        type=str
+    )
+    if page:
+        try:
+            page = decode_last_evaluated_key(page)
+        except Exception:
+            logger.exception('Failed to parse provided page')
+            return jsonify({'error': 'Failed to parse page'}), 400
+    if limit:
+        results = Credential.data_type_date_index.query(
+            'credential',
+            scan_index_forward=False,
+            limit=limit,
+            last_evaluated_key=page,
+        )
+        credentials_response = CredentialsResponse.from_credentials(
+            [credential for credential in results],
+            next_page=results.last_evaluated_key,
+        )
+    else:
+        credentials_response = CredentialsResponse.from_credentials([
+            credential
+            for credential in
+            Credential.data_type_date_index.query('credential')
+        ])
     return credentials_response_schema.dumps(credentials_response)
 
 
