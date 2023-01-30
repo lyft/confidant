@@ -91,6 +91,7 @@ def get_service_list():
 
     :query string next_page: If paged results were returned in a call, this
                              query string can be used to fetch the next page.
+    :query int limit: Limit of items per each page (required for pagination)
 
     **Example response**:
 
@@ -128,9 +129,40 @@ def get_service_list():
         )
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
-    services_response = ServicesResponse.from_services(
-        Service.data_type_date_index.query('service')
+
+    limit = request.args.get(
+        'limit',
+        default=None,
+        type=int,
     )
+    page = request.args.get(
+        'page',
+        default=None,
+        type=str
+    )
+
+    if page:
+        try:
+            page = decode_last_evaluated_key(page)
+        except Exception:
+            logger.exception('Failed to parse provided page')
+            return jsonify({'error': 'Failed to parse page'}), 400
+
+    if limit:
+        results = Service.data_type_date_index.query(
+            'service',
+            scan_index_forward=False,
+            limit=limit,
+            last_evaluated_key=page,
+        )
+        services_response = ServicesResponse.from_services(
+            [result for result in results],
+            next_page=results.last_evaluated_key
+        )
+    else:
+        services_response = ServicesResponse.from_services(
+            Service.data_type_date_index.query('service'),
+        )
     return services_response_schema.dumps(services_response)
 
 
