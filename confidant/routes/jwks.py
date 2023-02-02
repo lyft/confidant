@@ -53,7 +53,9 @@ def get_token():
         if jwt_mapping_check(user, target_user):
             user = target_user
         else:
-            response = jsonify({'error': 'override to that target_user not authorized'})
+            response = jsonify({
+                'error': 'override to that target_user not authorized'
+            })
             return response, 403
 
     payload = {
