@@ -72,7 +72,3 @@ def no_acl(*args, **kwargs):
     the ACL checks.
     """
     return True
-
-
-def default_jwt_mapping(*args, **kwargs):
-    return False
