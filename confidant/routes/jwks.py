@@ -42,12 +42,17 @@ def get_token():
     :statuscode 200: Success
     :statuscode 400: JWTs are not supported for this user
     """
-    user = authnz.get_logged_in_user()
+    parent = authnz.get_logged_in_user()
+    user = parent
     environment = request.args.get('environment', type=str)
 
     if not environment:
         return jsonify({'error': 'Please specify an environment'}), 400
 
+    payload = {
+        'is_service': authnz.user_is_service(user),
+        'parent': parent,
+    }
     target_user = request.args.get('target_user', type=str)
     if target_user and JWT_MAPPING_MODULE:
         if jwt_mapping_check(user, target_user):
@@ -58,10 +63,8 @@ def get_token():
             })
             return response, 403
 
-    payload = {
-        'user': user,
-        'is_service': authnz.user_is_service(user),
-    }
+    payload['user'] = user
+
     try:
         token = jwk_manager.get_jwt(environment, payload)
     except ValueError:
