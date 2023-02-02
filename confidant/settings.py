@@ -652,3 +652,5 @@ DEFAULT_JWT_EXPIRATION_SECONDS = int_env('DEFAULT_JWT_EXPIRATION_SECONDS', 3600)
 # provide a JSON with the following format:
 # {"staging": "some_kid", "production": "some_kid"}
 ACTIVE_SIGNING_KEYS = json.loads(str_env('ACTIVE_SIGNING_KEYS', '{}'))
+
+JWT_MAPPING_MODULE = str_env('JWT_MAPPING_MODULE', 'confidant.authnz.rbac:default_jwt_mapping')

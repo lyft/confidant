@@ -6,10 +6,13 @@ from confidant import authnz
 from confidant.services.jwkmanager import jwk_manager
 from confidant.schema.jwks import jwt_response_schema, JWTResponse, \
     jwks_list_response_schema, JWKSListResponse
-
+from confidant.settings import JWT_MAPPING_MODULE
+from confidant.utils import misc
 
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('jwks', __name__)
+
+jwt_mapping_check = misc.load_module(JWT_MAPPING_MODULE)
 
 
 @blueprint.route('/v1/jwks/token', methods=['GET'])
@@ -44,6 +47,14 @@ def get_token():
 
     if not environment:
         return jsonify({'error': 'Please specify an environment'}), 400
+
+    target_user = request.args.get('target_user', type=str)
+    if target_user and JWT_MAPPING_MODULE:
+        if jwt_mapping_check(user, target_user):
+            user = target_user
+        else:
+            response = jsonify({'error': 'override to that target_user not authorized'})
+            return response, 403
 
     payload = {
         'user': user,
