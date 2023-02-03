@@ -6,15 +6,18 @@ from confidant import authnz
 from confidant.services.jwkmanager import jwk_manager
 from confidant.schema.jwks import jwt_response_schema, JWTResponse, \
     jwks_list_response_schema, JWKSListResponse
-
+from confidant.settings import ACL_MODULE
+from confidant.utils import misc
 
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('jwks', __name__)
 
+acl_module_check = misc.load_module(ACL_MODULE)
 
-@blueprint.route('/v1/jwks/token', methods=['GET'])
+
+@blueprint.route('/v1/jwks/token/<id>', methods=['GET'])
 @authnz.require_auth
-def get_token():
+def get_token(id):
     """
     Returns a JWT for the authenticated service
 
@@ -22,7 +25,7 @@ def get_token():
 
     .. sourcecode:: http
 
-       GET /v1/jwks/token
+       GET /v1/jwks/token/some-username
 
     **Example response**:
 
@@ -39,16 +42,23 @@ def get_token():
     :statuscode 200: Success
     :statuscode 400: JWTs are not supported for this user
     """
-    user = authnz.get_logged_in_user()
+    parent = authnz.get_logged_in_user()
     environment = request.args.get('environment', type=str)
 
     if not environment:
         return jsonify({'error': 'Please specify an environment'}), 400
 
+    if not acl_module_check(resource_type='jwt', action='get', resource_id=id):
+        msg = f'{parent} does not have access to get JWT {id}'
+        error_msg = {'error': msg}
+        return jsonify(error_msg), 403
+
     payload = {
-        'user': user,
-        'is_service': authnz.user_is_service(user),
+        'is_service': authnz.user_is_service(parent),
+        'parent': parent,
+        'user': id,
     }
+
     try:
         token = jwk_manager.get_jwt(environment, payload)
     except ValueError:
