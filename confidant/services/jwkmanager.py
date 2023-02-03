@@ -83,18 +83,25 @@ class JWKManager:
         if 'user' not in payload:
             raise ValueError('Please include the user in the payload')
 
+        if 'parent' not in payload:
+            raise ValueError('Please include the parent in the payload')
+
+        user = payload['user']
+        parent = payload['parent']
         if kid not in self._token_cache:
             self._token_cache[kid] = {}
 
-        user = payload['user']
+        if parent not in self._token_cache[kid]:
+            self._token_cache[kid][parent] = {}
+
         now = datetime.now(tz=timezone.utc)
 
         # return token from cache
-        if user in self._token_cache[kid].keys() \
+        if user in self._token_cache[kid][parent].keys() \
                 and JWT_CACHING_ENABLED:
-            if now < self._token_cache[kid][user]['expiry']:
+            if now < self._token_cache[kid][parent][user]['expiry']:
                 stats.incr('get_jwt.cache.hit')
-                return self._token_cache[kid][user]['token']
+                return self._token_cache[kid][parent][user]['token']
 
         # cache miss, generate new token and update cache
         expiry = now + timedelta(seconds=expiration_seconds)
@@ -112,7 +119,7 @@ class JWKManager:
                 algorithm=algorithm,
             )
 
-        self._token_cache[kid][user] = {
+        self._token_cache[kid][parent][user] = {
             'expiry': expiry,
             'token': token
         }
