@@ -25,7 +25,7 @@ def get_token(id):
 
     .. sourcecode:: http
 
-       GET /v1/jwks/token/some-username
+       GET /v1/jwks/token/some-id
 
     **Example response**:
 
@@ -42,20 +42,27 @@ def get_token(id):
     :statuscode 200: Success
     :statuscode 400: JWTs are not supported for this user
     """
-    parent = authnz.get_logged_in_user()
+    logged_in_user = authnz.get_logged_in_user()
     environment = request.args.get('environment', type=str)
 
     if not environment:
         return jsonify({'error': 'Please specify an environment'}), 400
 
-    if not acl_module_check(resource_type='jwt', action='get', resource_id=id):
-        msg = f'{parent} does not have access to get JWT {id}'
+    if not acl_module_check(
+        resource_type='jwt',
+        action='get',
+        resource_id=logged_in_user,
+        kwargs={
+            'id': id,
+        }
+    ):
+        msg = f'{logged_in_user} does not have access to get JWT {id}'
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
 
     payload = {
-        'is_service': authnz.user_is_service(parent),
-        'parent': parent,
+        'is_service': authnz.user_is_service(logged_in_user),
+        'requester': logged_in_user,
         'user': id,
     }
 
