@@ -15,6 +15,7 @@ blueprint = blueprints.Blueprint('jwks', __name__)
 acl_module_check = misc.load_module(ACL_MODULE)
 
 
+@blueprint.route('/v1/jwks/token', methods=['GET'], defaults={'id': None})
 @blueprint.route('/v1/jwks/token/<id>', methods=['GET'])
 @authnz.require_auth
 def get_token(id):
@@ -47,6 +48,9 @@ def get_token(id):
 
     if not environment:
         return jsonify({'error': 'Please specify an environment'}), 400
+
+    if not id:
+        id = logged_in_user
 
     if not acl_module_check(
         resource_type='jwt',
