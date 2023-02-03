@@ -35,9 +35,7 @@ def get_token(id):
        Content-Type: application/json
 
        {
-         "is_service": true,
-         "requester": "pyexample2",
-         "user": "ey..."
+         "token": "ey..."
        }
 
     :resheader Content-Type: application/json
