@@ -111,21 +111,21 @@ def test_key_pair():
 
 @pytest.fixture
 def test_jwk_payload():
-    return {'user': 'test', 'parent': 'test-parent', 'is_service': True}
+    return {'user': 'test', 'requester': 'test-parent', 'is_service': True}
 
 
 @pytest.fixture
 def test_jwt():
-    return 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjBoN1I4ZEwwclUtYjNwM29uZnRfQlBmdVJX' \
-           'MUxkN1lqc0ZuT1dKdUZYVUUiLCJ0eXAiOiJKV1QifQ.eyJ1c2VyIjoidGVzdCIsI' \
-           'nBhcmVudCI6InRlc3QtcGFyZW50IiwiaXNfc2VydmljZSI6dHJ1ZSwiaWF0IjoxN' \
-           'jAyMjg4MDAwLCJuYmYiOjE2MDIyODgwMDAsImV4cCI6MTYwMjI5MTYwMH0.rErhD' \
-           'Vt65HJ39WdFBnx69ig0ETCZoD8_Xpgtqs-APMCB-eRDsNj3bn_6B4HMr0E4bBf70' \
-           '4_uvy6Jp-WzPj4v7ybuRkQdVS6IC9pnbXcc0DPzyYh0JyOaBiE8Dj4HdVEf91N7d' \
-           '8ZWgQnhfsFuVIs8PC4t_fX2CoC27dOgIGyCSVy5BaOx4co72-vpUIWtQseBhxGT0' \
-           'hECk6LzORAXujypbCp7tBQ75yEqjxjZBA26JWQcUUS9ic_ug1oYzMAdFkpjK86nF' \
-           'oN1WTIoV80TGRbIaLdx5Tazwz5WRXcYK-5h8NMr5nEl2KKxjrVB693NphcqjgUpA' \
-           'L13mErNRSt9Zh7Uow'
+    return 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjBoN1I4ZEwwclUtYjNwM29uZnRfQlBmdVJXM' \
+           'UxkN1lqc0ZuT1dKdUZYVUUiLCJ0eXAiOiJKV1QifQ.eyJ1c2VyIjoidGVzdCIsInJ' \
+           'lcXVlc3RlciI6InRlc3QtcGFyZW50IiwiaXNfc2VydmljZSI6dHJ1ZSwiaWF0Ijox' \
+           'NjAyMjg4MDAwLCJuYmYiOjE2MDIyODgwMDAsImV4cCI6MTYwMjI5MTYwMH0.JfjzY' \
+           '0_mVG4JdJl75pNlfRf3lVHw8qfwJbXmWeIxAIxrc1No-v5ZRamXeqZYQtjriKJPmC' \
+           'Fx8TZgACtsLP0A2nHvqLQZ711oKfeOVASCJU2F3ya4oDV3p2y_eVfJOB-wNWaqEMi' \
+           'dTFnk8xkmCGOO0HeXZ4h2KMlWZmyJwgwx1K8XMrW-IjUX3h4mz4AHm5LykSHatNoI' \
+           'C8aZx2lZ4Recdr0PD8Z-UzC68G14uNxHqepEi-FVaOJ6jEYeXAgOq-7nu7kFsMRHl' \
+           'UoHy4l1VxEUbI3BO4cUmTBD7lE4-JJq-IPoFqkiXCF-Iw90Zbx8T5KQIkt76idlup' \
+           'yz_O0wqGv9mA'
 
 
 @pytest.fixture

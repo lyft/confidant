@@ -16,7 +16,7 @@ def test_get_token_override_user(mocker):
     mock_get_jwt.assert_called_with('test', {
         'user': 'test-override',
         'is_service': True,
-        'parent': 'test',
+        'requester': 'test',
     })
     assert ret.status_code == 200
 
