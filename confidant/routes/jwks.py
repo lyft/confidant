@@ -61,7 +61,8 @@ def get_token(id):
             'environment': environment,
         }
     ):
-        msg = f'{logged_in_user} does not have access to get JWT {id} in env {environment}'
+        msg = f'{logged_in_user} does not have access to get JWT {id} ' \
+              f'in env {environment}'
         error_msg = {'error': msg}
         return jsonify(error_msg), 403
 
