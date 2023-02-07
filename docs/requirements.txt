@@ -11,4 +11,4 @@ snowballstemmer==1.2.1
 sphinx==2.2.0
 sphinxcontrib-httpdomain==1.7.0
 sphinx_rtd_theme==0.4.3
-m2r==0.2.1
+m2r==0.3.1
