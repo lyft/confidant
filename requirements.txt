@@ -181,7 +181,7 @@ werkzeug==1.0.1
     # via flask
 wrapt==1.14.1
     # via deprecated
-xmlsec==1.3.3
+xmlsec==1.3.10
     # via python3-saml
 zope-event==4.5.0
     # via gevent
