@@ -1126,3 +1126,82 @@ def generate_value():
     if len(value) > VALUE_LENGTH:
         value = value[:VALUE_LENGTH]
     return jsonify({'value': value})
+
+
+@blueprint.route('/v1/credentials/<id>/archive', methods=['POST'])
+@authnz.require_auth
+@authnz.require_csrf_token
+@maintenance.check_maintenance_mode
+def archive_credential(id):
+    '''
+    Archive the provided credential.
+
+    .. :quickref: Credential; Update the provided credential using the data
+                  provided in the post body.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       PUT /v1/credentials/abcd12345bf4f1cafe8e722d3860404
+
+    :param id: The credential ID to update.
+    :type id: str
+    :<json string name: The friendly name for the credential.
+    :<json Dictionary{string: string} credential_pairs: A dictionary of
+      arbitrary key/value pairs to be encrypted at rest.
+    :<json Dictionary{string: string} metadata: A dictionary of arbitrary key/
+      value pairs for custom per-credential end-user extensions. This is not
+      encrypted at rest.
+    :<json boolean enabled: Whether or not this credential is enabled.
+    :<json string documentation: End-user provided documentation for this
+      credential.
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+        {
+          "result": "success"
+        }
+
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 400: Invalid input or state
+    :statuscode 403: Client does not have access to archive the provided
+                     credential ID.
+    '''
+    if not acl_module_check(resource_type='credential',
+                            action='archive',
+                            resource_id=id):
+        msg = "{} does not have access to archive credential {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
+    try:
+        _cred = Credential.get(id)
+    except DoesNotExist:
+        return jsonify({'error': 'Credential not found.'}), 404
+    if _cred.data_type != 'credential':
+        msg = 'id provided is not a credential.'
+        return jsonify({'error': msg}), 400
+
+    data = request.get_json()
+    force = data.get('force') if data else False
+    if not isinstance(force, bool):
+        return jsonify({'error': 'force must be a boolean.'}), 400
+
+    failed = credentialmanager.archive_credentials([_cred], force)
+    if failed and id in failed:
+        return jsonify({'error': failed[id]}), 400
+
+    result = 'dry-run success'
+    if force:
+        result = 'success'
+    return jsonify({'result': result}), 200
