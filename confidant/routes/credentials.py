@@ -1135,28 +1135,15 @@ def generate_value():
 def archive_credential(id):
     '''
     Archive the provided credential.
-
-    .. :quickref: Credential; Update the provided credential using the data
-                  provided in the post body.
-
     **Example request**:
 
     .. sourcecode:: http
 
-       PUT /v1/credentials/abcd12345bf4f1cafe8e722d3860404
+       POST /v1/credentials/abcd12345bf4f1cafe8e722d3860404/archive
 
     :param id: The credential ID to update.
-    :type id: str
-    :<json string name: The friendly name for the credential.
-    :<json Dictionary{string: string} credential_pairs: A dictionary of
-      arbitrary key/value pairs to be encrypted at rest.
-    :<json Dictionary{string: string} metadata: A dictionary of arbitrary key/
-      value pairs for custom per-credential end-user extensions. This is not
-      encrypted at rest.
-    :<json boolean enabled: Whether or not this credential is enabled.
-    :<json string documentation: End-user provided documentation for this
-      credential.
-
+    :<json bool force: Run the archive operation, if false will only validate
+        the provided input
     **Example response**:
 
     .. sourcecode:: http
