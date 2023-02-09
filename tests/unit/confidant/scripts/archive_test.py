@@ -203,7 +203,10 @@ def test_archive_old_disabled_unmapped_credential_no_force(
         'confidant.scripts.archive.Credential.batch_get',
         return_value=old_disabled_credentials['revisions']
     )
-    credentialmanager.archive_credentials(old_disabled_credentials['credentials'], force=False)
+    credentialmanager.archive_credentials(
+        old_disabled_credentials['credentials'],
+        force=False,
+    )
 
     save_mock.assert_called_with(
         old_disabled_credentials['archive_credentials'] + old_disabled_credentials['archive_revisions'],  # noqa:E501
