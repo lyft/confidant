@@ -579,12 +579,16 @@ def map_service_credentials(id):
     credentials = data.get('credentials', [])
     blind_credentials = data.get('blind_credentials', [])
     combined_credentials = credentials + blind_credentials
+    new_credentials = set(combined_credentials).difference(
+        _service.credentials + _service.blind_credentials
+    )
     if not acl_module_check(
           resource_type='service',
           action='update',
           resource_id=id,
           kwargs={
               'credential_ids': combined_credentials,
+              'new_credential_ids': new_credentials,
           }
     ):
         msg = ("{} does not have access to map the credentials "
