@@ -580,7 +580,7 @@ def map_service_credentials(id):
     blind_credentials = data.get('blind_credentials', [])
     combined_credentials = credentials + blind_credentials
     new_credentials = set(combined_credentials).difference(
-        _service.credentials + _service.blind_credentials
+        _service.credentials.union(_service.blind_credentials)
     )
     if not acl_module_check(
           resource_type='service',
