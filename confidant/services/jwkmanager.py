@@ -4,8 +4,8 @@ import jwt
 from jwcrypto import jwk
 from typing import Dict, Optional, List, Tuple
 
-from confidant.settings import CERTIFICATE_AUTHORITIES, \
-    DEFAULT_JWT_EXPIRATION_SECONDS, JWT_CACHING_ENABLED, ACTIVE_SIGNING_KEYS
+from confidant.settings import PKI_CERTIFICATE_AUTHORITIES, \
+    PKI_DEFAULT_JWT_EXPIRATION_SECONDS, PKI_JWT_CACHING_ENABLED, PKI_ACTIVE_SIGNING_KEYS
 from confidant.utils import stats
 from datetime import datetime, timezone, timedelta
 from cerberus import Validator
@@ -31,9 +31,9 @@ class JWKManager:
 
     def _load_certificate_authorities(self) -> None:
         validator = Validator(CA_SCHEMA)
-        if CERTIFICATE_AUTHORITIES:
-            for environment in CERTIFICATE_AUTHORITIES:
-                for ca in CERTIFICATE_AUTHORITIES[environment]:
+        if PKI_CERTIFICATE_AUTHORITIES:
+            for environment in PKI_CERTIFICATE_AUTHORITIES:
+                for ca in PKI_CERTIFICATE_AUTHORITIES[environment]:
                     if validator.validate(ca):
                         self.set_key(environment, ca['kid'], ca['key'],
                                      passphrase=ca['passphrase'])
@@ -74,7 +74,7 @@ class JWKManager:
         return self._pem_cache[environment][kid]
 
     def get_jwt(self, environment: str, payload: dict,
-                expiration_seconds: int = DEFAULT_JWT_EXPIRATION_SECONDS,
+                expiration_seconds: int = PKI_DEFAULT_JWT_EXPIRATION_SECONDS,
                 algorithm: str = 'RS256') -> str:
         kid, key = self.get_active_key(environment)
         if not key:
@@ -98,7 +98,7 @@ class JWKManager:
 
         # return token from cache
         if user in self._token_cache[kid][requester].keys() \
-                and JWT_CACHING_ENABLED:
+                and PKI_JWT_CACHING_ENABLED:
             if now < self._token_cache[kid][requester][user]['expiry']:
                 stats.incr('get_jwt.cache.hit')
                 return self._token_cache[kid][requester][user]['token']
@@ -127,9 +127,9 @@ class JWKManager:
         return token
 
     def get_active_key(self, environment: str) -> Tuple[str, Optional[jwk.JWK]]:
-        if environment in ACTIVE_SIGNING_KEYS and environment in self._keys:
-            return ACTIVE_SIGNING_KEYS[environment], self._get_key(
-                ACTIVE_SIGNING_KEYS[environment],
+        if environment in PKI_ACTIVE_SIGNING_KEYS and environment in self._keys:
+            return PKI_ACTIVE_SIGNING_KEYS[environment], self._get_key(
+                PKI_ACTIVE_SIGNING_KEYS[environment],
                 environment
             )
         return '', None

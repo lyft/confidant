@@ -617,13 +617,18 @@ ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPTION_TIME')
 #   "kid": "some-kid"
 # }, ...
 # ]
-decrypted_cas = encrypted_settings.decrypted_secrets.get(
-    'CERTIFICATE_AUTHORITIES'
-)
-CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) \
+
+if bool_env("PKI_IS_CA_ENCRYPTED", True):
+    decrypted_cas = encrypted_settings.decrypted_secrets.get(
+        'PKI_CERTIFICATE_AUTHORITIES'
+    )
+else:
+    decrypted_cas = str_env('PKI_CERTIFICATE_AUTHORITIES')
+
+PKI_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) \
     if decrypted_cas else {}
 
-JWT_CACHING_ENABLED = bool_env('JWT_CACHING_ENABLED', False)
+PKI_JWT_CACHING_ENABLED = bool_env('PKI_JWT_CACHING_ENABLED', False)
 
 # Configuration validation
 _settings_failures = False
@@ -646,9 +651,9 @@ def get(name, default=None):
 
 # Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:default_acl')
-DEFAULT_JWT_EXPIRATION_SECONDS = int_env('DEFAULT_JWT_EXPIRATION_SECONDS', 3600)
+PKI_DEFAULT_JWT_EXPIRATION_SECONDS = int_env('DEFAULT_JWT_EXPIRATION_SECONDS', 3600)
 
 # Key IDs from CERTIFICATE_AUTHORITIES that should be used to sign new JWTs,
 # provide a JSON with the following format:
 # {"staging": "some_kid", "production": "some_kid"}
-ACTIVE_SIGNING_KEYS = json.loads(str_env('ACTIVE_SIGNING_KEYS', '{}'))
+PKI_ACTIVE_SIGNING_KEYS = json.loads(str_env('PKI_ACTIVE_SIGNING_KEYS', '{}'))
