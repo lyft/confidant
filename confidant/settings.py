@@ -651,9 +651,11 @@ def get(name, default=None):
 
 # Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:default_acl')
-JWT_DEFAULT_JWT_EXPIRATION_SECONDS = int_env('DEFAULT_JWT_EXPIRATION_SECONDS', 3600)
+JWT_DEFAULT_JWT_EXPIRATION_SECONDS = int_env(
+    'JWT_DEFAULT_JWT_EXPIRATION_SECONDS', 3600
+)
 
 # Key IDs from CERTIFICATE_AUTHORITIES that should be used to sign new JWTs,
 # provide a JSON with the following format:
 # {"staging": "some_kid", "production": "some_kid"}
-JWT_ACTIVE_SIGNING_KEYS = json.loads(str_env('PKI_ACTIVE_SIGNING_KEYS', '{}'))
+JWT_ACTIVE_SIGNING_KEYS = json.loads(str_env('JWT_ACTIVE_SIGNING_KEYS', '{}'))
