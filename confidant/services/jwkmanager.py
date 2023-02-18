@@ -4,10 +4,10 @@ import jwt
 from jwcrypto import jwk
 from typing import Dict, Optional, List, Tuple
 
+from confidant.settings import JWT_ACTIVE_SIGNING_KEYS
+from confidant.settings import JWT_CACHING_ENABLED
 from confidant.settings import JWT_CERTIFICATE_AUTHORITIES
 from confidant.settings import JWT_DEFAULT_JWT_EXPIRATION_SECONDS
-from confidant.settings import JWT_CACHING_ENABLED
-from confidant.settings import JWT_ACTIVE_SIGNING_KEYS
 from confidant.utils import stats
 from datetime import datetime, timezone, timedelta
 from cerberus import Validator
