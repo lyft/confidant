@@ -618,7 +618,7 @@ ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPTION_TIME')
 # }, ...
 # ]
 
-if bool_env("PKI_IS_CA_ENCRYPTED", True):
+if bool_env("JWT_IS_CA_ENCRYPTED", True):
     decrypted_cas = encrypted_settings.decrypted_secrets.get(
         'JWT_CERTIFICATE_AUTHORITIES'
     )
@@ -628,7 +628,7 @@ else:
 JWT_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) \
     if decrypted_cas else {}
 
-JWT_CACHING_ENABLED = bool_env('PKI_JWT_CACHING_ENABLED', False)
+JWT_CACHING_ENABLED = bool_env('JWT_CACHING_ENABLED', False)
 
 # Configuration validation
 _settings_failures = False
