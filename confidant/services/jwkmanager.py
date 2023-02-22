@@ -4,8 +4,10 @@ import jwt
 from jwcrypto import jwk
 from typing import Dict, Optional, List, Tuple
 
-from confidant.settings import CERTIFICATE_AUTHORITIES, \
-    DEFAULT_JWT_EXPIRATION_SECONDS, JWT_CACHING_ENABLED, ACTIVE_SIGNING_KEYS
+from confidant.settings import JWT_ACTIVE_SIGNING_KEYS
+from confidant.settings import JWT_CACHING_ENABLED
+from confidant.settings import JWT_CERTIFICATE_AUTHORITIES
+from confidant.settings import JWT_DEFAULT_JWT_EXPIRATION_SECONDS
 from confidant.utils import stats
 from datetime import datetime, timezone, timedelta
 from cerberus import Validator
@@ -31,9 +33,9 @@ class JWKManager:
 
     def _load_certificate_authorities(self) -> None:
         validator = Validator(CA_SCHEMA)
-        if CERTIFICATE_AUTHORITIES:
-            for environment in CERTIFICATE_AUTHORITIES:
-                for ca in CERTIFICATE_AUTHORITIES[environment]:
+        if JWT_CERTIFICATE_AUTHORITIES:
+            for environment in JWT_CERTIFICATE_AUTHORITIES:
+                for ca in JWT_CERTIFICATE_AUTHORITIES[environment]:
                     if validator.validate(ca):
                         self.set_key(environment, ca['kid'], ca['key'],
                                      passphrase=ca['passphrase'])
@@ -74,7 +76,7 @@ class JWKManager:
         return self._pem_cache[environment][kid]
 
     def get_jwt(self, environment: str, payload: dict,
-                expiration_seconds: int = DEFAULT_JWT_EXPIRATION_SECONDS,
+                expiration_seconds: int = JWT_DEFAULT_JWT_EXPIRATION_SECONDS,
                 algorithm: str = 'RS256') -> str:
         kid, key = self.get_active_key(environment)
         if not key:
@@ -127,9 +129,9 @@ class JWKManager:
         return token
 
     def get_active_key(self, environment: str) -> Tuple[str, Optional[jwk.JWK]]:
-        if environment in ACTIVE_SIGNING_KEYS and environment in self._keys:
-            return ACTIVE_SIGNING_KEYS[environment], self._get_key(
-                ACTIVE_SIGNING_KEYS[environment],
+        if environment in JWT_ACTIVE_SIGNING_KEYS and environment in self._keys:
+            return JWT_ACTIVE_SIGNING_KEYS[environment], self._get_key(
+                JWT_ACTIVE_SIGNING_KEYS[environment],
                 environment
             )
         return '', None

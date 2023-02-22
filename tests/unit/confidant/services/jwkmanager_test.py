@@ -25,7 +25,7 @@ def test_set_key_encrypted(test_encrypted_key):
 
 @patch.object(confidant.services.jwkmanager, 'datetime',
               Mock(wraps=datetime.datetime))
-@patch.object(confidant.services.jwkmanager, 'ACTIVE_SIGNING_KEYS',
+@patch.object(confidant.services.jwkmanager, 'JWT_ACTIVE_SIGNING_KEYS',
               {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
 def test_get_jwt(test_key_pair, test_jwk_payload, test_jwt):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
@@ -51,7 +51,7 @@ def test_get_jwt(test_key_pair, test_jwk_payload, test_jwt):
 @patch.object(confidant.services.jwkmanager, 'datetime',
               Mock(wraps=datetime.datetime))
 @patch.object(confidant.services.jwkmanager, 'JWT_CACHING_ENABLED', True)
-@patch.object(confidant.services.jwkmanager, 'ACTIVE_SIGNING_KEYS',
+@patch.object(confidant.services.jwkmanager, 'JWT_ACTIVE_SIGNING_KEYS',
               {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
 def test_get_jwt_caches_jwt(test_key_pair, test_jwk_payload, test_jwt):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
@@ -91,7 +91,7 @@ def test_get_jwt_caches_jwt(test_key_pair, test_jwk_payload, test_jwt):
 @patch.object(confidant.services.jwkmanager, 'datetime',
               Mock(wraps=datetime.datetime))
 @patch.object(confidant.services.jwkmanager, 'JWT_CACHING_ENABLED', False)
-@patch.object(confidant.services.jwkmanager, 'ACTIVE_SIGNING_KEYS',
+@patch.object(confidant.services.jwkmanager, 'JWT_ACTIVE_SIGNING_KEYS',
               {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
 def test_get_jwt_does_not_cache_jwt(test_key_pair, test_jwk_payload, test_jwt):
     test_private_key = test_key_pair.export_to_pem(private_key=True,
@@ -156,12 +156,12 @@ def test_get_jwks_not_found(test_key_pair, test_jwk_payload,
 
 @patch.object(confidant.services.jwkmanager, 'datetime',
               Mock(wraps=datetime.datetime))
-@patch.object(confidant.services.jwkmanager, 'ACTIVE_SIGNING_KEYS',
+@patch.object(confidant.services.jwkmanager, 'JWT_ACTIVE_SIGNING_KEYS',
               {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
 def test_get_jwt_with_ca(test_jwk_payload, test_jwt,
                          test_certificate_authorities):
     with patch.object(confidant.services.jwkmanager,
-                      'CERTIFICATE_AUTHORITIES',
+                      'JWT_CERTIFICATE_AUTHORITIES',
                       test_certificate_authorities):
         confidant.services.jwkmanager.datetime.now.return_value = \
             datetime.datetime(
