@@ -5,10 +5,8 @@ from datetime import datetime
 from flask_script import Command, Option
 
 from confidant import settings
-from confidant.models.credential import Credential, CredentialArchive
-from confidant.models.service import Service
+from confidant.models.credential import Credential
 from confidant.services import credentialmanager
-from confidant.utils import stats
 
 logger = logging.getLogger(__name__)
 
@@ -47,94 +45,6 @@ class ArchiveCredentials(Command):
         ),
     ]
 
-    def credential_in_service(self, _id, services):
-        for service in services:
-            if _id in service.credentials:
-                return True
-        return False
-
-    def save(self, saves, force=False):
-        _saves = ', '.join([save.id for save in saves])
-        if not force:
-            logger.info(
-                'Would have archived credential and revisions: {}'.format(
-                    _saves,
-                )
-            )
-            return
-        logger.info(
-            'Archiving credential and revisions: {}'.format(
-                _saves,
-            )
-        )
-        with CredentialArchive.batch_write() as batch:
-            for save in saves:
-                batch.save(save)
-        stats.incr('archive.save.success')
-
-    def delete(self, deletes, force=False):
-        _deletes = ', '.join([delete.id for delete in deletes])
-        if not force:
-            logger.info(
-                'Would have deleted credential and revisions: {}'.format(
-                    _deletes,
-                )
-            )
-            return
-        logger.info(
-            'Deleting credential and revisions: {}'.format(
-                _deletes,
-            )
-        )
-        with Credential.batch_write() as batch:
-            for delete in deletes:
-                batch.delete(delete)
-        stats.incr('archive.delete.success')
-
-    def archive(self, credentials, force):
-        services = list(Service.data_type_date_index.query('service'))
-        for credential in credentials:
-            if self.credential_in_service(credential.id, services):
-                msg = ('Skipping archival of disabled credential {}, as it'
-                       ' is still mapped to a service.')
-                logger.warning(msg.format(credential.id))
-                continue
-            saves = []
-            deletes = []
-            # save the current record.
-            archive_credential = CredentialArchive.from_credential(
-                credential,
-            )
-            saves.append(archive_credential)
-            # fetch and save every revision
-            revisions = Credential.batch_get(
-                credentialmanager.get_revision_ids_for_credential(credential)
-            )
-            for revision in revisions:
-                archive_revision = CredentialArchive.from_credential(
-                    revision,
-                )
-                saves.append(archive_revision)
-                deletes.append(revision)
-            deletes.append(credential)
-            try:
-                self.save(saves, force=force)
-            except Exception:
-                logger.exception(
-                    'Failed to batch save {}, skipping deletion.'.format(
-                        credential.id
-                    )
-                )
-                stats.incr('archive.save.failure')
-                continue
-            try:
-                self.delete(deletes, force=force)
-            except Exception:
-                logger.exception(
-                    'Failed to batch delete {}'.format(credential.id)
-                )
-                stats.incr('archive.delete.failure')
-
     def run(self, days, force, ids):
         if not settings.DYNAMODB_TABLE_ARCHIVE:
             logger.error('DYNAMODB_TABLE_ARCHIVE is not configured, exiting.')
@@ -168,4 +78,5 @@ class ArchiveCredentials(Command):
                 delta = now - credential.modified_date
                 if not credential.enabled and delta.days > days:
                     credentials.append(credential)
-        self.archive(credentials, force=force)
+
+        credentialmanager.archive_credentials(credentials, force=force)

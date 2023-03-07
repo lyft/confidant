@@ -4,6 +4,7 @@ import pytest
 from confidant.models.service import Service
 from confidant.models.credential import Credential, CredentialArchive
 from confidant.scripts.archive import ArchiveCredentials
+from confidant.services import credentialmanager
 
 
 @pytest.fixture
@@ -18,17 +19,20 @@ def old_date():
 
 @pytest.fixture()
 def save_mock(mocker):
-    return mocker.patch('confidant.scripts.archive.ArchiveCredentials.save')
+    return mocker.patch('confidant.scripts.archive.credentialmanager.'
+                        '_save_credentials_to_archive')
 
 
 @pytest.fixture()
 def delete_mock(mocker):
-    return mocker.patch('confidant.scripts.archive.ArchiveCredentials.delete')
+    return mocker.patch('confidant.scripts.archive.credentialmanager.'
+                        '_delete_credentials')
 
 
 @pytest.fixture()
 def archive_mock(mocker):
-    return mocker.patch('confidant.scripts.archive.ArchiveCredentials.archive')
+    return mocker.patch('confidant.scripts.archive.credentialmanager.'
+                        'archive_credentials')
 
 
 @pytest.fixture
@@ -36,11 +40,12 @@ def credentials(mocker, now):
     gmd_mock = mocker.Mock(return_value='test')
     gmd_mock.range_keyname = 'test'
     mocker.patch(
-        'confidant.scripts.archive.Credential._get_meta_data',
+        'confidant.services.credentialmanager.Credential._get_meta_data',
         return_value=gmd_mock,
     )
     mocker.patch(
-        'confidant.scripts.archive.CredentialArchive._get_meta_data',
+        'confidant.services.credentialmanager.CredentialArchive.'
+        '_get_meta_data',
         return_value=gmd_mock,
     )
     credential = Credential(
@@ -116,7 +121,7 @@ def no_mapped_service(mocker):
     mocked = mocker.patch.object(Service, 'data_type_date_index')
     mocked.query = mocker.Mock(return_value=[])
     mocker.patch(
-        'confidant.scripts.archive.ArchiveCredentials.credential_in_service',
+        'confidant.scripts.archive.credentialmanager._credential_in_service',
         return_value=False,
     )
 
@@ -128,30 +133,32 @@ def mapped_service(mocker):
         return_value=[Service(id='test-service', revision=1, enabled=True)],
     )
     mocker.patch(
-        'confidant.scripts.archive.ArchiveCredentials.credential_in_service',
+        'confidant.scripts.archive.credentialmanager._credential_in_service',
         return_value=True,
     )
 
 
-def test_save(mocker, credentials):
+def test_save_credentials_to_archive(mocker, credentials):
     mocker.patch('pynamodb.models.BatchWrite.commit')
     save_mock = mocker.patch('pynamodb.models.BatchWrite.save')
-    ac = ArchiveCredentials()
-    ac.save(credentials['credentials'], force=False)
+    credentialmanager._save_credentials_to_archive(credentials['credentials'],
+                                                   force=False)
     assert save_mock.called is False
 
-    ac.save(credentials['credentials'], force=True)
+    credentialmanager._save_credentials_to_archive(credentials['credentials'],
+                                                   force=True)
     assert save_mock.called is True
 
 
 def test_delete(mocker, credentials):
     mocker.patch('pynamodb.models.BatchWrite.commit')
     delete_mock = mocker.patch('pynamodb.models.BatchWrite.delete')
-    ac = ArchiveCredentials()
-    ac.delete(credentials['credentials'], force=False)
+    credentialmanager._delete_credentials(credentials['credentials'],
+                                          force=False)
     assert delete_mock.called is False
 
-    ac.delete(credentials['credentials'], force=True)
+    credentialmanager._delete_credentials(credentials['credentials'],
+                                          force=True)
     assert delete_mock.called is True
 
 
@@ -170,8 +177,10 @@ def test_archive_old_disabled_unmapped_credential(
         'confidant.scripts.archive.Credential.batch_get',
         return_value=old_disabled_credentials['revisions']
     )
-    ac = ArchiveCredentials()
-    ac.archive(old_disabled_credentials['credentials'], force=True)
+    credentialmanager.archive_credentials(
+        old_disabled_credentials['credentials'],
+        force=True,
+    )
 
     save_mock.assert_called_with(
         old_disabled_credentials['archive_credentials'] + old_disabled_credentials['archive_revisions'],  # noqa:E501
@@ -194,8 +203,10 @@ def test_archive_old_disabled_unmapped_credential_no_force(
         'confidant.scripts.archive.Credential.batch_get',
         return_value=old_disabled_credentials['revisions']
     )
-    ac = ArchiveCredentials()
-    ac.archive(old_disabled_credentials['credentials'], force=False)
+    credentialmanager.archive_credentials(
+        old_disabled_credentials['credentials'],
+        force=False,
+    )
 
     save_mock.assert_called_with(
         old_disabled_credentials['archive_credentials'] + old_disabled_credentials['archive_revisions'],  # noqa:E501
@@ -218,8 +229,10 @@ def test_archive_old_disabled_mapped_credential(
         'confidant.scripts.archive.Credential.batch_get',
         return_value=old_disabled_credentials['revisions']
     )
-    ac = ArchiveCredentials()
-    ac.archive(old_disabled_credentials['credentials'], force=True)
+    credentialmanager.archive_credentials(
+        old_disabled_credentials['credentials'],
+        force=True,
+    )
 
     assert save_mock.called is False
     assert delete_mock.called is False
