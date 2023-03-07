@@ -1180,7 +1180,7 @@ def archive_credential(id):
         return jsonify({'error': msg}), 400
 
     data = request.get_json()
-    force = data.get('force') if data else False
+    force = data.get('force', False) if data else False
     if not isinstance(force, bool):
         return jsonify({'error': 'force must be a boolean.'}), 400
 
