@@ -137,7 +137,7 @@ class JWKManager:
         # The active signing key used to sign JWTs
         if environment in JWT_ACTIVE_SIGNING_KEYS and environment in self._keys:
             kid = JWT_ACTIVE_SIGNING_KEYS[environment]
-            stats.incr(f'jwt.get_active_key.{kid}')
+            stats.incr(f'jwt.get_active_key.{environment}.{kid}')
             return kid, self._get_key(kid, environment)
         return '', None
 
