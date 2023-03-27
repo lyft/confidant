@@ -4,7 +4,6 @@
 #
 #    pip-compile
 #
-
 attrs==19.3.0
     # via
     #   pytest
@@ -152,7 +151,7 @@ pytz==2019.1
     # via -r requirements.in
 pyyaml==5.4
     # via -r requirements.in
-redis==2.10.3
+redis==4.5.3
     # via -r requirements.in
 requests==2.22.0
     # via -r requirements.in
