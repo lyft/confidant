@@ -1,16 +1,20 @@
 import logging
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
+
 import jwt
-
-from jwcrypto import jwk
-from typing import Dict, Optional, List, Tuple
-
+from cerberus import Validator
 from confidant.settings import JWT_ACTIVE_SIGNING_KEYS
 from confidant.settings import JWT_CACHING_ENABLED
 from confidant.settings import JWT_CERTIFICATE_AUTHORITIES
 from confidant.settings import JWT_DEFAULT_JWT_EXPIRATION_SECONDS
 from confidant.utils import stats
-from datetime import datetime, timezone, timedelta
-from cerberus import Validator
+from jwcrypto import jwk
 
 
 logger = logging.getLogger(__name__)
@@ -37,7 +41,8 @@ class JWKManager:
             for environment in JWT_CERTIFICATE_AUTHORITIES:
                 for ca in JWT_CERTIFICATE_AUTHORITIES[environment]:
                     if validator.validate(ca):
-                        self.set_key(environment, ca['kid'], ca['key'],
+                        self.set_key(environment, ca['kid'],
+                                     ca['key'],
                                      passphrase=ca['passphrase'])
                     else:
                         logger.error(f'Invalid entry in {environment} '
@@ -102,7 +107,7 @@ class JWKManager:
         if user in self._token_cache[kid][requester].keys() \
                 and JWT_CACHING_ENABLED:
             if now < self._token_cache[kid][requester][user]['expiry']:
-                stats.incr('get_jwt.cache.hit')
+                stats.incr('jwt.get_jwt.cache.hit')
                 return self._token_cache[kid][requester][user]['token']
 
         # cache miss, generate new token and update cache
@@ -113,7 +118,7 @@ class JWKManager:
             'exp': expiry,
         })
 
-        with stats.timer('get_jwt.encode'):
+        with stats.timer('jwt.get_jwt.encode'):
             token = jwt.encode(
                 payload=payload,
                 headers={'kid': kid},
@@ -125,28 +130,28 @@ class JWKManager:
             'expiry': expiry,
             'token': token
         }
-        stats.incr('get_jwt.create')
+        stats.incr('jwt.get_jwt.create')
         return token
 
     def get_active_key(self, environment: str) -> Tuple[str, Optional[jwk.JWK]]:
+        # The active signing key used to sign JWTs
         if environment in JWT_ACTIVE_SIGNING_KEYS and environment in self._keys:
-            return JWT_ACTIVE_SIGNING_KEYS[environment], self._get_key(
-                JWT_ACTIVE_SIGNING_KEYS[environment],
-                environment
-            )
+            kid = JWT_ACTIVE_SIGNING_KEYS[environment]
+            stats.incr(f'jwt.get_active_key.{environment}.{kid}')
+            return kid, self._get_key(kid, environment)
         return '', None
 
     def get_jwks(self, environment: str, algorithm: str = 'RS256') \
             -> List[Dict[str, str]]:
         keys = self._keys.get(environment)
         if keys:
-            stats.incr(f'get_jwks.{environment}.hit')
+            stats.incr(f'jwt.get_jwks.{environment}.hit')
             return [{
                 **key.export_public(as_dict=True),
                 'alg': algorithm
             } for key in keys]
         else:
-            stats.incr(f'get_jwks.{environment}.miss')
+            stats.incr(f'jwt.get_jwks.{environment}.miss')
             return []
 
 
