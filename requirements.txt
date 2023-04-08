@@ -92,7 +92,7 @@ kmsauth==0.6.0
     # via -r requirements.in
 lru-dict==1.1.6
     # via -r requirements.in
-lxml==4.6.5
+lxml==4.9.1
     # via xmlsec
 markupsafe==2.0.1
     # via jinja2
