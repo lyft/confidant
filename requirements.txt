@@ -4,15 +4,16 @@
 #
 #    pip-compile
 #
-
 attrs==19.3.0
     # via
     #   pytest
     #   toastedmarshmallow
 authomatic==1.0.0
     # via -r requirements.in
-blinker==1.4
-    # via -r requirements.in
+blinker==1.6.2
+    # via
+    #   -r requirements.in
+    #   flask
 boto3==1.9.227
     # via
     #   -r requirements.in
@@ -33,7 +34,7 @@ cffi==1.14.5
     #   cryptography
 chardet==3.0.4
     # via requests
-click==7.1.2
+click==8.1.3
     # via flask
 coverage[toml]==6.2
     # via pytest-cov
@@ -48,7 +49,7 @@ deprecated==1.2.13
     # via jwcrypto
 docutils==0.15.2
     # via botocore
-flask==1.1.4
+flask==2.3.2
     # via
     #   -r requirements.in
     #   flask-script
@@ -78,9 +79,9 @@ iniconfig==1.1.1
     # via pytest
 isodate==0.6.0
     # via python3-saml
-itsdangerous==1.1.0
+itsdangerous==2.1.2
     # via flask
-jinja2==2.11.3
+jinja2==3.1.2
     # via flask
 jmespath==0.9.4
     # via
@@ -94,8 +95,10 @@ lru-dict==1.1.6
     # via -r requirements.in
 lxml==4.6.5
     # via xmlsec
-markupsafe==2.0.1
-    # via jinja2
+markupsafe==2.1.2
+    # via
+    #   jinja2
+    #   werkzeug
 ndg-httpsclient==0.5.1
     # via -r requirements.in
 packaging==20.0
@@ -177,7 +180,7 @@ urllib3==1.25.3
     # via
     #   botocore
     #   requests
-werkzeug==1.0.1
+werkzeug==2.3.3
     # via flask
 wrapt==1.14.1
     # via deprecated
