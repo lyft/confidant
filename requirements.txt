@@ -4,7 +4,6 @@
 #
 #    pip-compile
 #
-
 attrs==19.3.0
     # via
     #   pytest
@@ -37,7 +36,7 @@ click==7.1.2
     # via flask
 coverage[toml]==6.2
     # via pytest-cov
-cryptography==36.0.1
+cryptography==41.0.0
     # via
     #   -r requirements.in
     #   jwcrypto
