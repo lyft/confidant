@@ -259,6 +259,7 @@ def get_service(id):
             id
         )
         error_msg = {'error': msg, 'reference': id}
+        logger.warning(msg)
         return jsonify(error_msg), 403
 
     logger.info(
@@ -277,6 +278,7 @@ def get_service(id):
             msg = 'Authenticated user is not authorized.'
             return jsonify({'error': msg}), 401
     except DoesNotExist:
+        logger.warning('Item with id {0} does not exist.'.format(id))
         return jsonify({}), 404
     if (service.data_type != 'service' and
             service.data_type != 'archive-service'):
