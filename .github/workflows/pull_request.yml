@@ -1,7 +1,7 @@
 on: pull_request
 jobs:
   pre-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -36,7 +36,7 @@ jobs:
   #    - name: Run license finder
   #      run: license_finder
   test-unit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
         matrix:
           python-version: ['3.7.x', '3.8.x']
@@ -54,14 +54,14 @@ jobs:
       - name: Run python unit tests
         run: make test_unit
   test-integration:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Run python integration tests
         run: "make actions_test_integration"
   test-frontend:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v1
