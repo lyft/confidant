@@ -4,7 +4,6 @@
 #
 #    pip-compile
 #
-
 attrs==19.3.0
     # via
     #   pytest
@@ -31,7 +30,7 @@ cffi==1.14.5
     # via
     #   -r requirements.in
     #   cryptography
-chardet==3.0.4
+charset-normalizer==3.1.0
     # via requests
 click==7.1.2
     # via flask
@@ -152,7 +151,7 @@ pyyaml==5.4
     # via -r requirements.in
 redis==2.10.3
     # via -r requirements.in
-requests==2.22.0
+requests==2.31.0
     # via -r requirements.in
 s3transfer==0.2.1
     # via boto3
