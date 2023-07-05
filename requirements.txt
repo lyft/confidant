@@ -4,7 +4,6 @@
 #
 #    pip-compile
 #
---index-url https://artifactory.lyft.net/artifactory/api/pypi/virtual-pypi-lyft/simple/
 
 attrs==19.3.0
     # via
