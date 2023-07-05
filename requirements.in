@@ -81,7 +81,7 @@ Authomatic
 # License: MIT
 # Upstream url: https://github.com/onelogin/python3-saml
 # Use: For user authentication via SAML
-python3-saml>=1.9.0
+python3-saml>=1.15.0
 
 # Python HTTP for Humans.
 # License: Apache2
