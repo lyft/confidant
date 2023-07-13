@@ -3,13 +3,13 @@
 # License: BSD
 # Upstream url: http://github.com/mitsuhiko/flask/
 # Use: For API.
-Flask
+Flask==1.1.4
 
 # Flask Scripting support for Flask
 # License: BSD
 # Upstream url: http://github.com/techniq/flask-script
 # Use: For CLI scripts.
-Flask-Script
+Flask-Script==2.0.5
 
 # Dispatching system for parties to subscribe to events
 # Supports per-endpoint timing in flask
@@ -22,14 +22,14 @@ blinker
 # License: Apache2
 # Upstream url: https://github.com/boto/botocore
 # Use: For boto3
-botocore>=1.4.58
+botocore==1.12.227
 
 # Boto3 is the Amazon Web Services (AWS) Software Development Kit (SDK)
 # for Python.
 # License: Apache2
 # Upstream url: https://github.com/boto/boto3
 # Use: For KMS
-boto3>1.5.0
+boto3==1.9.227
 
 # A Pythonic interface for Amazon's DynamoDB that supports Python 2 and 3.
 # License: MIT
@@ -54,20 +54,21 @@ cffi>1.10.0
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
 # Use: For shared sessions
-Flask-Session
+Flask-Session==0.2.3
 
 # Redis
 # License: MIT
 # Upstream url: https://github.com/andymccurdy/redis-py
 # Use: For shared sessions
 redis
+types-redis
 
 # Flask extension that configures the Flask application to redirect all
 # incoming requests to https
 # License: BSD
 # Upstream url: https://github.com/kennethreitz/flask-sslify
 # Use: For SSL redirection and HSTS
-Flask-SSLify
+Flask-SSLify==0.1.5
 
 # Authomatic is a framework agnostic library for Python web applications
 # with a minimalistic but powerful interface which simplifies
@@ -88,6 +89,7 @@ python3-saml>=1.15.0
 # Upstream url: http://python-requests.org
 # Use: REST calls to external services
 requests>=2.22.0,<3.0.0
+types-requests
 
 # Provides enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
 # License: BSD
@@ -116,6 +118,7 @@ guard
 # Upstream url: http://pyyaml.org/wiki/PyYAML
 # Use: For parsing users.yaml
 PyYAML
+types-PyYAML
 
 # License: MIT
 # Upstream url: http://gunicorn.org/
@@ -190,8 +193,12 @@ pytest-gevent
 
 # Timezones
 pytz
+types-pytz
 
 # for jwt
 pyjwt>=2.6.0
 jwcrypto
 cerberus
+
+# for typing
+mypy
