@@ -2,6 +2,8 @@ from confidant.models.credential import Credential
 from confidant.services import credentialmanager
 from pynamodb.exceptions import DoesNotExist
 
+from pytest_mock.plugin import MockerFixture
+
 
 def test_get_revision_ids_for_credential():
     credential = Credential(
@@ -17,7 +19,7 @@ def test_get_revision_ids_for_credential():
     ]
 
 
-def test_get_latest_blind_credential_revision(mocker):
+def test_get_latest_blind_credential_revision(mocker: MockerFixture):
     get = mocker.patch(
         'confidant.models.blind_credential.BlindCredential.get'
     )
@@ -26,7 +28,7 @@ def test_get_latest_blind_credential_revision(mocker):
     assert res == 2
 
 
-def test_get_latest_credential_revision(mocker):
+def test_get_latest_credential_revision(mocker: MockerFixture):
     get = mocker.patch(
         'confidant.models.credential.Credential.get'
     )
@@ -35,7 +37,7 @@ def test_get_latest_credential_revision(mocker):
     assert res == 2
 
 
-def test_check_credential_pair_values(mocker):
+def test_check_credential_pair_values(mocker: MockerFixture):
     cred_pairs_success = {
         'A': '1'
     }

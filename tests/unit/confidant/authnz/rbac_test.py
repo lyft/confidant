@@ -1,8 +1,10 @@
+from pytest_mock.plugin import MockerFixture
+
 from confidant.app import create_app
 from confidant.authnz import rbac
 
 
-def test_default_acl(mocker):
+def test_default_acl(mocker: MockerFixture):
     mocker.patch('confidant.settings.USE_AUTH', True)
     app = create_app()
     with app.test_request_context('/fake'):

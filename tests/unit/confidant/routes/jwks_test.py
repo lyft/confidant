@@ -1,7 +1,9 @@
+from pytest_mock.plugin import MockerFixture
+
 from confidant.app import create_app
 
 
-def test_get_token_override_user(mocker):
+def test_get_token_override_user(mocker: MockerFixture):
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch('confidant.routes.jwks.acl_module_check', return_value=True)
     mocker.patch('confidant.routes.identity.authnz.get_logged_in_user',
@@ -21,7 +23,7 @@ def test_get_token_override_user(mocker):
     assert ret.status_code == 200
 
 
-def test_get_token_no_override(mocker):
+def test_get_token_no_override(mocker: MockerFixture):
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch('confidant.routes.jwks.acl_module_check', return_value=True)
     mocker.patch('confidant.routes.identity.authnz.get_logged_in_user',
@@ -41,7 +43,7 @@ def test_get_token_no_override(mocker):
     assert ret.status_code == 200
 
 
-def test_get_token_override_user_not_authorized(mocker):
+def test_get_token_override_user_not_authorized(mocker: MockerFixture):
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch('confidant.routes.jwks.acl_module_check',
                  return_value=False)

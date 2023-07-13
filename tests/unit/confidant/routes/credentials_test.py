@@ -1,6 +1,8 @@
 import json
 import pytz
 from datetime import datetime
+from pytest_mock.plugin import MockerFixture
+from typing import List, Union
 
 import pytest
 from unittest import mock
@@ -11,7 +13,7 @@ from confidant.models.credential import Credential
 
 
 @pytest.fixture()
-def credential(mocker):
+def credential(mocker: MockerFixture) -> Credential:
     return Credential(
         id='1234',
         revision=1,
@@ -30,7 +32,7 @@ def credential(mocker):
 
 
 @pytest.fixture()
-def archive_credential(mocker):
+def archive_credential(mocker: MockerFixture) -> Credential:
     return Credential(
         id='123-1',
         revision=1,
@@ -49,7 +51,7 @@ def archive_credential(mocker):
 
 
 @pytest.fixture()
-def credential_list(mocker):
+def credential_list(mocker: MockerFixture) -> List[Credential]:
     credentials = [
         Credential(
             id='1234',
@@ -83,7 +85,10 @@ def credential_list(mocker):
     return credentials
 
 
-def test_get_credential_list(mocker, credential_list):
+def test_get_credential_list(
+    mocker: MockerFixture,
+    credential_list: List[Credential]
+):
     app = create_app()
 
     mocker.patch('confidant.settings.USE_AUTH', False)
@@ -165,7 +170,7 @@ def test_get_credential_list(mocker, credential_list):
     assert json_data['next_page'] is None
 
 
-def test_get_credential(mocker, credential):
+def test_get_credential(mocker: MockerFixture, credential: Credential):
     app = create_app()
 
     mocker.patch('confidant.settings.USE_AUTH', False)
@@ -182,7 +187,10 @@ def test_get_credential(mocker, credential):
     ret = app.test_client().get('/v1/credentials/1234', follow_redirects=False)
     assert ret.status_code == 403
 
-    def acl_module_check(resource_type, action, resource_id):
+    def acl_module_check(
+            resource_type: str,
+            action: str,
+            resource_id: int) -> Union[bool, None]:
         if action == 'metadata':
             if resource_id == '5678':
                 return False
@@ -198,6 +206,7 @@ def test_get_credential(mocker, credential):
                 return True
             else:
                 return False
+        return None
 
     mocker.patch(
         'confidant.routes.credentials.acl_module_check',
@@ -282,7 +291,7 @@ def test_get_credential(mocker, credential):
     assert ret.status_code == 404
 
 
-def test_diff_credential(mocker, credential):
+def test_diff_credential(mocker: MockerFixture, credential: Credential):
     app = create_app()
 
     mocker.patch('confidant.settings.USE_AUTH', False)
@@ -349,7 +358,7 @@ def test_diff_credential(mocker, credential):
     assert ret.status_code == 404
 
 
-def test_create_credential(mocker, credential):
+def test_create_credential(mocker: MockerFixture, credential: Credential):
     app = create_app()
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch(
@@ -446,7 +455,7 @@ def test_create_credential(mocker, credential):
     assert mock_save.call_count == 2
 
 
-def test_update_credential(mocker, credential):
+def test_update_credential(mocker: MockerFixture, credential: Credential):
     credential.last_rotation_date = datetime(2020, 1, 1, tzinfo=pytz.UTC)
     app = create_app()
     mocker.patch('confidant.settings.USE_AUTH', False)
@@ -573,7 +582,11 @@ def test_update_credential(mocker, credential):
     assert 'next_rotation_date' in json_data
 
 
-def test_revise_credential(mocker, credential, archive_credential):
+def test_revise_credential(
+    mocker: MockerFixture,
+    credential: Credential,
+    archive_credential: Credential
+):
     app = create_app()
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch(
