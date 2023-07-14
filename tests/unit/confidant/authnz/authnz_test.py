@@ -1,4 +1,6 @@
 import pytest
+from pytest_mock.plugin import MockerFixture
+from typing import Union
 from werkzeug.exceptions import Forbidden, Unauthorized
 
 from confidant import authnz
@@ -6,11 +8,11 @@ from confidant.app import create_app
 
 
 @pytest.fixture(autouse=True)
-def mock_email_suffix(mocker):
+def mock_email_suffix(mocker: MockerFixture):
     mocker.patch('confidant.authnz.settings.USER_EMAIL_SUFFIX', '')
 
 
-def test_get_logged_in_user(mocker):
+def test_get_logged_in_user(mocker: MockerFixture):
     mocker.patch('confidant.authnz.settings.USER_EMAIL_SUFFIX', 'example.com')
     app = create_app()
     with app.test_request_context('/v1/user/email'):
@@ -21,7 +23,7 @@ def test_get_logged_in_user(mocker):
         assert authnz.get_logged_in_user() == 'unittestuser'
 
 
-def test_get_logged_in_user_from_session(mocker):
+def test_get_logged_in_user_from_session(mocker: MockerFixture):
     mocker.patch('confidant.authnz.settings.USER_EMAIL_SUFFIX', 'example.com')
     app = create_app()
     with app.test_request_context('/v1/user/email'):
@@ -32,7 +34,7 @@ def test_get_logged_in_user_from_session(mocker):
         assert authnz.get_logged_in_user() == 'unittestuser@example.com'
 
 
-def test_user_is_user_type(mocker):
+def test_user_is_user_type(mocker: MockerFixture):
     mocker.patch('confidant.authnz.settings.USE_AUTH', False)
     assert authnz.user_is_user_type('anything') is True
 
@@ -53,7 +55,7 @@ def test_user_is_user_type(mocker):
         assert authnz.user_is_user_type('user') is False
 
 
-def test_require_csrf_token(mocker):
+def test_require_csrf_token(mocker: MockerFixture):
     mock_fn = mocker.Mock()
     mock_fn.__name__ = 'mock_fn'
     mock_fn.return_value = 'unittestval'
@@ -82,7 +84,7 @@ def test_require_csrf_token(mocker):
             wrapped()
 
 
-def test_user_is_service(mocker):
+def test_user_is_service(mocker: MockerFixture):
     mocker.patch('confidant.authnz.settings.USE_AUTH', False)
     assert authnz.user_is_service('anything') is True
 
@@ -97,7 +99,7 @@ def test_user_is_service(mocker):
         assert authnz.user_is_service('notconfidant-unitttest') is False
 
 
-def test_service_in_account(mocker):
+def test_service_in_account(mocker: MockerFixture):
     # If we aren't scoping, this should pass
     assert authnz.service_in_account(None) is True
 
@@ -109,7 +111,7 @@ def test_service_in_account(mocker):
         assert authnz.service_in_account('confidant-unitttest') is True
 
 
-def test_account_for_key_alias(mocker):
+def test_account_for_key_alias(mocker: MockerFixture):
     mocker.patch(
         'confidant.authnz.settings.SCOPED_AUTH_KEYS',
         {'sandbox-auth-key': 'sandbox'},
@@ -118,7 +120,7 @@ def test_account_for_key_alias(mocker):
     assert authnz.account_for_key_alias('non-existent') is None
 
 
-def test__get_kms_auth_data_from_auth(mocker):
+def test__get_kms_auth_data_from_auth(mocker: MockerFixture):
     app = create_app()
     with app.test_request_context('/fake'):
         auth_mock = mocker.patch('confidant.authnz.request')
@@ -140,7 +142,7 @@ def test__get_kms_auth_data_from_auth(mocker):
             authnz._get_kms_auth_data()
 
 
-def test__get_kms_auth_data_from_headers(mocker):
+def test__get_kms_auth_data_from_headers(mocker: MockerFixture):
     app = create_app()
     with app.test_request_context('/fake'):
         auth_mock = mocker.patch('confidant.authnz.request')
@@ -163,7 +165,7 @@ def test__get_kms_auth_data_from_headers(mocker):
             authnz._get_kms_auth_data()
 
 
-def test_redirect_to_logout_if_no_auth(mocker):
+def test_redirect_to_logout_if_no_auth(mocker: MockerFixture):
     mock_fn = mocker.Mock()
     mock_fn.__name__ = 'mock_fn'
     mock_fn.return_value = 'unittestval'
@@ -188,7 +190,7 @@ def test_redirect_to_logout_if_no_auth(mocker):
 
 
 @pytest.fixture()
-def mock_header_auth(mocker):
+def mock_header_auth(mocker: MockerFixture):
     mocker.patch('confidant.authnz.settings.USE_AUTH', True)
     mocker.patch('confidant.authnz.settings.USER_AUTH_MODULE', 'header')
     mocker.patch(
@@ -205,7 +207,10 @@ def mock_header_auth(mocker):
     )
 
 
-def test_header_auth_will_extract_from_request(mocker, mock_header_auth):
+def test_header_auth_will_extract_from_request(
+    mocker: MockerFixture,
+    mock_header_auth: None
+):
     app = create_app()
     with app.test_request_context('/fake'):
         # No headers given: an error
@@ -221,7 +226,10 @@ def test_header_auth_will_extract_from_request(mocker, mock_header_auth):
         assert authnz.get_logged_in_user() == 'unittestuser@example.com'
 
 
-def test_header_auth_will_log_in(mocker, mock_header_auth):
+def test_header_auth_will_log_in(
+    mocker: MockerFixture,
+    mock_header_auth: None
+):
     app = create_app()
     with app.test_request_context('/fake'):
         request_mock = mocker.patch('confidant.authnz.userauth.request')
@@ -235,7 +243,7 @@ def test_header_auth_will_log_in(mocker, mock_header_auth):
         assert resp.headers['Location'] == '/'
 
 
-def test_require_auth(mocker):
+def test_require_auth(mocker: MockerFixture):
     mocker.patch(
         'confidant.authnz.settings.KMS_AUTH_USER_TYPES',
         ['user', 'service'],
@@ -259,12 +267,13 @@ def test_require_auth(mocker):
     with pytest.raises(Forbidden):
         wrapped()
 
-    def extract_username_field(username, field):
+    def extract_username_field(username: str, field: str) -> Union[str, None]:
         username_arr = username.split('/')
         if field == 'from':
             return username_arr[2]
         elif field == 'user_type':
             return username_arr[1]
+        return None
 
     validator_mock = mocker.MagicMock()
     mocker.patch('confidant.authnz._get_validator', return_value=validator_mock)
@@ -346,7 +355,7 @@ def test_require_auth(mocker):
         wrapped()
 
 
-def test_require_logout_for_goodbye(mocker):
+def test_require_logout_for_goodbye(mocker: MockerFixture):
     mock_fn = mocker.Mock()
     mock_fn.__name__ = 'mock_fn'
     mock_fn.return_value = 'unittestval'

@@ -1,9 +1,10 @@
 from datetime import datetime
+from pytest_mock.plugin import MockerFixture
 
 from confidant.models.service import Service
 
 
-def test_equals(mocker):
+def test_equals(mocker: MockerFixture):
     service1 = Service(
         id='test',
         credentials=['abc', 'def'],
@@ -19,7 +20,7 @@ def test_equals(mocker):
     assert service1.equals(service2) is True
 
 
-def test_not_equals(mocker):
+def test_not_equals(mocker: MockerFixture):
     service1 = Service(
         id='test',
         credentials=['abc', 'def'],
@@ -35,7 +36,7 @@ def test_not_equals(mocker):
     assert service1.equals(service2) is False
 
 
-def test_diff(mocker):
+def test_diff(mocker: MockerFixture):
     modified_by = 'test@example.com'
     modified_date_old = datetime.now
     modified_date_new = datetime.now
@@ -82,4 +83,5 @@ def test_diff(mocker):
             'added': modified_date_new,
         },
     }
+
     assert old.diff(new) == expected_diff

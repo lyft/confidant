@@ -1,32 +1,38 @@
 from datetime import datetime, timedelta
 import pytest
+from pytest_mock.plugin import MockerFixture
+from typing import Dict, List
+from unittest.mock import MagicMock
 
 from confidant.models.credential import Credential, CredentialArchive
 from confidant.scripts.restore import RestoreCredentials
 
 
 @pytest.fixture
-def now():
+def now() -> datetime:
     return datetime.now()
 
 
 @pytest.fixture
-def old_date():
+def old_date() -> datetime:
     return datetime.now() - timedelta(30)
 
 
 @pytest.fixture()
-def save_mock(mocker):
+def save_mock(mocker: MockerFixture) -> MagicMock:
     return mocker.patch('confidant.scripts.restore.RestoreCredentials.save')
 
 
 @pytest.fixture()
-def restore_mock(mocker):
+def restore_mock(mocker: MockerFixture) -> MagicMock:
     return mocker.patch('confidant.scripts.restore.RestoreCredentials.restore')
 
 
 @pytest.fixture
-def credentials(mocker, now):
+def credentials(
+    mocker: MockerFixture,
+    now: datetime
+) -> Dict[str, List[Credential]]:
     gmd_mock = mocker.Mock(return_value='test')
     gmd_mock.range_keyname = 'test'
     mocker.patch(
@@ -68,7 +74,7 @@ def credentials(mocker, now):
     )
     revision2 = Credential.from_archive_credential(archive_revision2)
 
-    def from_archive_credential(archive_credential):
+    def from_archive_credential(archive_credential: CredentialArchive):
         if archive_credential.id == '1234':
             return credential
         elif archive_credential.id == '1234-1':
@@ -90,7 +96,10 @@ def credentials(mocker, now):
 
 
 @pytest.fixture
-def old_disabled_credentials(credentials, old_date):
+def old_disabled_credentials(
+    credentials: Dict[str, List[Credential]],
+    old_date: datetime
+) -> Dict[str, List[Credential]]:
     for credential in credentials['credentials']:
         credential.modified_date = old_date
         credential.enabled = False
@@ -106,7 +115,7 @@ def old_disabled_credentials(credentials, old_date):
     return credentials
 
 
-def test_save(mocker, credentials):
+def test_save(mocker: MockerFixture, credentials: Dict[str, List[Credential]]):
     rc = RestoreCredentials()
     save_mock = mocker.patch('pynamodb.models.BatchWrite.save')
     mocker.patch('pynamodb.models.BatchWrite.commit')
@@ -129,9 +138,9 @@ def test_save(mocker, credentials):
 
 
 def test_restore_credentials(
-    mocker,
-    old_disabled_credentials,
-    save_mock,
+    mocker: MockerFixture,
+    old_disabled_credentials: Dict[str, List[Credential]],
+    save_mock: MagicMock,
 ):
     mocker.patch(
         'confidant.scripts.restore.CredentialArchive.batch_get',
@@ -147,9 +156,9 @@ def test_restore_credentials(
 
 
 def test_restore_old_disabled_unmapped_credential_no_force(
-    mocker,
-    old_disabled_credentials,
-    save_mock,
+    mocker: MockerFixture,
+    old_disabled_credentials: Dict[str, List[Credential]],
+    save_mock: MagicMock,
 ):
     mocker.patch(
         'confidant.scripts.restore.CredentialArchive.batch_get',
@@ -164,7 +173,7 @@ def test_restore_old_disabled_unmapped_credential_no_force(
     )
 
 
-def test_run_no_archive_table(mocker):
+def test_run_no_archive_table(mocker: MockerFixture):
     mocker.patch(
         'confidant.scripts.restore.settings.DYNAMODB_TABLE_ARCHIVE',
         None,
@@ -173,16 +182,16 @@ def test_run_no_archive_table(mocker):
     assert rc.run(_all=True, force=True, ids=None) == 1
 
 
-def test_run_bad_args(mocker):
+def test_run_bad_args(mocker: MockerFixture):
     rc = RestoreCredentials()
     assert rc.run(_all=False, force=True, ids=None) == 1
     assert rc.run(_all=True, force=True, ids='1234') == 1
 
 
 def test_run_all(
-    mocker,
-    credentials,
-    restore_mock,
+    mocker: MockerFixture,
+    credentials: Dict[str, List[Credential]],
+    restore_mock: MagicMock,
 ):
     mocker.patch(
         'confidant.scripts.restore.CredentialArchive.data_type_date_index.query',  # noqa:E501
@@ -197,9 +206,9 @@ def test_run_all(
 
 
 def test_run_ids(
-    mocker,
-    credentials,
-    restore_mock,
+    mocker: MockerFixture,
+    credentials: Dict[str, List[Credential]],
+    restore_mock: MagicMock,
 ):
     mocker.patch(
         'confidant.scripts.restore.CredentialArchive.batch_get',

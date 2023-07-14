@@ -50,7 +50,7 @@ jobs:
       - name: Install apt dependencies
         run: sudo apt-get update && sudo apt-get install -y python3-dev openssl libssl-dev gcc pkg-config libffi-dev libxml2-dev libxmlsec1-dev
       - name: Install dependencies
-        run: pip install -r piptools_requirements.txt && pip install -r requirements.txt
+        run: pip install -r piptools_requirements.txt && pip install -r piptools_requirements3.txt && pip install -r requirements3.txt 
       - name: Run python unit tests
         run: make test_unit
   test-integration:

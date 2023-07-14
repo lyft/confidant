@@ -1,8 +1,11 @@
+from pytest_mock.plugin import MockerFixture
+from typing import Union
+
 from confidant.authnz import UserUnknownError
 from confidant.app import create_app
 
 
-def test_get_user_info(mocker):
+def test_get_user_info(mocker: MockerFixture):
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch(
         'confidant.routes.identity.authnz.get_logged_in_user',
@@ -14,7 +17,7 @@ def test_get_user_info(mocker):
     assert ret.json == {'email': 'test@example.com'}
 
 
-def test_get_user_info_no_user(mocker):
+def test_get_user_info_no_user(mocker: MockerFixture):
     mocker.patch('confidant.settings.USE_AUTH', False)
     mocker.patch(
         'confidant.routes.identity.authnz.get_logged_in_user',
@@ -26,8 +29,8 @@ def test_get_user_info_no_user(mocker):
     assert ret.json == {'email': None}
 
 
-def test_get_client_config(mocker):
-    def acl_module_check(resource_type, action):
+def test_get_client_config(mocker: MockerFixture):
+    def acl_module_check(resource_type: str, action: str) -> Union[bool, None]:
         if resource_type == 'credential':
             if action == 'create':
                 return False
@@ -38,6 +41,7 @@ def test_get_client_config(mocker):
                 return True
             elif action == 'list':
                 return False
+        return None
 
     mocker.patch('confidant.routes.identity.acl_module_check', acl_module_check)
     mocker.patch('confidant.settings.USE_AUTH', False)
