@@ -637,7 +637,7 @@ JWT_CACHING_ENABLED = bool_env('JWT_CACHING_ENABLED', False)
 # example:
 #     JWT_CACHING_TTL = 3600 (1 hr)
 #     JWT_DEFAULT_JWT_EXPIRATION_SECONDS = 86400 (24 hrs)
-# This means JWTs issued by Confidant will be between 82800 (max) and 82800 (min) seconds
+# This means JWTs issued will be between 86400 (max) and 82800 (min) seconds
 JWT_CACHING_TTL = int_env('JWT_CACHING_TTL_SECONDS', 3600)
 
 JWT_DEFAULT_JWT_EXPIRATION_SECONDS = int_env(
