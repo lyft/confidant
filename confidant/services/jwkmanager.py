@@ -119,6 +119,7 @@ class JWKManager:
             else:
                 stats.incr('jwt.get_jwt.cache.miss')
 
+        # cache miss or disabled
         if not token:
             expiry = now + timedelta(seconds=expiration_seconds)
             payload.update({
@@ -134,11 +135,10 @@ class JWKManager:
                     algorithm=algorithm,
                 )
             stats.incr('jwt.get_jwt.create')
-            if JWT_CACHING_ENABLED:
-                self._token_cache[kid][requester][user] = {
-                    'expiry': expiry,
-                    'token': token
-                }
+            self._token_cache[kid][requester][user] = {
+                'expiry': expiry,
+                'token': token
+            }
         return token
 
     def get_active_key(self, environment: str) -> Tuple[str, Optional[jwk.JWK]]:
