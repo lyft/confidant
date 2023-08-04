@@ -1,7 +1,9 @@
 from confidant.services import keymanager
 
+from pytest_mock.plugin import MockerFixture
 
-def test_get_key_id(mocker):
+
+def test_get_key_id(mocker: MockerFixture):
     mocker.patch('confidant.services.keymanager._KEY_METADATA', {})
     mock_auth_client = mocker.Mock()
     mock_auth_client.describe_key = mocker.Mock(
@@ -14,7 +16,7 @@ def test_get_key_id(mocker):
     assert keymanager.get_key_id('mockalias') == 'mockid'
 
 
-def test_get_key_id_cached(mocker):
+def test_get_key_id_cached(mocker: MockerFixture):
     mocker.patch(
         'confidant.services.keymanager._KEY_METADATA',
         {'mockalias': {'KeyMetadata': {'KeyId': 'mockid'}}}
@@ -29,7 +31,7 @@ def test_get_key_id_cached(mocker):
     assert keymanager.get_key_id('mockalias') == 'mockid'
 
 
-def test_create_datakey_mocked(mocker):
+def test_create_datakey_mocked(mocker: MockerFixture):
     fernet_mock = mocker.patch('cryptography.fernet.Fernet.generate_key')
     fernet_mock.return_value = 'mocked_fernet_key'
     mocker.patch('confidant.services.keymanager.settings.USE_ENCRYPTION', False)
@@ -46,7 +48,7 @@ def test_create_datakey_mocked(mocker):
     assert ret['ciphertext'] == 'mocked_fernet_key'
 
 
-def test_decrypt_datakey_mocked(mocker):
+def test_decrypt_datakey_mocked(mocker: MockerFixture):
     mocker.patch('confidant.services.keymanager.settings.USE_ENCRYPTION', False)
     ret = keymanager.decrypt_datakey('mocked_fernet_key')
 
@@ -54,7 +56,7 @@ def test_decrypt_datakey_mocked(mocker):
     assert ret == 'mocked_fernet_key'
 
 
-def test_create_datakey_with_encryption(mocker):
+def test_create_datakey_with_encryption(mocker: MockerFixture):
     cd_mock = mocker.patch(
         'confidant.services.keymanager.cryptolib.create_datakey'
     )
@@ -72,7 +74,7 @@ def test_create_datakey_with_encryption(mocker):
     assert cmd_mock.called is False
 
 
-def test_decrypt_datakey_with_encryption(mocker):
+def test_decrypt_datakey_with_encryption(mocker: MockerFixture):
     dd_mock = mocker.patch(
         'confidant.services.keymanager.cryptolib.decrypt_datakey'
     )

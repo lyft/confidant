@@ -2,13 +2,15 @@ import json
 import pytest
 
 from unittest import mock
+from pytest_mock.plugin import MockerFixture
+from typing import List
 
 from confidant.app import create_app
 from confidant.models.service import Service
 
 
 @pytest.fixture()
-def services_list(mocker):
+def services_list(mocker: MockerFixture) -> List[Service]:
     services = [
         Service(
             id='something-production-iad',
@@ -32,7 +34,7 @@ def services_list(mocker):
     return services
 
 
-def test_get_services_list(mocker, services_list):
+def test_get_services_list(mocker: MockerFixture, services_list: List[Service]):
     app = create_app()
 
     mocker.patch('confidant.settings.USE_AUTH', False)

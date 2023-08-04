@@ -1,9 +1,10 @@
 from datetime import datetime
+from pytest_mock.plugin import MockerFixture
 
 from confidant.models.credential import Credential, CredentialArchive
 
 
-def test_equals(mocker):
+def test_equals(mocker: MockerFixture):
     mocker.patch(
         'confidant.models.credential.Credential'
         '._get_decrypted_credential_pairs',
@@ -26,7 +27,7 @@ def test_equals(mocker):
     assert cred1.equals(cred2) is True
 
 
-def test_not_equals(mocker):
+def test_not_equals(mocker: MockerFixture):
     mocker.patch(
         'confidant.models.credential.Credential'
         '._get_decrypted_credential_pairs',
@@ -47,7 +48,7 @@ def test_not_equals(mocker):
     assert cred1.equals(cred2) is False
 
 
-def test_not_equals_different_tags(mocker):
+def test_not_equals_different_tags(mocker: MockerFixture):
     decrypted_pairs_mock = mocker.patch(
         'confidant.models.credential.Credential.decrypted_credential_pairs'
     )
@@ -69,7 +70,7 @@ def test_not_equals_different_tags(mocker):
     assert cred1.equals(cred2) is False
 
 
-def test_diff(mocker):
+def test_diff(mocker: MockerFixture):
     mocker.patch(
         'confidant.models.credential.Credential'
         '._get_decrypted_credential_pairs',
@@ -129,7 +130,7 @@ def test_diff(mocker):
     assert old.diff(new) == expectedDiff
 
 
-def test_credential_archive(mocker):
+def test_credential_archive(mocker: MockerFixture):
     mocker.patch(
         'confidant.models.credential.Credential'
         '._get_decrypted_credential_pairs',
@@ -146,7 +147,7 @@ def test_credential_archive(mocker):
     assert cred.id == archive_cred.id
 
 
-def test_next_rotation_date_no_rotation_required(mocker):
+def test_next_rotation_date_no_rotation_required(mocker: MockerFixture):
     mocker.patch(
         'confidant.models.credential.settings.TAGS_EXCLUDING_ROTATION',
         ['ADMIN_PRIV'],
@@ -154,7 +155,7 @@ def test_next_rotation_date_no_rotation_required(mocker):
     assert Credential(tags=['ADMIN_PRIV']).next_rotation_date is None
 
 
-def test_next_rotation_date_never_rotated(mocker):
+def test_next_rotation_date_never_rotated(mocker: MockerFixture):
     mocker.patch(
         'confidant.models.credential.settings.TAGS_EXCLUDING_ROTATION',
         [],
@@ -163,7 +164,7 @@ def test_next_rotation_date_never_rotated(mocker):
     assert cred.next_rotation_date <= datetime.utcnow()
 
 
-def test_next_rotation_date_last_rotation_present(mocker):
+def test_next_rotation_date_last_rotation_present(mocker: MockerFixture):
     mocker.patch(
         'confidant.models.credential.settings.TAGS_EXCLUDING_ROTATION',
         [],
@@ -183,7 +184,7 @@ def test_next_rotation_date_last_rotation_present(mocker):
     assert cred.next_rotation_date == datetime(2020, 1, 31)
 
 
-def test_exempt_from_rotation(mocker):
+def test_exempt_from_rotation(mocker: MockerFixture):
     mocker.patch(
         'confidant.models.credential.settings.TAGS_EXCLUDING_ROTATION',
         ['ADMIN_PRIV'],

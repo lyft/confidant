@@ -1,3 +1,5 @@
+from pytest_mock.plugin import MockerFixture
+
 from confidant.encrypted_settings import EncryptedSettings
 
 
@@ -22,7 +24,7 @@ def test_get_registered_default():
     assert enc_set.get_secret('Bar') == 'Baz'
 
 
-def test_bootstrap(mocker):
+def test_bootstrap(mocker: MockerFixture):
     mocker.patch(
         'confidant.encrypted_settings.cryptolib.decrypt_datakey',
         return_value=b'1cVUbJT58SbMt4Wk4xmEZoNhZGdWO_vg1IJiXwc6HGs==',
