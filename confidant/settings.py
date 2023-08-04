@@ -635,10 +635,10 @@ JWT_CACHING_ENABLED = bool_env('JWT_CACHING_ENABLED', False)
 # to avoid Confidant issuing very short lived JWTs.
 # Enabling the cache means JWTs will have a varying minimum/maximum TTL window.
 # example:
-#     JWT_CACHING_TTL = 900 (15 min)
+#     JWT_CACHING_TTL_SECONDS = 900 (15 min)
 #     JWT_DEFAULT_JWT_EXPIRATION_SECONDS = 3600 (1 hr)
 # This means JWTs issued will be between 3600 and 2700 seconds
-JWT_CACHING_TTL = int_env('JWT_CACHING_TTL_SECONDS', 900)
+JWT_CACHING_TTL_SECONDS = int_env('JWT_CACHING_TTL_SECONDS', 900)
 
 JWT_DEFAULT_JWT_EXPIRATION_SECONDS = int_env(
     'JWT_DEFAULT_JWT_EXPIRATION_SECONDS', 3600

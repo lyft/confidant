@@ -13,7 +13,8 @@ from confidant.settings import JWT_ACTIVE_SIGNING_KEYS
 from confidant.settings import JWT_CACHING_ENABLED
 from confidant.settings import JWT_CERTIFICATE_AUTHORITIES
 from confidant.settings import JWT_DEFAULT_JWT_EXPIRATION_SECONDS
-from confidant.settings import JWT_CACHING_TTL
+from confidant.settings import JWT_CACHING_TTL_SECONDS
+
 from confidant.utils import stats
 from jwcrypto import jwk
 
@@ -23,7 +24,7 @@ logger = logging.getLogger(__name__)
 CA_SCHEMA = {
     'crt': {'type': 'string', 'required': True},
     'key': {'type': 'string', 'required': True},
-    'passphrase': {'type': 'string', 'required': True},
+    'passphrase': {'type': 'string', 'required': True, 'nullable': True},
     'kid': {'type': 'string', 'required': True},
 }
 
@@ -36,13 +37,46 @@ class JWKManager:
 
         self._load_certificate_authorities()
 
+        # format of local cache:
+        # {
+        #     "<kid>": {
+        #         "<downstream_requester>": {
+        #            "<requested_resource_id>": {
+        #                "expiry": 1234567890,
+        #                "jwt": "eyJpc19zZ...",
+        #         },
+        #         ...
+        #     },
+        #     ...
+        # }
+        # Example:
+        # {
+        #     "0h7R8..": {
+        #         "serviceA-staging-iad": {
+        #             "ServiceAA-staging-iad": {
+        #                 "expiry": 1234567890,
+        #                 "jwt": "eyJpc19zZX...",
+        #         },
+        #         ...
+        #     },
+        #     ...
+        # }
+        # for kid in self._get_active_kids():
+        #     self._token_cache[kid] = {}
+
+        # XXX: TODO, add setting to allow switching between
+        # remote redis and local memory cache
+        self._get_jwt_cache = self._get_jwt_cache_mem
+        self._set_jwt_cache = self._set_jwt_cache_mem
+
     def _load_certificate_authorities(self) -> None:
         validator = Validator(CA_SCHEMA)
         if JWT_CERTIFICATE_AUTHORITIES:
             for environment in JWT_CERTIFICATE_AUTHORITIES:
                 for ca in JWT_CERTIFICATE_AUTHORITIES[environment]:
                     if validator.validate(ca):
-                        self.set_key(environment, ca['kid'],
+                        self.set_key(environment,
+                                     ca['kid'],
                                      ca['key'],
                                      passphrase=ca['passphrase'])
                     else:
@@ -81,9 +115,14 @@ class JWKManager:
                 )
         return self._pem_cache[environment][kid]
 
-    def get_jwt(self, environment: str, payload: dict,
+    def _get_active_kids(self) -> List[str]:
+        return list(JWT_ACTIVE_SIGNING_KEYS.values())
+
+    def get_jwt(self, environment: str,
+                payload: dict,
                 expiration_seconds: int = JWT_DEFAULT_JWT_EXPIRATION_SECONDS,
                 algorithm: str = 'RS256') -> str:
+
         kid, key = self.get_active_key(environment)
         if not key:
             raise ValueError('No active key for this environment')
@@ -97,30 +136,17 @@ class JWKManager:
         if not requester:
             raise ValueError('Please include the requester in the payload')
 
-        if kid not in self._token_cache:
-            self._token_cache[kid] = {}
-
-        if requester not in self._token_cache[kid]:
-            self._token_cache[kid][requester] = {}
-
-        now = datetime.now(tz=timezone.utc)
-
-        token = None
+        jwt_str = None
         if JWT_CACHING_ENABLED:
-            token = self._token_cache[kid][requester].get(user)
-            if token:
-                token_cache_ttl_diff = (now - token['expiry']).total_seconds()
-                if token_cache_ttl_diff < JWT_CACHING_TTL:
-                    stats.incr('jwt.get_jwt.cache.hit')
-                    token = token['token']
-                else:
-                    stats.incr('jwt.get_jwt.cache.expired')
-                    del self._token_cache[kid][requester][user]
+            jwt_str = self._get_jwt_cache(kid, requester, user)
+            if jwt_str:
+                stats.incr('jwt.get_jwt.cache.hit')
             else:
                 stats.incr('jwt.get_jwt.cache.miss')
 
-        # cache miss or disabled
-        if not token:
+        # cache miss, create a new jwt
+        if not jwt_str:
+            now = datetime.now(tz=timezone.utc)
             expiry = now + timedelta(seconds=expiration_seconds)
             payload.update({
                 'iat': now,
@@ -128,18 +154,56 @@ class JWKManager:
                 'exp': expiry,
             })
             with stats.timer('jwt.get_jwt.encode'):
-                token = jwt.encode(
+                jwt_str = jwt.encode(
                     payload=payload,
                     headers={'kid': kid},
                     key=key,
                     algorithm=algorithm,
                 )
             stats.incr('jwt.get_jwt.create')
-            self._token_cache[kid][requester][user] = {
-                'expiry': expiry,
-                'token': token
-            }
-        return token
+            if JWT_CACHING_ENABLED:
+                self._set_jwt_cache(kid, requester, user, expiry, jwt_str)
+
+        return jwt_str
+
+    def _set_jwt_cache_mem(self, kid: str, requester: str, user: str,
+                           expiry: str, jwt: str) -> None:
+
+        if kid not in self._token_cache:
+            self._token_cache[kid] = {}
+
+        if requester not in self._token_cache[kid]:
+            self._token_cache[kid][requester] = {}
+
+        self._token_cache[kid][requester][user] = {
+            'expiry': expiry,
+            'jwt': jwt
+        }
+
+    def _get_jwt_cache_mem(self, kid: str, requester: str, user: str) -> str:
+        jwt_str = None
+        token_kv = self._token_cache.get(kid, {}).get(requester, {}).get(user)
+        if token_kv:
+            now = datetime.now(tz=timezone.utc)
+            token_cache_ttl_diff = (token_kv['expiry'] - now).total_seconds()
+            if token_cache_ttl_diff > JWT_CACHING_TTL_SECONDS:
+                stats.incr('jwt.get_jwt.cache.hit')
+                jwt_str = token_kv['jwt']
+            else:
+                stats.incr('jwt.get_jwt.cache.expired')
+                del self._token_cache[kid][requester][user]
+        else:
+            stats.incr('jwt.get_jwt.cache.miss')
+        return jwt_str
+
+    def _set_jwt_cache_redis(self, kid: str, requester: str, user: str,
+                             expiry: str, jwt: str) -> None:
+        # XXX: TODO: place holder for remote redis cache calls
+        pass
+
+    def _get_jwt_cache_redis(self, kid: str, requester: str, user: str) -> str:
+        # XXX: TODO: place holder for remote redis cache calls
+        return ""
 
     def get_active_key(self, environment: str) -> Tuple[str, Optional[jwk.JWK]]:
         # The active signing key used to sign JWTs
@@ -161,6 +225,3 @@ class JWKManager:
         else:
             stats.incr(f'jwt.get_jwks.{environment}.miss')
             return []
-
-
-jwk_manager = JWKManager()
