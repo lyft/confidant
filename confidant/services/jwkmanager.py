@@ -13,6 +13,7 @@ from confidant.settings import JWT_ACTIVE_SIGNING_KEYS
 from confidant.settings import JWT_CACHING_ENABLED
 from confidant.settings import JWT_CERTIFICATE_AUTHORITIES
 from confidant.settings import JWT_DEFAULT_JWT_EXPIRATION_SECONDS
+from confidant.settings import JWT_CACHING_TTL
 from confidant.utils import stats
 from jwcrypto import jwk
 
@@ -87,14 +88,15 @@ class JWKManager:
         if not key:
             raise ValueError('No active key for this environment')
 
-        if 'user' not in payload:
+        user = payload.get('user')
+        requester = payload.get('requester')
+
+        if not user:
             raise ValueError('Please include the user in the payload')
 
-        if 'requester' not in payload:
+        if not requester:
             raise ValueError('Please include the requester in the payload')
 
-        user = payload['user']
-        requester = payload['requester']
         if kid not in self._token_cache:
             self._token_cache[kid] = {}
 
@@ -103,34 +105,40 @@ class JWKManager:
 
         now = datetime.now(tz=timezone.utc)
 
-        # return token from cache
-        if user in self._token_cache[kid][requester].keys() \
-                and JWT_CACHING_ENABLED:
-            if now < self._token_cache[kid][requester][user]['expiry']:
-                stats.incr('jwt.get_jwt.cache.hit')
-                return self._token_cache[kid][requester][user]['token']
+        token = None
+        if JWT_CACHING_ENABLED:
+            token = self._token_cache[kid][requester].get(user)
+            if token:
+                token_cache_ttl_diff = (now - token['expiry']).total_seconds()
+                if token_cache_ttl_diff < JWT_CACHING_TTL:
+                    stats.incr('jwt.get_jwt.cache.hit')
+                    token = token['token']
+                else:
+                    stats.incr('jwt.get_jwt.cache.expired')
+                    del self._token_cache[kid][requester][user]
+            else:
+                stats.incr('jwt.get_jwt.cache.miss')
 
-        # cache miss, generate new token and update cache
-        expiry = now + timedelta(seconds=expiration_seconds)
-        payload.update({
-            'iat': now,
-            'nbf': now,
-            'exp': expiry,
-        })
-
-        with stats.timer('jwt.get_jwt.encode'):
-            token = jwt.encode(
-                payload=payload,
-                headers={'kid': kid},
-                key=key,
-                algorithm=algorithm,
-            )
-
-        self._token_cache[kid][requester][user] = {
-            'expiry': expiry,
-            'token': token
-        }
-        stats.incr('jwt.get_jwt.create')
+        if not token:
+            expiry = now + timedelta(seconds=expiration_seconds)
+            payload.update({
+                'iat': now,
+                'nbf': now,
+                'exp': expiry,
+            })
+            with stats.timer('jwt.get_jwt.encode'):
+                token = jwt.encode(
+                    payload=payload,
+                    headers={'kid': kid},
+                    key=key,
+                    algorithm=algorithm,
+                )
+            stats.incr('jwt.get_jwt.create')
+            if JWT_CACHING_ENABLED:
+                self._token_cache[kid][requester][user] = {
+                    'expiry': expiry,
+                    'token': token
+                }
         return token
 
     def get_active_key(self, environment: str) -> Tuple[str, Optional[jwk.JWK]]:
