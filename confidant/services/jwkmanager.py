@@ -43,37 +43,18 @@ class JwtCache(ABC):
 
 class LocalJwtCache(JwtCache):
     def __init__(self) -> None:
-        # format of self._token_cache:
-        # {
-        #     "<kid>": {
-        #         "<downstream_requester>": {
-        #            "<requested_resource_id>": {
-        #                "expiry": 1234567890,
-        #                "jwt": "eyJpc19zZ...",
-        #         },
-        #         ...
-        #     },
-        #     ...
-        # }
-        # Example:
-        # {
-        #     "0h7R8..": {
-        #         "serviceA-staging-iad": {
-        #             "ServiceAA-staging-iad": {
-        #                 "expiry": 1234567890,
-        #                 "jwt": "eyJpc19zZX...",
-        #         },
-        #         ...
-        #     },
-        #     ...
-        # }
         self._token_cache = {}
+
+    def _key_fmt(self, kid: str, requester: str, user: str) -> str:
+        return f'{kid}:{requester}:{user}'
 
     def get_jwt(self, kid: str, requester: str, user: str) -> str:
         jwt_str = None
-
-        token_kv = self._token_cache.get(kid, {}).get(requester, {}).get(user)
+        token_kv = self._token_cache.get(self._key_fmt(kid, requester, user))
         if token_kv:
+            # token in cache, check if elapsed time since token created is
+            # less than cache ttl.  If it is, return the token, otherwise
+            # evict the token from the cache and return None
             now = datetime.now(tz=timezone.utc)
             when_created = token_kv['expiry'] - timedelta(
                 seconds=JWT_DEFAULT_JWT_EXPIRATION_SECONDS
@@ -84,20 +65,14 @@ class LocalJwtCache(JwtCache):
                 jwt_str = token_kv['jwt']
             else:
                 stats.incr('jwt.get_jwt.cache.expired')
-                del self._token_cache[kid][requester][user]
+                del self._token_cache[self._key_fmt(kid, requester, user)]
         else:
             stats.incr('jwt.get_jwt.cache.miss')
         return jwt_str
 
     def set_jwt(self, kid: str, requester: str, user: str, expiry: str,
                 jwt: str) -> None:
-        if kid not in self._token_cache:
-            self._token_cache[kid] = {}
-
-        if requester not in self._token_cache[kid]:
-            self._token_cache[kid][requester] = {}
-
-        self._token_cache[kid][requester][user] = {
+        self._token_cache[f'{kid}:{requester}:{user}'] = {
             'expiry': expiry,
             'jwt': jwt
         }
