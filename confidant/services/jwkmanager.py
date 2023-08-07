@@ -32,17 +32,6 @@ CA_SCHEMA = {
 
 
 class JwtCache(ABC):
-    def statsdcache(f):
-        """ Decorator to send stats based on result of cache hits/misses
-        """
-        def wrapper(self, *args, **kwargs):
-            result = f(self, *args, **kwargs)
-            if result:
-                stats.incr(f'jwt.get_jwt.cache.{kwargs["kid"]}.hit')
-            else:
-                stats.incr(f'jwt.get_jwt.cache.{kwargs["kid"]}.miss')
-            return result
-        return wrapper
 
     @abstractmethod
     def get_jwt(self, kid: str, requester: str, user: str) -> str:
@@ -50,10 +39,6 @@ class JwtCache(ABC):
 
     @abstractmethod
     def set_jwt(self, kid: str, requester: str, user: str, jwt: str) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def cache_key(self, kid: str, requester: str, user: str) -> str:
         raise NotImplementedError()
 
 
@@ -167,9 +152,9 @@ class JWKManager:
         if JWT_CACHING_ENABLED:
             jwt_str = self._jwt_cache.get_jwt(kid, requester, user)
             if jwt_str:
-                stats.incr('jwt.get_jwt.cache.hit')
+                stats.incr(f'jwt.get_jwt.cache.{kid}.{requester}.hit')
             else:
-                stats.incr('jwt.get_jwt.cache.miss')
+                stats.incr(f'jwt.get_jwt.cache.{kid}.{requester}.miss')
 
         # cache miss, create a new jwt
         if not jwt_str:
@@ -187,7 +172,7 @@ class JWKManager:
                     key=key,
                     algorithm=algorithm,
                 )
-            stats.incr('jwt.get_jwt.create')
+            stats.incr(f'jwt.get_jwt.{kid}.{requester}.create')
             if JWT_CACHING_ENABLED:
                 self._jwt_cache.set_jwt(kid, requester, user, jwt_str)
 
