@@ -213,7 +213,9 @@ def test_localcache_get_jwt():
     localcache = LocalJwtCache()
     cached_jwt = localcache.get_jwt('marge', 'homer', 'bart')
     assert cached_jwt is None
+    assert len(localcache._token_cache) == 0
 
     cached_jwt = localcache.set_jwt('marge', 'homer', 'bart', 'lisa')
     cached_jwt = localcache.get_jwt('marge', 'homer', 'bart')
     assert cached_jwt == 'lisa'
+    assert len(localcache._token_cache) == 1
