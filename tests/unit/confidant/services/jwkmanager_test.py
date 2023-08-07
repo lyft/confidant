@@ -8,6 +8,8 @@ from pytest_mock.plugin import MockerFixture
 from typing import Dict, Union
 from unittest.mock import patch, Mock
 from confidant.services.jwkmanager import JWKManager
+from confidant.services.jwkmanager import LocalJwtCache
+from confidant.settings import JWT_CACHING_MAX_SIZE
 from confidant.settings import JWT_CACHING_TTL_SECONDS
 
 
@@ -68,7 +70,6 @@ def helper_jwt_parser(jwt_str, field):
 
 @patch.object(confidant.services.jwkmanager, 'datetime',
               Mock(wraps=datetime.datetime))
-@patch.object(confidant.services.jwkmanager, 'JWT_CACHING_ENABLED', True)
 @patch.object(confidant.services.jwkmanager, 'JWT_ACTIVE_SIGNING_KEYS',
               {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
 def test_get_jwt_caches_jwt(
@@ -77,120 +78,58 @@ def test_get_jwt_caches_jwt(
     test_jwk_payload: Dict[str, Union[str, bool]],
     test_jwt: str
 ):
+
     jwk_manager = JWKManager()
     test_private_key = test_key_pair.export_to_pem(private_key=True,
                                                    password=None)
     jwk_manager.set_key('test',
                         test_key_pair.thumbprint(),
                         test_private_key.decode('utf-8'))
-    base_time = datetime.datetime(
-            year=2020,
-            month=10,
-            day=10,
-            hour=0,
-            minute=0,
-            second=0,
-            microsecond=0
-        )
-    mocker.patch(
-        'confidant.services.jwkmanager.datetime.now',
-        return_value=base_time
-    )
-    # hydrate cache
-    result = jwk_manager.get_jwt('test', test_jwk_payload)
 
-    # only 1 minute has elapsed, cache should hit
-    mocker.patch(
-        'confidant.services.jwkmanager.datetime.now',
-        return_value=base_time + datetime.timedelta(seconds=60)
+    # Test enabling caching
+    mocker.patch.object(confidant.services.jwkmanager,
+                        'JWT_CACHING_ENABLED', True)
+    # Test that if cache doesn't return a jwt, we call set_jwt
+    local_cache_get_mock = mocker.patch.object(
+        jwk_manager,
+        '_jwt_cache'
     )
-    cached_result = jwk_manager.get_jwt('test', test_jwk_payload)
-    assert result == test_jwt
-    assert result == cached_result
-    assert 1602291600 == helper_jwt_parser(cached_result, 'exp')
+    local_cache_get_mock.get_jwt.return_value = None
+    jwk_manager.get_jwt('test', test_jwk_payload)
+    assert local_cache_get_mock.get_jwt.called is True
+    assert local_cache_get_mock.set_jwt.called is True
 
-    # test we CAN request from cache if time elapsed < JWT_CACHING_TTL_SECONDS
-    elapsed_time = base_time + datetime.timedelta(
-        seconds=JWT_CACHING_TTL_SECONDS-1
+    # Test that if cache returns a jwt, we don't call set_jwt
+    local_cache_get_mock = mocker.patch.object(
+        jwk_manager,
+        '_jwt_cache'
     )
-    mocker.patch(
-        'confidant.services.jwkmanager.datetime.now',
-        return_value=elapsed_time
-    )
-    cached_result = jwk_manager.get_jwt('test', test_jwk_payload)
-    assert result == cached_result
-    assert 1602291600 == helper_jwt_parser(cached_result, 'exp')
+    local_cache_get_mock.get_jwt.return_value = test_jwt
+    jwk_manager.get_jwt('test', test_jwk_payload)
+    assert local_cache_get_mock.get_jwt.called is True
+    assert local_cache_get_mock.set_jwt.called is False
 
-    # test we CANNOT request from cache
-    # if time elapsed >= JWT_CACHING_TTL_SECONDS
-    # new token will be provisioned with new exp
-    elapsed_time = base_time + datetime.timedelta(
-        seconds=JWT_CACHING_TTL_SECONDS
+    # Test cache disabled
+    mocker.patch.object(confidant.services.jwkmanager,
+                        'JWT_CACHING_ENABLED', False)
+    local_cache_get_mock = mocker.patch.object(
+        jwk_manager,
+        '_jwt_cache'
     )
-    mocker.patch(
-        'confidant.services.jwkmanager.datetime.now',
-        return_value=elapsed_time
+    local_cache_get_mock.get_jwt.return_value = None
+    jwk_manager.get_jwt('test', test_jwk_payload)
+    assert local_cache_get_mock.get_jwt.called is False
+    assert local_cache_get_mock.set_jwt.called is False
+
+    # Test that if cache returns a jwt, we don't call set_jwt
+    local_cache_get_mock = mocker.patch.object(
+        jwk_manager,
+        '_jwt_cache'
     )
-    cached_result = jwk_manager.get_jwt('test', test_jwk_payload)
-    assert result != cached_result
-    assert 1602292500 == helper_jwt_parser(cached_result, 'exp')
-
-    # token has long expired, cache should NOT hit
-    mocker.patch(
-        'confidant.services.jwkmanager.datetime.now',
-        return_value=base_time + datetime.timedelta(days=30)
-    )
-    cached_result = jwk_manager.get_jwt('test', test_jwk_payload)
-    assert 1604883600 == helper_jwt_parser(cached_result, 'exp')
-
-
-@patch.object(confidant.services.jwkmanager, 'datetime',
-              Mock(wraps=datetime.datetime))
-@patch.object(confidant.services.jwkmanager, 'JWT_CACHING_ENABLED', False)
-@patch.object(confidant.services.jwkmanager, 'JWT_ACTIVE_SIGNING_KEYS',
-              {'test': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE'})
-def test_get_jwt_does_not_cache_jwt(
-    mocker: MockerFixture,
-    test_key_pair: jwk.JWK,
-    test_jwk_payload: Dict[str, Union[str, bool]],
-    test_jwt: str
-):
-    jwk_manager = JWKManager()
-    test_private_key = test_key_pair.export_to_pem(private_key=True,
-                                                   password=None)
-    mocker.patch(
-        'confidant.services.jwkmanager.datetime.now',
-        return_value=datetime.datetime(
-            year=2020,
-            month=10,
-            day=10,
-            hour=0,
-            minute=0,
-            second=0,
-            microsecond=0
-        )
-    )
-    jwk_manager.set_key('test',
-                        test_key_pair.thumbprint(),
-                        test_private_key.decode('utf-8'))
-    result = jwk_manager.get_jwt('test', test_jwk_payload)
-
-    mocker.patch(
-        'confidant.services.jwkmanager.datetime.now',
-        return_value=datetime.datetime(
-            year=2020,
-            month=10,
-            day=10,
-            hour=0,
-            minute=1,
-            second=1,
-            microsecond=0
-        )
-    )
-
-    not_cached_result = jwk_manager.get_jwt('test', test_jwk_payload)
-    assert result == test_jwt
-    assert result != not_cached_result
+    local_cache_get_mock.get_jwt.return_value = test_jwt
+    jwk_manager.get_jwt('test', test_jwk_payload)
+    assert local_cache_get_mock.get_jwt.called is False
+    assert local_cache_get_mock.set_jwt.called is False
 
 
 def test_get_jwt_raises_no_key_id(
@@ -255,3 +194,26 @@ def test_get_jwt_with_ca(
         )
         result = jwk_manager.get_jwt('test', test_jwk_payload)
         assert result == test_jwt
+
+
+def test_localcache_init():
+    localcache = LocalJwtCache()
+    assert localcache._token_cache.maxsize == JWT_CACHING_MAX_SIZE
+    assert localcache._token_cache.ttl == JWT_CACHING_TTL_SECONDS
+    assert len(localcache._token_cache) == 0
+
+
+def test_localcache_cache_key():
+    localcache = LocalJwtCache()
+    result = localcache.cache_key('marge', 'homer', 'bart')
+    assert result == 'marge:homer:bart'
+
+
+def test_localcache_get_jwt():
+    localcache = LocalJwtCache()
+    cached_jwt = localcache.get_jwt('marge', 'homer', 'bart')
+    assert cached_jwt is None
+
+    cached_jwt = localcache.set_jwt('marge', 'homer', 'bart', 'lisa')
+    cached_jwt = localcache.get_jwt('marge', 'homer', 'bart')
+    assert cached_jwt == 'lisa'

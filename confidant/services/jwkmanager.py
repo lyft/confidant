@@ -14,11 +14,12 @@ from confidant.settings import JWT_ACTIVE_SIGNING_KEYS
 from confidant.settings import JWT_CACHING_ENABLED
 from confidant.settings import JWT_CERTIFICATE_AUTHORITIES
 from confidant.settings import JWT_DEFAULT_JWT_EXPIRATION_SECONDS
+from confidant.settings import JWT_CACHING_MAX_SIZE
 from confidant.settings import JWT_CACHING_TTL_SECONDS
-
 from confidant.utils import stats
-from jwcrypto import jwk
 
+from cachetools import TTLCache
+from jwcrypto import jwk
 
 logger = logging.getLogger(__name__)
 
@@ -31,51 +32,47 @@ CA_SCHEMA = {
 
 
 class JwtCache(ABC):
+    def statsdcache(f):
+        """ Decorator to send stats based on result of cache hits/misses
+        """
+        def wrapper(self, *args, **kwargs):
+            result = f(self, *args, **kwargs)
+            if result:
+                stats.incr(f'jwt.get_jwt.cache.{kwargs["kid"]}.hit')
+            else:
+                stats.incr(f'jwt.get_jwt.cache.{kwargs["kid"]}.miss')
+            return result
+        return wrapper
+
     @abstractmethod
     def get_jwt(self, kid: str, requester: str, user: str) -> str:
         raise NotImplementedError()
 
     @abstractmethod
-    def set_jwt(self, kid: str, requester: str, user: str, expiry: str,
-                jwt: str) -> None:
+    def set_jwt(self, kid: str, requester: str, user: str, jwt: str) -> None:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def cache_key(self, kid: str, requester: str, user: str) -> str:
         raise NotImplementedError()
 
 
 class LocalJwtCache(JwtCache):
     def __init__(self) -> None:
-        self._token_cache = {}
+        self._token_cache = TTLCache(
+            maxsize=JWT_CACHING_MAX_SIZE,
+            ttl=JWT_CACHING_TTL_SECONDS
+        )
 
-    def _key_fmt(self, kid: str, requester: str, user: str) -> str:
+    def cache_key(self, kid: str, requester: str, user: str) -> str:
         return f'{kid}:{requester}:{user}'
 
     def get_jwt(self, kid: str, requester: str, user: str) -> str:
-        jwt_str = None
-        token_kv = self._token_cache.get(self._key_fmt(kid, requester, user))
-        if token_kv:
-            # token in cache, check if elapsed time since token created is
-            # less than cache ttl.  If it is, return the token, otherwise
-            # evict the token from the cache and return None
-            now = datetime.now(tz=timezone.utc)
-            when_created = token_kv['expiry'] - timedelta(
-                seconds=JWT_DEFAULT_JWT_EXPIRATION_SECONDS
-                )
-            elapsed_time = (now - when_created).total_seconds()
-            if elapsed_time < JWT_CACHING_TTL_SECONDS:
-                stats.incr('jwt.get_jwt.cache.hit')
-                jwt_str = token_kv['jwt']
-            else:
-                stats.incr('jwt.get_jwt.cache.expired')
-                del self._token_cache[self._key_fmt(kid, requester, user)]
-        else:
-            stats.incr('jwt.get_jwt.cache.miss')
-        return jwt_str
+        cached_jwt = self._token_cache.get(self.cache_key(kid, requester, user))
+        return cached_jwt
 
-    def set_jwt(self, kid: str, requester: str, user: str, expiry: str,
-                jwt: str) -> None:
-        self._token_cache[f'{kid}:{requester}:{user}'] = {
-            'expiry': expiry,
-            'jwt': jwt
-        }
+    def set_jwt(self, kid: str, requester: str, user: str, jwt: str) -> None:
+        self._token_cache[self.cache_key(kid, requester, user)] = jwt
 
 
 # XXX: TODO add remote redis cache
@@ -86,8 +83,7 @@ class RedisCache(JwtCache):
     def get_jwt(self, kid: str, requester: str, user: str) -> str:
         raise NotImplementedError()
 
-    def set_jwt(self, kid: str, requester: str, user: str, expiry: str,
-                jwt: str) -> None:
+    def set_jwt(self, kid: str, requester: str, user: str, jwt: str) -> None:
         raise NotImplementedError()
 
 
@@ -193,7 +189,7 @@ class JWKManager:
                 )
             stats.incr('jwt.get_jwt.create')
             if JWT_CACHING_ENABLED:
-                self._jwt_cache.set_jwt(kid, requester, user, expiry, jwt_str)
+                self._jwt_cache.set_jwt(kid, requester, user, jwt_str)
 
         return jwt_str
 

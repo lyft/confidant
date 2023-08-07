@@ -630,6 +630,8 @@ JWT_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) \
 
 JWT_CACHING_ENABLED = bool_env('JWT_CACHING_ENABLED', False)
 
+JWT_CACHING_MAX_SIZE = int_env('JWT_CACHING_MAX_SIZE', 1000)
+
 # Maximum time JWTs are stored in Confidant's cache.
 # Warning: this needs to be considerably less than the JWT TTL
 # to avoid Confidant issuing very short lived JWTs.
