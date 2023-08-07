@@ -630,6 +630,27 @@ JWT_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) \
 
 JWT_CACHING_ENABLED = bool_env('JWT_CACHING_ENABLED', False)
 
+JWT_CACHING_MAX_SIZE = int_env('JWT_CACHING_MAX_SIZE', 1000)
+
+# Maximum time JWTs are stored in Confidant's cache.
+# Warning: this needs to be considerably less than the JWT TTL
+# to avoid Confidant issuing very short lived JWTs.
+# Enabling the cache means JWTs will have a varying minimum/maximum TTL window.
+# example:
+#     JWT_CACHING_TTL_SECONDS = 900 (15 min)
+#     JWT_DEFAULT_JWT_EXPIRATION_SECONDS = 3600 (1 hr)
+# This means JWTs issued will be between 3600 and 2700 seconds
+JWT_CACHING_TTL_SECONDS = int_env('JWT_CACHING_TTL_SECONDS', 900)
+
+JWT_DEFAULT_JWT_EXPIRATION_SECONDS = int_env(
+    'JWT_DEFAULT_JWT_EXPIRATION_SECONDS', 3600
+)
+
+# Key IDs from CERTIFICATE_AUTHORITIES that should be used to sign new JWTs,
+# provide a JSON with the following format:
+# {"staging": "some_kid", "production": "some_kid"}
+JWT_ACTIVE_SIGNING_KEYS = json.loads(str_env('JWT_ACTIVE_SIGNING_KEYS', '{}'))
+
 # Configuration validation
 _settings_failures = False
 if len(set(SCOPED_AUTH_KEYS.values())) != len(SCOPED_AUTH_KEYS.values()):
@@ -651,11 +672,3 @@ def get(name, default=None):
 
 # Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:default_acl')
-JWT_DEFAULT_JWT_EXPIRATION_SECONDS = int_env(
-    'JWT_DEFAULT_JWT_EXPIRATION_SECONDS', 3600
-)
-
-# Key IDs from CERTIFICATE_AUTHORITIES that should be used to sign new JWTs,
-# provide a JSON with the following format:
-# {"staging": "some_kid", "production": "some_kid"}
-JWT_ACTIVE_SIGNING_KEYS = json.loads(str_env('JWT_ACTIVE_SIGNING_KEYS', '{}'))

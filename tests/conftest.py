@@ -1,4 +1,3 @@
-import json
 import pytest
 
 from jwcrypto import jwk
@@ -151,7 +150,7 @@ def test_jwks():
 
 @pytest.fixture
 def test_certificate_authorities():
-    return json.dumps({
+    return {
         'test': [
             {
                 'crt': TEST_CERTIFICATE.decode('utf-8'),
@@ -174,4 +173,4 @@ def test_certificate_authorities():
                 'kid': '0h7R8dL0rU-b3p3onft_BPfuRW1Ld7YjsFnOWJuFXUE',
             },
         ],
-    })
+    }

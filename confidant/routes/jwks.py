@@ -3,7 +3,7 @@ import logging
 from flask import blueprints, jsonify, request
 
 from confidant import authnz
-from confidant.services.jwkmanager import jwk_manager
+from confidant.services.jwkmanager import JWKManager
 from confidant.schema.jwks import jwt_response_schema, JWTResponse, \
     jwks_list_response_schema, JWKSListResponse
 from confidant.settings import ACL_MODULE
@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('jwks', __name__)
 
 acl_module_check = misc.load_module(ACL_MODULE)
+jwk_manager = JWKManager()
 
 
 @blueprint.route('/v1/jwks/token', methods=['GET'], defaults={'id': None})

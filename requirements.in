@@ -200,5 +200,8 @@ pyjwt>=2.6.0
 jwcrypto
 cerberus
 
+# caching jwt
+cachetools==5.2.0
+
 # for typing
 mypy
