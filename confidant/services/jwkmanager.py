@@ -20,6 +20,7 @@ from confidant.utils import stats
 
 from cachetools import TTLCache
 from jwcrypto import jwk
+import redis
 
 logger = logging.getLogger(__name__)
 
@@ -62,14 +63,17 @@ class LocalJwtCache(JwtCache):
 
 # XXX: TODO add remote redis cache
 class RedisCache(JwtCache):
+    # initalize redis client
     def __init__(self) -> None:
-        raise NotImplementedError()
+        self._redis_cache = redis.StrictRedis()
 
+    ## get JWT from redis cache
     def get_jwt(self, kid: str, requester: str, user: str) -> str:
-        raise NotImplementedError()
+        cached_jwt = self._redis_cache.get(self.cache_key(kid, requester, user))
+        return cached_jwt
 
     def set_jwt(self, kid: str, requester: str, user: str, jwt: str) -> None:
-        raise NotImplementedError()
+        self._redis_cache[self.cache_key(kid, requester, user)] = jwt
 
 
 class JWKManager:

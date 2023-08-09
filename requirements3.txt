@@ -95,7 +95,6 @@ kmsauth==0.6.0
     # via -r requirements.in
 lru-dict==1.2.0
     # via -r requirements.in
-lxml==4.9.2
     # via
     #   python3-saml
     #   xmlsec
@@ -149,7 +148,6 @@ python-dateutil==2.8.2
     #   pynamodb
 python-json-logger==2.0.7
     # via -r requirements.in
-python3-saml==1.15.0
     # via -r requirements.in
 pytz==2023.3
     # via -r requirements.in
@@ -197,8 +195,6 @@ werkzeug==1.0.1
     # via flask
 wrapt==1.15.0
     # via deprecated
-xmlsec==1.3.13
-    # via python3-saml
 zope-event==5.0
     # via gevent
 zope-interface==6.0
