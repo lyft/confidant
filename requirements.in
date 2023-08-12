@@ -205,3 +205,6 @@ cachetools==5.2.0
 
 # for typing
 mypy
+
+##
+fakeredis

@@ -16,8 +16,11 @@ from confidant.settings import JWT_CERTIFICATE_AUTHORITIES
 from confidant.settings import JWT_DEFAULT_JWT_EXPIRATION_SECONDS
 from confidant.settings import JWT_CACHING_MAX_SIZE
 from confidant.settings import JWT_CACHING_TTL_SECONDS
+from confidant.settings import REDIS_URL
+from confidant.settings import JWT_USE_REDIS_CACHE
 from confidant.utils import stats
 
+from redis import RedisError
 from cachetools import TTLCache
 from jwcrypto import jwk
 import redis
@@ -61,26 +64,44 @@ class LocalJwtCache(JwtCache):
         self._token_cache[self.cache_key(kid, requester, user)] = jwt
 
 
-# XXX: TODO add remote redis cache
 class RedisCache(JwtCache):
-    # initalize redis client
     def __init__(self) -> None:
-        self._redis_cache = redis.StrictRedis()
+        self._redis_client = None
+        try:
+            self._redis_client = redis.StrictRedis.from_url(REDIS_URL, decode_responses=True)
+        except RedisError as e:
+            print(f'1Error connecting to Redis: {e}')
+            logger.error(f'Failed to setup connection to Redis: {e}')
 
-    ## get JWT from redis cache
+    def cache_key(self, kid: str, requester: str, user: str) -> str:
+        return f'{kid}:{requester}:{user}'
+
     def get_jwt(self, kid: str, requester: str, user: str) -> str:
-        cached_jwt = self._redis_cache.get(self.cache_key(kid, requester, user))
-        return cached_jwt
+        if self._redis_client:
+            try:
+                cached_jwt = self._redis_client.get(self.cache_key(kid, requester, user))
+            except RedisError as e:
+                logger.error(f'Error connecting to Redis: {e}')
+                return None
+            return cached_jwt
 
     def set_jwt(self, kid: str, requester: str, user: str, jwt: str) -> None:
-        self._redis_cache[self.cache_key(kid, requester, user)] = jwt
-
+        if self._redis_client:
+            try:
+                self._redis_client.set(self.cache_key(kid, requester, user), jwt, JWT_CACHING_TTL_SECONDS)
+            except RedisError as e:
+                print (f'Error connecting to Redis: {e}')
+                logger.error(f'Error connecting to Redis: {e}')
+                return None
 
 class JWKManager:
     def __init__(self) -> None:
         self._keys = {}
-        # XXX: TODO add hook here to point to remote redis cache
-        self._jwt_cache = LocalJwtCache()
+        if JWT_CACHING_ENABLED:
+            if JWT_USE_REDIS_CACHE:
+                self._jwt_cache = RedisCache()
+            else:
+                self._jwt_cache = LocalJwtCache()
         self._pem_cache = {}
 
         self._load_certificate_authorities()
