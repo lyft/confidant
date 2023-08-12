@@ -68,7 +68,8 @@ class RedisCache(JwtCache):
     def __init__(self) -> None:
         self._redis_client = None
         try:
-            self._redis_client = redis.StrictRedis.from_url(REDIS_URL, decode_responses=True)
+            self._redis_client = \
+                redis.StrictRedis.from_url(REDIS_URL, decode_responses=True)
         except RedisError as e:
             print(f'1Error connecting to Redis: {e}')
             logger.error(f'Failed to setup connection to Redis: {e}')
@@ -79,7 +80,8 @@ class RedisCache(JwtCache):
     def get_jwt(self, kid: str, requester: str, user: str) -> str:
         if self._redis_client:
             try:
-                cached_jwt = self._redis_client.get(self.cache_key(kid, requester, user))
+                cached_jwt = \
+                    self._redis_client.get(self.cache_key(kid, requester, user))
             except RedisError as e:
                 logger.error(f'Error connecting to Redis: {e}')
                 return None
@@ -88,20 +90,22 @@ class RedisCache(JwtCache):
     def set_jwt(self, kid: str, requester: str, user: str, jwt: str) -> None:
         if self._redis_client:
             try:
-                self._redis_client.set(self.cache_key(kid, requester, user), jwt, JWT_CACHING_TTL_SECONDS)
+                self._redis_client.set(self.cache_key(kid, requester, user),
+                                       jwt, JWT_CACHING_TTL_SECONDS)
             except RedisError as e:
-                print (f'Error connecting to Redis: {e}')
+                print(f'Error connecting to Redis: {e}')
                 logger.error(f'Error connecting to Redis: {e}')
                 return None
+
 
 class JWKManager:
     def __init__(self) -> None:
         self._keys = {}
-        if JWT_CACHING_ENABLED:
-            if JWT_USE_REDIS_CACHE:
-                self._jwt_cache = RedisCache()
-            else:
-                self._jwt_cache = LocalJwtCache()
+        self._jwt_cache = None
+        if JWT_USE_REDIS_CACHE:
+            self._jwt_cache = RedisCache()
+        else:
+            self._jwt_cache = LocalJwtCache()
         self._pem_cache = {}
 
         self._load_certificate_authorities()
@@ -147,9 +151,9 @@ class JWKManager:
             if self._pem_cache[environment][kid]:
                 self._pem_cache[environment][kid] = \
                     self._pem_cache[environment][kid].export_to_pem(
-                    private_key=True,
-                    password=None
-                )
+                        private_key=True,
+                        password=None
+                    )
         return self._pem_cache[environment][kid]
 
     def _get_active_kids(self) -> List[str]:

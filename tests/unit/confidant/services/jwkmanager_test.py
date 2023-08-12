@@ -1,12 +1,9 @@
-from _pytest import unittest
-
 import confidant.services.jwkmanager
 import datetime
 import base64
 import json
 import pytest
 import fakeredis
-import redis
 from redis import RedisError
 
 from jwcrypto import jwk
@@ -219,14 +216,16 @@ def test_localcache_get_jwt():
     assert cached_jwt is None
     assert len(localcache._token_cache) == 0
 
-    localcache.set_jwt('marge', 'homer', 'bart', 'lisa')
+    cached_jwt = localcache.set_jwt('marge', 'homer', 'bart', 'lisa')
     cached_jwt = localcache.get_jwt('marge', 'homer', 'bart')
     assert cached_jwt == 'lisa'
     assert len(localcache._token_cache) == 1
 
 
-@patch('confidant.services.jwkmanager.redis.StrictRedis', fakeredis.FakeStrictRedis)
-@patch.object(confidant.services.jwkmanager, 'REDIS_URL', 'redis://localhost:9090')
+@patch('confidant.services.jwkmanager.redis.StrictRedis',
+       fakeredis.FakeStrictRedis)
+@patch.object(confidant.services.jwkmanager, 'REDIS_URL',
+              'redis://localhost:9090')
 def test_rediscache_get_jwt():
     redis_cache = RedisCache()
     cached_jwt = redis_cache.get_jwt('marge', 'homer', 'bart')
@@ -236,10 +235,11 @@ def test_rediscache_get_jwt():
     assert cached_jwt == 'lisa'
 
 
-@patch('confidant.services.jwkmanager.redis.StrictRedis.get', side_effect=RedisError("Mocked RedisError"))
-@patch.object(confidant.services.jwkmanager, 'REDIS_URL', 'redis://localhost:9090')
+@patch('confidant.services.jwkmanager.redis.StrictRedis.get',
+       side_effect=RedisError("Mocked RedisError"))
+@patch.object(confidant.services.jwkmanager, 'REDIS_URL',
+              'redis://localhost:9090')
 def test_rediscache_redis_error(mock_redis):
     redis_cache = RedisCache()
     cached_jwt = redis_cache.get_jwt('marge', 'homer', 'bart')
     assert cached_jwt is None
-
