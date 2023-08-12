@@ -20,10 +20,9 @@ from confidant.settings import REDIS_URL
 from confidant.settings import JWT_USE_REDIS_CACHE
 from confidant.utils import stats
 
-from redis import RedisError
+from redis import StrictRedis, RedisError
 from cachetools import TTLCache
 from jwcrypto import jwk
-import redis
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +68,7 @@ class RedisCache(JwtCache):
         self._redis_client = None
         try:
             self._redis_client = \
-                redis.StrictRedis.from_url(REDIS_URL, decode_responses=True)
+                StrictRedis.from_url(REDIS_URL, decode_responses=True)
         except RedisError as e:
             print(f'1Error connecting to Redis: {e}')
             logger.error(f'Failed to setup connection to Redis: {e}')

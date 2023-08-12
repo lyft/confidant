@@ -222,7 +222,7 @@ def test_localcache_get_jwt():
     assert len(localcache._token_cache) == 1
 
 
-@patch('confidant.services.jwkmanager.redis.StrictRedis',
+@patch('confidant.services.jwkmanager.StrictRedis',
        fakeredis.FakeStrictRedis)
 @patch.object(confidant.services.jwkmanager, 'REDIS_URL',
               'redis://localhost:9090')
@@ -235,7 +235,7 @@ def test_rediscache_get_jwt():
     assert cached_jwt == 'lisa'
 
 
-@patch('confidant.services.jwkmanager.redis.StrictRedis.get',
+@patch('confidant.services.jwkmanager.StrictRedis.get',
        side_effect=RedisError("Mocked RedisError"))
 @patch.object(confidant.services.jwkmanager, 'REDIS_URL',
               'redis://localhost:9090')
