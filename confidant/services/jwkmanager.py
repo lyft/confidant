@@ -17,7 +17,7 @@ from confidant.settings import JWT_DEFAULT_JWT_EXPIRATION_SECONDS
 from confidant.settings import JWT_CACHING_MAX_SIZE
 from confidant.settings import JWT_CACHING_TTL_SECONDS
 from confidant.settings import REDIS_URL
-from confidant.settings import JWT_USE_REDIS_CACHE
+from confidant.settings import JWT_CACHING_USE_REDIS
 from confidant.utils import stats
 
 from redis import StrictRedis, RedisError
@@ -101,7 +101,7 @@ class JWKManager:
     def __init__(self) -> None:
         self._keys = {}
         self._jwt_cache = None
-        if JWT_USE_REDIS_CACHE:
+        if JWT_CACHING_USE_REDIS:
             self._jwt_cache = RedisCache()
         else:
             self._jwt_cache = LocalJwtCache()
