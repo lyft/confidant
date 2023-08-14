@@ -646,7 +646,7 @@ JWT_DEFAULT_JWT_EXPIRATION_SECONDS = int_env(
     'JWT_DEFAULT_JWT_EXPIRATION_SECONDS', 3600
 )
 
-# Setting it true use REDIS for as JWT cache
+# Setting it true uses REDIS for JWT cache
 # REDIS server address will be fetched from "REDIS_URL"
 JWT_CACHING_USE_REDIS = bool_env('JWT_USE_REDIS_CACHE', False)
 
