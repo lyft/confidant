@@ -70,7 +70,6 @@ class RedisCache(JwtCache):
             self._redis_client = \
                 StrictRedis.from_url(REDIS_URL, decode_responses=True)
         except RedisError as e:
-            print(f'1Error connecting to Redis: {e}')
             logger.error(f'Failed to setup connection to Redis: {e}')
 
     def cache_key(self, kid: str, requester: str, user: str) -> str:
@@ -92,7 +91,6 @@ class RedisCache(JwtCache):
                 self._redis_client.set(self.cache_key(kid, requester, user),
                                        jwt, JWT_CACHING_TTL_SECONDS)
             except RedisError as e:
-                print(f'Error connecting to Redis: {e}')
                 logger.error(f'Error connecting to Redis: {e}')
                 return None
 
