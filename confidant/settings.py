@@ -649,9 +649,10 @@ JWT_DEFAULT_JWT_EXPIRATION_SECONDS = int_env(
 # A redis connection url to store JWTs.
 # Example: redis://localhost:6379
 REDIS_URL_JWT_CACHE = str_env('REDIS_URL_JWT_CACHE', '')
+# Redis socket timeout in seconds
 REDIS_SOCKET_TIMEOUT = int_env('REDIS_SOCKET_TIMEOUT', 2)
 # Setting it true uses REDIS for JWT cache
-JWT_CACHING_USE_REDIS = bool_env('JWT_USE_REDIS_CACHE', False)
+JWT_CACHING_USE_REDIS = bool_env('JWT_CACHING_USE_REDIS', False)
 
 
 # Key IDs from CERTIFICATE_AUTHORITIES that should be used to sign new JWTs,
