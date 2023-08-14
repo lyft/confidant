@@ -648,7 +648,7 @@ JWT_DEFAULT_JWT_EXPIRATION_SECONDS = int_env(
 
 # Setting it true uses REDIS for JWT cache
 # REDIS server address will be fetched from "REDIS_URL"
-JWT_CACHING_USE_REDIS = bool_env('JWT_USE_REDIS_CACHE', False)
+JWT_CACHING_USE_REDIS = bool_env('JWT_CACHING_USE_REDIS', False)
 
 # Key IDs from CERTIFICATE_AUTHORITIES that should be used to sign new JWTs,
 # provide a JSON with the following format:
