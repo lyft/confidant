@@ -16,7 +16,7 @@ from confidant.settings import JWT_CERTIFICATE_AUTHORITIES
 from confidant.settings import JWT_DEFAULT_JWT_EXPIRATION_SECONDS
 from confidant.settings import JWT_CACHING_MAX_SIZE
 from confidant.settings import JWT_CACHING_TTL_SECONDS
-from confidant.settings import REDIS_URL
+from confidant.settings import REDIS_URL_JWT_CACHE, REDIS_SOCKET_TIMEOUT
 from confidant.settings import JWT_CACHING_USE_REDIS
 from confidant.utils import stats
 
@@ -68,7 +68,7 @@ class RedisCache(JwtCache):
         self._redis_client = None
         try:
             self._redis_client = \
-                StrictRedis.from_url(REDIS_URL, decode_responses=True)
+                StrictRedis.from_url(REDIS_URL_JWT_CACHE, decode_responses=True, socket_timeout=REDIS_SOCKET_TIMEOUT)
         except RedisError as e:
             logger.error(f'Failed to setup connection to Redis: {e}')
 

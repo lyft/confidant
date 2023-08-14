@@ -282,9 +282,9 @@ XSRF_COOKIE_NAME = str_env('XSRF_COOKIE_NAME', 'XSRF-TOKEN')
 # Session cache
 # Mutually exclusive with secure cookie session settings.
 
-# A redis connection url.
+# A redis connection url to store flask sessions.
 # Example: redis://localhost:6379
-REDIS_URL = str_env('REDIS_URL')
+REDIS_URL_FLASK_SESSIONS = str_env('REDIS_URL_FLASK_SESSIONS')
 # The session type for Flask-Session. Currenty only redis is supported.
 SESSION_TYPE = str_env('SESSION_TYPE', 'redis')
 # The key prefix to use in redis. Can be used to run multiple applications on
@@ -646,9 +646,13 @@ JWT_DEFAULT_JWT_EXPIRATION_SECONDS = int_env(
     'JWT_DEFAULT_JWT_EXPIRATION_SECONDS', 3600
 )
 
+# A redis connection url to store JWTs.
+# Example: redis://localhost:6379
+REDIS_URL_JWT_CACHE = str_env('REDIS_URL_JWT_CACHE', '')
+REDIS_SOCKET_TIMEOUT = int_env('REDIS_SOCKET_TIMEOUT', 2)
 # Setting it true uses REDIS for JWT cache
-# REDIS server address will be fetched from "REDIS_URL"
 JWT_CACHING_USE_REDIS = bool_env('JWT_USE_REDIS_CACHE', False)
+
 
 # Key IDs from CERTIFICATE_AUTHORITIES that should be used to sign new JWTs,
 # provide a JSON with the following format:
