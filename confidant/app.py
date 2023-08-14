@@ -48,7 +48,8 @@ def create_app():
         import redis
         from flask_session import Session
         app.config['SESSION_REDIS'] = redis.Redis.from_url(
-            settings.REDIS_URL_FLASK_SESSIONS, socket_timeout=settings.REDIS_SOCKET_TIMEOUT
+            settings.REDIS_URL_FLASK_SESSIONS,
+            socket_timeout=settings.REDIS_SOCKET_TIMEOUT
         )
         Session(app)
 

@@ -68,7 +68,8 @@ class RedisCache(JwtCache):
         self._redis_client = None
         try:
             self._redis_client = \
-                StrictRedis.from_url(REDIS_URL_JWT_CACHE, decode_responses=True, socket_timeout=REDIS_SOCKET_TIMEOUT)
+                StrictRedis.from_url(REDIS_URL_JWT_CACHE, decode_responses=True,
+                                     socket_timeout=REDIS_SOCKET_TIMEOUT)
         except RedisError as e:
             logger.error(f'Failed to setup connection to Redis: {e}')
 
