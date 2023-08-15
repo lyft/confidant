@@ -44,11 +44,12 @@ def create_app():
 
     app.wsgi_app = guard.ContentSecurityPolicy(app.wsgi_app, CSP_POLICY)
 
-    if settings.REDIS_URL:
+    if settings.REDIS_URL_FLASK_SESSIONS:
         import redis
         from flask_session import Session
         app.config['SESSION_REDIS'] = redis.Redis.from_url(
-            settings.REDIS_URL
+            settings.REDIS_URL_FLASK_SESSIONS,
+            socket_timeout=settings.REDIS_SOCKET_TIMEOUT
         )
         Session(app)
 

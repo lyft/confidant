@@ -3,12 +3,15 @@ import datetime
 import base64
 import json
 import pytest
+import fakeredis
+from redis import RedisError
+
 from jwcrypto import jwk
 from pytest_mock.plugin import MockerFixture
 from typing import Dict, Union
 from unittest.mock import patch, Mock
 from confidant.services.jwkmanager import JWKManager
-from confidant.services.jwkmanager import LocalJwtCache
+from confidant.services.jwkmanager import LocalJwtCache, RedisCache
 from confidant.settings import JWT_CACHING_MAX_SIZE
 from confidant.settings import JWT_CACHING_TTL_SECONDS
 
@@ -78,7 +81,6 @@ def test_get_jwt_caches_jwt(
     test_jwk_payload: Dict[str, Union[str, bool]],
     test_jwt: str
 ):
-
     jwk_manager = JWKManager()
     test_private_key = test_key_pair.export_to_pem(private_key=True,
                                                    password=None)
@@ -178,7 +180,6 @@ def test_get_jwt_with_ca(
     with patch.object(confidant.services.jwkmanager,
                       'JWT_CERTIFICATE_AUTHORITIES',
                       test_certificate_authorities):
-
         jwk_manager = JWKManager()
         mocker.patch(
             'confidant.services.jwkmanager.datetime.now',
@@ -219,3 +220,26 @@ def test_localcache_get_jwt():
     cached_jwt = localcache.get_jwt('marge', 'homer', 'bart')
     assert cached_jwt == 'lisa'
     assert len(localcache._token_cache) == 1
+
+
+@patch('confidant.services.jwkmanager.StrictRedis',
+       fakeredis.FakeStrictRedis)
+@patch.object(confidant.services.jwkmanager, 'REDIS_URL_JWT_CACHE',
+              'redis://localhost:9090')
+def test_rediscache_get_jwt():
+    redis_cache = RedisCache()
+    cached_jwt = redis_cache.get_jwt('marge', 'homer', 'bart')
+    assert cached_jwt is None
+    redis_cache.set_jwt('marge', 'homer', 'bart', 'lisa')
+    cached_jwt = redis_cache.get_jwt('marge', 'homer', 'bart')
+    assert cached_jwt == 'lisa'
+
+
+@patch('confidant.services.jwkmanager.StrictRedis.get',
+       side_effect=RedisError("Mocked RedisError"))
+@patch.object(confidant.services.jwkmanager, 'REDIS_URL_JWT_CACHE',
+              'redis://localhost:9090')
+def test_rediscache_redis_error(mock_redis):
+    redis_cache = RedisCache()
+    cached_jwt = redis_cache.get_jwt('marge', 'homer', 'bart')
+    assert cached_jwt is None

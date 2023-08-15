@@ -205,3 +205,8 @@ cachetools==5.2.0
 
 # for typing
 mypy
+
+# License: BSD
+# Upstream url: https://pypi.org/project/fakeredis/
+# Use: To mock redis in unit tests
+fakeredis
