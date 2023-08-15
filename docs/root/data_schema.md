@@ -17,7 +17,7 @@ __credential__
 * revision: incrementing integer (integer)
 * name: user-defined friendly name (string)
 * credential\_pairs: dict with key/val pairs (string)
-* enabled: (boolean)
+* enabled: active/deprecated (boolean)
 * data\_key: encrypted data key used to encrypt the credential\_pairs (binary)
 * modified\_date: auto-generated date (datetime)
 
@@ -28,7 +28,7 @@ __archive-credential__
 * revision: incrementing integer (current revision + 1) (integer)
 * name: user-defined friendly name (string)
 * credential\_pairs: dict with key/val pairs (string)
-* enabled: (boolean)
+* enabled: active/deprecated (boolean)
 * data\_key: encrypted data key used to encrypt the credential\_pairs (binary)
 * modified\_date: auto-generated date (datetime)
 
@@ -38,6 +38,7 @@ __service__
 * data-type: 'service' (string)
 * revision: incrementing integer (integer)
 * credentials: list of credential ids (string set)
+* enabled: active/deprecated (boolean)
 * modified\_date: auto-generated date (datetime)
 
 __archive-service__
@@ -46,6 +47,7 @@ __archive-service__
 * data-type: 'service' (string)
 * revision: incrementing integer (current revision + 1) (integer)
 * credentials: list of credential ids (string set)
+* enabled: active/deprecated (boolean)
 * modified\_date: auto-generated date (datetime)
 
 ## At-rest encryption model
