@@ -1,4 +1,4 @@
--r ../requirements.txt
+-r ../requirements3.txt
 GitPython==2.0.8
 Jinja2==2.11.3
 Pygments==2.7.4
