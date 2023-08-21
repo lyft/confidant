@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.services package &mdash; confidant 6.3.0-92a4c4 documentation</title>
+  <title>confidant.services package &mdash; confidant 6.5.1-803382 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.3.0-92a4c4
+                6.5.1-803382
               </div>
             
           
@@ -630,6 +630,11 @@ decrypted_text = cipher.decrypt(encrypted_text)</p>
 <div class="section" id="module-confidant.services.credentialmanager">
 <span id="confidant-services-credentialmanager-module"></span><h2>confidant.services.credentialmanager module<a class="headerlink" href="#module-confidant.services.credentialmanager" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="confidant.services.credentialmanager.archive_credentials">
+<code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">archive_credentials</code><span class="sig-paren">(</span><em class="sig-param">credentials</em>, <em class="sig-param">force</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.archive_credentials" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="confidant.services.credentialmanager.check_credential_pair_values">
 <code class="sig-prename descclassname">confidant.services.credentialmanager.</code><code class="sig-name descname">check_credential_pair_values</code><span class="sig-paren">(</span><em class="sig-param">credential_pairs</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.credentialmanager.check_credential_pair_values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -690,6 +695,93 @@ decrypted_text = cipher.decrypt(encrypted_text)</p>
 <dt id="confidant.services.iamrolemanager.refresh_cache">
 <code class="sig-prename descclassname">confidant.services.iamrolemanager.</code><code class="sig-name descname">refresh_cache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.services.iamrolemanager.refresh_cache" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</div>
+<div class="section" id="module-confidant.services.jwkmanager">
+<span id="confidant-services-jwkmanager-module"></span><h2>confidant.services.jwkmanager module<a class="headerlink" href="#module-confidant.services.jwkmanager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="confidant.services.jwkmanager.JWKManager">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.services.jwkmanager.</code><code class="sig-name descname">JWKManager</code><a class="headerlink" href="#confidant.services.jwkmanager.JWKManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="confidant.services.jwkmanager.JWKManager.get_active_key">
+<code class="sig-name descname">get_active_key</code><span class="sig-paren">(</span><em class="sig-param">environment: str</em><span class="sig-paren">)</span> &#x2192; Tuple[str, Optional[jwcrypto.jwk.JWK]]<a class="headerlink" href="#confidant.services.jwkmanager.JWKManager.get_active_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.jwkmanager.JWKManager.get_jwks">
+<code class="sig-name descname">get_jwks</code><span class="sig-paren">(</span><em class="sig-param">environment: str</em>, <em class="sig-param">algorithm: str = 'RS256'</em><span class="sig-paren">)</span> &#x2192; List[Dict[str, str]]<a class="headerlink" href="#confidant.services.jwkmanager.JWKManager.get_jwks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.jwkmanager.JWKManager.get_jwt">
+<code class="sig-name descname">get_jwt</code><span class="sig-paren">(</span><em class="sig-param">environment: str</em>, <em class="sig-param">payload: dict</em>, <em class="sig-param">expiration_seconds: int = 3600</em>, <em class="sig-param">algorithm: str = 'RS256'</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#confidant.services.jwkmanager.JWKManager.get_jwt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.jwkmanager.JWKManager.set_key">
+<code class="sig-name descname">set_key</code><span class="sig-paren">(</span><em class="sig-param">environment: str</em>, <em class="sig-param">kid: str</em>, <em class="sig-param">private_key: str</em>, <em class="sig-param">passphrase: Optional[str] = None</em>, <em class="sig-param">encoding: str = 'utf-8'</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#confidant.services.jwkmanager.JWKManager.set_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.services.jwkmanager.JwtCache">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.services.jwkmanager.</code><code class="sig-name descname">JwtCache</code><a class="headerlink" href="#confidant.services.jwkmanager.JwtCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<dl class="method">
+<dt id="confidant.services.jwkmanager.JwtCache.get_jwt">
+<em class="property">abstract </em><code class="sig-name descname">get_jwt</code><span class="sig-paren">(</span><em class="sig-param">kid: str</em>, <em class="sig-param">requester: str</em>, <em class="sig-param">user: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#confidant.services.jwkmanager.JwtCache.get_jwt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.jwkmanager.JwtCache.set_jwt">
+<em class="property">abstract </em><code class="sig-name descname">set_jwt</code><span class="sig-paren">(</span><em class="sig-param">kid: str</em>, <em class="sig-param">requester: str</em>, <em class="sig-param">user: str</em>, <em class="sig-param">jwt: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#confidant.services.jwkmanager.JwtCache.set_jwt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.services.jwkmanager.LocalJwtCache">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.services.jwkmanager.</code><code class="sig-name descname">LocalJwtCache</code><a class="headerlink" href="#confidant.services.jwkmanager.LocalJwtCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.services.jwkmanager.JwtCache" title="confidant.services.jwkmanager.JwtCache"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.services.jwkmanager.JwtCache</span></code></a></p>
+<dl class="method">
+<dt id="confidant.services.jwkmanager.LocalJwtCache.cache_key">
+<code class="sig-name descname">cache_key</code><span class="sig-paren">(</span><em class="sig-param">kid: str</em>, <em class="sig-param">requester: str</em>, <em class="sig-param">user: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#confidant.services.jwkmanager.LocalJwtCache.cache_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.jwkmanager.LocalJwtCache.get_jwt">
+<code class="sig-name descname">get_jwt</code><span class="sig-paren">(</span><em class="sig-param">kid: str</em>, <em class="sig-param">requester: str</em>, <em class="sig-param">user: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#confidant.services.jwkmanager.LocalJwtCache.get_jwt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.jwkmanager.LocalJwtCache.set_jwt">
+<code class="sig-name descname">set_jwt</code><span class="sig-paren">(</span><em class="sig-param">kid: str</em>, <em class="sig-param">requester: str</em>, <em class="sig-param">user: str</em>, <em class="sig-param">jwt: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#confidant.services.jwkmanager.LocalJwtCache.set_jwt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.services.jwkmanager.RedisCache">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.services.jwkmanager.</code><code class="sig-name descname">RedisCache</code><a class="headerlink" href="#confidant.services.jwkmanager.RedisCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.services.jwkmanager.JwtCache" title="confidant.services.jwkmanager.JwtCache"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.services.jwkmanager.JwtCache</span></code></a></p>
+<dl class="method">
+<dt id="confidant.services.jwkmanager.RedisCache.cache_key">
+<code class="sig-name descname">cache_key</code><span class="sig-paren">(</span><em class="sig-param">kid: str</em>, <em class="sig-param">requester: str</em>, <em class="sig-param">user: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#confidant.services.jwkmanager.RedisCache.cache_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.jwkmanager.RedisCache.get_jwt">
+<code class="sig-name descname">get_jwt</code><span class="sig-paren">(</span><em class="sig-param">kid: str</em>, <em class="sig-param">requester: str</em>, <em class="sig-param">user: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#confidant.services.jwkmanager.RedisCache.get_jwt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="confidant.services.jwkmanager.RedisCache.set_jwt">
+<code class="sig-name descname">set_jwt</code><span class="sig-paren">(</span><em class="sig-param">kid: str</em>, <em class="sig-param">requester: str</em>, <em class="sig-param">user: str</em>, <em class="sig-param">jwt: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#confidant.services.jwkmanager.RedisCache.set_jwt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
 
 </div>
 <div class="section" id="module-confidant.services.keymanager">
@@ -801,7 +893,7 @@ decrypted_text = cipher.decrypt(encrypted_text)</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019-2021, Confidant Project Authors
+        &copy; Copyright 2019-2023, Confidant Project Authors
 
     </p>
   </div>

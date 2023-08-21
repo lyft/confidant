@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DynamoDB Data Schema &mdash; confidant 6.3.0-92a4c4 documentation</title>
+  <title>DynamoDB Data Schema &mdash; confidant 6.5.1-803382 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.3.0-92a4c4
+                6.5.1-803382
               </div>
             
           
@@ -393,7 +393,7 @@ the same.</p>
 <li><p>revision: incrementing integer (integer)</p></li>
 <li><p>name: user-defined friendly name (string)</p></li>
 <li><p>credential_pairs: dict with key/val pairs (string)</p></li>
-<li><p>enabled: (boolean)</p></li>
+<li><p>enabled: active/deprecated (boolean)</p></li>
 <li><p>data_key: encrypted data key used to encrypt the credential_pairs (binary)</p></li>
 <li><p>modified_date: auto-generated date (datetime)</p></li>
 </ul>
@@ -404,7 +404,7 @@ the same.</p>
 <li><p>revision: incrementing integer (current revision + 1) (integer)</p></li>
 <li><p>name: user-defined friendly name (string)</p></li>
 <li><p>credential_pairs: dict with key/val pairs (string)</p></li>
-<li><p>enabled: (boolean)</p></li>
+<li><p>enabled: active/deprecated (boolean)</p></li>
 <li><p>data_key: encrypted data key used to encrypt the credential_pairs (binary)</p></li>
 <li><p>modified_date: auto-generated date (datetime)</p></li>
 </ul>
@@ -414,6 +414,7 @@ the same.</p>
 <li><p>data-type: ‘service’ (string)</p></li>
 <li><p>revision: incrementing integer (integer)</p></li>
 <li><p>credentials: list of credential ids (string set)</p></li>
+<li><p>enabled: active/deprecated (boolean)</p></li>
 <li><p>modified_date: auto-generated date (datetime)</p></li>
 </ul>
 <p><strong>archive-service</strong></p>
@@ -422,6 +423,7 @@ the same.</p>
 <li><p>data-type: ‘service’ (string)</p></li>
 <li><p>revision: incrementing integer (current revision + 1) (integer)</p></li>
 <li><p>credentials: list of credential ids (string set)</p></li>
+<li><p>enabled: active/deprecated (boolean)</p></li>
 <li><p>modified_date: auto-generated date (datetime)</p></li>
 </ul>
 <div class="section" id="at-rest-encryption-model">
@@ -461,7 +463,7 @@ isn’t available in memory.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019-2021, Confidant Project Authors
+        &copy; Copyright 2019-2023, Confidant Project Authors
 
     </p>
   </div>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.schema package &mdash; confidant 6.3.0-92a4c4 documentation</title>
+  <title>confidant.schema package &mdash; confidant 6.5.1-803382 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.3.0-92a4c4
+                6.5.1-803382
               </div>
             
           
@@ -734,6 +734,96 @@ validation errors will raise an exception.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-confidant.schema.jwks">
+<span id="confidant-schema-jwks-module"></span><h2>confidant.schema.jwks module<a class="headerlink" href="#module-confidant.schema.jwks" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="confidant.schema.jwks.JWKSListResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.jwks.</code><code class="sig-name descname">JWKSListResponse</code><span class="sig-paren">(</span><em class="sig-param">keys</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.jwks.JWKSListResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.jwks.JWKSListResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.jwks.</code><code class="sig-name descname">JWKSListResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.jwks.JWKSListResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.schema.auto_build_schema.AutobuildSchema" title="confidant.schema.auto_build_schema.AutobuildSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.schema.auto_build_schema.AutobuildSchema</span></code></a></p>
+<dl class="class">
+<dt id="confidant.schema.jwks.JWKSListResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.jwks.JWKSListResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.jwks.JWKSListResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.jwks.JWKSListResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.jwks.JWKSListResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.jwks.JWKSListResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.jwks.JWKSResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.jwks.</code><code class="sig-name descname">JWKSResponse</code><span class="sig-paren">(</span><em class="sig-param">kty</em>, <em class="sig-param">kid</em>, <em class="sig-param">n</em>, <em class="sig-param">e</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.jwks.JWKSResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.jwks.JWKSResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.jwks.</code><code class="sig-name descname">JWKSResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.jwks.JWKSResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.schema.auto_build_schema.AutobuildSchema" title="confidant.schema.auto_build_schema.AutobuildSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.schema.auto_build_schema.AutobuildSchema</span></code></a></p>
+<dl class="class">
+<dt id="confidant.schema.jwks.JWKSResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.jwks.JWKSResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.jwks.JWKSResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.jwks.JWKSResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.jwks.JWKSResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.jwks.JWKSResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.jwks.JWTResponse">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.jwks.</code><code class="sig-name descname">JWTResponse</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.jwks.JWTResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="confidant.schema.jwks.JWTResponseSchema">
+<em class="property">class </em><code class="sig-prename descclassname">confidant.schema.jwks.</code><code class="sig-name descname">JWTResponseSchema</code><span class="sig-paren">(</span><em class="sig-param">extra=None</em>, <em class="sig-param">only=None</em>, <em class="sig-param">exclude=()</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">many=False</em>, <em class="sig-param">context=None</em>, <em class="sig-param">load_only=()</em>, <em class="sig-param">dump_only=()</em>, <em class="sig-param">partial=False</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.schema.jwks.JWTResponseSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#confidant.schema.auto_build_schema.AutobuildSchema" title="confidant.schema.auto_build_schema.AutobuildSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.schema.auto_build_schema.AutobuildSchema</span></code></a></p>
+<dl class="class">
+<dt id="confidant.schema.jwks.JWTResponseSchema.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.schema.jwks.JWTResponseSchema.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="confidant.schema.jwks.JWTResponseSchema.Meta.jit">
+<code class="sig-name descname">jit</code><a class="headerlink" href="#confidant.schema.jwks.JWTResponseSchema.Meta.jit" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">toastedmarshmallow.Jit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.schema.jwks.JWTResponseSchema.opts">
+<code class="sig-name descname">opts</code><em class="property"> = &lt;marshmallow.schema.SchemaOpts object&gt;</em><a class="headerlink" href="#confidant.schema.jwks.JWTResponseSchema.opts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-confidant.schema.services">
 <span id="confidant-schema-services-module"></span><h2>confidant.schema.services module<a class="headerlink" href="#module-confidant.schema.services" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -903,7 +993,7 @@ validation errors will raise an exception.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019-2021, Confidant Project Authors
+        &copy; Copyright 2019-2023, Confidant Project Authors
 
     </p>
   </div>

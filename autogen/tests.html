@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tests package &mdash; confidant 6.3.0-92a4c4 documentation</title>
+  <title>tests package &mdash; confidant 6.5.1-803382 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.3.0-92a4c4
+                6.5.1-803382
               </div>
             
           
@@ -423,6 +423,8 @@
 <li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.routes.html#module-tests.unit.confidant.routes.certificates_test">tests.unit.confidant.routes.certificates_test module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.routes.html#module-tests.unit.confidant.routes.credentials_test">tests.unit.confidant.routes.credentials_test module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.routes.html#module-tests.unit.confidant.routes.identity_test">tests.unit.confidant.routes.identity_test module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.routes.html#module-tests.unit.confidant.routes.jwks_test">tests.unit.confidant.routes.jwks_test module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.routes.html#module-tests.unit.confidant.routes.services_test">tests.unit.confidant.routes.services_test module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.routes.html#module-tests.unit.confidant.routes">Module contents</a></li>
 </ul>
 </li>
@@ -431,6 +433,7 @@
 <li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.services.html#module-tests.unit.confidant.services.certificatemanager_test">tests.unit.confidant.services.certificatemanager_test module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.services.html#module-tests.unit.confidant.services.ciphermanager_test">tests.unit.confidant.services.ciphermanager_test module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.services.html#module-tests.unit.confidant.services.credentialmanager_test">tests.unit.confidant.services.credentialmanager_test module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.services.html#module-tests.unit.confidant.services.jwkmanager_test">tests.unit.confidant.services.jwkmanager_test module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.services.html#module-tests.unit.confidant.services.keymanager_test">tests.unit.confidant.services.keymanager_test module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.services.html#module-tests.unit.confidant.services.servicemanager_test">tests.unit.confidant.services.servicemanager_test module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="tests.unit.confidant.services.html#module-tests.unit.confidant.services">Module contents</a></li>
@@ -461,6 +464,41 @@
 <code class="sig-prename descclassname">tests.conftest.</code><code class="sig-name descname">encrypted_settings_mock</code><span class="sig-paren">(</span><em class="sig-param">mocker</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.conftest.encrypted_settings_mock" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="function">
+<dt id="tests.conftest.test_certificate">
+<code class="sig-prename descclassname">tests.conftest.</code><code class="sig-name descname">test_certificate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.conftest.test_certificate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tests.conftest.test_certificate_authorities">
+<code class="sig-prename descclassname">tests.conftest.</code><code class="sig-name descname">test_certificate_authorities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.conftest.test_certificate_authorities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tests.conftest.test_encrypted_key">
+<code class="sig-prename descclassname">tests.conftest.</code><code class="sig-name descname">test_encrypted_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.conftest.test_encrypted_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tests.conftest.test_jwk_payload">
+<code class="sig-prename descclassname">tests.conftest.</code><code class="sig-name descname">test_jwk_payload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.conftest.test_jwk_payload" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tests.conftest.test_jwks">
+<code class="sig-prename descclassname">tests.conftest.</code><code class="sig-name descname">test_jwks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.conftest.test_jwks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tests.conftest.test_jwt">
+<code class="sig-prename descclassname">tests.conftest.</code><code class="sig-name descname">test_jwt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.conftest.test_jwt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tests.conftest.test_key_pair">
+<code class="sig-prename descclassname">tests.conftest.</code><code class="sig-name descname">test_key_pair</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.conftest.test_key_pair" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tests">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tests" title="Permalink to this headline">¶</a></h2>
@@ -478,7 +516,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019-2021, Confidant Project Authors
+        &copy; Copyright 2019-2023, Confidant Project Authors
 
     </p>
   </div>

@@ -36,6 +36,14 @@ confidant.routes.identity module
    :undoc-members:
    :show-inheritance:
 
+confidant.routes.jwks module
+----------------------------
+
+.. automodule:: confidant.routes.jwks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 confidant.routes.saml module
 ----------------------------
 

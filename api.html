@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API &mdash; confidant 6.3.0-92a4c4 documentation</title>
+  <title>API &mdash; confidant 6.5.1-803382 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.3.0-92a4c4
+                6.5.1-803382
               </div>
             
           
@@ -414,12 +414,28 @@
 <td><p><a class="reference external" href="#get--v1-saml-debug">GET /v1/saml/debug</a></p></td>
 <td></td>
 </tr>
+<tr class="row-odd"><td></td>
+<td><p><a class="reference external" href="#post--v1-credentials-(id)-archive">POST /v1/credentials/(id)/archive</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#get--v1-jwks-public-(environment)">GET /v1/jwks/public/(environment)</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><a class="reference external" href="#get--v1-jwks-token">GET /v1/jwks/token</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><a class="reference external" href="#get--v1-jwks-token-(id)">GET /v1/jwks/token/(id)</a></p></td>
+<td></td>
+</tr>
 <tr class="row-odd"><td><p>Authenticate</p></td>
-<td><p><a class="reference external" href="#post--v1-login">POST /v1/login</a></p></td>
+<td><p><a class="reference external" href="#get--v1-login">GET /v1/login</a></p></td>
 <td><p>Send user through login flow.</p></td>
 </tr>
 <tr class="row-even"><td></td>
-<td><p><a class="reference external" href="#get--v1-login">GET /v1/login</a></p></td>
+<td><p><a class="reference external" href="#post--v1-login">POST /v1/login</a></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>Certificate</p></td>
@@ -479,11 +495,11 @@
 <td><p>Get a list of the metadata for all current</p></td>
 </tr>
 <tr class="row-odd"><td><p>Email Address</p></td>
-<td><p><a class="reference external" href="#post--v1-user-email">POST /v1/user/email</a></p></td>
+<td><p><a class="reference external" href="#get--v1-user-email">GET /v1/user/email</a></p></td>
 <td><p>Get the email address associated with the</p></td>
 </tr>
 <tr class="row-even"><td></td>
-<td><p><a class="reference external" href="#get--v1-user-email">GET /v1/user/email</a></p></td>
+<td><p><a class="reference external" href="#post--v1-user-email">POST /v1/user/email</a></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>IAM Roles</p></td>
@@ -664,9 +680,9 @@ and receives the HTTP-REDIRECT callback (also a GET) from the IdP post
 logout.</p>
 </dd></dl>
 
-<dl class="post">
-<dt id="post--v1-user-email">
-<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/user/email</code><a class="headerlink" href="#post--v1-user-email" title="Permalink to this definition">¶</a></dt>
+<dl class="get">
+<dt id="get--v1-user-email">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/user/email</code><a class="headerlink" href="#get--v1-user-email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the email associated with the currently authenticated user.</p>
 <p><strong>Example request</strong>:</p>
 <div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/user/email
@@ -695,9 +711,9 @@ logout.</p>
 </dl>
 </dd></dl>
 
-<dl class="get">
-<dt id="get--v1-user-email">
-<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/user/email</code><a class="headerlink" href="#get--v1-user-email" title="Permalink to this definition">¶</a></dt>
+<dl class="post">
+<dt id="post--v1-user-email">
+<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/user/email</code><a class="headerlink" href="#post--v1-user-email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the email associated with the currently authenticated user.</p>
 <p><strong>Example request</strong>:</p>
 <div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/user/email
@@ -951,6 +967,7 @@ correct format, or a required field was not provided.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>next_page</strong> (<em>string</em>) – If paged results were returned in a call, this
 query string can be used to fetch the next page.</p></li>
+<li><p><strong>limit</strong> (<em>int</em>) – Limit of items per each page (required for pagination)</p></li>
 </ul>
 </dd>
 </dl>
@@ -992,9 +1009,9 @@ Content-Type: application/json
 </dl>
 </dd></dl>
 
-<dl class="post">
-<dt id="post--v1-login">
-<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/login</code><a class="headerlink" href="#post--v1-login" title="Permalink to this definition">¶</a></dt>
+<dl class="get">
+<dt id="get--v1-login">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/login</code><a class="headerlink" href="#get--v1-login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send user through login flow. Response depends on configured authentication
 plugin.</p>
 <p><strong>Example request</strong>:</p>
@@ -1003,9 +1020,9 @@ plugin.</p>
 </div>
 </dd></dl>
 
-<dl class="get">
-<dt id="get--v1-login">
-<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/login</code><a class="headerlink" href="#get--v1-login" title="Permalink to this definition">¶</a></dt>
+<dl class="post">
+<dt id="post--v1-login">
+<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/login</code><a class="headerlink" href="#post--v1-login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send user through login flow. Response depends on configured authentication
 plugin.</p>
 <p><strong>Example request</strong>:</p>
@@ -1118,6 +1135,53 @@ Content-Type: application/json
 <li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
 <li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to get metadata for the
 provided credential.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--v1-credentials-(id)-archive">
+<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/credentials/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><code class="sig-name descname">/archive</code><a class="headerlink" href="#post--v1-credentials-(id)-archive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Archive the provided credential.
+<strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>POST /v1/credentials/abcd12345bf4f1cafe8e722d3860404/archive
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – The credential ID to update.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Request JSON Object</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>force</strong> (<em>bool</em>) – Run the archive operation, if false will only validate
+the provided input</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+ <span class="p">{</span>
+   <span class="nt">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Invalid input or state</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have access to archive the provided
+credential ID.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1240,6 +1304,79 @@ Content-Type: application/json
 <li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.4">403 Forbidden</a> – Client does not have permissions to get metadata for the
 provided service ID.</p></li>
 <li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Specified ID does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-jwks-public-(environment)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/jwks/public/</code><span class="sig-paren">(</span><em class="sig-param">environment</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-jwks-public-(environment)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a the public JWKS for the requested environment</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/jwks/public/staging
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;kty&quot;</span><span class="p">:</span> <span class="s2">&quot;RSA&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;kid&quot;</span><span class="p">:</span> <span class="s2">&quot;staging&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;n&quot;</span><span class="p">:</span> <span class="s2">&quot;123...&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;e&quot;</span><span class="p">:</span> <span class="s2">&quot;AQAB&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;alg&quot;</span> <span class="s2">&quot;RS256&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Public key not found for this environment</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--v1-jwks-token">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/jwks/token</code><a class="headerlink" href="#get--v1-jwks-token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="get">
+<dt id="get--v1-jwks-token-(id)">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/jwks/token/</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#get--v1-jwks-token-(id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a JWT for the authenticated service</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/jwks/token/some-id
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;ey...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Response Headers</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – application/json</p></li>
+</ul>
+</dd>
+<dt class="field-even">Status Codes</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Success</p></li>
+<li><p><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – JWTs are not supported for this user</p></li>
 </ul>
 </dd>
 </dl>
@@ -2067,7 +2204,7 @@ certificate against.</p></li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019-2021, Confidant Project Authors
+        &copy; Copyright 2019-2023, Confidant Project Authors
 
     </p>
   </div>

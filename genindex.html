@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; confidant 6.3.0-92a4c4 documentation</title>
+  <title>Index &mdash; confidant 6.5.1-803382 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                6.3.0-92a4c4
+                6.5.1-803382
               </div>
             
           
@@ -412,9 +412,13 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.allowed_email_whitelist">allowed_email_whitelist() (confidant.authnz.userauth.AbstractUserAuthenticator property)</a>
 </li>
-      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials.archive">archive() (confidant.scripts.archive.ArchiveCredentials method)</a>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.credentials.archive_credential">archive_credential() (in module confidant.routes.credentials)</a>
+
+      <ul>
+        <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.credentials_test.archive_credential">(in module tests.unit.confidant.routes.credentials_test)</a>
 </li>
-      <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.credentials_test.archive_credential">archive_credential() (in module tests.unit.confidant.routes.credentials_test)</a>
+      </ul></li>
+      <li><a href="autogen/confidant.services.html#confidant.services.credentialmanager.archive_credentials">archive_credentials() (in module confidant.services.credentialmanager)</a>
 </li>
       <li><a href="autogen/confidant.models.html#confidant.models.credential.CredentialArchive.archive_date">archive_date (confidant.models.credential.CredentialArchive attribute)</a>
 </li>
@@ -530,6 +534,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.ca_object">ca_object() (in module tests.unit.confidant.services.certificatemanager_test)</a>
 </li>
+      <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.LocalJwtCache.cache_key">cache_key() (confidant.services.jwkmanager.LocalJwtCache method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.RedisCache.cache_key">(confidant.services.jwkmanager.RedisCache method)</a>
+</li>
+      </ul></li>
       <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CachedCertificate">CachedCertificate (class in confidant.services.certificatemanager)</a>
 </li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.certificates.CertificateAuthoritiesResponse">CertificateAuthoritiesResponse (class in confidant.schema.certificates)</a>
@@ -638,6 +648,8 @@
 </li>
       <li><a href="autogen/confidant.routes.html#module-confidant.routes.identity">confidant.routes.identity (module)</a>
 </li>
+      <li><a href="autogen/confidant.routes.html#module-confidant.routes.jwks">confidant.routes.jwks (module)</a>
+</li>
       <li><a href="autogen/confidant.routes.html#module-confidant.routes.saml">confidant.routes.saml (module)</a>
 </li>
       <li><a href="autogen/confidant.routes.html#module-confidant.routes.services">confidant.routes.services (module)</a>
@@ -654,6 +666,8 @@
 </li>
       <li><a href="autogen/confidant.schema.html#module-confidant.schema.credentials">confidant.schema.credentials (module)</a>
 </li>
+      <li><a href="autogen/confidant.schema.html#module-confidant.schema.jwks">confidant.schema.jwks (module)</a>
+</li>
       <li><a href="autogen/confidant.schema.html#module-confidant.schema.services">confidant.schema.services (module)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts">confidant.scripts (module)</a>
@@ -662,12 +676,12 @@
 </li>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.bootstrap">confidant.scripts.bootstrap (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.manage">confidant.scripts.manage (module)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.migrate">confidant.scripts.migrate (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.migrate_bool">confidant.scripts.migrate_bool (module)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#module-confidant.scripts.restore">confidant.scripts.restore (module)</a>
@@ -685,6 +699,8 @@
       <li><a href="autogen/confidant.services.html#module-confidant.services.graphite">confidant.services.graphite (module)</a>
 </li>
       <li><a href="autogen/confidant.services.html#module-confidant.services.iamrolemanager">confidant.services.iamrolemanager (module)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#module-confidant.services.jwkmanager">confidant.services.jwkmanager (module)</a>
 </li>
       <li><a href="autogen/confidant.services.html#module-confidant.services.keymanager">confidant.services.keymanager (module)</a>
 </li>
@@ -749,8 +765,6 @@
       <li><a href="autogen/confidant.models.html#confidant.models.credential.Credential.Meta">Credential.Meta (class in confidant.models.credential)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials.credential_exists">credential_exists() (confidant.scripts.restore.RestoreCredentials method)</a>
-</li>
-      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials.credential_in_service">credential_in_service() (confidant.scripts.archive.ArchiveCredentials method)</a>
 </li>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.credential_keys">credential_keys (confidant.models.blind_credential.BlindCredential attribute)</a>
 
@@ -872,10 +886,10 @@
       </ul></li>
       <li><a href="autogen/confidant.models.html#confidant.models.connection_cls.DDBConnection">DDBConnection (class in confidant.models.connection_cls)</a>
 </li>
-      <li><a href="autogen/confidant.models.html#confidant.models.session_cls.DDBSession">DDBSession (class in confidant.models.session_cls)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.models.html#confidant.models.session_cls.DDBSession">DDBSession (class in confidant.models.session_cls)</a>
+</li>
       <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.decode_csr">decode_csr() (confidant.services.certificatemanager.CertificateAuthority method)</a>
 </li>
       <li><a href="autogen/confidant.utils.html#confidant.utils.dynamodb.decode_last_evaluated_key">decode_last_evaluated_key() (in module confidant.utils.dynamodb)</a>
@@ -895,8 +909,6 @@
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.bootstrap.DecryptSecretsBootstrap">DecryptSecretsBootstrap (class in confidant.scripts.bootstrap)</a>
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.rbac.default_acl">default_acl() (in module confidant.authnz.rbac)</a>
-</li>
-      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials.delete">delete() (confidant.scripts.archive.ArchiveCredentials method)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.migrate.NewUnicodeSetAttribute.deserialize">deserialize() (confidant.scripts.migrate.NewUnicodeSetAttribute method)</a>
 
@@ -1080,6 +1092,8 @@
         <li><a href="autogen/confidant.html#confidant.settings.get">(in module confidant.settings)</a>
 </li>
       </ul></li>
+      <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.JWKManager.get_active_key">get_active_key() (confidant.services.jwkmanager.JWKManager method)</a>
+</li>
       <li><a href="autogen/confidant.html#confidant.encrypted_settings.EncryptedSettings.get_all_secrets">get_all_secrets() (confidant.encrypted_settings.EncryptedSettings method)</a>
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.blind_credentials.get_archive_blind_credential_list">get_archive_blind_credential_list() (in module confidant.routes.blind_credentials)</a>
@@ -1116,14 +1130,14 @@
         <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.get_ca">(in module confidant.services.certificatemanager)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCache.get_cache_id">get_cache_id() (confidant.services.certificatemanager.CertificateCache method)</a>
 
       <ul>
         <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCacheNoOp.get_cache_id">(confidant.services.certificatemanager.CertificateCacheNoOp method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.routes.html#confidant.routes.certificates.get_certificate">get_certificate() (in module confidant.routes.certificates)</a>
 </li>
       <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateAuthority.get_certificate_authority_certificate">get_certificate_authority_certificate() (confidant.services.certificatemanager.CertificateAuthority method)</a>
@@ -1158,6 +1172,18 @@
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.services.get_iam_roles_list">get_iam_roles_list() (in module confidant.routes.services)</a>
 </li>
+      <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.JWKManager.get_jwks">get_jwks() (confidant.services.jwkmanager.JWKManager method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.JWKManager.get_jwt">get_jwt() (confidant.services.jwkmanager.JWKManager method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.JwtCache.get_jwt">(confidant.services.jwkmanager.JwtCache method)</a>
+</li>
+        <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.LocalJwtCache.get_jwt">(confidant.services.jwkmanager.LocalJwtCache method)</a>
+</li>
+        <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.RedisCache.get_jwt">(confidant.services.jwkmanager.RedisCache method)</a>
+</li>
+      </ul></li>
       <li><a href="autogen/confidant.services.html#confidant.services.keymanager.get_key_id">get_key_id() (in module confidant.services.keymanager)</a>
 </li>
       <li><a href="autogen/confidant.services.html#confidant.services.credentialmanager.get_latest_blind_credential_revision">get_latest_blind_credential_revision() (in module confidant.services.credentialmanager)</a>
@@ -1167,6 +1193,8 @@
       <li><a href="autogen/confidant.services.html#confidant.services.servicemanager.get_latest_service_revision">get_latest_service_revision() (in module confidant.services.servicemanager)</a>
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.get_logged_in_user">get_logged_in_user() (in module confidant.authnz)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.jwks.get_public_jwks">get_public_jwks() (in module confidant.routes.jwks)</a>
 </li>
       <li><a href="autogen/confidant.services.html#confidant.services.credentialmanager.get_revision_ids_for_credential">get_revision_ids_for_credential() (in module confidant.services.credentialmanager)</a>
 </li>
@@ -1183,6 +1211,8 @@
       <li><a href="autogen/confidant.services.html#confidant.services.servicemanager.get_services_for_blind_credential">get_services_for_blind_credential() (in module confidant.services.servicemanager)</a>
 </li>
       <li><a href="autogen/confidant.services.html#confidant.services.servicemanager.get_services_for_credential">get_services_for_credential() (in module confidant.services.servicemanager)</a>
+</li>
+      <li><a href="autogen/confidant.routes.html#confidant.routes.jwks.get_token">get_token() (in module confidant.routes.jwks)</a>
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.identity.get_user_info">get_user_info() (in module confidant.routes.identity)</a>
 </li>
@@ -1201,6 +1231,8 @@
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.HeaderAuthenticator">HeaderAuthenticator (class in confidant.authnz.userauth)</a>
 </li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.healthcheck">healthcheck() (in module confidant.routes.static_files)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.helper_jwt_parser">helper_jwt_parser() (in module tests.unit.confidant.services.jwkmanager_test)</a>
 </li>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.Meta.host">host (confidant.models.blind_credential.BlindCredential.Meta attribute)</a>
 
@@ -1301,6 +1333,12 @@
 </li>
         <li><a href="autogen/confidant.schema.html#confidant.schema.credentials.RevisionsResponseSchema.Meta.jit">(confidant.schema.credentials.RevisionsResponseSchema.Meta attribute)</a>
 </li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWKSListResponseSchema.Meta.jit">(confidant.schema.jwks.JWKSListResponseSchema.Meta attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWKSResponseSchema.Meta.jit">(confidant.schema.jwks.JWKSResponseSchema.Meta attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWTResponseSchema.Meta.jit">(confidant.schema.jwks.JWTResponseSchema.Meta attribute)</a>
+</li>
         <li><a href="autogen/confidant.schema.html#confidant.schema.services.RevisionsResponseSchema.Meta.jit">(confidant.schema.services.RevisionsResponseSchema.Meta attribute)</a>
 </li>
         <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServiceExpandedResponseSchema.Meta.jit">(confidant.schema.services.ServiceExpandedResponseSchema.Meta attribute)</a>
@@ -1310,6 +1348,30 @@
         <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServicesResponseSchema.Meta.jit">(confidant.schema.services.ServicesResponseSchema.Meta attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.JWKManager">JWKManager (class in confidant.services.jwkmanager)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWKSListResponse">JWKSListResponse (class in confidant.schema.jwks)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWKSListResponseSchema">JWKSListResponseSchema (class in confidant.schema.jwks)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWKSListResponseSchema.Meta">JWKSListResponseSchema.Meta (class in confidant.schema.jwks)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWKSResponse">JWKSResponse (class in confidant.schema.jwks)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWKSResponseSchema">JWKSResponseSchema (class in confidant.schema.jwks)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWKSResponseSchema.Meta">JWKSResponseSchema.Meta (class in confidant.schema.jwks)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.JwtCache">JwtCache (class in confidant.services.jwkmanager)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWTResponse">JWTResponse (class in confidant.schema.jwks)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWTResponseSchema">JWTResponseSchema (class in confidant.schema.jwks)</a>
+</li>
+      <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWTResponseSchema.Meta">JWTResponseSchema.Meta (class in confidant.schema.jwks)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1335,6 +1397,8 @@
       <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.load_x509_certificate_pem">load_x509_certificate_pem() (in module confidant.lib.cryptolib)</a>
 </li>
       <li><a href="autogen/confidant.lib.html#confidant.lib.cryptolib.load_x509_certificate_pem_as_bare_base64">load_x509_certificate_pem_as_bare_base64() (in module confidant.lib.cryptolib)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.LocalJwtCache">LocalJwtCache (class in confidant.services.jwkmanager)</a>
 </li>
       <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CachedCertificate.lock">lock() (confidant.services.certificatemanager.CachedCertificate property)</a>
 
@@ -1527,6 +1591,12 @@
 </li>
         <li><a href="autogen/confidant.schema.html#confidant.schema.credentials.RevisionsResponseSchema.opts">(confidant.schema.credentials.RevisionsResponseSchema attribute)</a>
 </li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWKSListResponseSchema.opts">(confidant.schema.jwks.JWKSListResponseSchema attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWKSResponseSchema.opts">(confidant.schema.jwks.JWKSResponseSchema attribute)</a>
+</li>
+        <li><a href="autogen/confidant.schema.html#confidant.schema.jwks.JWTResponseSchema.opts">(confidant.schema.jwks.JWTResponseSchema attribute)</a>
+</li>
         <li><a href="autogen/confidant.schema.html#confidant.schema.services.RevisionsResponseSchema.opts">(confidant.schema.services.RevisionsResponseSchema attribute)</a>
 </li>
         <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServiceExpandedResponseSchema.opts">(confidant.schema.services.ServiceExpandedResponseSchema attribute)</a>
@@ -1584,6 +1654,8 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.redirect_to_logout_if_no_auth">redirect_to_logout_if_no_auth() (in module confidant.authnz)</a>
 </li>
+      <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.RedisCache">RedisCache (class in confidant.services.jwkmanager)</a>
+</li>
       <li><a href="autogen/confidant.services.html#confidant.services.iamrolemanager.refresh_cache">refresh_cache() (in module confidant.services.iamrolemanager)</a>
 </li>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.Meta.region">region (confidant.models.blind_credential.BlindCredential.Meta attribute)</a>
@@ -1626,10 +1698,10 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.require_logout_for_goodbye">require_logout_for_goodbye() (in module confidant.authnz)</a>
 </li>
-      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CachedCertificate.response">response() (confidant.services.certificatemanager.CachedCertificate property)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CachedCertificate.response">response() (confidant.services.certificatemanager.CachedCertificate property)</a>
+</li>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials.restore">restore() (confidant.scripts.restore.RestoreCredentials method)</a>
 </li>
       <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials">RestoreCredentials (class in confidant.scripts.restore)</a>
@@ -1702,12 +1774,8 @@
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.SamlAuthenticator">SamlAuthenticator (class in confidant.authnz.userauth)</a>
 </li>
-      <li><a href="autogen/confidant.scripts.html#confidant.scripts.archive.ArchiveCredentials.save">save() (confidant.scripts.archive.ArchiveCredentials method)</a>
-
-      <ul>
-        <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials.save">(confidant.scripts.restore.RestoreCredentials method)</a>
+      <li><a href="autogen/confidant.scripts.html#confidant.scripts.restore.RestoreCredentials.save">save() (confidant.scripts.restore.RestoreCredentials method)</a>
 </li>
-      </ul></li>
       <li><a href="autogen/confidant.routes.html#confidant.routes.static_files.scripts">scripts() (in module confidant.routes.static_files)</a>
 </li>
       <li><a href="autogen/confidant.services.html#confidant.services.graphite.send_event">send_event() (in module confidant.services.graphite)</a>
@@ -1746,14 +1814,16 @@
 </li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServiceResponseSchema.Meta">ServiceResponseSchema.Meta (class in confidant.schema.services)</a>
 </li>
+      <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.services_test.services_list">services_list() (in module tests.unit.confidant.routes.services_test)</a>
+</li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServicesResponse">ServicesResponse (class in confidant.schema.services)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServicesResponseSchema">ServicesResponseSchema (class in confidant.schema.services)</a>
 </li>
       <li><a href="autogen/confidant.schema.html#confidant.schema.services.ServicesResponseSchema.Meta">ServicesResponseSchema.Meta (class in confidant.schema.services)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/confidant.models.html#confidant.models.blind_credential.BlindCredential.Meta.session_cls">session_cls (confidant.models.blind_credential.BlindCredential.Meta attribute)</a>
 
       <ul>
@@ -1771,6 +1841,16 @@
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.set_current_user">set_current_user() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
 </li>
       <li><a href="autogen/confidant.authnz.html#confidant.authnz.userauth.AbstractUserAuthenticator.set_expiration">set_expiration() (confidant.authnz.userauth.AbstractUserAuthenticator method)</a>
+</li>
+      <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.JwtCache.set_jwt">set_jwt() (confidant.services.jwkmanager.JwtCache method)</a>
+
+      <ul>
+        <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.LocalJwtCache.set_jwt">(confidant.services.jwkmanager.LocalJwtCache method)</a>
+</li>
+        <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.RedisCache.set_jwt">(confidant.services.jwkmanager.RedisCache method)</a>
+</li>
+      </ul></li>
+      <li><a href="autogen/confidant.services.html#confidant.services.jwkmanager.JWKManager.set_key">set_key() (confidant.services.jwkmanager.JWKManager method)</a>
 </li>
       <li><a href="autogen/confidant.services.html#confidant.services.certificatemanager.CertificateCache.set_response">set_response() (confidant.services.certificatemanager.CertificateCache method)</a>
 
@@ -1846,6 +1926,10 @@
 </li>
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_bootstrap_filefail">test_bootstrap_filefail() (in module tests.unit.confidant.encrypted_settings_test)</a>
 </li>
+      <li><a href="autogen/tests.html#tests.conftest.test_certificate">test_certificate() (in module tests.conftest)</a>
+</li>
+      <li><a href="autogen/tests.html#tests.conftest.test_certificate_authorities">test_certificate_authorities() (in module tests.conftest)</a>
+</li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_certificate_cache">test_certificate_cache() (in module tests.unit.confidant.services.certificatemanager_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.credentialmanager_test.test_check_credential_pair_values">test_check_credential_pair_values() (in module tests.unit.confidant.services.credentialmanager_test)</a>
@@ -1888,6 +1972,8 @@
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_encode_san_dns_names">test_encode_san_dns_names() (in module tests.unit.confidant.services.certificatemanager_test)</a>
 </li>
+      <li><a href="autogen/tests.html#tests.conftest.test_encrypted_key">test_encrypted_key() (in module tests.conftest)</a>
+</li>
       <li><a href="autogen/tests.unit.confidant.models.html#tests.unit.confidant.models.credential_test.test_equals">test_equals() (in module tests.unit.confidant.models.credential_test)</a>
 
       <ul>
@@ -1926,6 +2012,18 @@
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_get_csr_san">test_get_csr_san() (in module tests.unit.confidant.services.certificatemanager_test)</a>
 </li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_get_jwks">test_get_jwks() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_get_jwks_not_found">test_get_jwks_not_found() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_get_jwt">test_get_jwt() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_get_jwt_caches_jwt">test_get_jwt_caches_jwt() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_get_jwt_raises_no_key_id">test_get_jwt_raises_no_key_id() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_get_jwt_with_ca">test_get_jwt_with_ca() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.keymanager_test.test_get_key_id">test_get_key_id() (in module tests.unit.confidant.services.keymanager_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.keymanager_test.test_get_key_id_cached">test_get_key_id_cached() (in module tests.unit.confidant.services.keymanager_test)</a>
@@ -1934,8 +2032,6 @@
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.credentialmanager_test.test_get_latest_credential_revision">test_get_latest_credential_revision() (in module tests.unit.confidant.services.credentialmanager_test)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.servicemanager_test.test_get_latest_service_revision">test_get_latest_service_revision() (in module tests.unit.confidant.services.servicemanager_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.authnz.html#tests.unit.confidant.authnz.authnz_test.test_get_logged_in_user">test_get_logged_in_user() (in module tests.unit.confidant.authnz.authnz_test)</a>
@@ -1944,9 +2040,19 @@
 </li>
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_get_registered">test_get_registered() (in module tests.unit.confidant.encrypted_settings_test)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_get_registered_default">test_get_registered_default() (in module tests.unit.confidant.encrypted_settings_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.credentialmanager_test.test_get_revision_ids_for_credential">test_get_revision_ids_for_credential() (in module tests.unit.confidant.services.credentialmanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.services_test.test_get_services_list">test_get_services_list() (in module tests.unit.confidant.routes.services_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.jwks_test.test_get_token_no_override">test_get_token_no_override() (in module tests.unit.confidant.routes.jwks_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.jwks_test.test_get_token_override_user">test_get_token_override_user() (in module tests.unit.confidant.routes.jwks_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.jwks_test.test_get_token_override_user_not_authorized">test_get_token_override_user_not_authorized() (in module tests.unit.confidant.routes.jwks_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.identity_test.test_get_user_info">test_get_user_info() (in module tests.unit.confidant.routes.identity_test)</a>
 </li>
@@ -1964,7 +2070,21 @@
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.certificatemanager_test.test_issue_certificate_with_key">test_issue_certificate_with_key() (in module tests.unit.confidant.services.certificatemanager_test)</a>
 </li>
+      <li><a href="autogen/tests.html#tests.conftest.test_jwk_payload">test_jwk_payload() (in module tests.conftest)</a>
+</li>
+      <li><a href="autogen/tests.html#tests.conftest.test_jwks">test_jwks() (in module tests.conftest)</a>
+</li>
+      <li><a href="autogen/tests.html#tests.conftest.test_jwt">test_jwt() (in module tests.conftest)</a>
+</li>
+      <li><a href="autogen/tests.html#tests.conftest.test_key_pair">test_key_pair() (in module tests.conftest)</a>
+</li>
       <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.certificates_test.test_list_cas">test_list_cas() (in module tests.unit.confidant.routes.certificates_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_localcache_cache_key">test_localcache_cache_key() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_localcache_get_jwt">test_localcache_get_jwt() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_localcache_init">test_localcache_init() (in module tests.unit.confidant.services.jwkmanager_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.credentialmanager_test.test_lowercase_credential_pairs">test_lowercase_credential_pairs() (in module tests.unit.confidant.services.credentialmanager_test)</a>
 </li>
@@ -1988,6 +2108,10 @@
 </li>
       <li><a href="autogen/tests.unit.confidant.authnz.html#tests.unit.confidant.authnz.authnz_test.test_redirect_to_logout_if_no_auth">test_redirect_to_logout_if_no_auth() (in module tests.unit.confidant.authnz.authnz_test)</a>
 </li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_rediscache_get_jwt">test_rediscache_get_jwt() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_rediscache_redis_error">test_rediscache_redis_error() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
       <li><a href="autogen/tests.unit.confidant.html#tests.unit.confidant.encrypted_settings_test.test_register">test_register() (in module tests.unit.confidant.encrypted_settings_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.authnz.html#tests.unit.confidant.authnz.authnz_test.test_require_auth">test_require_auth() (in module tests.unit.confidant.authnz.authnz_test)</a>
@@ -1999,6 +2123,10 @@
       <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.credentials_test.test_revise_credential">test_revise_credential() (in module tests.unit.confidant.routes.credentials_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.authnz.html#tests.unit.confidant.authnz.authnz_test.test_service_in_account">test_service_in_account() (in module tests.unit.confidant.authnz.authnz_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_set_key">test_set_key() (in module tests.unit.confidant.services.jwkmanager_test)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#tests.unit.confidant.services.jwkmanager_test.test_set_key_encrypted">test_set_key_encrypted() (in module tests.unit.confidant.services.jwkmanager_test)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.routes.html#tests.unit.confidant.routes.credentials_test.test_update_credential">test_update_credential() (in module tests.unit.confidant.routes.credentials_test)</a>
 </li>
@@ -2044,6 +2172,10 @@
 </li>
       <li><a href="autogen/tests.unit.confidant.routes.html#module-tests.unit.confidant.routes.identity_test">tests.unit.confidant.routes.identity_test (module)</a>
 </li>
+      <li><a href="autogen/tests.unit.confidant.routes.html#module-tests.unit.confidant.routes.jwks_test">tests.unit.confidant.routes.jwks_test (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.routes.html#module-tests.unit.confidant.routes.services_test">tests.unit.confidant.routes.services_test (module)</a>
+</li>
       <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services">tests.unit.confidant.services (module)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services.certificatemanager_test">tests.unit.confidant.services.certificatemanager_test (module)</a>
@@ -2051,6 +2183,8 @@
       <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services.ciphermanager_test">tests.unit.confidant.services.ciphermanager_test (module)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services.credentialmanager_test">tests.unit.confidant.services.credentialmanager_test (module)</a>
+</li>
+      <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services.jwkmanager_test">tests.unit.confidant.services.jwkmanager_test (module)</a>
 </li>
       <li><a href="autogen/tests.unit.confidant.services.html#module-tests.unit.confidant.services.keymanager_test">tests.unit.confidant.services.keymanager_test (module)</a>
 </li>
@@ -2109,7 +2243,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019-2021, Confidant Project Authors
+        &copy; Copyright 2019-2023, Confidant Project Authors
 
     </p>
   </div>

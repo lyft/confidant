@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.routes package &mdash; confidant 6.3.0-92a4c4 documentation</title>
+  <title>confidant.routes package &mdash; confidant 6.5.1-803382 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.3.0-92a4c4
+                6.5.1-803382
               </div>
             
           
@@ -613,6 +613,49 @@ Content-Type: application/json
 </div>
 <div class="section" id="module-confidant.routes.credentials">
 <span id="confidant-routes-credentials-module"></span><h2>confidant.routes.credentials module<a class="headerlink" href="#module-confidant.routes.credentials" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="confidant.routes.credentials.archive_credential">
+<code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">archive_credential</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.archive_credential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Archive the provided credential.
+<strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>POST /v1/credentials/abcd12345bf4f1cafe8e722d3860404/archive
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> – The credential ID to update.</p>
+</dd>
+<dt class="field-even">&lt;json bool force</dt>
+<dd class="field-even"><p>Run the archive operation, if false will only validate
+the provided input</p>
+</dd>
+</dl>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+ <span class="p">{</span>
+   <span class="nt">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 400</dt>
+<dd class="field-odd"><p>Invalid input or state</p>
+</dd>
+<dt class="field-even">Statuscode 403</dt>
+<dd class="field-even"><p>Client does not have access to archive the provided
+credential ID.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="function">
 <dt id="confidant.routes.credentials.create_credential">
 <code class="sig-prename descclassname">confidant.routes.credentials.</code><code class="sig-name descname">create_credential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.credentials.create_credential" title="Permalink to this definition">¶</a></dt>
@@ -1266,6 +1309,73 @@ plugin.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-confidant.routes.jwks">
+<span id="confidant-routes-jwks-module"></span><h2>confidant.routes.jwks module<a class="headerlink" href="#module-confidant.routes.jwks" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="confidant.routes.jwks.get_public_jwks">
+<code class="sig-prename descclassname">confidant.routes.jwks.</code><code class="sig-name descname">get_public_jwks</code><span class="sig-paren">(</span><em class="sig-param">environment</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.jwks.get_public_jwks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a the public JWKS for the requested environment</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/jwks/public/staging
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;kty&quot;</span><span class="p">:</span> <span class="s2">&quot;RSA&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;kid&quot;</span><span class="p">:</span> <span class="s2">&quot;staging&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;n&quot;</span><span class="p">:</span> <span class="s2">&quot;123...&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;e&quot;</span><span class="p">:</span> <span class="s2">&quot;AQAB&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;alg&quot;</span> <span class="s2">&quot;RS256&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 404</dt>
+<dd class="field-odd"><p>Public key not found for this environment</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="confidant.routes.jwks.get_token">
+<code class="sig-prename descclassname">confidant.routes.jwks.</code><code class="sig-name descname">get_token</code><span class="sig-paren">(</span><em class="sig-param">id</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.routes.jwks.get_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a JWT for the authenticated service</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/jwks/token/some-id
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;ey...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Resheader Content-Type</dt>
+<dd class="field-odd"><p>application/json</p>
+</dd>
+<dt class="field-even">Statuscode 200</dt>
+<dd class="field-even"><p>Success</p>
+</dd>
+<dt class="field-odd">Statuscode 400</dt>
+<dd class="field-odd"><p>JWTs are not supported for this user</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-confidant.routes.saml">
 <span id="confidant-routes-saml-module"></span><h2>confidant.routes.saml module<a class="headerlink" href="#module-confidant.routes.saml" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -1681,6 +1791,9 @@ provided.</p>
 <dd class="field-odd"><p>If paged results were returned in a call, this
 query string can be used to fetch the next page.</p>
 </dd>
+<dt class="field-even">Query int limit</dt>
+<dd class="field-even"><p>Limit of items per each page (required for pagination)</p>
+</dd>
 </dl>
 <p><strong>Example response</strong>:</p>
 <div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
@@ -1957,7 +2070,7 @@ service ID.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019-2021, Confidant Project Authors
+        &copy; Copyright 2019-2023, Confidant Project Authors
 
     </p>
   </div>

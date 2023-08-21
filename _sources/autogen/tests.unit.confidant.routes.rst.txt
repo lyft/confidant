@@ -28,6 +28,22 @@ tests.unit.confidant.routes.identity\_test module
    :undoc-members:
    :show-inheritance:
 
+tests.unit.confidant.routes.jwks\_test module
+---------------------------------------------
+
+.. automodule:: tests.unit.confidant.routes.jwks_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tests.unit.confidant.routes.services\_test module
+-------------------------------------------------
+
+.. automodule:: tests.unit.confidant.routes.services_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------

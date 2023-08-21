@@ -36,6 +36,14 @@ confidant.schema.credentials module
    :undoc-members:
    :show-inheritance:
 
+confidant.schema.jwks module
+----------------------------
+
+.. automodule:: confidant.schema.jwks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 confidant.schema.services module
 --------------------------------
 

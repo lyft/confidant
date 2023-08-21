@@ -44,6 +44,14 @@ confidant.services.iamrolemanager module
    :undoc-members:
    :show-inheritance:
 
+confidant.services.jwkmanager module
+------------------------------------
+
+.. automodule:: confidant.services.jwkmanager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 confidant.services.keymanager module
 ------------------------------------
 
