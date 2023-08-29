@@ -130,10 +130,6 @@ gunicorn
 # Use: For concurrency
 gevent
 
-# License: MIT
-# Upstream url: https://github.com/python-greenlet/greenlet
-# Use: For concurrency
-greenlet
 
 # License: MIT
 # Upstream url: https://github.com/jsocol/pystatsd

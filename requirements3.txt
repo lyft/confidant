@@ -70,9 +70,7 @@ gevent==22.10.2
     #   -r requirements.in
     #   pytest-gevent
 greenlet==2.0.2
-    # via
-    #   -r requirements.in
-    #   gevent
+    # via gevent
 guard==1.0.1
     # via -r requirements.in
 gunicorn==20.1.0
