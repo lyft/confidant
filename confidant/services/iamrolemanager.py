@@ -37,11 +37,11 @@ def refresh_cache():
 
 def get_iam_roles(purge=False):
     if settings.BACKGROUND_CACHE_IAM_ROLES:
-        # If the cache is empty, assume it's not populated yet, and skip cache
+        # If cache is empty, it hasn't been populated by the bg process yet
+        # Populate, then return
         if not ROLES:
-            return _get_iam_roles()
-        else:
-            return ROLES
+            ROLES = _get_iam_roles()
+        return ROLES
     else:
         return _get_iam_roles()
 
