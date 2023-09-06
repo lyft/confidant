@@ -26,8 +26,8 @@ def refresh_cache():
         # +/- 20ish seconds for respawn, to ensure all processes do not
         # refresh at the same time
         random_refresh_rate = random.randrange(
-            refresh_rate - 20,
-            refresh_rate + 20
+            refresh_rate - settings.BACKGROUND_CACHE_IAM_ROLE_JITTER,
+            refresh_rate + settings.BACKGROUND_CACHE_IAM_ROLE_JITTER
         )
         return gevent.spawn_later(
             random_refresh_rate,

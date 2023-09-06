@@ -491,6 +491,13 @@ BACKGROUND_CACHE_IAM_ROLE_REFRESH_RATE = int_env(
     600
 )
 
+# Seconds to add as jitter to ensure all processes do not refresh at the same time
+# which can cause AWS ratelimits to be hit.  Default to 30 seconds.
+BACKGROUND_CACHE_IAM_ROLE_JITTER = int_env(
+    'BACKGROUND_CACHE_IAM_ROLE_JITTER',
+    30
+)
+
 # ACM Private CA configuration
 
 # ACM_PRIVATE_CAS is a comma separated list of friendly ca names. Confidant
