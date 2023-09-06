@@ -23,11 +23,11 @@ def refresh_cache():
             exc_info=True
         )
     finally:
-        # +/- 20ish seconds for respawn, to ensure all processes do not
+        # +/- seconds for respawn, to ensure all processes do not
         # refresh at the same time
         random_refresh_rate = random.randrange(
-            refresh_rate - 20,
-            refresh_rate + 20
+            refresh_rate - settings.BACKGROUND_CACHE_IAM_ROLE_JITTER,
+            refresh_rate + settings.BACKGROUND_CACHE_IAM_ROLE_JITTER
         )
         return gevent.spawn_later(
             random_refresh_rate,
@@ -37,11 +37,12 @@ def refresh_cache():
 
 def get_iam_roles(purge=False):
     if settings.BACKGROUND_CACHE_IAM_ROLES:
-        # If the cache is empty, assume it's not populated yet, and skip cache
+        global ROLES
+        # If cache is empty, it hasn't been populated by the bg process yet
+        # Populate cache, then return
         if not ROLES:
-            return _get_iam_roles()
-        else:
-            return ROLES
+            ROLES = _get_iam_roles()
+        return ROLES
     else:
         return _get_iam_roles()
 
