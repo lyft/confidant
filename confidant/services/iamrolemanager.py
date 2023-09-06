@@ -23,7 +23,7 @@ def refresh_cache():
             exc_info=True
         )
     finally:
-        # +/- 20ish seconds for respawn, to ensure all processes do not
+        # +/- seconds for respawn, to ensure all processes do not
         # refresh at the same time
         random_refresh_rate = random.randrange(
             refresh_rate - settings.BACKGROUND_CACHE_IAM_ROLE_JITTER,
