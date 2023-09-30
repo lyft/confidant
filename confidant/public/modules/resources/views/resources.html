@@ -1,5 +1,9 @@
 <div class="row row-relative">
   <div class="col-md-5 well row-relative">
+
+    <div id="reactDiv"></div>
+
+    <!--
     <div class="row">
       <div class="form">
         <div class="form-group col-md-12">
@@ -7,6 +11,7 @@
         </div>
       </div>
     </div>
+
     <div class="row has-margin-bottom-lg">
       <div class="col-md-9">
         <button type="button" ng-class="{ 'active': typeFilter == 'credentials' }" ng-click="setTypeFilter('credentials')" class="btn">Credentials</button>
@@ -24,7 +29,7 @@
     <div class="row has-margin-bottom-lg">
       <div class="form">
         <div class="simple-form col-md-12">
-          <label for="showDiabledInput"><input id="showDiabledInput" type="checkbox" data-ng-model="showDisabled" /> Show disabled resources</label>
+          <label for="showDiabledInput"><input id="showDiabledInput" type="checkbox" data-ng-model="showDisabled" /> disabled resources</label>
         </div>
       </div>
     </div>
@@ -62,13 +67,17 @@
               <td>{{ resource.modified_by }}</td>
               <td><span class="glyphicon glyphicon-menu-right"></span></td>
             </tr>
+
+
           </tbody>
         </table>
       </div>
     </div>
+    -->
   </div>
   <div class="col-md-7 row-overflow">
     <div ui-view="details"><div class="row"><div class="no-details-text"><h3>No resource selected.</h3></div></div></div>
     <div ui-view="docs"></div>
   </div>
 </div>
+

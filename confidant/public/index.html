@@ -17,11 +17,14 @@
     <!-- endbuild -->
 </head>
 <body>
+<div id="mainReactDiv"></div>
+
     <!--[if lt IE 9]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
+    <!--
     <div id="loading-spinner" loading-spinner="data-loading"></div>
     <header id="page-header" class="header">
         <nav id="site-navigation">
@@ -33,13 +36,14 @@
           </div>
         </nav>
     </header>
-
+ 
     <div id="page-navigation" class="container-fluid container-bottomborder has-margin-bottom" role="navigation" ng-controller="common.NavCtrl">
       <ul class="nav nav-pills has-margin-bottom">
         <li role="presentation" ng-class="{ 'active': viewLocation === 'resources' }"><a href="#/resources">Resources <span class="glyphicon glyphicon-lock"></span></a></li>
         <li role="presentation" ng-class="{ 'active': viewLocation === 'history' }"><a href="#/history">History <span class="glyphicon glyphicon-time"></span></a></li>
       </ul>
     </div>
+       -->
     <div ui-view="main" class="container-fluid container-body"></div>
 
     <!-- build:js scripts/oldieshim.js -->
@@ -107,5 +111,12 @@
     <!-- endinjector -->
     <script src="/modules/app.js"></script>
     <!-- endbuild -->
+
+    <script src="/react_modules/common/react.development.js.1"></script>
+    <script src="/react_modules/common/react-dom.development.js.1"></script>
+    <script src="/react_modules/common/babel.min.js.1"></script>
+    <script type="module" src="/react_modules/common/react-router-dom.js"></script>
+    <script type="module" src="/react_modules/prod/index.js"></script>
+    <!-- <script type="module" src="/react_modules/prod/services.js"></script> -->
 </body>
 </html>

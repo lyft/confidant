@@ -53,6 +53,10 @@ def modules(path):
     return current_app.send_static_file(os.path.join('modules', path))
 
 
+@blueprint.route('/react_modules/<path:path>')
+def react_modules(path):
+    return current_app.send_static_file(os.path.join('react_modules', path))
+
 @blueprint.route('/styles/<path:path>')
 def static_proxy(path):
     return current_app.send_static_file(os.path.join('styles', path))
