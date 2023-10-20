@@ -36,6 +36,9 @@ def _get_validator():
             token_cache_size=settings.KMS_AUTH_TOKEN_CACHE_SIZE,
             stats=stats,
             endpoint_url=settings.KMS_URL,
+            max_pool_connections=settings.KMS_MAX_POOL_CONNECTIONS,
+            connect_timeout=settings.KMS_CONNECTION_TIMEOUT,
+            read_timeout=settings.KMS_READ_TIMEOUT,
         )
     return _VALIDATOR
 

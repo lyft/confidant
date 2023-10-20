@@ -93,7 +93,7 @@ jmespath==0.10.0
     #   botocore
 jwcrypto==1.5.0
     # via -r requirements.in
-kmsauth==0.6.0
+kmsauth==0.6.2
     # via -r requirements.in
 lru-dict==1.2.0
     # via -r requirements.in
