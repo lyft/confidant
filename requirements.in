@@ -143,7 +143,7 @@ statsd
 # License: Apache2
 # Upstream url: https://github.com/lyft/python-kmsauth
 # Use: kmsauth support library
-kmsauth
+kmsauth==0.6.2
 
 # License: Apache2
 # Upstream url: https://pypi.python.org/pypi/toasted-marshmallow
