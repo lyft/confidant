@@ -210,7 +210,7 @@ zope-event==5.0
 zope-interface==6.0
     # via gevent
 
-pip==23.1.2
+pip==23.3
     # via -r piptools_requirements.txt
 setuptools==68.0.0
     # via
