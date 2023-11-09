@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API &mdash; confidant 6.5.1-7c5743 documentation</title>
+  <title>API &mdash; confidant 6.5.1-7236b9 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.5.1-7c5743
+                6.5.1-7236b9
               </div>
             
           
@@ -431,11 +431,11 @@
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>Authenticate</p></td>
-<td><p><a class="reference external" href="#post--v1-login">POST /v1/login</a></p></td>
+<td><p><a class="reference external" href="#get--v1-login">GET /v1/login</a></p></td>
 <td><p>Send user through login flow.</p></td>
 </tr>
 <tr class="row-even"><td></td>
-<td><p><a class="reference external" href="#get--v1-login">GET /v1/login</a></p></td>
+<td><p><a class="reference external" href="#post--v1-login">POST /v1/login</a></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>Certificate</p></td>
@@ -495,11 +495,11 @@
 <td><p>Get a list of the metadata for all current</p></td>
 </tr>
 <tr class="row-odd"><td><p>Email Address</p></td>
-<td><p><a class="reference external" href="#post--v1-user-email">POST /v1/user/email</a></p></td>
+<td><p><a class="reference external" href="#get--v1-user-email">GET /v1/user/email</a></p></td>
 <td><p>Get the email address associated with the</p></td>
 </tr>
 <tr class="row-even"><td></td>
-<td><p><a class="reference external" href="#get--v1-user-email">GET /v1/user/email</a></p></td>
+<td><p><a class="reference external" href="#post--v1-user-email">POST /v1/user/email</a></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>IAM Roles</p></td>
@@ -680,9 +680,9 @@ and receives the HTTP-REDIRECT callback (also a GET) from the IdP post
 logout.</p>
 </dd></dl>
 
-<dl class="post">
-<dt id="post--v1-user-email">
-<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/user/email</code><a class="headerlink" href="#post--v1-user-email" title="Permalink to this definition">¶</a></dt>
+<dl class="get">
+<dt id="get--v1-user-email">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/user/email</code><a class="headerlink" href="#get--v1-user-email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the email associated with the currently authenticated user.</p>
 <p><strong>Example request</strong>:</p>
 <div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/user/email
@@ -711,9 +711,9 @@ logout.</p>
 </dl>
 </dd></dl>
 
-<dl class="get">
-<dt id="get--v1-user-email">
-<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/user/email</code><a class="headerlink" href="#get--v1-user-email" title="Permalink to this definition">¶</a></dt>
+<dl class="post">
+<dt id="post--v1-user-email">
+<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/user/email</code><a class="headerlink" href="#post--v1-user-email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the email associated with the currently authenticated user.</p>
 <p><strong>Example request</strong>:</p>
 <div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/user/email
@@ -1009,9 +1009,9 @@ Content-Type: application/json
 </dl>
 </dd></dl>
 
-<dl class="post">
-<dt id="post--v1-login">
-<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/login</code><a class="headerlink" href="#post--v1-login" title="Permalink to this definition">¶</a></dt>
+<dl class="get">
+<dt id="get--v1-login">
+<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/login</code><a class="headerlink" href="#get--v1-login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send user through login flow. Response depends on configured authentication
 plugin.</p>
 <p><strong>Example request</strong>:</p>
@@ -1020,9 +1020,9 @@ plugin.</p>
 </div>
 </dd></dl>
 
-<dl class="get">
-<dt id="get--v1-login">
-<code class="sig-name descname">GET </code><code class="sig-name descname">/v1/login</code><a class="headerlink" href="#get--v1-login" title="Permalink to this definition">¶</a></dt>
+<dl class="post">
+<dt id="post--v1-login">
+<code class="sig-name descname">POST </code><code class="sig-name descname">/v1/login</code><a class="headerlink" href="#post--v1-login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send user through login flow. Response depends on configured authentication
 plugin.</p>
 <p><strong>Example request</strong>:</p>
