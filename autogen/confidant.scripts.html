@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.scripts package &mdash; confidant 6.5.1-7236b9 documentation</title>
+  <title>confidant.scripts package &mdash; confidant 6.5.2-d3c823 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.5.1-7236b9
+                6.5.2-d3c823
               </div>
             
           
@@ -452,11 +452,11 @@ arguments as configured by the Command options.</p>
 <span id="confidant-scripts-migrate-module"></span><h2>confidant.scripts.migrate module<a class="headerlink" href="#module-confidant.scripts.migrate" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="confidant.scripts.migrate.GeneralCredentialModel">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">GeneralCredentialModel</code><span class="sig-paren">(</span><em class="sig-param">hash_key=None</em>, <em class="sig-param">range_key=None</em>, <em class="sig-param">_user_instantiated=True</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralCredentialModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">GeneralCredentialModel</code><span class="sig-paren">(</span><em class="sig-param">hash_key: Optional[Any] = None</em>, <em class="sig-param">range_key: Optional[Any] = None</em>, <em class="sig-param">_user_instantiated: bool = True</em>, <em class="sig-param">**attributes: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralCredentialModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.models.Model</span></code></p>
 <dl class="exception">
 <dt id="confidant.scripts.migrate.GeneralCredentialModel.DoesNotExist">
-<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg=None</em>, <em class="sig-param">cause=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralCredentialModel.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg: Optional[str] = None</em>, <em class="sig-param">cause: Optional[Exception] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralCredentialModel.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.exceptions.DoesNotExist</span></code></p>
 </dd></dl>
 
@@ -482,11 +482,11 @@ arguments as configured by the Command options.</p>
 
 <dl class="class">
 <dt id="confidant.scripts.migrate.GeneralServiceModel">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">GeneralServiceModel</code><span class="sig-paren">(</span><em class="sig-param">hash_key=None</em>, <em class="sig-param">range_key=None</em>, <em class="sig-param">_user_instantiated=True</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralServiceModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">GeneralServiceModel</code><span class="sig-paren">(</span><em class="sig-param">hash_key: Optional[Any] = None</em>, <em class="sig-param">range_key: Optional[Any] = None</em>, <em class="sig-param">_user_instantiated: bool = True</em>, <em class="sig-param">**attributes: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralServiceModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.models.Model</span></code></p>
 <dl class="exception">
 <dt id="confidant.scripts.migrate.GeneralServiceModel.DoesNotExist">
-<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg=None</em>, <em class="sig-param">cause=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralServiceModel.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg: Optional[str] = None</em>, <em class="sig-param">cause: Optional[Exception] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.GeneralServiceModel.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.exceptions.DoesNotExist</span></code></p>
 </dd></dl>
 
@@ -544,12 +544,12 @@ arguments as configured by the Command options.</p>
 
 <dl class="class">
 <dt id="confidant.scripts.migrate.NewUnicodeSetAttribute">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">NewUnicodeSetAttribute</code><span class="sig-paren">(</span><em class="sig-param">hash_key=False</em>, <em class="sig-param">range_key=False</em>, <em class="sig-param">null=None</em>, <em class="sig-param">default=None</em>, <em class="sig-param">default_for_new=None</em>, <em class="sig-param">attr_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate.</code><code class="sig-name descname">NewUnicodeSetAttribute</code><span class="sig-paren">(</span><em class="sig-param">hash_key: bool = False, range_key: bool = False, null: Optional[bool] = None, default: Union[_T, Callable[[...], _T], None] = None, default_for_new: Union[Any, Callable[[...], _T], None] = None, attr_name: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#confidant.scripts.migrate.SetMixin" title="confidant.scripts.migrate.SetMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.scripts.migrate.SetMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.attributes.Attribute</span></code></p>
 <p>A unicode set</p>
 <dl class="attribute">
 <dt id="confidant.scripts.migrate.NewUnicodeSetAttribute.attr_type">
-<code class="sig-name descname">attr_type</code><em class="property"> = 'StringSet'</em><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute.attr_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attr_type</code><em class="property"> = 'SS'</em><a class="headerlink" href="#confidant.scripts.migrate.NewUnicodeSetAttribute.attr_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -618,11 +618,11 @@ empty sets return None</p>
 <span id="confidant-scripts-migrate-bool-module"></span><h2>confidant.scripts.migrate_bool module<a class="headerlink" href="#module-confidant.scripts.migrate_bool" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="confidant.scripts.migrate_bool.GenericCredential">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate_bool.</code><code class="sig-name descname">GenericCredential</code><span class="sig-paren">(</span><em class="sig-param">hash_key=None</em>, <em class="sig-param">range_key=None</em>, <em class="sig-param">_user_instantiated=True</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">confidant.scripts.migrate_bool.</code><code class="sig-name descname">GenericCredential</code><span class="sig-paren">(</span><em class="sig-param">hash_key: Optional[Any] = None</em>, <em class="sig-param">range_key: Optional[Any] = None</em>, <em class="sig-param">_user_instantiated: bool = True</em>, <em class="sig-param">**attributes: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.models.Model</span></code></p>
 <dl class="exception">
 <dt id="confidant.scripts.migrate_bool.GenericCredential.DoesNotExist">
-<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg=None</em>, <em class="sig-param">cause=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg: Optional[str] = None</em>, <em class="sig-param">cause: Optional[Exception] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.exceptions.DoesNotExist</span></code></p>
 </dd></dl>
 
@@ -641,19 +641,38 @@ empty sets return None</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.aws_session_token">
+<code class="sig-name descname">aws_session_token</code><em class="property"> = None</em><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.aws_session_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.base_backoff_ms">
 <code class="sig-name descname">base_backoff_ms</code><em class="property"> = 25</em><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.base_backoff_ms" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.connection_cls">
-<code class="sig-name descname">connection_cls</code><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.connection_cls" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="confidant.models.html#confidant.models.connection_cls.DDBConnection" title="confidant.models.connection_cls.DDBConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.connection_cls.DDBConnection</span></code></a></p>
-</dd></dl>
+<dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.connect_timeout_seconds">
+<code class="sig-name descname">connect_timeout_seconds</code><em class="property"> = 1</em><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.connect_timeout_seconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.extra_headers">
+<code class="sig-name descname">extra_headers</code><em class="property"> = None</em><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.extra_headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.host">
 <code class="sig-name descname">host</code><em class="property"> = None</em><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.max_pool_connection">
+<code class="sig-name descname">max_pool_connection</code><em class="property"> = 100</em><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.max_pool_connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.max_pool_connections">
+<code class="sig-name descname">max_pool_connections</code><em class="property"> = 10</em><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.max_pool_connections" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -662,20 +681,14 @@ empty sets return None</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.read_timeout_seconds">
+<code class="sig-name descname">read_timeout_seconds</code><em class="property"> = 1</em><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.read_timeout_seconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.region">
 <code class="sig-name descname">region</code><em class="property"> = 'us-east-1'</em><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.region" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.request_timeout_seconds">
-<code class="sig-name descname">request_timeout_seconds</code><em class="property"> = 60</em><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.request_timeout_seconds" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.session_cls">
-<code class="sig-name descname">session_cls</code><a class="headerlink" href="#confidant.scripts.migrate_bool.GenericCredential.Meta.session_cls" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="confidant.models.html#confidant.models.session_cls.DDBSession" title="confidant.models.session_cls.DDBSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.session_cls.DDBSession</span></code></a></p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="confidant.scripts.migrate_bool.GenericCredential.Meta.table_name">

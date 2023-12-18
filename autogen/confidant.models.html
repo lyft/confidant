@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>confidant.models package &mdash; confidant 6.5.1-7236b9 documentation</title>
+  <title>confidant.models package &mdash; confidant 6.5.2-d3c823 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                6.5.1-7236b9
+                6.5.2-d3c823
               </div>
             
           
@@ -383,11 +383,11 @@
 <span id="confidant-models-blind-credential-module"></span><h2>confidant.models.blind_credential module<a class="headerlink" href="#module-confidant.models.blind_credential" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="confidant.models.blind_credential.BlindCredential">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.models.blind_credential.</code><code class="sig-name descname">BlindCredential</code><span class="sig-paren">(</span><em class="sig-param">hash_key=None</em>, <em class="sig-param">range_key=None</em>, <em class="sig-param">_user_instantiated=True</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">confidant.models.blind_credential.</code><code class="sig-name descname">BlindCredential</code><span class="sig-paren">(</span><em class="sig-param">hash_key: Optional[Any] = None</em>, <em class="sig-param">range_key: Optional[Any] = None</em>, <em class="sig-param">_user_instantiated: bool = True</em>, <em class="sig-param">**attributes: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.models.Model</span></code></p>
 <dl class="exception">
 <dt id="confidant.models.blind_credential.BlindCredential.DoesNotExist">
-<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg=None</em>, <em class="sig-param">cause=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg: Optional[str] = None</em>, <em class="sig-param">cause: Optional[Exception] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.exceptions.DoesNotExist</span></code></p>
 </dd></dl>
 
@@ -406,19 +406,38 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="confidant.models.blind_credential.BlindCredential.Meta.aws_session_token">
+<code class="sig-name descname">aws_session_token</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.aws_session_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="confidant.models.blind_credential.BlindCredential.Meta.base_backoff_ms">
 <code class="sig-name descname">base_backoff_ms</code><em class="property"> = 25</em><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.base_backoff_ms" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="confidant.models.blind_credential.BlindCredential.Meta.connection_cls">
-<code class="sig-name descname">connection_cls</code><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.connection_cls" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#confidant.models.connection_cls.DDBConnection" title="confidant.models.connection_cls.DDBConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.connection_cls.DDBConnection</span></code></a></p>
-</dd></dl>
+<dt id="confidant.models.blind_credential.BlindCredential.Meta.connect_timeout_seconds">
+<code class="sig-name descname">connect_timeout_seconds</code><em class="property"> = 1</em><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.connect_timeout_seconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.blind_credential.BlindCredential.Meta.extra_headers">
+<code class="sig-name descname">extra_headers</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.extra_headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="confidant.models.blind_credential.BlindCredential.Meta.host">
 <code class="sig-name descname">host</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.blind_credential.BlindCredential.Meta.max_pool_connection">
+<code class="sig-name descname">max_pool_connection</code><em class="property"> = 100</em><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.max_pool_connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.blind_credential.BlindCredential.Meta.max_pool_connections">
+<code class="sig-name descname">max_pool_connections</code><em class="property"> = 10</em><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.max_pool_connections" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -427,20 +446,14 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="confidant.models.blind_credential.BlindCredential.Meta.read_timeout_seconds">
+<code class="sig-name descname">read_timeout_seconds</code><em class="property"> = 1</em><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.read_timeout_seconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="confidant.models.blind_credential.BlindCredential.Meta.region">
 <code class="sig-name descname">region</code><em class="property"> = 'us-east-1'</em><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.region" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.models.blind_credential.BlindCredential.Meta.request_timeout_seconds">
-<code class="sig-name descname">request_timeout_seconds</code><em class="property"> = 60</em><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.request_timeout_seconds" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.models.blind_credential.BlindCredential.Meta.session_cls">
-<code class="sig-name descname">session_cls</code><a class="headerlink" href="#confidant.models.blind_credential.BlindCredential.Meta.session_cls" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#confidant.models.session_cls.DDBSession" title="confidant.models.session_cls.DDBSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.session_cls.DDBSession</span></code></a></p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="confidant.models.blind_credential.BlindCredential.Meta.table_name">
@@ -557,7 +570,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
 <dt id="confidant.models.blind_credential.DataTypeDateIndex.Meta.attributes">
-<code class="sig-name descname">attributes</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.blind_credential.DataTypeDateIndex.Meta.attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attributes</code><em class="property"> = {'data_type': &lt;pynamodb.attributes.UnicodeAttribute object&gt;, 'modified_date': &lt;pynamodb.attributes.UTCDateTimeAttribute object&gt;}</em><a class="headerlink" href="#confidant.models.blind_credential.DataTypeDateIndex.Meta.attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -603,15 +616,6 @@
 </dd></dl>
 
 </div>
-<div class="section" id="module-confidant.models.connection_cls">
-<span id="confidant-models-connection-cls-module"></span><h2>confidant.models.connection_cls module<a class="headerlink" href="#module-confidant.models.connection_cls" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="confidant.models.connection_cls.DDBConnection">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.models.connection_cls.</code><code class="sig-name descname">DDBConnection</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.connection_cls.DDBConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.connection.base.Connection</span></code></p>
-</dd></dl>
-
-</div>
 <div class="section" id="module-confidant.models.credential">
 <span id="confidant-models-credential-module"></span><h2>confidant.models.credential module<a class="headerlink" href="#module-confidant.models.credential" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -624,7 +628,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
 <dt id="confidant.models.credential.ArchiveDataTypeDateIndex.Meta.attributes">
-<code class="sig-name descname">attributes</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.credential.ArchiveDataTypeDateIndex.Meta.attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attributes</code><em class="property"> = {'data_type': &lt;pynamodb.attributes.UnicodeAttribute object&gt;, 'modified_date': &lt;pynamodb.attributes.UTCDateTimeAttribute object&gt;}</em><a class="headerlink" href="#confidant.models.credential.ArchiveDataTypeDateIndex.Meta.attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -671,11 +675,11 @@
 
 <dl class="class">
 <dt id="confidant.models.credential.Credential">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.models.credential.</code><code class="sig-name descname">Credential</code><span class="sig-paren">(</span><em class="sig-param">hash_key=None</em>, <em class="sig-param">range_key=None</em>, <em class="sig-param">_user_instantiated=True</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.Credential" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">confidant.models.credential.</code><code class="sig-name descname">Credential</code><span class="sig-paren">(</span><em class="sig-param">hash_key: Optional[Any] = None</em>, <em class="sig-param">range_key: Optional[Any] = None</em>, <em class="sig-param">_user_instantiated: bool = True</em>, <em class="sig-param">**attributes: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.Credential" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#confidant.models.credential.CredentialBase" title="confidant.models.credential.CredentialBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.credential.CredentialBase</span></code></a></p>
 <dl class="exception">
 <dt id="confidant.models.credential.Credential.DoesNotExist">
-<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg=None</em>, <em class="sig-param">cause=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.Credential.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg: Optional[str] = None</em>, <em class="sig-param">cause: Optional[Exception] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.Credential.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.exceptions.DoesNotExist</span></code></p>
 </dd></dl>
 
@@ -694,19 +698,38 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="confidant.models.credential.Credential.Meta.aws_session_token">
+<code class="sig-name descname">aws_session_token</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.credential.Credential.Meta.aws_session_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="confidant.models.credential.Credential.Meta.base_backoff_ms">
 <code class="sig-name descname">base_backoff_ms</code><em class="property"> = 25</em><a class="headerlink" href="#confidant.models.credential.Credential.Meta.base_backoff_ms" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="confidant.models.credential.Credential.Meta.connection_cls">
-<code class="sig-name descname">connection_cls</code><a class="headerlink" href="#confidant.models.credential.Credential.Meta.connection_cls" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#confidant.models.connection_cls.DDBConnection" title="confidant.models.connection_cls.DDBConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.connection_cls.DDBConnection</span></code></a></p>
-</dd></dl>
+<dt id="confidant.models.credential.Credential.Meta.connect_timeout_seconds">
+<code class="sig-name descname">connect_timeout_seconds</code><em class="property"> = 1</em><a class="headerlink" href="#confidant.models.credential.Credential.Meta.connect_timeout_seconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.credential.Credential.Meta.extra_headers">
+<code class="sig-name descname">extra_headers</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.credential.Credential.Meta.extra_headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="confidant.models.credential.Credential.Meta.host">
 <code class="sig-name descname">host</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.credential.Credential.Meta.host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.credential.Credential.Meta.max_pool_connection">
+<code class="sig-name descname">max_pool_connection</code><em class="property"> = 100</em><a class="headerlink" href="#confidant.models.credential.Credential.Meta.max_pool_connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.credential.Credential.Meta.max_pool_connections">
+<code class="sig-name descname">max_pool_connections</code><em class="property"> = 10</em><a class="headerlink" href="#confidant.models.credential.Credential.Meta.max_pool_connections" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -715,20 +738,14 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="confidant.models.credential.Credential.Meta.read_timeout_seconds">
+<code class="sig-name descname">read_timeout_seconds</code><em class="property"> = 1</em><a class="headerlink" href="#confidant.models.credential.Credential.Meta.read_timeout_seconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="confidant.models.credential.Credential.Meta.region">
 <code class="sig-name descname">region</code><em class="property"> = 'us-east-1'</em><a class="headerlink" href="#confidant.models.credential.Credential.Meta.region" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.models.credential.Credential.Meta.request_timeout_seconds">
-<code class="sig-name descname">request_timeout_seconds</code><em class="property"> = 60</em><a class="headerlink" href="#confidant.models.credential.Credential.Meta.request_timeout_seconds" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.models.credential.Credential.Meta.session_cls">
-<code class="sig-name descname">session_cls</code><a class="headerlink" href="#confidant.models.credential.Credential.Meta.session_cls" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#confidant.models.session_cls.DDBSession" title="confidant.models.session_cls.DDBSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.session_cls.DDBSession</span></code></a></p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="confidant.models.credential.Credential.Meta.table_name">
@@ -783,11 +800,11 @@
 
 <dl class="class">
 <dt id="confidant.models.credential.CredentialArchive">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.models.credential.</code><code class="sig-name descname">CredentialArchive</code><span class="sig-paren">(</span><em class="sig-param">hash_key=None</em>, <em class="sig-param">range_key=None</em>, <em class="sig-param">_user_instantiated=True</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.CredentialArchive" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">confidant.models.credential.</code><code class="sig-name descname">CredentialArchive</code><span class="sig-paren">(</span><em class="sig-param">hash_key: Optional[Any] = None</em>, <em class="sig-param">range_key: Optional[Any] = None</em>, <em class="sig-param">_user_instantiated: bool = True</em>, <em class="sig-param">**attributes: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.CredentialArchive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#confidant.models.credential.CredentialBase" title="confidant.models.credential.CredentialBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.credential.CredentialBase</span></code></a></p>
 <dl class="exception">
 <dt id="confidant.models.credential.CredentialArchive.DoesNotExist">
-<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg=None</em>, <em class="sig-param">cause=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.CredentialArchive.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg: Optional[str] = None</em>, <em class="sig-param">cause: Optional[Exception] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.CredentialArchive.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.exceptions.DoesNotExist</span></code></p>
 </dd></dl>
 
@@ -806,19 +823,38 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="confidant.models.credential.CredentialArchive.Meta.aws_session_token">
+<code class="sig-name descname">aws_session_token</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.aws_session_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="confidant.models.credential.CredentialArchive.Meta.base_backoff_ms">
 <code class="sig-name descname">base_backoff_ms</code><em class="property"> = 25</em><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.base_backoff_ms" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="confidant.models.credential.CredentialArchive.Meta.connection_cls">
-<code class="sig-name descname">connection_cls</code><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.connection_cls" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#confidant.models.connection_cls.DDBConnection" title="confidant.models.connection_cls.DDBConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.connection_cls.DDBConnection</span></code></a></p>
-</dd></dl>
+<dt id="confidant.models.credential.CredentialArchive.Meta.connect_timeout_seconds">
+<code class="sig-name descname">connect_timeout_seconds</code><em class="property"> = 1</em><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.connect_timeout_seconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.credential.CredentialArchive.Meta.extra_headers">
+<code class="sig-name descname">extra_headers</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.extra_headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="confidant.models.credential.CredentialArchive.Meta.host">
 <code class="sig-name descname">host</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.credential.CredentialArchive.Meta.max_pool_connection">
+<code class="sig-name descname">max_pool_connection</code><em class="property"> = 100</em><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.max_pool_connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.credential.CredentialArchive.Meta.max_pool_connections">
+<code class="sig-name descname">max_pool_connections</code><em class="property"> = 10</em><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.max_pool_connections" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -827,20 +863,14 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="confidant.models.credential.CredentialArchive.Meta.read_timeout_seconds">
+<code class="sig-name descname">read_timeout_seconds</code><em class="property"> = 1</em><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.read_timeout_seconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="confidant.models.credential.CredentialArchive.Meta.region">
 <code class="sig-name descname">region</code><em class="property"> = 'us-east-1'</em><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.region" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.models.credential.CredentialArchive.Meta.request_timeout_seconds">
-<code class="sig-name descname">request_timeout_seconds</code><em class="property"> = 60</em><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.request_timeout_seconds" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.models.credential.CredentialArchive.Meta.session_cls">
-<code class="sig-name descname">session_cls</code><a class="headerlink" href="#confidant.models.credential.CredentialArchive.Meta.session_cls" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#confidant.models.session_cls.DDBSession" title="confidant.models.session_cls.DDBSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.session_cls.DDBSession</span></code></a></p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="confidant.models.credential.CredentialArchive.Meta.table_name">
@@ -869,18 +899,12 @@
 
 <dl class="class">
 <dt id="confidant.models.credential.CredentialBase">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.models.credential.</code><code class="sig-name descname">CredentialBase</code><span class="sig-paren">(</span><em class="sig-param">hash_key=None</em>, <em class="sig-param">range_key=None</em>, <em class="sig-param">_user_instantiated=True</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.CredentialBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">confidant.models.credential.</code><code class="sig-name descname">CredentialBase</code><span class="sig-paren">(</span><em class="sig-param">hash_key: Optional[Any] = None</em>, <em class="sig-param">range_key: Optional[Any] = None</em>, <em class="sig-param">_user_instantiated: bool = True</em>, <em class="sig-param">**attributes: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.CredentialBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.models.Model</span></code></p>
 <dl class="exception">
 <dt id="confidant.models.credential.CredentialBase.DoesNotExist">
-<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg=None</em>, <em class="sig-param">cause=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.CredentialBase.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg: Optional[str] = None</em>, <em class="sig-param">cause: Optional[Exception] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.credential.CredentialBase.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.exceptions.DoesNotExist</span></code></p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.models.credential.CredentialBase.Meta">
-<code class="sig-name descname">Meta</code><a class="headerlink" href="#confidant.models.credential.CredentialBase.Meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.models.DefaultMeta</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -985,7 +1009,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
 <dt id="confidant.models.credential.DataTypeDateIndex.Meta.attributes">
-<code class="sig-name descname">attributes</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.credential.DataTypeDateIndex.Meta.attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attributes</code><em class="property"> = {'data_type': &lt;pynamodb.attributes.UnicodeAttribute object&gt;, 'modified_date': &lt;pynamodb.attributes.UTCDateTimeAttribute object&gt;}</em><a class="headerlink" href="#confidant.models.credential.DataTypeDateIndex.Meta.attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1035,7 +1059,7 @@
 <span id="confidant-models-non-null-unicode-set-attribute-module"></span><h2>confidant.models.non_null_unicode_set_attribute module<a class="headerlink" href="#module-confidant.models.non_null_unicode_set_attribute" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="confidant.models.non_null_unicode_set_attribute.NonNullUnicodeSetAttribute">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.models.non_null_unicode_set_attribute.</code><code class="sig-name descname">NonNullUnicodeSetAttribute</code><span class="sig-paren">(</span><em class="sig-param">hash_key=False</em>, <em class="sig-param">range_key=False</em>, <em class="sig-param">null=None</em>, <em class="sig-param">default=None</em>, <em class="sig-param">default_for_new=None</em>, <em class="sig-param">attr_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.non_null_unicode_set_attribute.NonNullUnicodeSetAttribute" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">confidant.models.non_null_unicode_set_attribute.</code><code class="sig-name descname">NonNullUnicodeSetAttribute</code><span class="sig-paren">(</span><em class="sig-param">hash_key: bool = False, range_key: bool = False, null: Optional[bool] = None, default: Union[_T, Callable[[...], _T], None] = None, default_for_new: Union[Any, Callable[[...], _T], None] = None, attr_name: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.non_null_unicode_set_attribute.NonNullUnicodeSetAttribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.attributes.UnicodeSetAttribute</span></code></p>
 </dd></dl>
 
@@ -1052,7 +1076,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
 <dt id="confidant.models.service.DataTypeDateIndex.Meta.attributes">
-<code class="sig-name descname">attributes</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.service.DataTypeDateIndex.Meta.attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">attributes</code><em class="property"> = {'data_type': &lt;pynamodb.attributes.UnicodeAttribute object&gt;, 'modified_date': &lt;pynamodb.attributes.UTCDateTimeAttribute object&gt;}</em><a class="headerlink" href="#confidant.models.service.DataTypeDateIndex.Meta.attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1099,11 +1123,11 @@
 
 <dl class="class">
 <dt id="confidant.models.service.Service">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.models.service.</code><code class="sig-name descname">Service</code><span class="sig-paren">(</span><em class="sig-param">hash_key=None</em>, <em class="sig-param">range_key=None</em>, <em class="sig-param">_user_instantiated=True</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.service.Service" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">confidant.models.service.</code><code class="sig-name descname">Service</code><span class="sig-paren">(</span><em class="sig-param">hash_key: Optional[Any] = None</em>, <em class="sig-param">range_key: Optional[Any] = None</em>, <em class="sig-param">_user_instantiated: bool = True</em>, <em class="sig-param">**attributes: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.service.Service" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.models.Model</span></code></p>
 <dl class="exception">
 <dt id="confidant.models.service.Service.DoesNotExist">
-<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg=None</em>, <em class="sig-param">cause=None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.service.Service.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><span class="sig-paren">(</span><em class="sig-param">msg: Optional[str] = None</em>, <em class="sig-param">cause: Optional[Exception] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#confidant.models.service.Service.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pynamodb.exceptions.DoesNotExist</span></code></p>
 </dd></dl>
 
@@ -1122,19 +1146,38 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="confidant.models.service.Service.Meta.aws_session_token">
+<code class="sig-name descname">aws_session_token</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.service.Service.Meta.aws_session_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="confidant.models.service.Service.Meta.base_backoff_ms">
 <code class="sig-name descname">base_backoff_ms</code><em class="property"> = 25</em><a class="headerlink" href="#confidant.models.service.Service.Meta.base_backoff_ms" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="confidant.models.service.Service.Meta.connection_cls">
-<code class="sig-name descname">connection_cls</code><a class="headerlink" href="#confidant.models.service.Service.Meta.connection_cls" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#confidant.models.connection_cls.DDBConnection" title="confidant.models.connection_cls.DDBConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.connection_cls.DDBConnection</span></code></a></p>
-</dd></dl>
+<dt id="confidant.models.service.Service.Meta.connect_timeout_seconds">
+<code class="sig-name descname">connect_timeout_seconds</code><em class="property"> = 1</em><a class="headerlink" href="#confidant.models.service.Service.Meta.connect_timeout_seconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.service.Service.Meta.extra_headers">
+<code class="sig-name descname">extra_headers</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.service.Service.Meta.extra_headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="confidant.models.service.Service.Meta.host">
 <code class="sig-name descname">host</code><em class="property"> = None</em><a class="headerlink" href="#confidant.models.service.Service.Meta.host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.service.Service.Meta.max_pool_connection">
+<code class="sig-name descname">max_pool_connection</code><em class="property"> = 100</em><a class="headerlink" href="#confidant.models.service.Service.Meta.max_pool_connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="confidant.models.service.Service.Meta.max_pool_connections">
+<code class="sig-name descname">max_pool_connections</code><em class="property"> = 10</em><a class="headerlink" href="#confidant.models.service.Service.Meta.max_pool_connections" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1143,20 +1186,14 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="confidant.models.service.Service.Meta.read_timeout_seconds">
+<code class="sig-name descname">read_timeout_seconds</code><em class="property"> = 1</em><a class="headerlink" href="#confidant.models.service.Service.Meta.read_timeout_seconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="confidant.models.service.Service.Meta.region">
 <code class="sig-name descname">region</code><em class="property"> = 'us-east-1'</em><a class="headerlink" href="#confidant.models.service.Service.Meta.region" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.models.service.Service.Meta.request_timeout_seconds">
-<code class="sig-name descname">request_timeout_seconds</code><em class="property"> = 60</em><a class="headerlink" href="#confidant.models.service.Service.Meta.request_timeout_seconds" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="confidant.models.service.Service.Meta.session_cls">
-<code class="sig-name descname">session_cls</code><a class="headerlink" href="#confidant.models.service.Service.Meta.session_cls" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#confidant.models.session_cls.DDBSession" title="confidant.models.session_cls.DDBSession"><code class="xref py py-class docutils literal notranslate"><span class="pre">confidant.models.session_cls.DDBSession</span></code></a></p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="confidant.models.service.Service.Meta.table_name">
@@ -1232,15 +1269,6 @@
 <dd><p>A number attribute</p>
 </dd></dl>
 
-</dd></dl>
-
-</div>
-<div class="section" id="module-confidant.models.session_cls">
-<span id="confidant-models-session-cls-module"></span><h2>confidant.models.session_cls module<a class="headerlink" href="#module-confidant.models.session_cls" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="confidant.models.session_cls.DDBSession">
-<em class="property">class </em><code class="sig-prename descclassname">confidant.models.session_cls.</code><code class="sig-name descname">DDBSession</code><a class="headerlink" href="#confidant.models.session_cls.DDBSession" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">botocore.vendored.requests.sessions.Session</span></code></p>
 </dd></dl>
 
 </div>

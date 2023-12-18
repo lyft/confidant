@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration &mdash; confidant 6.5.1-7236b9 documentation</title>
+  <title>Configuration &mdash; confidant 6.5.2-d3c823 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.5.1-7236b9
+                6.5.2-d3c823
               </div>
             
           
@@ -851,7 +851,8 @@ confidant is pretty aggressive with pynamodb timeouts, setting the default
 timeout to 1s. This is to fail fast and retry, rather than waiting on a blocked
 request that could be general networking failures, attempting to avoid request
 pileups. If this setting is too aggressive, you can adjust it via:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export PYNAMO_REQUEST_TIMEOUT_SECONDS=1
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>export PYNAMO_CONNECT_TIMEOUT_SECONDS=1
+export PYNAMO_READ_TIMEOUT_SECONDS=1
 </pre></div>
 </div>
 <p>To avoid recreating connections to dynamodb on each request, we open a larger
