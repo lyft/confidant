@@ -10,8 +10,6 @@ from pynamodb.attributes import (
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 
 from confidant import settings
-from confidant.models.session_cls import DDBSession
-from confidant.models.connection_cls import DDBConnection
 from confidant.models.non_null_unicode_set_attribute import (
     NonNullUnicodeSetAttribute
 )
@@ -32,8 +30,9 @@ class Service(Model):
         if settings.DYNAMODB_URL:
             host = settings.DYNAMODB_URL
         region = settings.AWS_DEFAULT_REGION
-        connection_cls = DDBConnection
-        session_cls = DDBSession
+        connect_timeout_seconds = settings.PYNAMO_CONNECT_TIMEOUT_SECONDS
+        read_timeout_seconds = settings.PYNAMO_READ_TIMEOUT_SECONDS
+        max_pool_connection = settings.PYNAMO_CONNECTION_POOL_SIZE
 
     id = UnicodeAttribute(hash_key=True)
     data_type = UnicodeAttribute()

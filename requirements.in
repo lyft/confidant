@@ -35,7 +35,7 @@ boto3==1.9.227
 # License: MIT
 # Upstream url: http://jlafon.io/pynamodb.html
 # Use: For DynamoDB storage
-pynamodb>=3.2.1,<4
+pynamodb==5.5.1
 
 # cryptography is a package which provides cryptographic recipes and
 # primitives to Python developers.
@@ -143,7 +143,7 @@ statsd
 # License: Apache2
 # Upstream url: https://github.com/lyft/python-kmsauth
 # Use: kmsauth support library
-kmsauth==0.6.2
+kmsauth==0.6.3
 
 # License: Apache2
 # Upstream url: https://pypi.python.org/pypi/toasted-marshmallow

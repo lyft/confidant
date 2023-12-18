@@ -531,7 +531,8 @@ request that could be general networking failures, attempting to avoid request
 pileups. If this setting is too aggressive, you can adjust it via:
 
 ```
-export PYNAMO_REQUEST_TIMEOUT_SECONDS=1
+export PYNAMO_CONNECT_TIMEOUT_SECONDS=1
+export PYNAMO_READ_TIMEOUT_SECONDS=1
 ```
 
 To avoid recreating connections to dynamodb on each request, we open a larger
