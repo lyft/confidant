@@ -43,17 +43,6 @@ def credentials(
     mocker: MockerFixture,
     now: datetime
 ) -> Dict[str, List[Credential]]:
-    gmd_mock = mocker.Mock(return_value='test')
-    gmd_mock.range_keyname = 'test'
-    mocker.patch(
-        'confidant.services.credentialmanager.Credential._get_meta_data',
-        return_value=gmd_mock,
-    )
-    mocker.patch(
-        'confidant.services.credentialmanager.CredentialArchive.'
-        '_get_meta_data',
-        return_value=gmd_mock,
-    )
     credential = Credential(
         id='1234',
         name='test',
