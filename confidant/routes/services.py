@@ -270,7 +270,6 @@ def get_service(id):
         )
     )
     try:
-        logger.debug('Attempting to get service {0}.'.format(id))
         service = Service.get(id)
         if not authnz.service_in_account(service.account):
             logger.warning(
