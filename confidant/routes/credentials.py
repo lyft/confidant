@@ -616,11 +616,10 @@ def create_credential():
     if not _check:
         return jsonify(ret), 400
     for cred in Credential.data_type_date_index.query(
-            'credential'):
-        if cred.name == data['name']:
-            # Conflict, the name already exists
-            msg = 'Name already exists. See id: {0}'.format(cred.id)
-            return jsonify({'error': msg, 'reference': cred.id}), 409
+            'credential', filter_condition=Credential.name == data['name']):
+        # Conflict, the name already exists
+        msg = 'Name already exists. See id: {0}'.format(cred.id)
+        return jsonify({'error': msg, 'reference': cred.id}), 409
     # Generate an initial stable ID to allow name changes
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
