@@ -188,7 +188,9 @@ def create_blind_credential():
     if not isinstance(data.get('metadata', {}), dict):
         return jsonify({'error': 'metadata must be a dict'}), 400
     for cred in BlindCredential.data_type_date_index.query(
-            'blind-credential', filter_condition=BlindCredential.name == data['name']):
+            'blind-credential',
+            filter_condition=BlindCredential.name == data['name']
+    ):
         # Conflict, the name already exists
         msg = 'Name already exists. See id: {0}'.format(cred.id)
         return jsonify({'error': msg, 'reference': cred.id}), 409
