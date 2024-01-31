@@ -650,7 +650,7 @@ def map_service_credentials(id):
             enabled=data.get('enabled'),
             revision=revision,
             modified_by=authnz.get_logged_in_user()
-        ).save(id__null=True)
+        ).save()
     except PutError as e:
         logger.error(e)
         return jsonify({'error': 'Failed to add service to archive.'}), 500
@@ -811,7 +811,7 @@ def revert_service_to_revision(id, to_revision):
             enabled=revert_service.enabled,
             revision=new_revision,
             modified_by=authnz.get_logged_in_user()
-        ).save(id__null=True)
+        ).save()
     except PutError as e:
         logger.error(e)
         return jsonify({'error': 'Failed to add service to archive.'}), 500

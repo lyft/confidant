@@ -616,10 +616,11 @@ def create_credential():
     if not _check:
         return jsonify(ret), 400
     for cred in Credential.data_type_date_index.query(
-            'credential', name__eq=data['name']):
-        # Conflict, the name already exists
-        msg = 'Name already exists. See id: {0}'.format(cred.id)
-        return jsonify({'error': msg, 'reference': cred.id}), 409
+            'credential'):
+        if cred.name == data['name']:
+            # Conflict, the name already exists
+            msg = 'Name already exists. See id: {0}'.format(cred.id)
+            return jsonify({'error': msg, 'reference': cred.id}), 409
     # Generate an initial stable ID to allow name changes
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
@@ -643,7 +644,7 @@ def create_credential():
         documentation=data.get('documentation'),
         tags=data.get('tags', []),
         last_rotation_date=last_rotation_date,
-    ).save(id__null=True)
+    ).save()
     # Make this the current revision
     cred = Credential(
         id=id,
@@ -882,7 +883,7 @@ def update_credential(id):
             documentation=update['documentation'],
             tags=update['tags'],
             last_rotation_date=update['last_rotation_date'],
-        ).save(id__null=True)
+        ).save()
     except PutError as e:
         logger.error(e)
         return jsonify({'error': 'Failed to add credential to archive.'}), 500
@@ -1056,7 +1057,7 @@ def revert_credential_to_revision(id, to_revision):
             documentation=revert_credential.documentation,
             tags=revert_credential.tags,
             last_rotation_date=revert_credential.last_rotation_date,
-        ).save(id__null=True)
+        ).save()
     except PutError as e:
         logger.error(e)
         return jsonify({'error': 'Failed to add credential to archive.'}), 500
