@@ -188,7 +188,9 @@ def create_blind_credential():
     if not isinstance(data.get('metadata', {}), dict):
         return jsonify({'error': 'metadata must be a dict'}), 400
     for cred in BlindCredential.data_type_date_index.query(
-            'blind-credential', name__eq=data['name']):
+            'blind-credential',
+            filter_condition=BlindCredential.name == data['name']
+    ):
         # Conflict, the name already exists
         msg = 'Name already exists. See id: {0}'.format(cred.id)
         return jsonify({'error': msg, 'reference': cred.id}), 409
@@ -210,7 +212,7 @@ def create_blind_credential():
         cipher_version=data['cipher_version'],
         modified_by=authnz.get_logged_in_user(),
         documentation=data.get('documentation')
-    ).save(id__null=True)
+    ).save()
     # Make this the current revision
     cred = BlindCredential(
         id=id,
@@ -344,7 +346,7 @@ def update_blind_credential(id):
             cipher_version=update['cipher_version'],
             modified_by=authnz.get_logged_in_user(),
             documentation=update['documentation']
-        ).save(id__null=True)
+        ).save()
     except PutError as e:
         logger.error(e)
         return jsonify(
@@ -454,7 +456,7 @@ def revert_blind_credential_to_revision(id, to_revision):
             cipher_version=revert_credential.cipher_version,
             modified_by=authnz.get_logged_in_user(),
             documentation=revert_credential.documentation
-        ).save(id__null=True)
+        ).save()
     except PutError as e:
         logger.error(e)
         return jsonify(

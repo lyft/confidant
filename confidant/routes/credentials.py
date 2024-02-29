@@ -4,7 +4,7 @@ import logging
 import re
 import uuid
 
-from flask import blueprints, jsonify, request
+from flask import blueprints, escape, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, clients, settings
@@ -616,7 +616,7 @@ def create_credential():
     if not _check:
         return jsonify(ret), 400
     for cred in Credential.data_type_date_index.query(
-            'credential', name__eq=data['name']):
+            'credential', filter_condition=Credential.name == data['name']):
         # Conflict, the name already exists
         msg = 'Name already exists. See id: {0}'.format(cred.id)
         return jsonify({'error': msg, 'reference': cred.id}), 409
@@ -624,15 +624,20 @@ def create_credential():
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
     revision = 1
+    for key, value in credential_pairs.items():
+        value = escape(value)
+        credential_pairs[key] = value
     credential_pairs = json.dumps(credential_pairs)
     data_key = keymanager.create_datakey(encryption_context={'id': id})
     cipher = CipherManager(data_key['plaintext'], version=2)
     credential_pairs = cipher.encrypt(credential_pairs)
     last_rotation_date = misc.utcnow()
+
+    sanitized_name = escape(data['name'])
     cred = Credential(
         id='{0}-{1}'.format(id, revision),
         data_type='archive-credential',
-        name=data['name'],
+        name=sanitized_name,
         credential_pairs=credential_pairs,
         metadata=data.get('metadata'),
         revision=revision,
@@ -643,12 +648,12 @@ def create_credential():
         documentation=data.get('documentation'),
         tags=data.get('tags', []),
         last_rotation_date=last_rotation_date,
-    ).save(id__null=True)
+    ).save()
     # Make this the current revision
     cred = Credential(
         id=id,
         data_type='credential',
-        name=data['name'],
+        name=sanitized_name,
         credential_pairs=credential_pairs,
         metadata=data.get('metadata'),
         revision=revision,
@@ -882,7 +887,7 @@ def update_credential(id):
             documentation=update['documentation'],
             tags=update['tags'],
             last_rotation_date=update['last_rotation_date'],
-        ).save(id__null=True)
+        ).save()
     except PutError as e:
         logger.error(e)
         return jsonify({'error': 'Failed to add credential to archive.'}), 500
@@ -1056,7 +1061,7 @@ def revert_credential_to_revision(id, to_revision):
             documentation=revert_credential.documentation,
             tags=revert_credential.tags,
             last_rotation_date=revert_credential.last_rotation_date,
-        ).save(id__null=True)
+        ).save()
     except PutError as e:
         logger.error(e)
         return jsonify({'error': 'Failed to add credential to archive.'}), 500

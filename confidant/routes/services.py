@@ -1,6 +1,6 @@
 import logging
 
-from flask import blueprints, jsonify, request
+from flask import blueprints, escape, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, settings
@@ -640,9 +640,14 @@ def map_service_credentials(id):
     # credential IDs.
     filtered_credential_ids = [cred.id for cred in credentials]
     # Try to save to the archive
+
+    if _service:
+        service_id = _service.id
+    else:
+        service_id = escape(id)
     try:
         Service(
-            id='{0}-{1}'.format(id, revision),
+            id='{0}-{1}'.format(service_id, revision),
             data_type='archive-service',
             credentials=filtered_credential_ids,
             blind_credentials=data.get('blind_credentials'),
@@ -650,14 +655,14 @@ def map_service_credentials(id):
             enabled=data.get('enabled'),
             revision=revision,
             modified_by=authnz.get_logged_in_user()
-        ).save(id__null=True)
+        ).save()
     except PutError as e:
         logger.error(e)
         return jsonify({'error': 'Failed to add service to archive.'}), 500
 
     try:
         service = Service(
-            id=id,
+            id=service_id,
             data_type='service',
             credentials=filtered_credential_ids,
             blind_credentials=data.get('blind_credentials'),
@@ -811,7 +816,7 @@ def revert_service_to_revision(id, to_revision):
             enabled=revert_service.enabled,
             revision=new_revision,
             modified_by=authnz.get_logged_in_user()
-        ).save(id__null=True)
+        ).save()
     except PutError as e:
         logger.error(e)
         return jsonify({'error': 'Failed to add service to archive.'}), 500
