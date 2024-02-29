@@ -4,7 +4,7 @@ import logging
 import re
 import uuid
 
-from flask import blueprints, jsonify, request
+from flask import blueprints, escape, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, clients, settings
@@ -624,15 +624,20 @@ def create_credential():
     id = str(uuid.uuid4()).replace('-', '')
     # Try to save to the archive
     revision = 1
+    for key, value in credential_pairs.items():
+        value = escape(value)
+        credential_pairs[key] = value
     credential_pairs = json.dumps(credential_pairs)
     data_key = keymanager.create_datakey(encryption_context={'id': id})
     cipher = CipherManager(data_key['plaintext'], version=2)
     credential_pairs = cipher.encrypt(credential_pairs)
     last_rotation_date = misc.utcnow()
+
+    sanitized_name = escape(data['name'])
     cred = Credential(
         id='{0}-{1}'.format(id, revision),
         data_type='archive-credential',
-        name=data['name'],
+        name=sanitized_name,
         credential_pairs=credential_pairs,
         metadata=data.get('metadata'),
         revision=revision,
@@ -648,7 +653,7 @@ def create_credential():
     cred = Credential(
         id=id,
         data_type='credential',
-        name=data['name'],
+        name=sanitized_name,
         credential_pairs=credential_pairs,
         metadata=data.get('metadata'),
         revision=revision,
