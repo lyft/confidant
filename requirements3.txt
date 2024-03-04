@@ -30,7 +30,6 @@ certifi==2023.5.7
     # via requests
 cffi==1.15.1
     # via
-    #   -r requirements.in
     #   cryptography
 charset-normalizer==3.1.0
     # via requests
@@ -70,9 +69,7 @@ gevent==22.10.2
     #   -r requirements.in
     #   pytest-gevent
 greenlet==2.0.2
-    # via
-    #   -r requirements.in
-    #   gevent
+    # via gevent
 guard==1.0.1
     # via -r requirements.in
 gunicorn==20.1.0
