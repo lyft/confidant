@@ -13,12 +13,10 @@ repos:
     -   id: mypy
         additional_dependencies:
         -   --no-compile
-        -   cffi==1.15.1
+        -   cffi==1.14.6
         -   cryptography==41.0.1
         -   pycparser==2.21
         -   types-pyopenssl==23.2.0.1
         -   types-pytz==2023.3.0.0
         -   types-pyyaml==6.0.12.10
         -   types-redis==4.6.0.0
-        -   types-requests==2.31.0.1
-        -   types-urllib3==1.26.25.13

@@ -49,7 +49,7 @@ cryptography>2.3.0
 # Upstream url: https://bitbucket.org/cffi/cffi
 # Use: Required by cryptography package to be installed. This should be removed
 # once crytography updates their depenencies to require cffi>=1.10.0.
-cffi>1.10.0
+cffi>1.10.0,<1.15.0
 
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
@@ -89,7 +89,6 @@ python3-saml>=1.15.0
 # Upstream url: http://python-requests.org
 # Use: REST calls to external services
 requests>=2.22.0,<3.0.0
-types-requests
 
 # Provides enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
 # License: BSD
