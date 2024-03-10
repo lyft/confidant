@@ -188,7 +188,7 @@ types-redis==4.6.0.0
     # via -r requirements.in
 typing-extensions==4.7.0
     # via mypy
-urllib3==1.25.11
+urllib3==1.26.18
     # via
     #   botocore
     #   requests
