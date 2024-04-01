@@ -1,4 +1,8 @@
 on: pull_request
+
+# Explicitly grant the `secrets.GITHUB_TOKEN` no permissions.
+permissions: {}
+
 jobs:
   pre-commit:
     runs-on: ubuntu-20.04
@@ -70,3 +74,24 @@ jobs:
           node-version: '8.x'
       - name: Run frontend tests
         run: "npm install grunt-cli && npm install && grunt test"
+  build-dist-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build
+        uses: docker/build-push-action@v3
+        with:
+          file: Dockerfile
+          push: false # only build the image, don't push it anywhere
+          context: .
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
