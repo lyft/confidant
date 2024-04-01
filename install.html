@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; confidant 6.5.3-488781 documentation</title>
+  <title>Installation &mdash; confidant 6.5.3-8e0939 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                6.5.3-488781
+                6.5.3-8e0939
               </div>
             
           
@@ -391,10 +391,15 @@ for this.</p>
 <div class="section" id="to-run-confidant-in-docker">
 <h3>To run confidant in Docker<a class="headerlink" href="#to-run-confidant-in-docker" title="Permalink to this headline">¶</a></h3>
 <p>It’s necessary to export your configuration variables before running confidant.
-You can either specify them as multiple -e options, or you can put them into an
+You can either specify them as multiple -e options, or you can put them into
 an environment file and use –env-file.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull lyft/confidant
-docker run --env-file my_config -t lyft/confidant
+<p>A production-ready docker image is available in
+<a class="reference external" href="https://github.com/lyft/confidant/pkgs/container/confidant">GitHub Container Registry</a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull ghcr.io/lyft/confidant:master
+</pre></div>
+</div>
+<p>This image can then be ran with any of your desired command line flags:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run --rm ghcr.io/lyft/confidant:master --help
 </pre></div>
 </div>
 </div>
