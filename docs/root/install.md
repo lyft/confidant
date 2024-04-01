@@ -17,7 +17,7 @@ You can either specify them as multiple -e options, or you can put them into
 an environment file and use --env-file.
 
 A production-ready docker image is available in
-[GitHub Container Registry](https://github.com/lyft/cartography/pkgs/container/cartography).
+[GitHub Container Registry](https://github.com/lyft/confidant/pkgs/container/confidant).
 
 ```bash
 docker pull ghcr.io/lyft/confidant:master
@@ -26,7 +26,7 @@ docker pull ghcr.io/lyft/confidant:master
 This image can then be ran with any of your desired command line flags:
 
 ```bash
-docker run --rm ghcr.io/lyft/cartography:master --help
+docker run --rm ghcr.io/lyft/confidant:master --help
 ```
 
 ### To build the image
