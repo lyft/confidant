@@ -573,7 +573,7 @@ def test_update_credential(mocker: MockerFixture, credential: Credential):
     json_data = json.loads(ret.data)
     error_msg = '''Credential with the same key value pairs already exists.
     See id: 123'''
-    assert ret.status_code == 400
+    assert ret.status_code == 409
     assert error_msg == json_data['error']
 
     # All good
