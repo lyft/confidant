@@ -592,7 +592,6 @@ def create_credential():
                      correct format, or a required field was not provided.
     :statuscode 403: Client does not have access to create credentials.
     '''
-    logger.info("Creating credential")
     if not acl_module_check(resource_type='credential', action='create'):
         msg = "{} does not have access to create credentials".format(
             authnz.get_logged_in_user()
