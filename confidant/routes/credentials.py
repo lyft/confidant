@@ -886,7 +886,7 @@ def update_credential(id):
                 credential_pairs
             )
         if is_duplicate:
-            msg = 'Credential with the same key value pairs already exists.'
+            msg = 'Credential with the same key value pairs already exists. '
             msg += 'See id: {0}'.format(duplicate_id)
             return jsonify({'error': msg, 'reference': duplicate_id}), 409
 
