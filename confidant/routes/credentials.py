@@ -627,13 +627,13 @@ def create_credential():
     for key, value in credential_pairs.items():
         value = escape(value)
         credential_pairs[key] = value
-    
+
     # Verify this credential is not a duplicate of an existing credential
     is_duplicate, duplicate_id = credentialmanager.is_key_value_pair_duplicate(
         credential_pairs
     )
     if is_duplicate:
-        msg = '''Credential with the same key value pairs already exists. 
+        msg = '''Credential with the same key value pairs already exists.
         See id: {0}'''.format(duplicate_id)
         return jsonify({'error': msg, 'reference': duplicate_id}), 409
 
@@ -881,9 +881,10 @@ def update_credential(id):
             update['last_rotation_date'] = misc.utcnow()
 
         # Verify if after update the credential will not be a duplicate
-        is_duplicate, duplicate_id = credentialmanager.is_key_value_pair_duplicate(
-            credential_pairs
-        )
+        is_duplicate, duplicate_id = \
+            credentialmanager.is_key_value_pair_duplicate(
+                credential_pairs
+            )
         if is_duplicate:
             msg = '''Credential with the same key value pairs already exists.
             See id: {0}'''.format(duplicate_id)
