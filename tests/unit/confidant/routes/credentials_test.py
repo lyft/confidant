@@ -563,7 +563,7 @@ def test_update_credential(mocker: MockerFixture, credential: Credential):
         return_value={'foo': 'baz'}
     )
     ret = app.test_client().put(
-        '/v1/credentials/123',
+        '/v1/credentials/1234',
         headers={"Content-Type": 'application/json'},
         data=json.dumps({
             'enabled': True,
