@@ -60,9 +60,6 @@ def pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
 
 
 def is_key_value_pair_duplicate(key_pairs):
-    logger.info("Checking if key value pair is duplicate")
-    logger.info("checking key_pairs: %s", key_pairs)
-
     all_credentials = Credential.data_type_date_index.query('credential')
 
     for cred in all_credentials:
