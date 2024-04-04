@@ -422,7 +422,7 @@ def test_create_credential(mocker: MockerFixture, credential: Credential):
         return_value=(True, 123),
     )
     ret = app.test_client().post(
-        '/v1/credentials/123',
+        '/v1/credentials',
         headers={"Content-Type": 'application/json'},
         data=json.dumps({
             'name': 'me',
@@ -431,9 +431,9 @@ def test_create_credential(mocker: MockerFixture, credential: Credential):
         }),
     )
     json_data = json.loads(ret.data)
+    assert ret.status_code == 409
     error_msg = 'Credential with the same key value pairs already exists.'
     error_msg += ' See id: 123'
-    assert ret.status_code == 409
     assert error_msg == json_data['error']
 
     # All good
@@ -591,9 +591,9 @@ def test_update_credential(mocker: MockerFixture, credential: Credential):
         }),
     )
     json_data = json.loads(ret.data)
+    assert ret.status_code == 409
     error_msg = 'Credential with the same key value pairs already exists.'
     error_msg += ' See id: 123'
-    assert ret.status_code == 409
     assert error_msg == json_data['error']
 
     # All good
