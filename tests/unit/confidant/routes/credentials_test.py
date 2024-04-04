@@ -429,7 +429,7 @@ def test_create_credential(mocker: MockerFixture, credential: Credential):
         'confidant.services.credentialmanager.is_key_value_pair_duplicate',
         return_value=(True, 123),
     )
-    ret = app.test_client().put(
+    ret = app.test_client().post(
         '/v1/credentials/123',
         headers={"Content-Type": 'application/json'},
         data=json.dumps({
