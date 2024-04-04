@@ -459,6 +459,10 @@ def test_create_credential(mocker: MockerFixture, credential: Credential):
         return_value={'test': 'me'},
     )
     mocker.patch(
+        'confidant.services.credentialmanager.is_key_value_pair_duplicate',
+        return_value=(False, None),
+    )
+    mocker.patch(
         'confidant.routes.credentials.CipherManager.encrypt',
         return_value={'foo': 'baz'}
     )
