@@ -59,6 +59,19 @@ def pair_key_conflicts_for_credentials(credential_ids, blind_credential_ids):
     return conflicts
 
 
+def is_key_value_pair_duplicate(key_pairs):
+    logger.info("Checking if key value pair is duplicate")
+    logger.info("checking key_pairs: %s", key_pairs)
+
+    all_credentials = Credential.data_type_date_index.query('credential')
+
+    for cred in all_credentials:
+        if cred.decrypted_credential_pairs == key_pairs:
+            return True, cred.id
+
+    return False, None
+
+
 def check_credential_pair_values(credential_pairs):
     for key, val in credential_pairs.items():
         if isinstance(val, dict) or isinstance(val, list):
