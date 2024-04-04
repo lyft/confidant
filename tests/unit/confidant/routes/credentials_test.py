@@ -418,6 +418,10 @@ def test_create_credential(mocker: MockerFixture, credential: Credential):
 
     # Credential key value pair is duplicate
     mocker.patch(
+        'confidant.routes.credentials.Credential.data_type_date_index.query',
+        return_value=[],
+    )
+    mocker.patch(
         'confidant.services.credentialmanager.is_key_value_pair_duplicate',
         return_value=(True, 123),
     )
