@@ -633,8 +633,8 @@ def create_credential():
         credential_pairs
     )
     if is_duplicate:
-        msg = '''Credential with the same key value pairs already exists.
-        See id: {0}'''.format(duplicate_id)
+        msg = 'Credential with the same key value pairs already exists. '
+        msg += 'See id: {0}'''.format(duplicate_id)
         return jsonify({'error': msg, 'reference': duplicate_id}), 409
 
     credential_pairs = json.dumps(credential_pairs)
@@ -886,8 +886,8 @@ def update_credential(id):
                 credential_pairs
             )
         if is_duplicate:
-            msg = '''Credential with the same key value pairs already exists.
-            See id: {0}'''.format(duplicate_id)
+            msg = 'Credential with the same key value pairs already exists.'
+            msg += 'See id: {0}'.format(duplicate_id)
             return jsonify({'error': msg, 'reference': duplicate_id}), 409
 
         data_key = keymanager.create_datakey(encryption_context={'id': id})
