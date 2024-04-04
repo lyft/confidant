@@ -425,7 +425,7 @@ def test_create_credential(mocker: MockerFixture, credential: Credential):
         '/v1/credentials',
         headers={"Content-Type": 'application/json'},
         data=json.dumps({
-            'name': 'me',
+            'name': 'new key',
             'documentation': 'doc',
             'credential_pairs': {'key': 'value'},
         }),
