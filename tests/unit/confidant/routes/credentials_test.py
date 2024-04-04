@@ -418,14 +418,6 @@ def test_create_credential(mocker: MockerFixture, credential: Credential):
 
     # Credential key value pair is duplicate
     mocker.patch(
-        ('confidant.routes.credentials.servicemanager'
-         '.pair_key_conflicts_for_services'),
-        return_value={},
-    )
-    mock_save = mocker.patch('confidant.routes.credentials.Credential.save')
-    mocker.patch('confidant.routes.credentials.graphite.send_event')
-    mocker.patch('confidant.routes.credentials.webhook.send_event')
-    mocker.patch(
         'confidant.services.credentialmanager.is_key_value_pair_duplicate',
         return_value=(True, 123),
     )
@@ -433,8 +425,9 @@ def test_create_credential(mocker: MockerFixture, credential: Credential):
         '/v1/credentials/123',
         headers={"Content-Type": 'application/json'},
         data=json.dumps({
-            'credential_pairs': {'foo': 'baz'},
-            'enabled': True,
+            'name': 'me',
+            'documentation': 'doc',
+            'credential_pairs': {'key': 'value'},
         }),
     )
     json_data = json.loads(ret.data)
