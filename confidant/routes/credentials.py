@@ -601,10 +601,12 @@ def create_credential():
             return jsonify(error_msg), 403
 
         data = request.get_json()
-        if not data.get('documentation') and settings.get('ENFORCE_DOCUMENTATION'):
+        if not data.get('documentation') \
+                and settings.get('ENFORCE_DOCUMENTATION'):
             return jsonify({'error': 'documentation is a required field'}), 400
         if not data.get('credential_pairs'):
-            return jsonify({'error': 'credential_pairs is a required field'}), 400
+            error = {'error': 'credential_pairs is a required field'}
+            return jsonify(error), 400
         if not isinstance(data.get('metadata', {}), dict):
             return jsonify({'error': 'metadata must be a dict'}), 400
         # Ensure credential pair keys are lowercase
@@ -892,7 +894,8 @@ def update_credential(id):
             ).save()
         except PutError as e:
             logger.error(e)
-            return jsonify({'error': 'Failed to add credential to archive.'}), 500
+            error = {'error': 'Failed to add credential to archive.'}
+            return jsonify(error), 500
         try:
             cred = Credential(
                 id=id,
@@ -912,7 +915,8 @@ def update_credential(id):
             cred.save()
         except PutError as e:
             logger.error(e)
-            return jsonify({'error': 'Failed to update active credential.'}), 500
+            error = {'error': 'Failed to update active credential.'}
+            return jsonify(error), 500
 
         if services:
             service_names = [x.id for x in services]
