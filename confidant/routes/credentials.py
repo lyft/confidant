@@ -4,6 +4,9 @@ import logging
 import re
 import uuid
 
+from datetime import datetime
+from functools import wraps
+
 from flask import blueprints, escape, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
@@ -33,6 +36,18 @@ blueprint = blueprints.Blueprint('credentials', __name__)
 
 acl_module_check = misc.load_module(settings.ACL_MODULE)
 VALUE_LENGTH = 50
+
+
+def do_time(func):
+    '''super cool timer'''
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        before = datetime.now()
+        return_value = func(*args, **kwargs)
+        after = datetime.now()
+        logger.info(f'functimer: {func.__name__}: {after - before}')
+        return return_value
+    return wrapper
 
 
 @blueprint.route('/v1/credentials', methods=['GET'])
@@ -530,6 +545,7 @@ def get_archive_credential_list():
 
 
 @blueprint.route('/v1/credentials', methods=['POST'])
+@do_time
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -725,6 +741,7 @@ def get_credential_dependencies(id):
 
 
 @blueprint.route('/v1/credentials/<id>', methods=['PUT'])
+@do_time
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
