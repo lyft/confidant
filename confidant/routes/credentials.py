@@ -4,9 +4,6 @@ import logging
 import re
 import uuid
 
-from datetime import datetime
-from functools import wraps
-
 from flask import blueprints, escape, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
