@@ -627,16 +627,6 @@ def create_credential():
     for key, value in credential_pairs.items():
         value = escape(value)
         credential_pairs[key] = value
-
-    # Verify this credential is not a duplicate of an existing credential
-    is_duplicate, duplicate_id = credentialmanager.is_key_value_pair_duplicate(
-        credential_pairs
-    )
-    if is_duplicate:
-        msg = 'Credential with the same key value pairs already exists.'
-        msg += ' See id: {0}'.format(duplicate_id)
-        return jsonify({'error': msg, 'reference': duplicate_id}), 409
-
     credential_pairs = json.dumps(credential_pairs)
     data_key = keymanager.create_datakey(encryption_context={'id': id})
     cipher = CipherManager(data_key['plaintext'], version=2)
@@ -879,16 +869,6 @@ def update_credential(id):
         # this is a new credential pair and update last_rotation_date
         if credential_pairs != _cred.decrypted_credential_pairs:
             update['last_rotation_date'] = misc.utcnow()
-
-        # Verify if after update the credential will not be a duplicate
-        is_duplicate, duplicate_id = \
-            credentialmanager.is_key_value_pair_duplicate(
-                credential_pairs
-            )
-        if is_duplicate:
-            msg = 'Credential with the same key value pairs already exists.'
-            msg += ' See id: {0}'.format(duplicate_id)
-            return jsonify({'error': msg, 'reference': duplicate_id}), 409
 
         data_key = keymanager.create_datakey(encryption_context={'id': id})
         cipher = CipherManager(data_key['plaintext'], version=2)

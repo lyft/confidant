@@ -416,30 +416,6 @@ def test_create_credential(mocker: MockerFixture, credential: Credential):
     assert ret.status_code == 409
     assert 'Name already exists' in json_data['error']
 
-    # Credential key value pair is duplicate
-    mocker.patch(
-        'confidant.routes.credentials.Credential.data_type_date_index.query',
-        return_value=[],
-    )
-    mocker.patch(
-        'confidant.services.credentialmanager.is_key_value_pair_duplicate',
-        return_value=(True, 123),
-    )
-    ret = app.test_client().post(
-        '/v1/credentials',
-        headers={"Content-Type": 'application/json'},
-        data=json.dumps({
-            'name': 'new key',
-            'documentation': 'doc',
-            'credential_pairs': {'key': 'value'},
-        }),
-    )
-    json_data = json.loads(ret.data)
-    assert ret.status_code == 409
-    error_msg = 'Credential with the same key value pairs already exists.'
-    error_msg += ' See id: 123'
-    assert error_msg == json_data['error']
-
     # All good
     mocker.patch(
         ('confidant.routes.credentials.Credential'
@@ -457,10 +433,6 @@ def test_create_credential(mocker: MockerFixture, credential: Credential):
         ('confidant.routes.credentials.Credential'
          '._get_decrypted_credential_pairs'),
         return_value={'test': 'me'},
-    )
-    mocker.patch(
-        'confidant.services.credentialmanager.is_key_value_pair_duplicate',
-        return_value=(False, None),
     )
     mocker.patch(
         'confidant.routes.credentials.CipherManager.encrypt',
@@ -577,33 +549,6 @@ def test_update_credential(mocker: MockerFixture, credential: Credential):
     assert ret.status_code == 400
     assert 'Conflicting key pairs in mapped service.' == json_data['error']
 
-    # Credential key value pair is duplicate
-    mocker.patch(
-        ('confidant.routes.credentials.servicemanager'
-         '.pair_key_conflicts_for_services'),
-        return_value={},
-    )
-    mock_save = mocker.patch('confidant.routes.credentials.Credential.save')
-    mocker.patch('confidant.routes.credentials.graphite.send_event')
-    mocker.patch('confidant.routes.credentials.webhook.send_event')
-    mocker.patch(
-        'confidant.services.credentialmanager.is_key_value_pair_duplicate',
-        return_value=(True, 123),
-    )
-    ret = app.test_client().put(
-        '/v1/credentials/123',
-        headers={"Content-Type": 'application/json'},
-        data=json.dumps({
-            'credential_pairs': {'foo': 'baz'},
-            'enabled': True,
-        }),
-    )
-    json_data = json.loads(ret.data)
-    assert ret.status_code == 409
-    error_msg = 'Credential with the same key value pairs already exists.'
-    error_msg += ' See id: 123'
-    assert error_msg == json_data['error']
-
     # All good
     mocker.patch(
         ('confidant.routes.credentials.servicemanager'
@@ -613,10 +558,6 @@ def test_update_credential(mocker: MockerFixture, credential: Credential):
     mock_save = mocker.patch('confidant.routes.credentials.Credential.save')
     mocker.patch('confidant.routes.credentials.graphite.send_event')
     mocker.patch('confidant.routes.credentials.webhook.send_event')
-    mocker.patch(
-        'confidant.services.credentialmanager.is_key_value_pair_duplicate',
-        return_value=(False, None),
-    )
     mocker.patch(
         'confidant.routes.credentials.CipherManager.encrypt',
         return_value={'foo': 'baz'}
