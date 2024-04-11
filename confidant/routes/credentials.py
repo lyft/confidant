@@ -592,92 +592,95 @@ def create_credential():
                      correct format, or a required field was not provided.
     :statuscode 403: Client does not have access to create credentials.
     '''
-    if not acl_module_check(resource_type='credential', action='create'):
-        msg = "{} does not have access to create credentials".format(
-            authnz.get_logged_in_user()
+    with stats.timer('create_credential'):
+        if not acl_module_check(resource_type='credential', action='create'):
+            msg = "{} does not have access to create credentials".format(
+                authnz.get_logged_in_user()
+            )
+            error_msg = {'error': msg}
+            return jsonify(error_msg), 403
+
+        data = request.get_json()
+        if not data.get('documentation') \
+                and settings.get('ENFORCE_DOCUMENTATION'):
+            return jsonify({'error': 'documentation is a required field'}), 400
+        if not data.get('credential_pairs'):
+            error = {'error': 'credential_pairs is a required field'}
+            return jsonify(error), 400
+        if not isinstance(data.get('metadata', {}), dict):
+            return jsonify({'error': 'metadata must be a dict'}), 400
+        # Ensure credential pair keys are lowercase
+        credential_pairs = credentialmanager.lowercase_credential_pairs(
+            data['credential_pairs']
         )
-        error_msg = {'error': msg}
-        return jsonify(error_msg), 403
+        _check, ret = credentialmanager.check_credential_pair_values(
+            credential_pairs
+        )
+        if not _check:
+            return jsonify(ret), 400
+        for cred in Credential.data_type_date_index.query(
+                'credential', filter_condition=Credential.name == data['name']):
+            # Conflict, the name already exists
+            msg = 'Name already exists. See id: {0}'.format(cred.id)
+            return jsonify({'error': msg, 'reference': cred.id}), 409
+        # Generate an initial stable ID to allow name changes
+        id = str(uuid.uuid4()).replace('-', '')
+        # Try to save to the archive
+        revision = 1
+        for key, value in credential_pairs.items():
+            value = escape(value)
+            credential_pairs[key] = value
+        credential_pairs = json.dumps(credential_pairs)
+        data_key = keymanager.create_datakey(encryption_context={'id': id})
+        cipher = CipherManager(data_key['plaintext'], version=2)
+        credential_pairs = cipher.encrypt(credential_pairs)
+        last_rotation_date = misc.utcnow()
 
-    data = request.get_json()
-    if not data.get('documentation') and settings.get('ENFORCE_DOCUMENTATION'):
-        return jsonify({'error': 'documentation is a required field'}), 400
-    if not data.get('credential_pairs'):
-        return jsonify({'error': 'credential_pairs is a required field'}), 400
-    if not isinstance(data.get('metadata', {}), dict):
-        return jsonify({'error': 'metadata must be a dict'}), 400
-    # Ensure credential pair keys are lowercase
-    credential_pairs = credentialmanager.lowercase_credential_pairs(
-        data['credential_pairs']
-    )
-    _check, ret = credentialmanager.check_credential_pair_values(
-        credential_pairs
-    )
-    if not _check:
-        return jsonify(ret), 400
-    for cred in Credential.data_type_date_index.query(
-            'credential', filter_condition=Credential.name == data['name']):
-        # Conflict, the name already exists
-        msg = 'Name already exists. See id: {0}'.format(cred.id)
-        return jsonify({'error': msg, 'reference': cred.id}), 409
-    # Generate an initial stable ID to allow name changes
-    id = str(uuid.uuid4()).replace('-', '')
-    # Try to save to the archive
-    revision = 1
-    for key, value in credential_pairs.items():
-        value = escape(value)
-        credential_pairs[key] = value
-    credential_pairs = json.dumps(credential_pairs)
-    data_key = keymanager.create_datakey(encryption_context={'id': id})
-    cipher = CipherManager(data_key['plaintext'], version=2)
-    credential_pairs = cipher.encrypt(credential_pairs)
-    last_rotation_date = misc.utcnow()
-
-    sanitized_name = escape(data['name'])
-    cred = Credential(
-        id='{0}-{1}'.format(id, revision),
-        data_type='archive-credential',
-        name=sanitized_name,
-        credential_pairs=credential_pairs,
-        metadata=data.get('metadata'),
-        revision=revision,
-        enabled=data.get('enabled'),
-        data_key=data_key['ciphertext'],
-        cipher_version=2,
-        modified_by=authnz.get_logged_in_user(),
-        documentation=data.get('documentation'),
-        tags=data.get('tags', []),
-        last_rotation_date=last_rotation_date,
-    ).save()
-    # Make this the current revision
-    cred = Credential(
-        id=id,
-        data_type='credential',
-        name=sanitized_name,
-        credential_pairs=credential_pairs,
-        metadata=data.get('metadata'),
-        revision=revision,
-        enabled=data.get('enabled'),
-        data_key=data_key['ciphertext'],
-        cipher_version=2,
-        modified_by=authnz.get_logged_in_user(),
-        documentation=data.get('documentation'),
-        tags=data.get('tags', []),
-        last_rotation_date=last_rotation_date,
-    )
-    cred.save()
-    permissions = {
-        'metadata': True,
-        'get': True,
-        'update': True,
-    }
-    credential_response = CredentialResponse.from_credential(
-        cred,
-        include_credential_keys=True,
-        include_credential_pairs=True,
-    )
-    credential_response.permissions = permissions
-    return credential_response_schema.dumps(credential_response)
+        sanitized_name = escape(data['name'])
+        cred = Credential(
+            id='{0}-{1}'.format(id, revision),
+            data_type='archive-credential',
+            name=sanitized_name,
+            credential_pairs=credential_pairs,
+            metadata=data.get('metadata'),
+            revision=revision,
+            enabled=data.get('enabled'),
+            data_key=data_key['ciphertext'],
+            cipher_version=2,
+            modified_by=authnz.get_logged_in_user(),
+            documentation=data.get('documentation'),
+            tags=data.get('tags', []),
+            last_rotation_date=last_rotation_date,
+        ).save()
+        # Make this the current revision
+        cred = Credential(
+            id=id,
+            data_type='credential',
+            name=sanitized_name,
+            credential_pairs=credential_pairs,
+            metadata=data.get('metadata'),
+            revision=revision,
+            enabled=data.get('enabled'),
+            data_key=data_key['ciphertext'],
+            cipher_version=2,
+            modified_by=authnz.get_logged_in_user(),
+            documentation=data.get('documentation'),
+            tags=data.get('tags', []),
+            last_rotation_date=last_rotation_date,
+        )
+        cred.save()
+        permissions = {
+            'metadata': True,
+            'get': True,
+            'update': True,
+        }
+        credential_response = CredentialResponse.from_credential(
+            cred,
+            include_credential_keys=True,
+            include_credential_pairs=True,
+        )
+        credential_response.permissions = permissions
+        return credential_response_schema.dumps(credential_response)
 
 
 @blueprint.route('/v1/credentials/<id>/services', methods=['GET'])
@@ -895,7 +898,8 @@ def update_credential(id):
             ).save()
         except PutError as e:
             logger.error(e)
-            return jsonify({'error': 'Failed to add credential to archive.'}), 500
+            error = {'error': 'Failed to add credential to archive.'}
+            return jsonify(error), 500
         try:
             cred = Credential(
                 id=id,
@@ -915,7 +919,8 @@ def update_credential(id):
             cred.save()
         except PutError as e:
             logger.error(e)
-            return jsonify({'error': 'Failed to update active credential.'}), 500
+            error = {'error': 'Failed to update active credential.'}
+            return jsonify(error), 500
 
         if services:
             service_names = [x.id for x in services]
