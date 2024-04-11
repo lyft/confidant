@@ -843,7 +843,8 @@ def update_credential(id):
         if 'credential_pairs' in data:
             # Ensure the credential is not empty
             if data['credential_pairs'] == {}:
-                return jsonify({'error': 'Credential Pairs cannot be empty'}), 400
+                error = {'error': 'Credential Pairs cannot be empty'}
+                return jsonify(error), 400
 
             # Ensure credential pair keys are lowercase
             credential_pairs = credentialmanager.lowercase_credential_pairs(
