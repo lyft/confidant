@@ -869,7 +869,6 @@ def update_credential(id):
         # this is a new credential pair and update last_rotation_date
         if credential_pairs != _cred.decrypted_credential_pairs:
             update['last_rotation_date'] = misc.utcnow()
-
         data_key = keymanager.create_datakey(encryption_context={'id': id})
         cipher = CipherManager(data_key['plaintext'], version=2)
         update['credential_pairs'] = cipher.encrypt(

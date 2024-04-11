@@ -549,6 +549,24 @@ def test_update_credential(mocker: MockerFixture, credential: Credential):
     assert ret.status_code == 400
     assert 'Conflicting key pairs in mapped service.' == json_data['error']
 
+    # Empty credential pairs
+    mocker.patch(
+        ('confidant.routes.credentials.servicemanager'
+         '.pair_key_conflicts_for_services'),
+        return_value={},
+    )
+    ret = app.test_client().put(
+        '/v1/credentials/123',
+        headers={"Content-Type": 'application/json'},
+        data=json.dumps({
+            'credential_pairs': {},
+            'enabled': True,
+        }),
+    )
+    json_data = json.loads(ret.data)
+    assert ret.status_code == 400
+    assert 'Credential Pairs cannot be empty.' == json_data['error']
+
     # All good
     mocker.patch(
         ('confidant.routes.credentials.servicemanager'
