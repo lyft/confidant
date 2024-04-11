@@ -25,7 +25,7 @@ from confidant.services import (
     webhook,
 )
 from confidant.services.ciphermanager import CipherManager
-from confidant.utils import maintenance, misc
+from confidant.utils import maintenance, misc, stats
 from confidant.utils.dynamodb import decode_last_evaluated_key
 
 logger = logging.getLogger(__name__)
@@ -790,150 +790,151 @@ def update_credential(id):
     :statuscode 403: Client does not have access to update the provided
                      credential ID.
     '''
-    if not acl_module_check(resource_type='credential',
-                            action='update',
-                            resource_id=id):
-        msg = "{} does not have access to update credential {}".format(
-            authnz.get_logged_in_user(),
-            id
-        )
-        error_msg = {'error': msg, 'reference': id}
-        return jsonify(error_msg), 403
+    with stats.timer('update_credential'):
+        if not acl_module_check(resource_type='credential',
+                                action='update',
+                                resource_id=id):
+            msg = "{} does not have access to update credential {}".format(
+                authnz.get_logged_in_user(),
+                id
+            )
+            error_msg = {'error': msg, 'reference': id}
+            return jsonify(error_msg), 403
 
-    try:
-        _cred = Credential.get(id)
-    except DoesNotExist:
-        return jsonify({'error': 'Credential not found.'}), 404
-    if _cred.data_type != 'credential':
-        msg = 'id provided is not a credential.'
-        return jsonify({'error': msg}), 400
+        try:
+            _cred = Credential.get(id)
+        except DoesNotExist:
+            return jsonify({'error': 'Credential not found.'}), 404
+        if _cred.data_type != 'credential':
+            msg = 'id provided is not a credential.'
+            return jsonify({'error': msg}), 400
 
-    data = request.get_json()
-    if not isinstance(data.get('metadata', {}), dict):
-        return jsonify({'error': 'metadata must be a dict'}), 400
+        data = request.get_json()
+        if not isinstance(data.get('metadata', {}), dict):
+            return jsonify({'error': 'metadata must be a dict'}), 400
 
-    update = {
-        'name': data.get('name', _cred.name),
-        'last_rotation_date': _cred.last_rotation_date,
-        'credential_pairs': _cred.credential_pairs,
-        'enabled': _cred.enabled,
-        'metadata': data.get('metadata', _cred.metadata),
-        'documentation': data.get('documentation', _cred.documentation),
-        'tags': data.get('tags', _cred.tags),
-    }
-    # Enforce documentation, EXCEPT if we are restoring an old revision
-    if (not update['documentation'] and
-            settings.get('ENFORCE_DOCUMENTATION') and
-            not data.get('revision')):
-        return jsonify({'error': 'documentation is a required field'}), 400
-    if 'enabled' in data:
-        if not isinstance(data['enabled'], bool):
-            return jsonify({'error': 'Enabled must be a boolean.'}), 400
-        update['enabled'] = data['enabled']
+        update = {
+            'name': data.get('name', _cred.name),
+            'last_rotation_date': _cred.last_rotation_date,
+            'credential_pairs': _cred.credential_pairs,
+            'enabled': _cred.enabled,
+            'metadata': data.get('metadata', _cred.metadata),
+            'documentation': data.get('documentation', _cred.documentation),
+            'tags': data.get('tags', _cred.tags),
+        }
+        # Enforce documentation, EXCEPT if we are restoring an old revision
+        if (not update['documentation'] and
+                settings.get('ENFORCE_DOCUMENTATION') and
+                not data.get('revision')):
+            return jsonify({'error': 'documentation is a required field'}), 400
+        if 'enabled' in data:
+            if not isinstance(data['enabled'], bool):
+                return jsonify({'error': 'Enabled must be a boolean.'}), 400
+            update['enabled'] = data['enabled']
 
-    services = servicemanager.get_services_for_credential(id)
-    revision = credentialmanager.get_latest_credential_revision(
-        id,
-        _cred.revision
-    )
-    if 'credential_pairs' in data:
-        # Ensure the credential is not empty
-        if data['credential_pairs'] == {}:
-            return jsonify({'error': 'Credential Pairs cannot be empty'}), 400
-
-        # Ensure credential pair keys are lowercase
-        credential_pairs = credentialmanager.lowercase_credential_pairs(
-            data['credential_pairs']
-        )
-        _check, ret = credentialmanager.check_credential_pair_values(
-            credential_pairs
-        )
-        if not _check:
-            return jsonify(ret), 400
-        # Ensure credential pairs don't conflicts with pairs from other
-        # services
-        conflicts = servicemanager.pair_key_conflicts_for_services(
+        services = servicemanager.get_services_for_credential(id)
+        revision = credentialmanager.get_latest_credential_revision(
             id,
-            list(credential_pairs.keys()),
-            services
+            _cred.revision
         )
-        if conflicts:
-            ret = {
-                'error': 'Conflicting key pairs in mapped service.',
-                'conflicts': conflicts
-            }
-            return jsonify(ret), 400
+        if 'credential_pairs' in data:
+            # Ensure the credential is not empty
+            if data['credential_pairs'] == {}:
+                return jsonify({'error': 'Credential Pairs cannot be empty'}), 400
 
-        # If the credential pair passed in the update is different from the
-        # decrypted credential pair of the most recent revision, assume that
-        # this is a new credential pair and update last_rotation_date
-        if credential_pairs != _cred.decrypted_credential_pairs:
-            update['last_rotation_date'] = misc.utcnow()
-        data_key = keymanager.create_datakey(encryption_context={'id': id})
-        cipher = CipherManager(data_key['plaintext'], version=2)
-        update['credential_pairs'] = cipher.encrypt(
-            json.dumps(credential_pairs)
+            # Ensure credential pair keys are lowercase
+            credential_pairs = credentialmanager.lowercase_credential_pairs(
+                data['credential_pairs']
+            )
+            _check, ret = credentialmanager.check_credential_pair_values(
+                credential_pairs
+            )
+            if not _check:
+                return jsonify(ret), 400
+            # Ensure credential pairs don't conflicts with pairs from other
+            # services
+            conflicts = servicemanager.pair_key_conflicts_for_services(
+                id,
+                list(credential_pairs.keys()),
+                services
+            )
+            if conflicts:
+                ret = {
+                    'error': 'Conflicting key pairs in mapped service.',
+                    'conflicts': conflicts
+                }
+                return jsonify(ret), 400
+
+            # If the credential pair passed in the update is different from the
+            # decrypted credential pair of the most recent revision, assume that
+            # this is a new credential pair and update last_rotation_date
+            if credential_pairs != _cred.decrypted_credential_pairs:
+                update['last_rotation_date'] = misc.utcnow()
+            data_key = keymanager.create_datakey(encryption_context={'id': id})
+            cipher = CipherManager(data_key['plaintext'], version=2)
+            update['credential_pairs'] = cipher.encrypt(
+                json.dumps(credential_pairs)
+            )
+
+        # Try to save to the archive
+        try:
+            Credential(
+                id='{0}-{1}'.format(id, revision),
+                name=update['name'],
+                data_type='archive-credential',
+                credential_pairs=update['credential_pairs'],
+                metadata=update['metadata'],
+                enabled=update['enabled'],
+                revision=revision,
+                data_key=data_key['ciphertext'],
+                cipher_version=2,
+                modified_by=authnz.get_logged_in_user(),
+                documentation=update['documentation'],
+                tags=update['tags'],
+                last_rotation_date=update['last_rotation_date'],
+            ).save()
+        except PutError as e:
+            logger.error(e)
+            return jsonify({'error': 'Failed to add credential to archive.'}), 500
+        try:
+            cred = Credential(
+                id=id,
+                name=update['name'],
+                data_type='credential',
+                credential_pairs=update['credential_pairs'],
+                metadata=update['metadata'],
+                enabled=update['enabled'],
+                revision=revision,
+                data_key=data_key['ciphertext'],
+                cipher_version=2,
+                modified_by=authnz.get_logged_in_user(),
+                documentation=update['documentation'],
+                tags=update['tags'],
+                last_rotation_date=update['last_rotation_date'],
+            )
+            cred.save()
+        except PutError as e:
+            logger.error(e)
+            return jsonify({'error': 'Failed to update active credential.'}), 500
+
+        if services:
+            service_names = [x.id for x in services]
+            msg = 'Updated credential "{0}" ({1}); Revision {2}'
+            msg = msg.format(cred.name, cred.id, cred.revision)
+            graphite.send_event(service_names, msg)
+            webhook.send_event('credential_update', service_names, [cred.id])
+        permissions = {
+            'metadata': True,
+            'get': True,
+            'update': True,
+        }
+        credential_response = CredentialResponse.from_credential(
+            cred,
+            include_credential_keys=True,
+            include_credential_pairs=True,
         )
-
-    # Try to save to the archive
-    try:
-        Credential(
-            id='{0}-{1}'.format(id, revision),
-            name=update['name'],
-            data_type='archive-credential',
-            credential_pairs=update['credential_pairs'],
-            metadata=update['metadata'],
-            enabled=update['enabled'],
-            revision=revision,
-            data_key=data_key['ciphertext'],
-            cipher_version=2,
-            modified_by=authnz.get_logged_in_user(),
-            documentation=update['documentation'],
-            tags=update['tags'],
-            last_rotation_date=update['last_rotation_date'],
-        ).save()
-    except PutError as e:
-        logger.error(e)
-        return jsonify({'error': 'Failed to add credential to archive.'}), 500
-    try:
-        cred = Credential(
-            id=id,
-            name=update['name'],
-            data_type='credential',
-            credential_pairs=update['credential_pairs'],
-            metadata=update['metadata'],
-            enabled=update['enabled'],
-            revision=revision,
-            data_key=data_key['ciphertext'],
-            cipher_version=2,
-            modified_by=authnz.get_logged_in_user(),
-            documentation=update['documentation'],
-            tags=update['tags'],
-            last_rotation_date=update['last_rotation_date'],
-        )
-        cred.save()
-    except PutError as e:
-        logger.error(e)
-        return jsonify({'error': 'Failed to update active credential.'}), 500
-
-    if services:
-        service_names = [x.id for x in services]
-        msg = 'Updated credential "{0}" ({1}); Revision {2}'
-        msg = msg.format(cred.name, cred.id, cred.revision)
-        graphite.send_event(service_names, msg)
-        webhook.send_event('credential_update', service_names, [cred.id])
-    permissions = {
-        'metadata': True,
-        'get': True,
-        'update': True,
-    }
-    credential_response = CredentialResponse.from_credential(
-        cred,
-        include_credential_keys=True,
-        include_credential_pairs=True,
-    )
-    credential_response.permissions = permissions
-    return credential_response_schema.dumps(credential_response)
+        credential_response.permissions = permissions
+        return credential_response_schema.dumps(credential_response)
 
 
 @blueprint.route('/v1/credentials/<id>/<to_revision>', methods=['PUT'])
