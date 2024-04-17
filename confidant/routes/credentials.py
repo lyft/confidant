@@ -837,7 +837,7 @@ def update_credential(id):
         if data.get('metadata') != _cred.metadata:
             new_metadata = {
                 key: value
-                for key, value in data.get('metadata').items()
+                for key, value in data.get('metadata', {}).items()
                 if key not in _cred.metadata or
                 value != _cred.metadata.get(key)
             }
