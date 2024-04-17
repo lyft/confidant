@@ -502,6 +502,11 @@ def test_update_credential(mocker: MockerFixture, credential: Credential):
         return_value=credential,
     )
     mocker.patch(
+        ('confidant.routes.credentials.Credential'
+         '.data_type_date_index.query'),
+        return_value=[],
+    )
+    mocker.patch(
         ('confidant.routes.credentials.credentialmanager'
          '.get_latest_credential_revision'),
         return_value=12,
