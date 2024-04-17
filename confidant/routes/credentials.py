@@ -635,7 +635,7 @@ def create_credential():
         credential_pairs = cipher.encrypt(credential_pairs)
         last_rotation_date = misc.utcnow()
 
-        metadata = data.get('metadata')
+        metadata = data.get('metadata', {})
         for key, value in metadata.items():
             value = escape(value)
             metadata[key] = value
