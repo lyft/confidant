@@ -654,7 +654,7 @@ def create_credential():
             data_key=data_key['ciphertext'],
             cipher_version=2,
             modified_by=authnz.get_logged_in_user(),
-            documentation=documentation,
+            documentation=data.get('documentation'),
             tags=data.get('tags', []),
             last_rotation_date=last_rotation_date,
         ).save()

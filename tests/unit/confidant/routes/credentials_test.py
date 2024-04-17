@@ -567,7 +567,6 @@ def test_update_credential(mocker: MockerFixture, credential: Credential):
     assert ret.status_code == 400
     assert 'Credential Pairs cannot be empty.' == json_data['error']
 
-
     # Credential name already exists (ie: query returns a value)
     mocker.patch(
         'confidant.routes.credentials.Credential.data_type_date_index.query',
