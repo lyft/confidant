@@ -640,7 +640,7 @@ def create_credential():
             value = escape(value)
             metadata[key] = value
 
-        documentation = escape(data.get('documentation'))
+        # TODO: fix documentation escape
 
         sanitized_name = escape(data['name'])
         cred = Credential(
@@ -844,6 +844,8 @@ def update_credential(id):
             for key, value in new_metadata.items():
                 value = escape(value)
                 data['metadata'][key] = value
+
+        # TODO: fix documentation escape
 
         update = {
             'name': data.get('name', _cred.name),
