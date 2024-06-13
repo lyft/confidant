@@ -37,7 +37,7 @@ do the following:
 ```bash
 git clone https://github.com/lyft/confidant
 cd confidant
-docker build -t lyft/confidant .
+docker build . -t lyft/confidant 
 ```
 
 ## pip installation
