@@ -8,7 +8,7 @@ source_venv() {
   VENV_DIR=$1
   if [[ "$VIRTUAL_ENV" == "" ]]; then
     if [[ ! -d "${VENV_DIR}"/venv ]]; then
-      virtualenv "${VENV_DIR}"/venv --python=python3.10
+      virtualenv "${VENV_DIR}"/venv --python=python3.8
     fi
     source "${VENV_DIR}"/venv/bin/activate
   else
@@ -56,7 +56,7 @@ rm -rf "${GENERATED_RST_DIR}"
 mkdir -p "${GENERATED_RST_DIR}"
 
 source_venv "$BUILD_DIR"
-pip install -r "${SCRIPT_DIR}"/requirements.txt
+pip install -r "${SCRIPT_DIR}"/requirements3.txt
 
 rsync -av "${SCRIPT_DIR}"/root/ "${SCRIPT_DIR}"/conf.py "${GENERATED_RST_DIR}"
 
