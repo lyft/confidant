@@ -2,7 +2,7 @@
 
 ## 6.5.6
 
-* Upgrade confidant to python 3.10
+* Upgrade confidant to python 3.10.14
 
 ## 6.4.0
 
