@@ -1,4 +1,4 @@
-# piptools: python3.8
+# piptools: python3.10
 # Flask
 # License: BSD
 # Upstream url: http://github.com/mitsuhiko/flask/
@@ -49,7 +49,7 @@ cryptography>2.3.0
 # Upstream url: https://bitbucket.org/cffi/cffi
 # Use: Required by cryptography package to be installed. This should be removed
 # once crytography updates their depenencies to require cffi>=1.10.0.
-cffi>1.10.0,<1.15.0
+cffi>1.15.0
 
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
