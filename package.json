@@ -23,7 +23,7 @@
     "spin.js": "~2.3.2"
   },
   "devDependencies": {
-    "grunt": "^0.4.1",
+    "grunt": "^1.0.3",
     "grunt-concurrent": "^0.5.0",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-concat": "^0.4.0",
