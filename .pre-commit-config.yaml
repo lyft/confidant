@@ -14,9 +14,11 @@ repos:
         additional_dependencies:
         -   --no-compile
         -   cffi==1.16.0
-        -   cryptography==41.0.1
-        -   pycparser==2.21
-        -   types-pyopenssl==23.2.0.1
-        -   types-pytz==2023.3.0.0
-        -   types-pyyaml==6.0.12.10
-        -   types-redis==4.6.0.0
+        -   cryptography==43.0.0
+        -   pycparser==2.22
+        -   types-cffi==1.16.0.20240331
+        -   types-pyopenssl==24.1.0.20240722
+        -   types-pytz==2024.1.0.20240417
+        -   types-pyyaml==6.0.12.20240724
+        -   types-redis==4.6.0.20240425
+        -   types-setuptools==71.1.0.20240724

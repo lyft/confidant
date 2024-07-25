@@ -5,7 +5,7 @@
 #    cd ~/src/confidant && run-piptools
 #
 
-pip==23.1.2
+pip==24.1.2
     # via -r /code/piptools/bootstrap_ins/requirements.in
 setuptools==68.0.0
     # via -r /code/piptools/bootstrap_ins/requirements.in

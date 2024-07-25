@@ -3,6 +3,11 @@ LABEL maintainer="rlane@lyft.com"
 
 WORKDIR /srv/confidant
 
+ENV GEVENT_RESOLVER=dnspython
+ENV GEVENT_RESOLVER_NAMESERVERS=dnspython
+
+RUN echo $GEVENT_RESOLVER $GEVENT_RESOLVER_NAMESERVERS
+
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         curl ca-certificates \
@@ -32,7 +37,7 @@ RUN virtualenv /venv --python=/usr/bin/python3.10 && \
 COPY .jshintrc Gruntfile.js /srv/confidant/
 COPY confidant/public /srv/confidant/confidant/public
 
-RUN node_modules/grunt-cli/bin/grunt build
+RUN node_modules/grunt-cli/bin/grunt build --force
 
 COPY . /srv/confidant
 
