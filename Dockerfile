@@ -3,11 +3,6 @@ LABEL maintainer="rlane@lyft.com"
 
 WORKDIR /srv/confidant
 
-ENV GEVENT_RESOLVER=dnspython
-ENV GEVENT_RESOLVER_NAMESERVERS=dnspython
-
-RUN echo $GEVENT_RESOLVER $GEVENT_RESOLVER_NAMESERVERS
-
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         curl ca-certificates \

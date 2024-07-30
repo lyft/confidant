@@ -1,5 +1,4 @@
 import attr
-import toastedmarshmallow
 from marshmallow import fields
 
 from confidant.schema.auto_build_schema import AutobuildSchema
@@ -32,8 +31,6 @@ class CertificateAuthoritiesResponse(object):
 
 
 class CertificateAuthorityResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = CertificateAuthorityResponse
 
@@ -44,8 +41,6 @@ class CertificateAuthorityResponseSchema(AutobuildSchema):
 
 
 class CertificateAuthoritiesResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = CertificateAuthoritiesResponse
 
@@ -60,8 +55,6 @@ class CertificateResponse(object):
 
 
 class CertificateResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = CertificateResponse
 
@@ -70,8 +63,6 @@ class CertificateResponseSchema(AutobuildSchema):
 
 
 class CertificateExpandedResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = CertificateResponse
 

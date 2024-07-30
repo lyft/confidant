@@ -1,5 +1,4 @@
 import attr
-import toastedmarshmallow
 from marshmallow import fields
 
 from confidant.schema.auto_build_schema import AutobuildSchema
@@ -11,8 +10,6 @@ class JWTResponse(object):
 
 
 class JWTResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = JWTResponse
     token = fields.Str(required=True)
@@ -32,8 +29,6 @@ class JWKSResponse(object):
 
 
 class JWKSResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = JWKSResponse
 
@@ -45,8 +40,6 @@ class JWKSResponseSchema(AutobuildSchema):
 
 
 class JWKSListResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = JWKSListResponse
     keys = fields.List(fields.Nested(JWKSResponseSchema))

@@ -1,5 +1,4 @@
 import attr
-import toastedmarshmallow
 from marshmallow import fields, pre_dump, Schema
 
 from confidant.schema.auto_build_schema import AutobuildSchema
@@ -51,8 +50,6 @@ class CredentialResponse(object):
 
 
 class CredentialResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = CredentialResponse
 
@@ -99,8 +96,6 @@ class CredentialsResponse(object):
 
 
 class CredentialsResponseSchema(Schema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = CredentialsResponse
 
@@ -111,7 +106,7 @@ class CredentialsResponseSchema(Schema):
     next_page = fields.Str()
 
     @pre_dump
-    def encode_next_page(self, item):
+    def encode_next_page(self, item, many):
         item.next_page = encode_last_evaluated_key(item.next_page)
         return item
 
@@ -151,8 +146,6 @@ class RevisionsResponse(object):
 
 
 class RevisionsResponseSchema(Schema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = RevisionsResponse
 
@@ -163,7 +156,7 @@ class RevisionsResponseSchema(Schema):
     next_page = fields.Str()
 
     @pre_dump
-    def encode_next_page(self, item):
+    def encode_next_page(self, item, many):
         item.next_page = encode_last_evaluated_key(item.next_page)
         return item
 
