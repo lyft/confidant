@@ -1,6 +1,6 @@
 {
   "name": "confidant",
-  "version": "6.5.6",
+  "version": "6.6.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/lyft/confidant.git"
