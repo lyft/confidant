@@ -149,7 +149,7 @@ kmsauth==0.6.3
 # License: MIT
 # Upstream url: https://pypi.org/project/marshmallow/
 # Use: input/output validation and json serialization
-marshmallow
+marshmallow==2.20.0
 
 # License MIT
 # Upstream url: https://pypi.org/project/attrs/

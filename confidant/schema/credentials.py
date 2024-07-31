@@ -106,7 +106,7 @@ class CredentialsResponseSchema(Schema):
     next_page = fields.Str()
 
     @pre_dump
-    def encode_next_page(self, item, many):
+    def encode_next_page(self, item):
         item.next_page = encode_last_evaluated_key(item.next_page)
         return item
 
@@ -156,7 +156,7 @@ class RevisionsResponseSchema(Schema):
     next_page = fields.Str()
 
     @pre_dump
-    def encode_next_page(self, item, many):
+    def encode_next_page(self, item):
         item.next_page = encode_last_evaluated_key(item.next_page)
         return item
 

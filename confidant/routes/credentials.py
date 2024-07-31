@@ -126,6 +126,8 @@ def get_credential_list():
             for credential in
             Credential.data_type_date_index.query('credential')
         ])
+
+    logger.debug(credentials_response)
     return credentials_response_schema.dumps(credentials_response)
 
 
@@ -257,6 +259,8 @@ def get_credential(id):
         include_credential_pairs=include_credential_pairs,
     )
     credential_response.permissions = permissions
+    logger.debug(credential_response)
+
     return credential_response_schema.dumps(credential_response)
 
 

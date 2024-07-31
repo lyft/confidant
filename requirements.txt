@@ -100,7 +100,7 @@ lxml==4.9.2
     #   xmlsec
 markupsafe==2.0.1
     # via jinja2
-marshmallow==3.21.3
+marshmallow==2.20.0
     # via -r requirements.in
 mypy==1.4.1
     # via -r requirements.in
@@ -111,7 +111,6 @@ ndg-httpsclient==0.5.1
 packaging==24.1
     # via
     #   gunicorn
-    #   marshmallow
     #   pytest
 pluggy==1.5.0
     # via pytest
