@@ -594,9 +594,8 @@ def create_credential():
     '''
     with stats.timer('create_credential'):
         if not acl_module_check(resource_type='credential', action='create'):
-            msg = "{} does not have access to create credentials".format(
-                authnz.get_logged_in_user()
-            )
+            msg = f"{authnz.get_logged_in_user()}"
+            msg += "does not have access to create credentials"
             error_msg = {'error': msg}
             return jsonify(error_msg), 403
 
@@ -621,7 +620,7 @@ def create_credential():
         for cred in Credential.data_type_date_index.query(
                 'credential', filter_condition=Credential.name == data['name']):
             # Conflict, the name already exists
-            msg = 'Name already exists. See id: {0}'.format(cred.id)
+            msg = f'Name already exists. See id: {cred.id}'
             return jsonify({'error': msg, 'reference': cred.id}), 409
         # Generate an initial stable ID to allow name changes
         id = str(uuid.uuid4()).replace('-', '')
@@ -636,13 +635,20 @@ def create_credential():
         credential_pairs = cipher.encrypt(credential_pairs)
         last_rotation_date = misc.utcnow()
 
+        metadata = data.get('metadata', {})
+        for key, value in metadata.items():
+            value = escape(value)
+            metadata[key] = value
+
+        data['documentation'] = escape(data.get('documentation'))
+
         sanitized_name = escape(data['name'])
         cred = Credential(
-            id='{0}-{1}'.format(id, revision),
+            id=f'{id}-{revision}',
             data_type='archive-credential',
             name=sanitized_name,
             credential_pairs=credential_pairs,
-            metadata=data.get('metadata'),
+            metadata=metadata,
             revision=revision,
             enabled=data.get('enabled'),
             data_key=data_key['ciphertext'],
@@ -797,10 +803,8 @@ def update_credential(id):
         if not acl_module_check(resource_type='credential',
                                 action='update',
                                 resource_id=id):
-            msg = "{} does not have access to update credential {}".format(
-                authnz.get_logged_in_user(),
-                id
-            )
+            msg = f"{authnz.get_logged_in_user()}"
+            msg += f"does not have access to update credential {id}"
             error_msg = {'error': msg, 'reference': id}
             return jsonify(error_msg), 403
 
@@ -815,6 +819,34 @@ def update_credential(id):
         data = request.get_json()
         if not isinstance(data.get('metadata', {}), dict):
             return jsonify({'error': 'metadata must be a dict'}), 400
+
+        # We check for a name change and ensure it doesn't conflict with an
+        # existing credential and to ensure we don't escape the name if it
+        # hasn't changed
+        if data.get('name') != _cred.name:
+            data['name'] = escape(data.get('name'))
+            for cred in Credential.data_type_date_index.query(
+                    'credential',
+                    filter_condition=Credential.name == data['name']):
+                # Conflict, the name already exists
+                msg = f'Name already exists. See id: {cred.id}'
+                return jsonify({'error': msg, 'reference': cred.id}), 409
+
+        # Escape metadata values by checking for new metadata keys and values
+        # to ensure we don't escape values that haven't changed
+        if data.get('metadata') != _cred.metadata:
+            new_metadata = {
+                key: value
+                for key, value in data.get('metadata', {}).items()
+                if key not in _cred.metadata or
+                value != _cred.metadata.get(key)
+            }
+            for key, value in new_metadata.items():
+                value = escape(value)
+                data['metadata'][key] = value
+
+        if data.get('documentation') != _cred.documentation:
+            data['documentation'] = escape(data.get('documentation'))
 
         update = {
             'name': data.get('name', _cred.name),
@@ -874,6 +906,19 @@ def update_credential(id):
             # this is a new credential pair and update last_rotation_date
             if credential_pairs != _cred.decrypted_credential_pairs:
                 update['last_rotation_date'] = misc.utcnow()
+
+                # We escape credential pairs by checking for new credential
+                # pairs and values to ensure we don't escape values that haven't
+                # changed
+                new_credential_pairs = {
+                    key: value
+                    for key, value in credential_pairs.items()
+                    if key not in _cred.decrypted_credential_pairs or
+                    value != _cred.decrypted_credential_pairs.get(key)
+                }
+                for key, value in new_credential_pairs.items():
+                    value = escape(value)
+                    credential_pairs[key] = value
             data_key = keymanager.create_datakey(encryption_context={'id': id})
             cipher = CipherManager(data_key['plaintext'], version=2)
             update['credential_pairs'] = cipher.encrypt(
@@ -883,7 +928,7 @@ def update_credential(id):
         # Try to save to the archive
         try:
             Credential(
-                id='{0}-{1}'.format(id, revision),
+                id=f'{id}-{revision}',
                 name=update['name'],
                 data_type='archive-credential',
                 credential_pairs=update['credential_pairs'],
@@ -925,8 +970,8 @@ def update_credential(id):
 
         if services:
             service_names = [x.id for x in services]
-            msg = 'Updated credential "{0}" ({1}); Revision {2}'
-            msg = msg.format(cred.name, cred.id, cred.revision)
+            msg = f'Updated credential "{cred.name}"'
+            msg += f'({cred.id}); Revision {cred.revision}'
             graphite.send_event(service_names, msg)
             webhook.send_event('credential_update', service_names, [cred.id])
         permissions = {
