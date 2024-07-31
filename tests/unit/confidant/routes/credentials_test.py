@@ -502,6 +502,11 @@ def test_update_credential(mocker: MockerFixture, credential: Credential):
         return_value=credential,
     )
     mocker.patch(
+        ('confidant.routes.credentials.Credential'
+         '.data_type_date_index.query'),
+        return_value=[],
+    )
+    mocker.patch(
         ('confidant.routes.credentials.credentialmanager'
          '.get_latest_credential_revision'),
         return_value=12,
@@ -567,7 +572,30 @@ def test_update_credential(mocker: MockerFixture, credential: Credential):
     assert ret.status_code == 400
     assert 'Credential Pairs cannot be empty.' == json_data['error']
 
+    # Credential name already exists (ie: query returns a value)
+    mocker.patch(
+        'confidant.routes.credentials.Credential.data_type_date_index.query',
+        return_value=[credential],
+    )
+    ret = app.test_client().put(
+        '/v1/credentials/123',
+        headers={"Content-Type": 'application/json'},
+        data=json.dumps({
+            'name': 'me',
+            'documentation': 'doc',
+            'credential_pairs': {'key': 'value'},
+        }),
+    )
+    json_data = json.loads(ret.data)
+    assert ret.status_code == 409
+    assert 'Name already exists' in json_data['error']
+
     # All good
+    mocker.patch(
+        ('confidant.routes.credentials.Credential'
+         '.data_type_date_index.query'),
+        return_value=[],
+    )
     mocker.patch(
         ('confidant.routes.credentials.servicemanager'
          '.pair_key_conflicts_for_services'),
