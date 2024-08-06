@@ -5,7 +5,6 @@ confidant_env:
   AUTH_KEY: 'authnz-{{ grains.cluster_name }}'
   AUTHOMATIC_SALT: 'H39bfLCqLbrYrFyiJIxkK0uf12rlzvgjgo9FqOnttPXIdAAuyQ'
   DYNAMODB_TABLE: '{{ grains.cluster_name }}'
-  GEVENT_RESOLVER: 'ares'
   GOOGLE_OAUTH_CLIENT_ID: '123456789-abcdefghijklmnop.apps.googleusercontent.com'
   GOOGLE_OAUTH_CONSUMER_SECRET: '123456789abcdefghijklmnop'
   KMS_MASTER_KEY: '{{ grains.cluster_name }}'
