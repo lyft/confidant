@@ -4,6 +4,10 @@
 
 * Upgrade confidant to python 3.10.14
 
+## 6.5.8
+
+* Migrated to docker compose v2
+
 ## 6.4.0
 
 * Updated client with a new logo and updated CSS to match design style guide. The new CSS coloring should
