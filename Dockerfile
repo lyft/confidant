@@ -6,7 +6,7 @@ WORKDIR /srv/confidant
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         curl ca-certificates \
-    && /usr/bin/curl -sL --fail https://deb.nodesource.com/setup_8.x | bash -
+    && /usr/bin/curl -sL --fail https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         # For frontend
@@ -33,7 +33,7 @@ RUN virtualenv /venv --python=/usr/bin/python3.8 && \
 COPY .jshintrc Gruntfile.js /srv/confidant/
 COPY confidant/public /srv/confidant/confidant/public
 
-RUN node_modules/grunt-cli/bin/grunt build
+RUN node_modules/grunt-cli/bin/grunt build --force
 
 COPY . /srv/confidant
 
