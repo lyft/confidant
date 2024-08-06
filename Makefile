@@ -16,16 +16,16 @@ docker_build: clean
 docker_test: docker_build docker_test_unit docker_test_integration docker_test_frontend down
 
 docker_test_unit:
-	docker-compose run --rm --no-deps confidant make test_unit
+	docker compose run --rm --no-deps confidant make test_unit
 
 docker_test_integration:
-	docker-compose run --rm confidant make test_integration
+	docker compose run --rm confidant make test_integration
 
 actions_test_integration:
-	docker-compose -f docker-compose.yml -f docker-compose.integration.yml run confidant bash /srv/confidant/actions_run_integration.sh
+	docker compose -f docker-compose.yml -f docker-compose.integration.yml run confidant bash /srv/confidant/actions_run_integration.sh
 
 docker_test_frontend:
-	docker-compose run --rm confidant make test_frontend
+	docker compose run --rm confidant make test_frontend
 
 test: test_unit test_integration test_frontend
 
