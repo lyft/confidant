@@ -29,11 +29,11 @@ Our only method of accepting code changes is through github pull requests.
 ## Development guide
 
 This guide assumes you're using docker desktop, which includes docker, and
-docker-compose.
+docker compose.
 
 A full developer configuration is available, using compose, which uses
 local dynamodb, local kms, and a local simplesamplephp. We have quick make
-aliases, so it's not necessary to learn the details of docker-compose.
+aliases, so it's not necessary to learn the details of docker compose.
 
 ### Starting confidant
 
@@ -41,7 +41,7 @@ To start: `make up`
 
 To test code changes:
 
-1. Kill docker-compose (ctrl-c)
+1. Kill docker compose (ctrl-c)
 1. `make docker_build`
 1. `make up`
 
@@ -50,11 +50,11 @@ and the password is `confidant`.
 
 All configuration settings for this environment are in the `config/development`
 directory. If you wish to change any settings, kill the docker compose, make the
-change, and start the docker-compose environment back up.
+change, and start the docker compose environment back up.
 
 ### Running tests
 
-The easiest way to run the tests is through docker-compose as well, as both unit
+The easiest way to run the tests is through docker compose as well, as both unit
 and integration test suites can be run via compose.
 
 To run the full test suite (minus pre-commit):

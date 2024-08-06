@@ -5,10 +5,10 @@ clean:
 	find . -name "*.pyc" -delete
 
 up:
-	docker-compose up
+	docker compose up
 
 down:
-	docker-compose down
+	docker compose down
 
 docker_build: clean
 	docker build -t lyft/confidant .
