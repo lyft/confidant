@@ -33,7 +33,7 @@ RUN virtualenv /venv --python=/usr/bin/python3.8 && \
 COPY .jshintrc Gruntfile.js /srv/confidant/
 COPY confidant/public /srv/confidant/confidant/public
 
-RUN node_modules/grunt-cli/bin/grunt build
+RUN node_modules/grunt-cli/bin/grunt build --force
 
 COPY . /srv/confidant
 
