@@ -71,7 +71,7 @@ jobs:
         uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: '8.x'
+          node-version: '18.x'
       - name: Run frontend tests
         run: "npm install grunt-cli && npm install && grunt test --force"
   build-dist-docker-image:
