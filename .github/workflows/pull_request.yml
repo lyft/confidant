@@ -73,7 +73,7 @@ jobs:
         with:
           node-version: '18.x'
       - name: Run frontend tests
-        run: "npm install grunt-cli && npm install && grunt test --force"
+        run: "npm install grunt-cli && npm install && grunt test"
   build-dist-docker-image:
     runs-on: ubuntu-22.04
     steps:
