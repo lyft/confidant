@@ -1,6 +1,6 @@
 # Changelog
 
-## 6.6.0
+## 6.6.1
 
 * Upgrade confidant to python 3.10.14
 
