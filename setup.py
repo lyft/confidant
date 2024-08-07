@@ -35,5 +35,7 @@ setup(
         'console_scripts': [
             'confidant-admin = confidant.scripts.manage:main',
         ]
-    }
+    },
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
 )

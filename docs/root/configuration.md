@@ -47,7 +47,7 @@ export DYNAMODB_TABLE='confidant-production'
 export DYNAMODB_CREATE_TABLE=true
 # Set the gevent resolver to ares; see:
 #   https://github.com/surfly/gevent/issues/468
-export GEVENT_RESOLVER='ares'
+# export GEVENT_RESOLVER='ares'
 # The KMS key used for at-rest encryption in DynamoDB.
 export KMS_MASTER_KEY='alias/confidant-production'
 # A long randomly generated string for CSRF protection.

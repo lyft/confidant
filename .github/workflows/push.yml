@@ -8,14 +8,14 @@ on:
 jobs:
   build-and-deploy-docs:
     name: Build and publish docs
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Setup python 3.8
+      - name: Setup python 3.10
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.10.14
       - name: Install virtualenv
         run: pip install virtualenv
       - name: Install xmlsec
@@ -33,14 +33,14 @@ jobs:
           FOLDER: generated/docs # The folder the action should deploy.
   build-and-publish-python-module:
     name: Build and publish python module to pypi
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Setup python 3.8
+      - name: Setup python 3.10
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.10.14
       - name: Add wheel dependency
         run: pip install wheel
       - name: Generate dist
@@ -58,7 +58,7 @@ jobs:
       # GitHub Container Registry).
       packages: write
     name: Build and publish Docker images to GitHub Container Registry
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - name: Extract metadata (tags, labels) for Docker

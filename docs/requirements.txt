@@ -1,0 +1,15 @@
+-r ../requirements.txt
+GitPython==2.0.9
+Jinja2==2.11.3
+Pygments==2.7.4
+alabaster==0.7.12
+babel==2.9.1
+gitdb==4.0.2
+imagesize==1.1.0
+smmap==3.0.1
+snowballstemmer==1.2.1
+sphinx==5.0.2
+mistune<2.0.0
+sphinxcontrib-httpdomain==1.8.1
+sphinx_rtd_theme
+m2r==0.3.1

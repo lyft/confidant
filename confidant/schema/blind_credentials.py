@@ -1,5 +1,4 @@
 import attr
-import toastedmarshmallow
 from marshmallow import fields
 
 from confidant.schema.auto_build_schema import AutobuildSchema
@@ -51,8 +50,6 @@ class BlindCredentialResponse(object):
 
 
 class BlindCredentialResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = BlindCredentialResponse
 

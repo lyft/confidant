@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.6.1
+
+* Upgrade confidant to python 3.10.14
+
 ## 6.5.8
 
 * Migrated to docker compose v2
