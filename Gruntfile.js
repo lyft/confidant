@@ -11,6 +11,7 @@ module.exports = function (grunt) {
 
   // Configurable paths for the application
   var appConfig = {
+    baseDir: '',
     nodeDir: 'node_modules',
     app: 'confidant/public',
     components: 'confidant/public/components',
@@ -45,7 +46,7 @@ module.exports = function (grunt) {
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
-        jshintrc: '<%= baseDir %>.jshintrc',
+        jshintrc: '.jshintrc',
         reporter: require('jshint-stylish')
       },
       all: {
@@ -67,7 +68,8 @@ module.exports = function (grunt) {
       options: {
         ignorePath: '<%= project.app %>',
         relative: false,
-        destFile:'<%= project.app %>/index.html'
+        destFile:'<%= project.app %>/index.html',
+        lineEnding: '\n',
       },
       scripts: {
         src: [

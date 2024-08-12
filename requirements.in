@@ -1,4 +1,4 @@
-# piptools: python3.8
+# piptools: python3.10
 # Flask
 # License: BSD
 # Upstream url: http://github.com/mitsuhiko/flask/
@@ -22,14 +22,14 @@ blinker
 # License: Apache2
 # Upstream url: https://github.com/boto/botocore
 # Use: For boto3
-botocore==1.12.227
+botocore>=1.34.147,<1.35.0
 
 # Boto3 is the Amazon Web Services (AWS) Software Development Kit (SDK)
 # for Python.
 # License: Apache2
 # Upstream url: https://github.com/boto/boto3
 # Use: For KMS
-boto3==1.9.227
+boto3==1.34.147
 
 # A Pythonic interface for Amazon's DynamoDB that supports Python 2 and 3.
 # License: MIT
@@ -49,7 +49,7 @@ cryptography>2.3.0
 # Upstream url: https://bitbucket.org/cffi/cffi
 # Use: Required by cryptography package to be installed. This should be removed
 # once crytography updates their depenencies to require cffi>=1.10.0.
-cffi>1.10.0,<1.15.0
+cffi>1.15.0
 
 # License: BSD
 # Upstream url: https://github.com/fengsp/flask-session
@@ -83,6 +83,8 @@ Authomatic
 # Upstream url: https://github.com/onelogin/python3-saml
 # Use: For user authentication via SAML
 python3-saml>=1.15.0
+lxml>=4.6.5,!=4.7.0,<=5.2.1
+xmlsec==1.3.13
 
 # Python HTTP for Humans.
 # License: Apache2
@@ -144,10 +146,15 @@ statsd
 # Use: kmsauth support library
 kmsauth==0.6.3
 
-# License: Apache2
-# Upstream url: https://pypi.python.org/pypi/toasted-marshmallow
+# License: MIT
+# Upstream url: https://pypi.org/project/marshmallow/
 # Use: input/output validation and json serialization
-toastedmarshmallow
+marshmallow==2.20.0
+
+# License MIT
+# Upstream url: https://pypi.org/project/attrs/
+# Use: declarative classes for marshmallow
+attrs
 
 # A fixed size dict like container which evicts Least Recently Used (LRU)
 # items once size limit is exceeded.

@@ -1,5 +1,4 @@
 import attr
-import toastedmarshmallow
 from marshmallow import fields, pre_dump, Schema
 
 from confidant.schema.auto_build_schema import AutobuildSchema
@@ -88,8 +87,6 @@ class ServiceResponse(object):
 
 
 class ServiceResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = ServiceResponse
 
@@ -105,8 +102,6 @@ class ServiceResponseSchema(AutobuildSchema):
 
 
 class ServiceExpandedResponseSchema(AutobuildSchema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = ServiceResponse
 
@@ -150,8 +145,6 @@ class ServicesResponse(object):
 
 
 class ServicesResponseSchema(Schema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = ServicesResponse
 
@@ -202,8 +195,6 @@ class RevisionsResponse(object):
 
 
 class RevisionsResponseSchema(Schema):
-    class Meta:
-        jit = toastedmarshmallow.Jit
 
     _class_to_load = RevisionsResponse
 
