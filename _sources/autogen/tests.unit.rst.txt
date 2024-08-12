@@ -5,6 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    tests.unit.confidant
 
@@ -15,3 +16,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

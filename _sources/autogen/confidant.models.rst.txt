@@ -11,6 +11,7 @@ confidant.models.blind\_credential module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.models.credential module
 ----------------------------------
@@ -19,6 +20,7 @@ confidant.models.credential module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.models.non\_null\_unicode\_set\_attribute module
 ----------------------------------------------------------
@@ -27,6 +29,7 @@ confidant.models.non\_null\_unicode\_set\_attribute module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.models.service module
 -------------------------------
@@ -35,7 +38,7 @@ confidant.models.service module
    :members:
    :undoc-members:
    :show-inheritance:
-
+   :private-members:
 
 Module contents
 ---------------
@@ -44,3 +47,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

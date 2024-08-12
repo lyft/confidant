@@ -11,6 +11,7 @@ confidant.services.certificatemanager module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.services.ciphermanager module
 ---------------------------------------
@@ -19,6 +20,7 @@ confidant.services.ciphermanager module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.services.credentialmanager module
 -------------------------------------------
@@ -27,6 +29,7 @@ confidant.services.credentialmanager module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.services.graphite module
 ----------------------------------
@@ -35,6 +38,7 @@ confidant.services.graphite module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.services.iamrolemanager module
 ----------------------------------------
@@ -43,6 +47,7 @@ confidant.services.iamrolemanager module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.services.jwkmanager module
 ------------------------------------
@@ -51,6 +56,7 @@ confidant.services.jwkmanager module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.services.keymanager module
 ------------------------------------
@@ -59,6 +65,7 @@ confidant.services.keymanager module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.services.servicemanager module
 ----------------------------------------
@@ -67,6 +74,7 @@ confidant.services.servicemanager module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.services.webhook module
 ---------------------------------
@@ -75,7 +83,7 @@ confidant.services.webhook module
    :members:
    :undoc-members:
    :show-inheritance:
-
+   :private-members:
 
 Module contents
 ---------------
@@ -84,3 +92,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

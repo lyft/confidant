@@ -11,6 +11,7 @@ confidant.scripts.archive module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.scripts.bootstrap module
 ----------------------------------
@@ -19,6 +20,7 @@ confidant.scripts.bootstrap module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.scripts.manage module
 -------------------------------
@@ -27,6 +29,7 @@ confidant.scripts.manage module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.scripts.migrate module
 --------------------------------
@@ -35,6 +38,7 @@ confidant.scripts.migrate module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.scripts.migrate\_bool module
 --------------------------------------
@@ -43,6 +47,7 @@ confidant.scripts.migrate\_bool module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.scripts.restore module
 --------------------------------
@@ -51,6 +56,7 @@ confidant.scripts.restore module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.scripts.utils module
 ------------------------------
@@ -59,7 +65,7 @@ confidant.scripts.utils module
    :members:
    :undoc-members:
    :show-inheritance:
-
+   :private-members:
 
 Module contents
 ---------------
@@ -68,3 +74,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

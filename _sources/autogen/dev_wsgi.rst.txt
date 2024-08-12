@@ -5,3 +5,4 @@ dev\_wsgi module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

@@ -1,88 +1,51 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>tests.unit.confidant.services package &mdash; confidant 6.5.8-de371c documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tests.unit.confidant.services package &mdash; confidant 6.6.1-4381e2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/confidant.css" />
 
   
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="../_static/css/confidant.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../contents.html" class="icon icon-home"> confidant
           
-
-          
+          <a href="../contents.html" class="icon icon-home">
+            confidant
           </a>
-
-          
-            
-            
               <div class="version">
-                6.5.8-de371c
+                6.6.1-4381e2
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Basics</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basics</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#quickstart-for-testing">Quickstart for testing</a></li>
@@ -152,7 +115,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced</span></p>
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#api-route-documentation">API route documentation</a></li>
@@ -264,423 +227,374 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">6.5.8</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id2">6.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id3">6.3.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id4">6.2.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id5">6.1.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id6">6.0.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id7">5.2.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id8">5.1.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id9">5.0.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id10">5.0.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id11">4.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id12">4.3.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id13">4.3.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id14">4.2.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id15">4.1.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id16">4.0.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id17">3.0.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id18">2.0.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id19">2.0.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id20">1.11.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id21">1.10.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id22">1.10.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id23">1.9.0</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id24">1.8.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id25">1.7.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id26">1.6.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id27">1.5.1</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id28">1.5.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id29">1.4.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id30">1.3.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id31">1.2.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id32">1.1.21</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id33">1.1.20</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id34">1.1.19</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id35">1.1.16 - 1.1.18</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id36">1.1.15</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id37">1.1.14</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id38">1.1.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">6.6.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id2">6.5.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id3">6.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id4">6.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id5">6.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id6">6.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id7">6.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id8">5.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id9">5.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id10">5.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id11">5.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id12">4.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id13">4.3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id14">4.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id15">4.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id16">4.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id17">4.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id18">3.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id19">2.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id20">2.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id21">1.11.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id22">1.10.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id23">1.10.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id24">1.9.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id25">1.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id26">1.7.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id27">1.6.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id28">1.5.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id29">1.5.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id30">1.4.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id31">1.3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id32">1.2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id33">1.1.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id34">1.1.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id35">1.1.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id36">1.1.16 - 1.1.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id37">1.1.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id38">1.1.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#id39">1.1.13</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Communication</span></p>
+<p class="caption" role="heading"><span class="caption-text">Communication</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../security_reporting.html">Reporting security vulnerabilities</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../contents.html">confidant</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../contents.html">Docs</a> &raquo;</li>
-        
-      <li>tests.unit.confidant.services package</li>
-    
-    
+      <li><a href="../contents.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">tests.unit.confidant.services package</li>
       <li class="wy-breadcrumbs-aside">
-        
-            
             <a href="../_sources/autogen/tests.unit.confidant.services.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="tests-unit-confidant-services-package">
-<h1>tests.unit.confidant.services package<a class="headerlink" href="#tests-unit-confidant-services-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-tests.unit.confidant.services.certificatemanager_test">
-<span id="tests-unit-confidant-services-certificatemanager-test-module"></span><h2>tests.unit.confidant.services.certificatemanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.certificatemanager_test" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.ca_object">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">ca_object</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span> &#x2192; confidant.services.certificatemanager.CertificateAuthority<a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.ca_object" title="Permalink to this definition">¶</a></dt>
+             
+  <section id="tests-unit-confidant-services-package">
+<h1>tests.unit.confidant.services package<a class="headerlink" href="#tests-unit-confidant-services-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-tests.unit.confidant.services.certificatemanager_test">
+<span id="tests-unit-confidant-services-certificatemanager-test-module"></span><h2>tests.unit.confidant.services.certificatemanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.certificatemanager_test" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.ca_object">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">ca_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.ca_object" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test__get_cached_certificate_with_key">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test__get_cached_certificate_with_key</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em>, <em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test__get_cached_certificate_with_key" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test__get_cached_certificate_with_key">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test__get_cached_certificate_with_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test__get_cached_certificate_with_key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_certificate_cache">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_certificate_cache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_certificate_cache" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_certificate_cache">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_certificate_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_certificate_cache" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_decode_csr">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_decode_csr</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_decode_csr" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_decode_csr">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_decode_csr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_decode_csr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_encode_certificate">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_encode_certificate</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_encode_certificate" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_encode_certificate">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_encode_certificate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_encode_certificate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_encode_csr">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_encode_csr</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_encode_csr" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_encode_csr">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_encode_csr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_encode_csr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_encode_key">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_encode_key</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_encode_key" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_encode_key">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_encode_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_encode_key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_encode_san_dns_names">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_encode_san_dns_names</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_encode_san_dns_names" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_encode_san_dns_names">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_encode_san_dns_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_encode_san_dns_names" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_generate_csr">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_generate_csr</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_generate_csr" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_generate_csr">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_generate_csr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_generate_csr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_generate_key">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_generate_key</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_generate_key" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_generate_key">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_generate_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_generate_key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_generate_self_signed_certificate">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_generate_self_signed_certificate</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_generate_self_signed_certificate" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_generate_self_signed_certificate">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_generate_self_signed_certificate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_generate_self_signed_certificate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_generate_x509_name">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_generate_x509_name</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_generate_x509_name" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_generate_x509_name">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_generate_x509_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_generate_x509_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_get_certificate_authority_certificate">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_get_certificate_authority_certificate</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em>, <em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_get_certificate_authority_certificate" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_get_certificate_authority_certificate">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_certificate_authority_certificate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_get_certificate_authority_certificate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_get_certificate_from_arn_no_exception">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_get_certificate_from_arn_no_exception</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em>, <em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_get_certificate_from_arn_no_exception" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_get_certificate_from_arn_no_exception">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_certificate_from_arn_no_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_get_certificate_from_arn_no_exception" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_get_certificate_from_arn_with_exception">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_get_certificate_from_arn_with_exception</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em>, <em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_get_certificate_from_arn_with_exception" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_get_certificate_from_arn_with_exception">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_certificate_from_arn_with_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_get_certificate_from_arn_with_exception" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_get_csr_common_name">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_get_csr_common_name</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_get_csr_common_name" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_get_csr_common_name">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_csr_common_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_get_csr_common_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_get_csr_san">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_get_csr_san</code><span class="sig-paren">(</span><em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_get_csr_san" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_get_csr_san">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_csr_san</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_get_csr_san" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_issue_certificate">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_issue_certificate</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em>, <em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_issue_certificate" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_issue_certificate">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_issue_certificate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_issue_certificate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.certificatemanager_test.test_issue_certificate_with_key">
-<code class="sig-prename descclassname">tests.unit.confidant.services.certificatemanager_test.</code><code class="sig-name descname">test_issue_certificate_with_key</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em>, <em class="sig-param">ca_object: confidant.services.certificatemanager.CertificateAuthority</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_issue_certificate_with_key" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.certificatemanager_test.test_issue_certificate_with_key">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.certificatemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_issue_certificate_with_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ca_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="confidant.services.html#confidant.services.certificatemanager.CertificateAuthority" title="confidant.services.certificatemanager.CertificateAuthority"><span class="pre">CertificateAuthority</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.certificatemanager_test.test_issue_certificate_with_key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-tests.unit.confidant.services.ciphermanager_test">
-<span id="tests-unit-confidant-services-ciphermanager-test-module"></span><h2>tests.unit.confidant.services.ciphermanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.ciphermanager_test" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="tests.unit.confidant.services.ciphermanager_test.test_cipher_version_1">
-<code class="sig-prename descclassname">tests.unit.confidant.services.ciphermanager_test.</code><code class="sig-name descname">test_cipher_version_1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_1" title="Permalink to this definition">¶</a></dt>
+</section>
+<section id="module-tests.unit.confidant.services.ciphermanager_test">
+<span id="tests-unit-confidant-services-ciphermanager-test-module"></span><h2>tests.unit.confidant.services.ciphermanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.ciphermanager_test" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.ciphermanager_test.test_cipher_version_1">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.ciphermanager_test.</span></span><span class="sig-name descname"><span class="pre">test_cipher_version_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.ciphermanager_test.test_cipher_version_2">
-<code class="sig-prename descclassname">tests.unit.confidant.services.ciphermanager_test.</code><code class="sig-name descname">test_cipher_version_2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_2" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.ciphermanager_test.test_cipher_version_2">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.ciphermanager_test.</span></span><span class="sig-name descname"><span class="pre">test_cipher_version_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.ciphermanager_test.test_cipher_version_3">
-<code class="sig-prename descclassname">tests.unit.confidant.services.ciphermanager_test.</code><code class="sig-name descname">test_cipher_version_3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_3" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.ciphermanager_test.test_cipher_version_3">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.ciphermanager_test.</span></span><span class="sig-name descname"><span class="pre">test_cipher_version_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.ciphermanager_test.test_cipher_version_3" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-tests.unit.confidant.services.credentialmanager_test">
-<span id="tests-unit-confidant-services-credentialmanager-test-module"></span><h2>tests.unit.confidant.services.credentialmanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.credentialmanager_test" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="tests.unit.confidant.services.credentialmanager_test.test_check_credential_pair_values">
-<code class="sig-prename descclassname">tests.unit.confidant.services.credentialmanager_test.</code><code class="sig-name descname">test_check_credential_pair_values</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.credentialmanager_test.test_check_credential_pair_values" title="Permalink to this definition">¶</a></dt>
+</section>
+<section id="module-tests.unit.confidant.services.credentialmanager_test">
+<span id="tests-unit-confidant-services-credentialmanager-test-module"></span><h2>tests.unit.confidant.services.credentialmanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.credentialmanager_test" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.credentialmanager_test.test_check_credential_pair_values">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.credentialmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_check_credential_pair_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.credentialmanager_test.test_check_credential_pair_values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.credentialmanager_test.test_get_latest_blind_credential_revision">
-<code class="sig-prename descclassname">tests.unit.confidant.services.credentialmanager_test.</code><code class="sig-name descname">test_get_latest_blind_credential_revision</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.credentialmanager_test.test_get_latest_blind_credential_revision" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.credentialmanager_test.test_get_latest_blind_credential_revision">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.credentialmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_latest_blind_credential_revision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.credentialmanager_test.test_get_latest_blind_credential_revision" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.credentialmanager_test.test_get_latest_credential_revision">
-<code class="sig-prename descclassname">tests.unit.confidant.services.credentialmanager_test.</code><code class="sig-name descname">test_get_latest_credential_revision</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.credentialmanager_test.test_get_latest_credential_revision" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.credentialmanager_test.test_get_latest_credential_revision">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.credentialmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_latest_credential_revision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.credentialmanager_test.test_get_latest_credential_revision" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.credentialmanager_test.test_get_revision_ids_for_credential">
-<code class="sig-prename descclassname">tests.unit.confidant.services.credentialmanager_test.</code><code class="sig-name descname">test_get_revision_ids_for_credential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.credentialmanager_test.test_get_revision_ids_for_credential" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.credentialmanager_test.test_get_revision_ids_for_credential">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.credentialmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_revision_ids_for_credential</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.credentialmanager_test.test_get_revision_ids_for_credential" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.credentialmanager_test.test_lowercase_credential_pairs">
-<code class="sig-prename descclassname">tests.unit.confidant.services.credentialmanager_test.</code><code class="sig-name descname">test_lowercase_credential_pairs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.credentialmanager_test.test_lowercase_credential_pairs" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.credentialmanager_test.test_lowercase_credential_pairs">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.credentialmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_lowercase_credential_pairs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.credentialmanager_test.test_lowercase_credential_pairs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-tests.unit.confidant.services.jwkmanager_test">
-<span id="tests-unit-confidant-services-jwkmanager-test-module"></span><h2>tests.unit.confidant.services.jwkmanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.jwkmanager_test" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.helper_jwt_parser">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">helper_jwt_parser</code><span class="sig-paren">(</span><em class="sig-param">jwt_str</em>, <em class="sig-param">field</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.helper_jwt_parser" title="Permalink to this definition">¶</a></dt>
+</section>
+<section id="module-tests.unit.confidant.services.jwkmanager_test">
+<span id="tests-unit-confidant-services-jwkmanager-test-module"></span><h2>tests.unit.confidant.services.jwkmanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.jwkmanager_test" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.helper_jwt_parser">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">helper_jwt_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jwt_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.helper_jwt_parser" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_get_jwks">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_get_jwks</code><span class="sig-paren">(</span><em class="sig-param">test_key_pair: jwcrypto.jwk.JWK, test_jwks: Dict[str, str]</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwks" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_get_jwks">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_jwks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_key_pair</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">JWK</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_jwks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwks" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_get_jwks_not_found">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_get_jwks_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwks_not_found" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_get_jwks_not_found">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_jwks_not_found</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwks_not_found" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_get_jwt">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_get_jwt</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture, test_key_pair: jwcrypto.jwk.JWK, test_jwk_payload: Dict[str, Union[str, bool]], test_jwt: str</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwt" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_get_jwt">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_jwt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_key_pair</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">JWK</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_jwk_payload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_jwt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwt" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_get_jwt_caches_jwt">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_get_jwt_caches_jwt</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture, test_key_pair: jwcrypto.jwk.JWK, test_jwk_payload: Dict[str, Union[str, bool]], test_jwt: str</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwt_caches_jwt" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_get_jwt_caches_jwt">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_jwt_caches_jwt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_key_pair</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">JWK</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_jwk_payload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_jwt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwt_caches_jwt" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_get_jwt_raises_no_key_id">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_get_jwt_raises_no_key_id</code><span class="sig-paren">(</span><em class="sig-param">test_key_pair: jwcrypto.jwk.JWK, test_jwk_payload: Dict[str, Union[str, bool]]</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwt_raises_no_key_id" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_get_jwt_raises_no_key_id">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_jwt_raises_no_key_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_key_pair</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">JWK</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_jwk_payload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwt_raises_no_key_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_get_jwt_with_ca">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_get_jwt_with_ca</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture, test_jwk_payload: Dict[str, Union[str, bool]], test_jwt: str, test_certificate_authorities: str</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwt_with_ca" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_get_jwt_with_ca">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_jwt_with_ca</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_jwk_payload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_jwt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_certificate_authorities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_get_jwt_with_ca" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_localcache_cache_key">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_localcache_cache_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_localcache_cache_key" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_localcache_cache_key">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_localcache_cache_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_localcache_cache_key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_localcache_get_jwt">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_localcache_get_jwt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_localcache_get_jwt" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_localcache_get_jwt">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_localcache_get_jwt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_localcache_get_jwt" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_localcache_init">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_localcache_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_localcache_init" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_localcache_init">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_localcache_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_localcache_init" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_rediscache_get_jwt">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_rediscache_get_jwt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_rediscache_get_jwt" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_rediscache_get_jwt">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_rediscache_get_jwt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_rediscache_get_jwt" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_rediscache_redis_error">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_rediscache_redis_error</code><span class="sig-paren">(</span><em class="sig-param">mock_redis</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_rediscache_redis_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_rediscache_redis_error">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_rediscache_redis_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mock_redis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_rediscache_redis_error" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_set_key">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_set_key</code><span class="sig-paren">(</span><em class="sig-param">test_key_pair: jwcrypto.jwk.JWK</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_set_key" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_set_key">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_set_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_key_pair</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">JWK</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_set_key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.jwkmanager_test.test_set_key_encrypted">
-<code class="sig-prename descclassname">tests.unit.confidant.services.jwkmanager_test.</code><code class="sig-name descname">test_set_key_encrypted</code><span class="sig-paren">(</span><em class="sig-param">test_encrypted_key: str</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_set_key_encrypted" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.jwkmanager_test.test_set_key_encrypted">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.jwkmanager_test.</span></span><span class="sig-name descname"><span class="pre">test_set_key_encrypted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_encrypted_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.jwkmanager_test.test_set_key_encrypted" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-tests.unit.confidant.services.keymanager_test">
-<span id="tests-unit-confidant-services-keymanager-test-module"></span><h2>tests.unit.confidant.services.keymanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.keymanager_test" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="tests.unit.confidant.services.keymanager_test.test_create_datakey_mocked">
-<code class="sig-prename descclassname">tests.unit.confidant.services.keymanager_test.</code><code class="sig-name descname">test_create_datakey_mocked</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_create_datakey_mocked" title="Permalink to this definition">¶</a></dt>
+</section>
+<section id="module-tests.unit.confidant.services.keymanager_test">
+<span id="tests-unit-confidant-services-keymanager-test-module"></span><h2>tests.unit.confidant.services.keymanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.keymanager_test" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.keymanager_test.test_create_datakey_mocked">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.keymanager_test.</span></span><span class="sig-name descname"><span class="pre">test_create_datakey_mocked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_create_datakey_mocked" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.keymanager_test.test_create_datakey_with_encryption">
-<code class="sig-prename descclassname">tests.unit.confidant.services.keymanager_test.</code><code class="sig-name descname">test_create_datakey_with_encryption</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_create_datakey_with_encryption" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.keymanager_test.test_create_datakey_with_encryption">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.keymanager_test.</span></span><span class="sig-name descname"><span class="pre">test_create_datakey_with_encryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_create_datakey_with_encryption" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.keymanager_test.test_decrypt_datakey_mocked">
-<code class="sig-prename descclassname">tests.unit.confidant.services.keymanager_test.</code><code class="sig-name descname">test_decrypt_datakey_mocked</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_decrypt_datakey_mocked" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.keymanager_test.test_decrypt_datakey_mocked">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.keymanager_test.</span></span><span class="sig-name descname"><span class="pre">test_decrypt_datakey_mocked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_decrypt_datakey_mocked" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.keymanager_test.test_decrypt_datakey_with_encryption">
-<code class="sig-prename descclassname">tests.unit.confidant.services.keymanager_test.</code><code class="sig-name descname">test_decrypt_datakey_with_encryption</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_decrypt_datakey_with_encryption" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.keymanager_test.test_decrypt_datakey_with_encryption">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.keymanager_test.</span></span><span class="sig-name descname"><span class="pre">test_decrypt_datakey_with_encryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_decrypt_datakey_with_encryption" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.keymanager_test.test_get_key_id">
-<code class="sig-prename descclassname">tests.unit.confidant.services.keymanager_test.</code><code class="sig-name descname">test_get_key_id</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_get_key_id" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.keymanager_test.test_get_key_id">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.keymanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_key_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_get_key_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="tests.unit.confidant.services.keymanager_test.test_get_key_id_cached">
-<code class="sig-prename descclassname">tests.unit.confidant.services.keymanager_test.</code><code class="sig-name descname">test_get_key_id_cached</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_get_key_id_cached" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.keymanager_test.test_get_key_id_cached">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.keymanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_key_id_cached</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.keymanager_test.test_get_key_id_cached" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-tests.unit.confidant.services.servicemanager_test">
-<span id="tests-unit-confidant-services-servicemanager-test-module"></span><h2>tests.unit.confidant.services.servicemanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.servicemanager_test" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="tests.unit.confidant.services.servicemanager_test.test_get_latest_service_revision">
-<code class="sig-prename descclassname">tests.unit.confidant.services.servicemanager_test.</code><code class="sig-name descname">test_get_latest_service_revision</code><span class="sig-paren">(</span><em class="sig-param">mocker: pytest_mock.plugin.MockerFixture</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.servicemanager_test.test_get_latest_service_revision" title="Permalink to this definition">¶</a></dt>
+</section>
+<section id="module-tests.unit.confidant.services.servicemanager_test">
+<span id="tests-unit-confidant-services-servicemanager-test-module"></span><h2>tests.unit.confidant.services.servicemanager_test module<a class="headerlink" href="#module-tests.unit.confidant.services.servicemanager_test" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.unit.confidant.services.servicemanager_test.test_get_latest_service_revision">
+<span class="sig-prename descclassname"><span class="pre">tests.unit.confidant.services.servicemanager_test.</span></span><span class="sig-name descname"><span class="pre">test_get_latest_service_revision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MockerFixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tests.unit.confidant.services.servicemanager_test.test_get_latest_service_revision" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-tests.unit.confidant.services">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tests.unit.confidant.services" title="Permalink to this headline">¶</a></h2>
-</div>
-</div>
+</section>
+<section id="module-tests.unit.confidant.services">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tests.unit.confidant.services" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; Copyright 2019-2024, Confidant Project Authors
-
-    </p>
+    <p>&#169; Copyright 2019-2024, Confidant Project Authors.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

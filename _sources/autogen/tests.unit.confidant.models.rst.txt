@@ -11,6 +11,7 @@ tests.unit.confidant.models.credential\_test module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 tests.unit.confidant.models.service\_test module
 ------------------------------------------------
@@ -19,7 +20,7 @@ tests.unit.confidant.models.service\_test module
    :members:
    :undoc-members:
    :show-inheritance:
-
+   :private-members:
 
 Module contents
 ---------------
@@ -28,3 +29,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

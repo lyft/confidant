@@ -11,6 +11,7 @@ confidant.schema.auto\_build\_schema module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.schema.blind\_credentials module
 ------------------------------------------
@@ -19,6 +20,7 @@ confidant.schema.blind\_credentials module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.schema.certificates module
 ------------------------------------
@@ -27,6 +29,7 @@ confidant.schema.certificates module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.schema.credentials module
 -----------------------------------
@@ -35,6 +38,7 @@ confidant.schema.credentials module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.schema.jwks module
 ----------------------------
@@ -43,6 +47,7 @@ confidant.schema.jwks module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.schema.services module
 --------------------------------
@@ -51,7 +56,7 @@ confidant.schema.services module
    :members:
    :undoc-members:
    :show-inheritance:
-
+   :private-members:
 
 Module contents
 ---------------
@@ -60,3 +65,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

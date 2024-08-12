@@ -11,6 +11,7 @@ confidant.authnz.errors module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.authnz.rbac module
 ----------------------------
@@ -19,6 +20,7 @@ confidant.authnz.rbac module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.authnz.userauth module
 --------------------------------
@@ -27,7 +29,7 @@ confidant.authnz.userauth module
    :members:
    :undoc-members:
    :show-inheritance:
-
+   :private-members:
 
 Module contents
 ---------------
@@ -36,3 +38,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

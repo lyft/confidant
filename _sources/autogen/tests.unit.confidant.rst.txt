@@ -5,6 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    tests.unit.confidant.authnz
    tests.unit.confidant.models
@@ -21,7 +22,7 @@ tests.unit.confidant.encrypted\_settings\_test module
    :members:
    :undoc-members:
    :show-inheritance:
-
+   :private-members:
 
 Module contents
 ---------------
@@ -30,3 +31,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

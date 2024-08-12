@@ -11,6 +11,7 @@ confidant.utils.dynamodb module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.utils.maintenance module
 ----------------------------------
@@ -19,6 +20,7 @@ confidant.utils.maintenance module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.utils.misc module
 ---------------------------
@@ -27,7 +29,7 @@ confidant.utils.misc module
    :members:
    :undoc-members:
    :show-inheritance:
-
+   :private-members:
 
 Module contents
 ---------------
@@ -36,3 +38,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

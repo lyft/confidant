@@ -5,6 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    confidant.authnz
    confidant.clients
@@ -26,6 +27,7 @@ confidant.app module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.encrypted\_settings module
 ------------------------------------
@@ -34,6 +36,7 @@ confidant.encrypted\_settings module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.settings module
 -------------------------
@@ -42,6 +45,7 @@ confidant.settings module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 confidant.wsgi module
 ---------------------
@@ -50,7 +54,7 @@ confidant.wsgi module
    :members:
    :undoc-members:
    :show-inheritance:
-
+   :private-members:
 
 Module contents
 ---------------
@@ -59,3 +63,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
