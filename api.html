@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API &mdash; confidant 6.6.1-4381e2 documentation</title>
+  <title>API &mdash; confidant 6.6.1-be4b0e documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/confidant.css" />
 
@@ -37,7 +37,7 @@
             confidant
           </a>
               <div class="version">
-                6.6.1-4381e2
+                6.6.1-be4b0e
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -358,11 +358,11 @@
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>Authenticate</p></td>
-<td><p><a class="reference external" href="#post--v1-login">POST /v1/login</a></p></td>
+<td><p><a class="reference external" href="#get--v1-login">GET /v1/login</a></p></td>
 <td><p>Send user through login flow.</p></td>
 </tr>
 <tr class="row-even"><td></td>
-<td><p><a class="reference external" href="#get--v1-login">GET /v1/login</a></p></td>
+<td><p><a class="reference external" href="#post--v1-login">POST /v1/login</a></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>Certificate</p></td>
@@ -422,11 +422,11 @@
 <td><p>Get a list of the metadata for all current</p></td>
 </tr>
 <tr class="row-odd"><td><p>Email Address</p></td>
-<td><p><a class="reference external" href="#post--v1-user-email">POST /v1/user/email</a></p></td>
+<td><p><a class="reference external" href="#get--v1-user-email">GET /v1/user/email</a></p></td>
 <td><p>Get the email address associated with the</p></td>
 </tr>
 <tr class="row-even"><td></td>
-<td><p><a class="reference external" href="#get--v1-user-email">GET /v1/user/email</a></p></td>
+<td><p><a class="reference external" href="#post--v1-user-email">POST /v1/user/email</a></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>IAM Roles</p></td>
@@ -607,9 +607,9 @@ and receives the HTTP-REDIRECT callback (also a GET) from the IdP post
 logout.</p>
 </dd></dl>
 
-<dl class="http post">
-<dt class="sig sig-object http" id="post--v1-user-email">
-<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/v1/user/email</span></span><a class="headerlink" href="#post--v1-user-email" title="Permalink to this definition">¶</a></dt>
+<dl class="http get">
+<dt class="sig sig-object http" id="get--v1-user-email">
+<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/v1/user/email</span></span><a class="headerlink" href="#get--v1-user-email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the email associated with the currently authenticated user.</p>
 <p><strong>Example request</strong>:</p>
 <div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/user/email
@@ -638,9 +638,9 @@ logout.</p>
 </dl>
 </dd></dl>
 
-<dl class="http get">
-<dt class="sig sig-object http" id="get--v1-user-email">
-<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/v1/user/email</span></span><a class="headerlink" href="#get--v1-user-email" title="Permalink to this definition">¶</a></dt>
+<dl class="http post">
+<dt class="sig sig-object http" id="post--v1-user-email">
+<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/v1/user/email</span></span><a class="headerlink" href="#post--v1-user-email" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the email associated with the currently authenticated user.</p>
 <p><strong>Example request</strong>:</p>
 <div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /v1/user/email
@@ -936,9 +936,9 @@ Content-Type: application/json
 </dl>
 </dd></dl>
 
-<dl class="http post">
-<dt class="sig sig-object http" id="post--v1-login">
-<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/v1/login</span></span><a class="headerlink" href="#post--v1-login" title="Permalink to this definition">¶</a></dt>
+<dl class="http get">
+<dt class="sig sig-object http" id="get--v1-login">
+<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/v1/login</span></span><a class="headerlink" href="#get--v1-login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send user through login flow. Response depends on configured authentication
 plugin.</p>
 <p><strong>Example request</strong>:</p>
@@ -947,9 +947,9 @@ plugin.</p>
 </div>
 </dd></dl>
 
-<dl class="http get">
-<dt class="sig sig-object http" id="get--v1-login">
-<span class="sig-name descname"><span class="pre">GET</span> </span><span class="sig-name descname"><span class="pre">/v1/login</span></span><a class="headerlink" href="#get--v1-login" title="Permalink to this definition">¶</a></dt>
+<dl class="http post">
+<dt class="sig sig-object http" id="post--v1-login">
+<span class="sig-name descname"><span class="pre">POST</span> </span><span class="sig-name descname"><span class="pre">/v1/login</span></span><a class="headerlink" href="#post--v1-login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send user through login flow. Response depends on configured authentication
 plugin.</p>
 <p><strong>Example request</strong>:</p>
