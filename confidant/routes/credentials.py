@@ -4,7 +4,7 @@ import logging
 import re
 import uuid
 
-from flask import blueprints, escape, jsonify, request
+from flask import blueprints, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
 
 from confidant import authnz, clients, settings
@@ -628,29 +628,18 @@ def create_credential():
         id = str(uuid.uuid4()).replace('-', '')
         # Try to save to the archive
         revision = 1
-        for key, value in credential_pairs.items():
-            value = escape(value)
-            credential_pairs[key] = value
         credential_pairs = json.dumps(credential_pairs)
         data_key = keymanager.create_datakey(encryption_context={'id': id})
         cipher = CipherManager(data_key['plaintext'], version=2)
         credential_pairs = cipher.encrypt(credential_pairs)
         last_rotation_date = misc.utcnow()
 
-        metadata = data.get('metadata', {})
-        for key, value in metadata.items():
-            value = escape(value)
-            metadata[key] = value
-
-        data['documentation'] = escape(data.get('documentation'))
-
-        sanitized_name = escape(data['name'])
         cred = Credential(
             id=f'{id}-{revision}',
             data_type='archive-credential',
-            name=sanitized_name,
+            name=data.get('name'),
             credential_pairs=credential_pairs,
-            metadata=metadata,
+            metadata=data.get('metadata'),
             revision=revision,
             enabled=data.get('enabled'),
             data_key=data_key['ciphertext'],
@@ -664,7 +653,7 @@ def create_credential():
         cred = Credential(
             id=id,
             data_type='credential',
-            name=sanitized_name,
+            name=data.get('name'),
             credential_pairs=credential_pairs,
             metadata=data.get('metadata'),
             revision=revision,
@@ -823,32 +812,14 @@ def update_credential(id):
             return jsonify({'error': 'metadata must be a dict'}), 400
 
         # We check for a name change and ensure it doesn't conflict with an
-        # existing credential and to ensure we don't escape the name if it
-        # hasn't changed
+        # existing credential name
         if data.get('name') != _cred.name:
-            data['name'] = escape(data.get('name'))
             for cred in Credential.data_type_date_index.query(
                     'credential',
-                    filter_condition=Credential.name == data['name']):
+                    filter_condition=Credential.name == data.get('name')):
                 # Conflict, the name already exists
                 msg = f'Name already exists. See id: {cred.id}'
                 return jsonify({'error': msg, 'reference': cred.id}), 409
-
-        # Escape metadata values by checking for new metadata keys and values
-        # to ensure we don't escape values that haven't changed
-        if data.get('metadata') != _cred.metadata:
-            new_metadata = {
-                key: value
-                for key, value in data.get('metadata', {}).items()
-                if key not in _cred.metadata or
-                value != _cred.metadata.get(key)
-            }
-            for key, value in new_metadata.items():
-                value = escape(value)
-                data['metadata'][key] = value
-
-        if data.get('documentation') != _cred.documentation:
-            data['documentation'] = escape(data.get('documentation'))
 
         update = {
             'name': data.get('name', _cred.name),
@@ -909,18 +880,6 @@ def update_credential(id):
             if credential_pairs != _cred.decrypted_credential_pairs:
                 update['last_rotation_date'] = misc.utcnow()
 
-                # We escape credential pairs by checking for new credential
-                # pairs and values to ensure we don't escape values that haven't
-                # changed
-                new_credential_pairs = {
-                    key: value
-                    for key, value in credential_pairs.items()
-                    if key not in _cred.decrypted_credential_pairs or
-                    value != _cred.decrypted_credential_pairs.get(key)
-                }
-                for key, value in new_credential_pairs.items():
-                    value = escape(value)
-                    credential_pairs[key] = value
             data_key = keymanager.create_datakey(encryption_context={'id': id})
             cipher = CipherManager(data_key['plaintext'], version=2)
             update['credential_pairs'] = cipher.encrypt(
