@@ -637,7 +637,7 @@ def create_credential():
         cred = Credential(
             id=f'{id}-{revision}',
             data_type='archive-credential',
-            name=data['name'],
+            name=data.get('name'),
             credential_pairs=credential_pairs,
             metadata=data.get('metadata'),
             revision=revision,
@@ -653,7 +653,7 @@ def create_credential():
         cred = Credential(
             id=id,
             data_type='credential',
-            name=data['name'],
+            name=data.get('name'),
             credential_pairs=credential_pairs,
             metadata=data.get('metadata'),
             revision=revision,
@@ -677,10 +677,7 @@ def create_credential():
             include_credential_pairs=True,
         )
         credential_response.permissions = permissions
-        schema = credential_response_schema.dumps(credential_response)
-        logger.info(f"jsonify: {jsonify(schema)}")
-        logger.info(f"schema: {schema} ")
-        return schema
+        return credential_response_schema.dumps(credential_response)
 
 
 @blueprint.route('/v1/credentials/<id>/services', methods=['GET'])
@@ -815,12 +812,11 @@ def update_credential(id):
             return jsonify({'error': 'metadata must be a dict'}), 400
 
         # We check for a name change and ensure it doesn't conflict with an
-        # existing credential and to ensure we don't escape the name if it
-        # hasn't changed
+        # existing credential name
         if data.get('name') != _cred.name:
             for cred in Credential.data_type_date_index.query(
                     'credential',
-                    filter_condition=Credential.name == data.get('name', _cred.name)):
+                    filter_condition=Credential.name == data.get('name')):
                 # Conflict, the name already exists
                 msg = f'Name already exists. See id: {cred.id}'
                 return jsonify({'error': msg, 'reference': cred.id}), 409
