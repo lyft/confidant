@@ -86,48 +86,49 @@ def get_credential_list():
     :statuscode 200: Success
     :statuscode 403: Client does not have permissions to list credentials.
     """
-    if not acl_module_check(resource_type='credential', action='list'):
-        msg = "{} does not have access to list credentials".format(
-            authnz.get_logged_in_user()
-        )
-        error_msg = {'error': msg}
-        return jsonify(error_msg), 403
+    with stats.timer('list_credentials'):
+        if not acl_module_check(resource_type='credential', action='list'):
+            msg = "{} does not have access to list credentials".format(
+                authnz.get_logged_in_user()
+            )
+            error_msg = {'error': msg}
+            return jsonify(error_msg), 403
 
-    limit = request.args.get(
-        'limit',
-        default=None,
-        type=int,
-    )
-    page = request.args.get(
-        'page',
-        default=None,
-        type=str
-    )
-    if page:
-        try:
-            page = decode_last_evaluated_key(page)
-        except Exception:
-            logger.exception('Failed to parse provided page')
-            return jsonify({'error': 'Failed to parse page'}), 400
-    if limit:
-        results = Credential.data_type_date_index.query(
-            'credential',
-            scan_index_forward=False,
-            limit=limit,
-            last_evaluated_key=page,
+        limit = request.args.get(
+            'limit',
+            default=None,
+            type=int,
         )
-        credentials_response = CredentialsResponse.from_credentials(
-            [credential for credential in results],
-            next_page=results.last_evaluated_key,
+        page = request.args.get(
+            'page',
+            default=None,
+            type=str
         )
-    else:
-        credentials_response = CredentialsResponse.from_credentials([
-            credential
-            for credential in
-            Credential.data_type_date_index.query('credential')
-        ])
+        if page:
+            try:
+                page = decode_last_evaluated_key(page)
+            except Exception:
+                logger.exception('Failed to parse provided page')
+                return jsonify({'error': 'Failed to parse page'}), 400
+        if limit:
+            results = Credential.data_type_date_index.query(
+                'credential',
+                scan_index_forward=False,
+                limit=limit,
+                last_evaluated_key=page,
+            )
+            credentials_response = CredentialsResponse.from_credentials(
+                [credential for credential in results],
+                next_page=results.last_evaluated_key,
+            )
+        else:
+            credentials_response = CredentialsResponse.from_credentials([
+                credential
+                for credential in
+                Credential.data_type_date_index.query('credential')
+            ])
 
-    return credentials_response_schema.dumps(credentials_response)
+        return credentials_response_schema.dumps(credentials_response)
 
 
 @blueprint.route('/v1/credentials/<id>', methods=['GET'])
@@ -186,80 +187,81 @@ def get_credential(id):
                      the provided ID.
     :statuscode 404: The provided credential ID does not exist.
     """
-    metadata_only = misc.get_boolean(request.args.get('metadata_only'))
+    with stats.timer('get_credential_by_id'):
+        metadata_only = misc.get_boolean(request.args.get('metadata_only'))
 
-    if not acl_module_check(resource_type='credential',
-                            action='metadata',
-                            resource_id=id):
-        msg = "{} does not have access to credential {}".format(
-            authnz.get_logged_in_user(),
-            id
+        if not acl_module_check(resource_type='credential',
+                                action='metadata',
+                                resource_id=id):
+            msg = "{} does not have access to credential {}".format(
+                authnz.get_logged_in_user(),
+                id
+            )
+            error_msg = {'error': msg, 'reference': id}
+            return jsonify(error_msg), 403
+
+        try:
+            credential = Credential.get(id)
+        except DoesNotExist:
+            logger.warning(
+                'Item with id {0} does not exist.'.format(id)
+            )
+            return jsonify({}), 404
+        if credential.data_type != 'credential':
+            return jsonify({}), 404
+
+        permissions = {
+            'metadata': True,
+            'get': acl_module_check(
+                resource_type='credential',
+                action='get',
+                resource_id=id
+            ),
+            'update': acl_module_check(
+                resource_type='credential',
+                action='update',
+                resource_id=id
+            ),
+        }
+        include_credential_pairs = False
+        if not metadata_only and acl_module_check(resource_type='credential',
+                                                  action='get',
+                                                  resource_id=id):
+            permissions['get'] = True
+            include_credential_pairs = True
+
+            if settings.ENABLE_SAVE_LAST_DECRYPTION_TIME:
+                # Also try to save the archived credential to stay consistent
+                try:
+                    archived_credential = Credential.get(
+                        '{}-{}'.format(id, credential.revision)
+                    )
+                except DoesNotExist:
+                    archived_credential = None
+                    logger.error('Archived credential {}-{} not found'.format(
+                            id, credential.revision)
+                    )
+                now = misc.utcnow()
+                credential.last_decrypted_date = now
+                credential.save()
+                if archived_credential:
+                    archived_credential.last_decrypted_date = now
+                    archived_credential.save()
+
+            log_line = "{0} get credential {1}".format(
+                authnz.get_logged_in_user(),
+                id
+            )
+            logger.info(log_line)
+
+        credential_response = CredentialResponse.from_credential(
+            credential,
+            include_credential_keys=True,
+            include_credential_pairs=include_credential_pairs,
         )
-        error_msg = {'error': msg, 'reference': id}
-        return jsonify(error_msg), 403
+        credential_response.permissions = permissions
 
-    try:
-        credential = Credential.get(id)
-    except DoesNotExist:
-        logger.warning(
-            'Item with id {0} does not exist.'.format(id)
-        )
-        return jsonify({}), 404
-    if credential.data_type != 'credential':
-        return jsonify({}), 404
-
-    permissions = {
-        'metadata': True,
-        'get': acl_module_check(
-            resource_type='credential',
-            action='get',
-            resource_id=id
-        ),
-        'update': acl_module_check(
-            resource_type='credential',
-            action='update',
-            resource_id=id
-        ),
-    }
-    include_credential_pairs = False
-    if not metadata_only and acl_module_check(resource_type='credential',
-                                              action='get',
-                                              resource_id=id):
-        permissions['get'] = True
-        include_credential_pairs = True
-
-        if settings.ENABLE_SAVE_LAST_DECRYPTION_TIME:
-            # Also try to save the archived credential to stay consistent
-            try:
-                archived_credential = Credential.get(
-                    '{}-{}'.format(id, credential.revision)
-                )
-            except DoesNotExist:
-                archived_credential = None
-                logger.error('Archived credential {}-{} not found'.format(
-                        id, credential.revision)
-                )
-            now = misc.utcnow()
-            credential.last_decrypted_date = now
-            credential.save()
-            if archived_credential:
-                archived_credential.last_decrypted_date = now
-                archived_credential.save()
-
-        log_line = "{0} get credential {1}".format(
-            authnz.get_logged_in_user(),
-            id
-        )
-        logger.info(log_line)
-
-    credential_response = CredentialResponse.from_credential(
-        credential,
-        include_credential_keys=True,
-        include_credential_pairs=include_credential_pairs,
-    )
-    credential_response.permissions = permissions
-
-    return credential_response_schema.dumps(credential_response)
+        return credential_response_schema.dumps(credential_response)
 
 
 @blueprint.route(
