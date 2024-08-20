@@ -235,92 +235,105 @@ def get_service(id):
                      provided.
     '''
     with stats.timer('get_service_by_id'):
-        permissions = {
-            'metadata': False,
-            'get': False,
-            'update': False,
-        }
-        metadata_only = misc.get_boolean(request.args.get('metadata_only'))
-        logged_in_user = authnz.get_logged_in_user()
-        action = 'metadata' if metadata_only else 'get'
-        if action == 'metadata':
-            permissions['metadata'] = acl_module_check(
-                resource_type='service',
-                action='metadata',
-                resource_id=id,
-            )
-        elif action == 'get':
-            permissions['get'] = acl_module_check(
-                resource_type='service',
-                action='get',
-                resource_id=id,
-            )
-        if not permissions[action]:
-            msg = "{} does not have access to get service {}".format(
-                authnz.get_logged_in_user(),
-                id
-            )
-            error_msg = {'error': msg, 'reference': id}
-            logger.warning(msg)
-            return jsonify(error_msg), 403
-
-        logger.info(
-            'get_service called on id={} by user={} metadata_only={}'.format(
-                id,
-                logged_in_user,
-                metadata_only,
-            )
-        )
-        try:
-            service = Service.get(id)
-            if not authnz.service_in_account(service.account):
-                logger.warning(
-                    'Authz failed for service {0} (wrong account).'.format(id)
+        with stats.timer('get_service_by_id.acl_check_get_service'):
+            permissions = {
+                'metadata': False,
+                'get': False,
+                'update': False,
+            }
+            metadata_only = misc.get_boolean(request.args.get('metadata_only'))
+            logged_in_user = authnz.get_logged_in_user()
+            action = 'metadata' if metadata_only else 'get'
+            if action == 'metadata':
+                permissions['metadata'] = acl_module_check(
+                    resource_type='service',
+                    action='metadata',
+                    resource_id=id,
                 )
-                msg = 'Authenticated user is not authorized.'
-                return jsonify({'error': msg}), 401
-        except DoesNotExist:
-            logger.warning('Item with id {0} does not exist.'.format(id))
-            return jsonify({}), 404
-        except Exception as e:
-            logger.warning('Exception occurred: {0}'.format(e))
-            raise e
+            elif action == 'get':
+                permissions['get'] = acl_module_check(
+                    resource_type='service',
+                    action='get',
+                    resource_id=id,
+                )
+            if not permissions[action]:
+                msg = "{} does not have access to get service {}".format(
+                    authnz.get_logged_in_user(),
+                    id
+                )
+                error_msg = {'error': msg, 'reference': id}
+                logger.warning(msg)
+                return jsonify(error_msg), 403
+
+            logger.info(
+                'get_service called on id={} by user={} metadata_only={}'.format(
+                    id,
+                    logged_in_user,
+                    metadata_only,
+                )
+            )
+        
+        with stats.timer('get_service_by_id.db_get_service'):
+            try:
+                service = Service.get(id)
+                if not authnz.service_in_account(service.account):
+                    logger.warning(
+                        'Authz failed for service {0} (wrong account).'.format(id)
+                    )
+                    msg = 'Authenticated user is not authorized.'
+                    return jsonify({'error': msg}), 401
+            except DoesNotExist:
+                logger.warning('Item with id {0} does not exist.'.format(id))
+                return jsonify({}), 404
+            except Exception as e:
+                logger.warning('Exception occurred: {0}'.format(e))
+                raise e
+        
+        
         if (service.data_type != 'service' and
                 service.data_type != 'archive-service'):
             logger.warning('Item with id {0} is not a service.'.format(id))
             return jsonify({}), 404
         logger.debug('Authz succeeded for service {0}.'.format(id))
-        try:
-            credentials = credentialmanager.get_credentials(service.credentials)
-        except KeyError:
-            logger.exception('KeyError occurred in getting credentials')
-            return jsonify({'error': 'Decryption error.'}), 500
-        blind_credentials = credentialmanager.get_blind_credentials(
-            service.blind_credentials,
-        )
-        # TODO: this check can be expensive, so we're gating only to user auth.
-        # We should probably add an argument that opts in for permission hints,
-        # rather than always checking them.
-        if authnz.user_is_user_type('user'):
-            combined_cred_ids = (
-                list(service.credentials) + list(service.blind_credentials)
+        
+        with stats.timer('get_service_by_id.db_get_credentials'):
+            try:
+                credentials = credentialmanager.get_credentials(service.credentials)
+            except KeyError:
+                logger.exception('KeyError occurred in getting credentials')
+                return jsonify({'error': 'Decryption error.'}), 500
+        
+        with stats.timer('get_service_by_id.db_get_blind_credentials'):
+            blind_credentials = credentialmanager.get_blind_credentials(
+                service.blind_credentials,
             )
-            permissions['update'] = acl_module_check(
-                resource_type='service',
-                action='update',
-                resource_id=id,
-                kwargs={
-                    'credential_ids': combined_cred_ids,
-                },
+        
+        with stats.timer('get_service_by_id.acl_check_update_service'):
+            # TODO: this check can be expensive, so we're gating only to user auth.
+            # We should probably add an argument that opts in for permission hints,
+            # rather than always checking them.
+            if authnz.user_is_user_type('user'):
+                combined_cred_ids = (
+                    list(service.credentials) + list(service.blind_credentials)
+                )
+                permissions['update'] = acl_module_check(
+                    resource_type='service',
+                    action='update',
+                    resource_id=id,
+                    kwargs={
+                        'credential_ids': combined_cred_ids,
+                    },
+                )
+        
+        with stats.timer('get_service_by_id.build_response'):
+            service_response = ServiceResponse.from_service_expanded(
+                service,
+                credentials=credentials,
+                blind_credentials=blind_credentials,
+                metadata_only=metadata_only,
             )
-        service_response = ServiceResponse.from_service_expanded(
-            service,
-            credentials=credentials,
-            blind_credentials=blind_credentials,
-            metadata_only=metadata_only,
-        )
-        service_response.permissions = permissions
-        return service_expanded_response_schema.dumps(service_response)
+            service_response.permissions = permissions
+            return service_expanded_response_schema.dumps(service_response)
 
 
 @blueprint.route('/v1/archive/services/<id>', methods=['GET'])
