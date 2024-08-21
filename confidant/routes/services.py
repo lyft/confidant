@@ -266,48 +266,49 @@ def get_service(id):
                 return jsonify(error_msg), 403
 
             logger.info(
-                f'get_service called', kv={
+                'get_service called', kv={
                     'id': id,
                     'user': logged_in_user,
                     'metadata_only': metadata_only
                 }
             )
-        
+
         with stats.timer('get_service_by_id.db_get_service'):
             try:
                 service = Service.get(id)
                 if not authnz.service_in_account(service.account):
                     logger.warning(
-                        'Authz failed for service {0} (wrong account).'.format(id)
+                        'Authz failed for service (wrong account).',
+                        kv = {'id': id}
                     )
                     msg = 'Authenticated user is not authorized.'
                     return jsonify({'error': msg}), 401
             except DoesNotExist:
-                logger.warning('Item with id {0} does not exist.'.format(id))
+                logger.warning('Item with id does not exist.',
+                               kv={'id': id})
                 return jsonify({}), 404
             except Exception as e:
                 logger.warning('Exception occurred: {0}'.format(e))
                 raise e
-        
-        
+
         if (service.data_type != 'service' and
                 service.data_type != 'archive-service'):
             logger.warning('Item with id {0} is not a service.'.format(id))
             return jsonify({}), 404
         logger.debug('Authz succeeded for service {0}.'.format(id))
-        
+
         with stats.timer('get_service_by_id.db_get_credentials'):
             try:
                 credentials = credentialmanager.get_credentials(service.credentials)
             except KeyError:
                 logger.exception('KeyError occurred in getting credentials')
                 return jsonify({'error': 'Decryption error.'}), 500
-        
+
         with stats.timer('get_service_by_id.db_get_blind_credentials'):
             blind_credentials = credentialmanager.get_blind_credentials(
                 service.blind_credentials,
             )
-        
+
         with stats.timer('get_service_by_id.acl_check_update_service'):
             # TODO: this check can be expensive, so we're gating only to user auth.
             # We should probably add an argument that opts in for permission hints,
@@ -324,7 +325,7 @@ def get_service(id):
                         'credential_ids': combined_cred_ids,
                     },
                 )
-        
+
         with stats.timer('get_service_by_id.build_response'):
             service_response = ServiceResponse.from_service_expanded(
                 service,
