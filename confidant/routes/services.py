@@ -266,8 +266,8 @@ def get_service(id):
                 return jsonify(error_msg), 403
 
             logger.info(
-                f'get_service called on id={id} by 
-                user={logged_in_user} metadata_only={metadata_only}'
+                f'get_service called on id={id} by '
+                f'user={logged_in_user} metadata_only={metadata_only}'
             )
 
         with stats.timer('get_service_by_id.db_get_service'):
