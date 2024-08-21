@@ -266,11 +266,8 @@ def get_service(id):
                 return jsonify(error_msg), 403
 
             logger.info(
-                'get_service called', kv={
-                    'id': id,
-                    'user': logged_in_user,
-                    'metadata_only': metadata_only
-                }
+                f'get_service called on id={id} by '
+                f'user={logged_in_user} metadata_only={metadata_only}'
             )
 
         with stats.timer('get_service_by_id.db_get_service'):
@@ -278,14 +275,12 @@ def get_service(id):
                 service = Service.get(id)
                 if not authnz.service_in_account(service.account):
                     logger.warning(
-                        'Authz failed for service (wrong account).',
-                        kv={'id': id}
+                        f'Authz failed for service {id} (wrong account).'
                     )
                     msg = 'Authenticated user is not authorized.'
                     return jsonify({'error': msg}), 401
             except DoesNotExist:
-                logger.warning('Item with id does not exist.',
-                               kv={'id': id})
+                logger.warning(f'Item with id={id} does not exist.')
                 return jsonify({}), 404
             except Exception as e:
                 logger.warning('Exception occurred: {0}'.format(e))
