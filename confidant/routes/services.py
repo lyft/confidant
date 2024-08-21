@@ -279,7 +279,7 @@ def get_service(id):
                 if not authnz.service_in_account(service.account):
                     logger.warning(
                         'Authz failed for service (wrong account).',
-                        kv = {'id': id}
+                        kv={'id': id}
                     )
                     msg = 'Authenticated user is not authorized.'
                     return jsonify({'error': msg}), 401
@@ -299,7 +299,8 @@ def get_service(id):
 
         with stats.timer('get_service_by_id.db_get_credentials'):
             try:
-                credentials = credentialmanager.get_credentials(service.credentials)
+                credentials = \
+                    credentialmanager.get_credentials(service.credentials)
             except KeyError:
                 logger.exception('KeyError occurred in getting credentials')
                 return jsonify({'error': 'Decryption error.'}), 500
@@ -310,9 +311,9 @@ def get_service(id):
             )
 
         with stats.timer('get_service_by_id.acl_check_update_service'):
-            # TODO: this check can be expensive, so we're gating only to user auth.
-            # We should probably add an argument that opts in for permission hints,
-            # rather than always checking them.
+            # TODO: this check can be expensive, so we're gating 
+            # only to user auth. We should probably add an argument 
+            # that opts in for permission hints, rather than always checking them.
             if authnz.user_is_user_type('user'):
                 combined_cred_ids = (
                     list(service.credentials) + list(service.blind_credentials)
