@@ -311,9 +311,9 @@ def get_service(id):
             )
 
         with stats.timer('get_service_by_id.acl_check_update_service'):
-            # TODO: this check can be expensive, so we're gating 
-            # only to user auth. We should probably add an argument 
-            # that opts in for permission hints, rather than always checking them.
+            # TODO: this check can be expensive, so we're gating
+            # only to user auth. We should probably add an argument that
+            # opts in for permission hints, rather than always checking them
             if authnz.user_is_user_type('user'):
                 combined_cred_ids = (
                     list(service.credentials) + list(service.blind_credentials)
