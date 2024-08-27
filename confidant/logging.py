@@ -3,6 +3,7 @@ import boto3
 
 from confidant import settings
 
+
 def init_logging():
     logging.getLogger(__name__).info('Initializing logging')
     if not settings.get('DEBUG'):
