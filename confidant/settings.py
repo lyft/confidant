@@ -691,3 +691,7 @@ def get(name, default=None):
 
 # Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:default_acl')
+
+# Logging
+INIT_LOGGING_MODULE = str_env('LOGGING_MODULE', 'confidant.logging:init_logging')
+LOGGING_MODULE = str_env('LOGGING_MODULE', 'confidant.logging:logging_abstraction')

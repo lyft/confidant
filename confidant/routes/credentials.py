@@ -32,6 +32,8 @@ logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('credentials', __name__)
 
 acl_module_check = misc.load_module(settings.ACL_MODULE)
+logging_module = misc.load_module(settings.get('LOGGING_MODULE'))
+
 VALUE_LENGTH = 50
 
 
@@ -203,8 +205,10 @@ def get_credential(id):
         try:
             credential = Credential.get(id)
         except DoesNotExist:
-            logger.warning(
-                'Item with id {0} does not exist.'.format(id)
+            logging_module(
+                log_level='WARNING',
+                msg='Item with id {0} does not exist.'.format(id),
+                name=__name__,
             )
             return jsonify({}), 404
         if credential.data_type != 'credential':
