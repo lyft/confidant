@@ -31,6 +31,8 @@ from confidant.utils.dynamodb import decode_last_evaluated_key
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('credentials', __name__)
 
+logger.warning('Will load logging module: {}'.format(settings.get('LOGGING_MODULE')))
+
 acl_module_check = misc.load_module(settings.ACL_MODULE)
 logging_module = misc.load_module(settings.get('LOGGING_MODULE'))
 
