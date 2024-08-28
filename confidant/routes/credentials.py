@@ -205,7 +205,9 @@ def get_credential(id):
         try:
             credential = Credential.get(id)
         except DoesNotExist:
-            logger.warning('Item with id {0} does not exist.'.format(id))
+            logger.warning(
+                'Item with id {0} does not exist.'.format(id)
+            )
             return jsonify({}), 404
         if credential.data_type != 'credential':
             return jsonify({}), 404
