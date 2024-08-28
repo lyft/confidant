@@ -1,6 +1,6 @@
 import base64
+import importlib
 import json
-import logging
 import re
 import uuid
 
@@ -28,15 +28,12 @@ from confidant.services.ciphermanager import CipherManager
 from confidant.utils import maintenance, misc, stats
 from confidant.utils.dynamodb import decode_last_evaluated_key
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
+
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('credentials', __name__)
 
-logger.warning(
-    'Will load logging module: {}'.format(settings.get('LOGGING_MODULE'))
-)
-
 acl_module_check = misc.load_module(settings.ACL_MODULE)
-logging_module = misc.load_module(settings.get('LOGGING_MODULE'))
 
 VALUE_LENGTH = 50
 
@@ -209,11 +206,7 @@ def get_credential(id):
         try:
             credential = Credential.get(id)
         except DoesNotExist:
-            logging_module(
-                log_level='WARNING',
-                msg='Item with id {0} does not exist.'.format(id),
-                name=__name__,
-            )
+            logger.warning('Item with id {0} does not exist.'.format(id))
             return jsonify({}), 404
         if credential.data_type != 'credential':
             return jsonify({}), 404
