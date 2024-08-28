@@ -34,7 +34,6 @@ logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('credentials', __name__)
 
 acl_module_check = misc.load_module(settings.ACL_MODULE)
-
 VALUE_LENGTH = 50
 
 

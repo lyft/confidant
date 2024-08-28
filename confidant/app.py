@@ -6,7 +6,6 @@ from flask import Flask
 from flask_sslify import SSLify
 
 from confidant import settings
-from confidant.utils import misc
 from confidant.routes import (
     blind_credentials,
     certificates,
@@ -17,7 +16,6 @@ from confidant.routes import (
     static_files,
     jwks,
 )
-
 
 if not settings.get('DEBUG'):
     boto3.set_stream_logger(level=logging.CRITICAL)
