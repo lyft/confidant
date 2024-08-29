@@ -14,7 +14,7 @@ LOGGING_MODULE = str_env('LOGGING_MODULE', 'logging')
 logging = importlib.import_module(LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
-from confidant.encrypted_settings import EncryptedSettings
+from confidant.encrypted_settings import EncryptedSettings  # noqa: E402
 
 
 class SettingsError(Exception):
