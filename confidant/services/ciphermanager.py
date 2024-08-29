@@ -1,11 +1,12 @@
 import base64
 import re
-import logging
+import importlib
 
 from cryptography.fernet import Fernet
 
 from confidant import settings
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 

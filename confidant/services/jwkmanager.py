@@ -1,4 +1,4 @@
-import logging
+import importlib
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
@@ -10,6 +10,7 @@ from typing import Tuple
 import jwt
 from abc import ABC, abstractmethod
 from cerberus import Validator
+from confidant.settings import LOGGING_MODULE
 from confidant.settings import JWT_ACTIVE_SIGNING_KEYS
 from confidant.settings import JWT_CACHING_ENABLED
 from confidant.settings import JWT_CERTIFICATE_AUTHORITIES
@@ -24,6 +25,7 @@ from redis import StrictRedis, RedisError
 from cachetools import TTLCache
 from jwcrypto import jwk
 
+logging = importlib.import_module(LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 CA_SCHEMA = {

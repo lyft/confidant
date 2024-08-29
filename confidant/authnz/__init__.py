@@ -1,4 +1,4 @@
-import logging
+import importlib
 
 import kmsauth
 from flask import abort, request, g, make_response
@@ -17,6 +17,7 @@ from confidant.authnz import userauth
 
 _VALIDATOR = None
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 user_mod = userauth.init_user_auth_class()
 

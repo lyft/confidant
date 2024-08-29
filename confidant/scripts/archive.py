@@ -1,5 +1,5 @@
 import sys
-import logging
+import importlib
 from datetime import datetime
 
 from flask_script import Command, Option
@@ -8,6 +8,7 @@ from confidant import settings
 from confidant.models.credential import Credential
 from confidant.services import credentialmanager
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 logger.addHandler(logging.StreamHandler(sys.stdout))

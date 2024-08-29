@@ -1,5 +1,5 @@
 import sys
-import logging
+import importlib
 from flask_script import Command
 from botocore.exceptions import ClientError
 
@@ -9,6 +9,7 @@ from confidant.services import keymanager
 from confidant.models.service import Service
 from confidant.utils.dynamodb import create_dynamodb_tables
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 logger.addHandler(logging.StreamHandler(sys.stdout))

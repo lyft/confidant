@@ -1,11 +1,9 @@
 import json
-import logging
+import importlib
 from os import getenv
 from base64 import b64decode
 
 from confidant.encrypted_settings import EncryptedSettings
-
-logger = logging.getLogger(__name__)
 
 
 class SettingsError(Exception):
@@ -64,6 +62,12 @@ def str_env(var_name, default=''):
 
 
 # Basic setup
+
+# Logging
+LOGGING_MODULE = str_env('LOGGING_MODULE', 'logging')
+
+logging = importlib.import_module(LOGGING_MODULE)
+logger = logging.getLogger(__name__)
 
 # Whether or not Confidant is run in debug mode. Never run confidant in debug
 # mode outside of development!
@@ -691,6 +695,3 @@ def get(name, default=None):
 
 # Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:default_acl')
-
-# Logging
-LOGGING_MODULE = str_env('LOGGING_MODULE', 'logging')

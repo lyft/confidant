@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.6.2
+
+* Added logging module abstraction. You can now define the logging module to be used by setting the
+  `LOGGING_MODULE` environment variable.
+
 ## 6.6.1
 
 * Upgrade confidant to python 3.10.14

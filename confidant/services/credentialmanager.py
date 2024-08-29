@@ -1,6 +1,6 @@
 import copy
 import re
-import logging
+import importlib
 
 from confidant import settings
 from confidant.models.blind_credential import BlindCredential
@@ -10,6 +10,7 @@ from confidant.utils import stats
 from pynamodb.exceptions import DoesNotExist
 
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 

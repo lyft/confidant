@@ -1,4 +1,4 @@
-import logging
+import importlib
 
 import boto3
 import guard
@@ -16,6 +16,8 @@ from confidant.routes import (
     static_files,
     jwks,
 )
+
+logging = importlib.import_module(settings.LOGGING_MODULE)
 
 if not settings.get('DEBUG'):
     boto3.set_stream_logger(level=logging.CRITICAL)

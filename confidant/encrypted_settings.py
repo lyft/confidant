@@ -1,13 +1,15 @@
 import yaml
 import base64
-import logging
+import importlib
 import json
 
 from cryptography.fernet import Fernet
 
 import confidant.clients
+from confidant import settings
 from confidant.lib import cryptolib
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 

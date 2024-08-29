@@ -1,4 +1,4 @@
-import logging
+import importlib
 
 from flask import blueprints, jsonify, request
 from pynamodb.exceptions import DoesNotExist, PutError
@@ -23,6 +23,7 @@ from confidant.services import (
 from confidant.utils import maintenance, misc, stats
 from confidant.utils.dynamodb import decode_last_evaluated_key
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('services', __name__)
 

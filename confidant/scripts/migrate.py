@@ -1,7 +1,8 @@
 import sys
-import logging
+import importlib
 from flask_script import Command
 
+from confidant import settings
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.service import Service
 
@@ -11,6 +12,7 @@ from pynamodb.attributes import Attribute, UnicodeAttribute
 from pynamodb.constants import STRING_SET
 from pynamodb.models import Model
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 logger.setLevel(logging.INFO)

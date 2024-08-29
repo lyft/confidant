@@ -1,10 +1,11 @@
-import logging
+import importlib
 
 import flask
 from flask import blueprints, jsonify, request, session
 
 from confidant import authnz, settings
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('saml', __name__)
 

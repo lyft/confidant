@@ -1,4 +1,4 @@
-import logging
+import importlib
 import uuid
 
 from flask import blueprints, jsonify, request
@@ -18,6 +18,7 @@ from confidant.utils.dynamodb import (
 )
 from confidant.models.blind_credential import BlindCredential
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('blind_credentials', __name__)
 

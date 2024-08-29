@@ -1,9 +1,10 @@
 import requests
 import json
-import logging
+import importlib
 
 from confidant import settings
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 

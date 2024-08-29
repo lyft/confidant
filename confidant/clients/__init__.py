@@ -1,8 +1,11 @@
 """Module for accessing services external to Confidant."""
 
 import boto3
-import logging
+import importlib
 
+from confidant import settings
+
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 CLIENT_CACHE = {}

@@ -1,4 +1,4 @@
-import logging
+import importlib
 
 from flask import blueprints, jsonify, request
 
@@ -9,6 +9,7 @@ from confidant.schema.jwks import jwt_response_schema, JWTResponse, \
 from confidant.settings import ACL_MODULE
 from confidant.utils import misc
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('jwks', __name__)
 

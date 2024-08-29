@@ -1,6 +1,6 @@
 import datetime
 import hashlib
-import logging
+import importlib
 import time
 
 from cryptography import x509
@@ -15,6 +15,7 @@ import confidant.clients
 from confidant import settings
 from confidant.utils import stats
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 

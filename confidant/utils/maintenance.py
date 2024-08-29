@@ -1,4 +1,4 @@
-import logging
+import importlib
 import json
 import os.path
 from functools import wraps
@@ -7,6 +7,7 @@ from flask import make_response
 
 from confidant import settings
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 

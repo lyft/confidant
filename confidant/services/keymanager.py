@@ -1,5 +1,5 @@
 import hashlib
-import logging
+import importlib
 import botocore
 
 from botocore.exceptions import ClientError
@@ -9,6 +9,7 @@ from confidant import settings
 from confidant.utils import stats
 from confidant.lib import cryptolib
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 _DATAKEYS = {}

@@ -1,11 +1,12 @@
 import os
-import logging
+import importlib
 
 from flask import blueprints, current_app, send_from_directory
 from werkzeug.exceptions import NotFound
 
 from confidant import authnz, settings
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('static_files', __name__)
 

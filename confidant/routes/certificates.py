@@ -1,4 +1,4 @@
-import logging
+import importlib
 
 from flask import blueprints, jsonify, request
 
@@ -15,6 +15,7 @@ from confidant.schema.certificates import (
 )
 from confidant.utils import misc
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('certificates', __name__)
 

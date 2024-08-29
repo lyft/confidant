@@ -1,6 +1,6 @@
 import abc
-import logging
 import datetime
+import importlib
 import random
 
 import yaml
@@ -24,6 +24,7 @@ from confidant.lib import cryptolib
 from confidant.utils.misc import dict_deep_update
 from confidant.authnz import errors
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 

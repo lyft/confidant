@@ -1,5 +1,5 @@
 import sys
-import logging
+import importlib
 
 from flask_script import Command, Option
 from pynamodb.exceptions import DoesNotExist
@@ -8,6 +8,7 @@ from confidant import settings
 from confidant.models.credential import Credential, CredentialArchive
 from confidant.utils import stats
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 logger.addHandler(logging.StreamHandler(sys.stdout))

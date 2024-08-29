@@ -1,4 +1,4 @@
-import logging
+import importlib
 import time
 import sys
 
@@ -14,6 +14,7 @@ from pynamodb.models import Model
 
 from confidant import settings
 
+logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 logger.setLevel(logging.INFO)
