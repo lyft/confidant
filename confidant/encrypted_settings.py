@@ -6,10 +6,10 @@ import json
 from cryptography.fernet import Fernet
 
 import confidant.clients
-from confidant import settings
+from confidant.settings import LOGGING_MODULE
 from confidant.lib import cryptolib
 
-logging = importlib.import_module(settings.LOGGING_MODULE)
+logging = importlib.import_module(LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
 
