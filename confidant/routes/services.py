@@ -20,7 +20,8 @@ from confidant.services import (
     servicemanager,
     webhook,
 )
-from confidant.utils import maintenance, misc, stats
+from confidant.utils import maintenance, misc
+from confidant.utils.stats import stats
 from confidant.utils.dynamodb import decode_last_evaluated_key
 
 logging = importlib.import_module(settings.LOGGING_MODULE)

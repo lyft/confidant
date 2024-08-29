@@ -19,7 +19,7 @@ from confidant.settings import JWT_CACHING_MAX_SIZE
 from confidant.settings import JWT_CACHING_TTL_SECONDS
 from confidant.settings import REDIS_URL_JWT_CACHE, REDIS_SOCKET_TIMEOUT
 from confidant.settings import JWT_CACHING_USE_REDIS
-from confidant.utils import stats
+from confidant.utils.stats import stats
 
 from redis import StrictRedis, RedisError
 from cachetools import TTLCache

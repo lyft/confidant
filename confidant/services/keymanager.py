@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 
 import confidant.clients
 from confidant import settings
-from confidant.utils import stats
+from confidant.utils.stats import stats
 from confidant.lib import cryptolib
 
 logging = importlib.import_module(settings.LOGGING_MODULE)

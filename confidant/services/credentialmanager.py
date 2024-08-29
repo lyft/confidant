@@ -6,7 +6,7 @@ from confidant import settings
 from confidant.models.blind_credential import BlindCredential
 from confidant.models.credential import Credential, CredentialArchive
 from confidant.models.service import Service
-from confidant.utils import stats
+from confidant.utils.stats import stats
 from pynamodb.exceptions import DoesNotExist
 
 

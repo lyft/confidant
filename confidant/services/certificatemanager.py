@@ -13,7 +13,7 @@ from lru import LRU
 
 import confidant.clients
 from confidant import settings
-from confidant.utils import stats
+from confidant.utils.stats import stats
 
 logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)

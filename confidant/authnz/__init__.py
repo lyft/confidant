@@ -6,7 +6,7 @@ from flask import url_for
 from functools import wraps
 
 from confidant import settings
-from confidant.utils import stats
+from confidant.utils.stats import stats
 
 from confidant.authnz.errors import (
     UserUnknownError,

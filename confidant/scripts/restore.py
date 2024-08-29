@@ -6,7 +6,7 @@ from pynamodb.exceptions import DoesNotExist
 
 from confidant import settings
 from confidant.models.credential import Credential, CredentialArchive
-from confidant.utils import stats
+from confidant.utils.stats import stats
 
 logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)

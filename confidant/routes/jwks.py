@@ -2,7 +2,7 @@ import importlib
 
 from flask import blueprints, jsonify, request
 
-from confidant import authnz
+from confidant import authnz, settings
 from confidant.services.jwkmanager import JWKManager
 from confidant.schema.jwks import jwt_response_schema, JWTResponse, \
     jwks_list_response_schema, JWKSListResponse
