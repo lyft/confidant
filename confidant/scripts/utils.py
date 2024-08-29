@@ -12,8 +12,9 @@ from confidant.utils.dynamodb import create_dynamodb_tables
 logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
 
-logger.addHandler(logging.StreamHandler(sys.stdout))
-logger.setLevel(logging.INFO)
+if settings.LOGGING_MODULE == 'logging':
+    logger.addHandler(logging.StreamHandler(sys.stdout))
+    logger.setLevel(logging.INFO)
 
 
 class ManageGrants(Command):

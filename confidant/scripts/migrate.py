@@ -14,8 +14,9 @@ from pynamodb.models import Model
 
 logging = importlib.import_module(settings.LOGGING_MODULE)
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.StreamHandler(sys.stdout))
-logger.setLevel(logging.INFO)
+if settings.LOGGING_MODULE == 'logging':
+    logger.addHandler(logging.StreamHandler(sys.stdout))
+    logger.setLevel(logging.INFO)
 
 
 def is_old_unicode_set(values):
