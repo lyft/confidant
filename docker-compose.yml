@@ -11,7 +11,7 @@ services:
       - confidant
     ports:
       - "8080:8080"
-      - "8443:8443"
+      - "8086:8086"
     volumes:
       - ./config/development/saml-authsources.php:/var/www/simplesamlphp/config/authsources.php
   dynamodb:
