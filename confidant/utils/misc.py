@@ -3,6 +3,9 @@ import pytz
 from datetime import datetime
 
 
+split_cache = {}
+
+
 def dict_deep_update(a, b):
     """
     Deep merge in place of two dicts. For all keys in `b`, override matching
@@ -54,3 +57,35 @@ def utcnow():
     """
     now = datetime.utcnow()
     return now.replace(tzinfo=pytz.utc)
+
+
+def _split_items(items, limit):
+    if limit not in split_cache:
+        split_cache[limit] = {}
+    key = str(items)
+    if key not in split_cache[limit]:
+        items = sorted(items)
+        split_cache[limit][key] = []
+        for i in range(0, len(items), limit):
+            split_cache[limit][key].append(items[i:i+limit])
+    return split_cache[limit][key]
+
+
+def get_page(items, limit, page):
+    # no page specified (first page)
+    if page is None:
+        page = 1
+    pages = _split_items(items, limit)
+    total = len(pages)
+
+    # if there is one, calculate next page
+    # (consistent with other methods)
+    next_page = None
+    if page < total:
+        next_page = page + 1
+
+    # validate page within range
+    if 1 <= page <= total:
+        return _split_items(items, limit)[page-1], next_page
+    else:
+        return [], None

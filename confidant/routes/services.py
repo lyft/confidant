@@ -12,6 +12,8 @@ from confidant.schema.services import (
     services_response_schema,
     RevisionsResponse,
     revisions_response_schema,
+    ServiceCredentialsResponse,
+    service_credentials_response_schema,
 )
 from confidant.services import (
     credentialmanager,
@@ -331,6 +333,174 @@ def get_service(id):
             )
             service_response.permissions = permissions
             return service_expanded_response_schema.dumps(service_response)
+
+
+@blueprint.route('/v1/services/<id>/credentials', methods=['GET'])
+@authnz.require_auth
+def get_service_credentials(id):
+    '''
+    Get the credentials for the service with the provided ID.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+       GET /v1/services/example-development/credentials
+
+    :param id: The service ID to get.
+    :type id: str
+    :query boolean metadata_only: If true, only fetch metadata for this
+      service, and do not respond with decrypted credential pairs in the
+      credential responses.
+    :query boolean blind: If true, fetch blind credentials instead.
+    :query int page: the page to fetch, leave unspecified for first page.
+    :query int limit: the number of items per page (required for pagination).
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+         "credentials": [
+           {
+             "id": "abcd12345bf4f1cafe8e722d3860404",
+             "name": "Example Credential",
+             "credential_keys": ["test_key"],
+             "credential_pairs": {
+               "test_key": "test_value"
+             },
+             "metadata": {
+               "example_metadata_key": "example_value"
+             },
+             "revision": 1,
+             "enabled": true,
+             "documentation": "Example documentation",
+             "modified_date": "2019-12-16T23:16:11.413299+00:00",
+             "modified_by": "rlane@example.com",
+             "permissions": {}
+           },
+           ...
+         ],
+         "blind_credentials": [],
+         "next_page": 2
+       }
+
+    :resheader Content-Type: application/json
+    :statuscode 200: Success
+    :statuscode 403: Client does not have permissions to get the service ID
+                     provided.
+    '''
+    permissions = {
+        'metadata': False,
+        'get': False,
+        'update': False,
+    }
+    metadata_only = misc.get_boolean(request.args.get('metadata_only'))
+    logged_in_user = authnz.get_logged_in_user()
+    action = 'metadata' if metadata_only else 'get'
+    if action == 'metadata':
+        permissions['metadata'] = acl_module_check(
+            resource_type='service',
+            action='metadata',
+            resource_id=id,
+        )
+    elif action == 'get':
+        permissions['get'] = acl_module_check(
+            resource_type='service',
+            action='get',
+            resource_id=id,
+        )
+    if not permissions[action]:
+        msg = "{} does not have access to get service {}".format(
+            authnz.get_logged_in_user(),
+            id
+        )
+        error_msg = {'error': msg, 'reference': id}
+        return jsonify(error_msg), 403
+
+    logger.info(
+        'get_service called on id={} by user={} metadata_only={}'.format(
+            id,
+            logged_in_user,
+            metadata_only,
+        )
+    )
+    try:
+        service = Service.get(id)
+        if not authnz.service_in_account(service.account):
+            logger.warning(
+                'Authz failed for service {0} (wrong account).'.format(id)
+            )
+            msg = 'Authenticated user is not authorized.'
+            return jsonify({'error': msg}), 401
+    except DoesNotExist:
+        return jsonify({}), 404
+
+    if (service.data_type != 'service' and
+            service.data_type != 'archive-service'):
+        return jsonify({}), 404
+
+    logger.debug('Authz succeeded for service {0}.'.format(id))
+
+    limit = request.args.get(
+        'limit',
+        default=None,
+        type=int,
+    )
+    page = request.args.get(
+        'page',
+        default=None,
+        type=int
+    )
+    blind = request.args.get(
+        'blind',
+        default=False,
+        type=bool,
+    )
+
+    all_ids = service.credentials
+    next_page = None
+    if blind:
+        all_ids = service.blind_credentials
+
+    if limit:
+        query_items, next_page = misc.get_page(all_ids, limit, page)
+    else:
+        query_items = all_ids
+
+    try:
+        if blind:
+            credentials = credentialmanager.get_blind_credentials(query_items)
+        else:
+            credentials = credentialmanager.get_credentials(query_items)
+    except KeyError:
+        logger.exception('KeyError occurred in getting credentials')
+        return jsonify({'error': 'Decryption error.'}), 500
+
+    if authnz.user_is_user_type('user'):
+        permissions['update'] = acl_module_check(
+            resource_type='service',
+            action='update',
+            resource_id=id,
+            kwargs={
+                'credential_ids': query_items,
+            },
+        )
+    kwargs = {
+        'next_page': next_page,
+        'metadata_only': metadata_only
+    }
+    if blind:
+        kwargs['blind_credentials'] = credentials
+    else:
+        kwargs['credentials'] = credentials
+
+    return service_credentials_response_schema.dumps(
+        ServiceCredentialsResponse.from_credentials(**kwargs)
+    )
 
 
 @blueprint.route('/v1/archive/services/<id>', methods=['GET'])
