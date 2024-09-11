@@ -128,7 +128,8 @@ def get_credential_list():
                 Credential.data_type_date_index.query('credential')
             ])
 
-        return credentials_response_schema.dumps(credentials_response)
+        response = credentials_response_schema.dumps(credentials_response)
+        return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/credentials/<id>', methods=['GET'])
@@ -260,8 +261,8 @@ def get_credential(id):
             include_credential_pairs=include_credential_pairs,
         )
         credential_response.permissions = permissions
-
-        return credential_response_schema.dumps(credential_response)
+        response = credential_response_schema.dumps(credential_response)
+        return misc.prevent_xss(response)
 
 
 @blueprint.route(
@@ -447,7 +448,8 @@ def get_archive_credential_revisions(id):
             credentialmanager.get_revision_ids_for_credential(cred)
         )
     )
-    return revisions_response_schema.dumps(revisions_response)
+    response = revisions_response_schema.dumps(revisions_response)
+    return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/archive/credentials', methods=['GET'])
@@ -530,7 +532,8 @@ def get_archive_credential_list():
         [credential for credential in results],
         next_page=results.last_evaluated_key,
     )
-    return credentials_response_schema.dumps(credentials_response)
+    response = credentials_response_schema.dumps(credentials_response)
+    return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/credentials', methods=['POST'])
@@ -679,7 +682,8 @@ def create_credential():
             include_credential_pairs=True,
         )
         credential_response.permissions = permissions
-        return credential_response_schema.dumps(credential_response)
+        response = credential_response_schema.dumps(credential_response)
+        return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/credentials/<id>/services', methods=['GET'])
@@ -948,7 +952,8 @@ def update_credential(id):
             include_credential_pairs=True,
         )
         credential_response.permissions = permissions
-        return credential_response_schema.dumps(credential_response)
+        response = credential_response_schema.dumps(credential_response)
+        return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/credentials/<id>/<to_revision>', methods=['PUT'])
@@ -1110,9 +1115,8 @@ def revert_credential_to_revision(id, to_revision):
         msg = msg.format(cred.name, cred.id, cred.revision)
         graphite.send_event(service_names, msg)
         webhook.send_event('credential_update', service_names, [cred.id])
-    return credential_response_schema.dumps(
-        CredentialResponse.from_credential(cred)
-    )
+    response = credential_response_schema.dumps(CredentialResponse.from_credential(cred))
+    return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/value_generator', methods=['GET'])

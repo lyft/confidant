@@ -1,6 +1,7 @@
 import importlib
 import pytz
 from datetime import datetime
+from flask import make_response
 
 
 def dict_deep_update(a, b):
@@ -54,3 +55,24 @@ def utcnow():
     """
     now = datetime.utcnow()
     return now.replace(tzinfo=pytz.utc)
+
+
+def prevent_xss(pre_xss_response):
+    """
+    Prevents XSS attacks:
+     1. Set content type to be application/json
+     2. Set Content Security Policy (already specified at app level, no need to set here)
+     3. Enable XSS Protection
+     4. Prevent MIME Type Sniffing
+     5. Limit Referrer Information
+    """
+    response = make_response(pre_xss_response)
+    # Setting Content Type
+    response.headers['Content-Type'] = 'application/json'
+    # Enabling XSS Protection
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    # Preventing MIME Type Sniffing
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    # Limiting Referrer Information
+    response.headers['Referrer-Policy'] = 'no-referrer'
+    return response

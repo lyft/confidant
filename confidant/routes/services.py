@@ -164,7 +164,9 @@ def get_service_list():
             services_response = ServicesResponse.from_services(
                 Service.data_type_date_index.query('service'),
             )
-        return services_response_schema.dumps(services_response)
+
+        response = services_response_schema.dumps(services_response)
+        return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/services/<id>', methods=['GET'])
@@ -330,7 +332,8 @@ def get_service(id):
                 metadata_only=metadata_only,
             )
             service_response.permissions = permissions
-            return service_expanded_response_schema.dumps(service_response)
+            response = service_expanded_response_schema.dumps(service_response)
+            return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/archive/services/<id>', methods=['GET'])
@@ -410,7 +413,9 @@ def get_archive_service_revisions(id):
     revisions_response = RevisionsResponse.from_services(
         Service.batch_get(ids)
     )
-    return revisions_response_schema.dumps(revisions_response)
+    response = revisions_response_schema.dumps(revisions_response)
+    return misc.prevent_xss(response)
+
 
 
 @blueprint.route('/v1/archive/services', methods=['GET'])
@@ -488,7 +493,8 @@ def get_archive_service_list():
         [service for service in results],
         next_page=results.last_evaluated_key,
     )
-    return services_response_schema.dumps(services_response)
+    response = services_response_schema.dumps(services_response)
+    return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/services/<id>', methods=['PUT'])
@@ -697,7 +703,8 @@ def map_service_credentials(id):
         blind_credentials=blind_credentials,
     )
     service_response.permissions = permissions
-    return service_expanded_response_schema.dumps(service_response)
+    response = service_expanded_response_schema.dumps(service_response)
+    return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/services/<id>/<to_revision>', methods=['PUT'])
@@ -850,13 +857,14 @@ def revert_service_to_revision(id, to_revision):
         [service.id],
         service.credentials,
     )
-    return service_expanded_response_schema.dumps(
+    response = service_expanded_response_schema.dumps(
         ServiceResponse.from_service_expanded(
             service,
             credentials=credentials,
             blind_credentials=blind_credentials,
         )
     )
+    return misc.prevent_xss(response)
 
 
 @blueprint.route(
