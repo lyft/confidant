@@ -417,7 +417,6 @@ def get_archive_service_revisions(id):
     return misc.prevent_xss(response)
 
 
-
 @blueprint.route('/v1/archive/services', methods=['GET'])
 @authnz.require_auth
 def get_archive_service_list():

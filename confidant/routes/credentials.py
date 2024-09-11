@@ -1115,7 +1115,9 @@ def revert_credential_to_revision(id, to_revision):
         msg = msg.format(cred.name, cred.id, cred.revision)
         graphite.send_event(service_names, msg)
         webhook.send_event('credential_update', service_names, [cred.id])
-    response = credential_response_schema.dumps(CredentialResponse.from_credential(cred))
+    response = credential_response_schema.dumps(
+        CredentialResponse.from_credential(cred)
+    )
     return misc.prevent_xss(response)
 
 

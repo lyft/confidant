@@ -61,7 +61,7 @@ def prevent_xss(pre_xss_response):
     """
     Prevents XSS attacks:
      1. Set content type to be application/json
-     2. Set Content Security Policy (already specified at app level, no need to set here)
+     2. Set Content Security Policy (already specified at app level)
      3. Enable XSS Protection
      4. Prevent MIME Type Sniffing
      5. Limit Referrer Information
