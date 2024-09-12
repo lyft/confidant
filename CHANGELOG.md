@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.6.2
+
+* XSS security fix
+
 ## 6.6.1
 
 * Upgrade confidant to python 3.10.14
