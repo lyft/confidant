@@ -72,10 +72,6 @@ def prevent_xss_decorator(func):
         # Call the original function to get the response
         pre_xss_response = func(*args, **kwargs)
 
-        # If the response is not a dict, return it as-is
-        if not isinstance(pre_xss_response, dict):
-            return pre_xss_response
-
         # Apply XSS prevention
         response = make_response(pre_xss_response)
         response.headers['Content-Type'] = 'application/json'
