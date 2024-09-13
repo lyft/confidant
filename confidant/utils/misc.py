@@ -1,3 +1,4 @@
+from functools import wraps
 import importlib
 import pytz
 from datetime import datetime
@@ -57,7 +58,7 @@ def utcnow():
     return now.replace(tzinfo=pytz.utc)
 
 
-def prevent_xss(pre_xss_response):
+def prevent_xss_decorator(func):
     """
     Prevents XSS attacks:
      1. Set content type to be application/json
@@ -66,13 +67,21 @@ def prevent_xss(pre_xss_response):
      4. Prevent MIME Type Sniffing
      5. Limit Referrer Information
     """
-    response = make_response(pre_xss_response)
-    # Setting Content Type
-    response.headers['Content-Type'] = 'application/json'
-    # Enabling XSS Protection
-    response.headers['X-XSS-Protection'] = '1; mode=block'
-    # Preventing MIME Type Sniffing
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    # Limiting Referrer Information
-    response.headers['Referrer-Policy'] = 'no-referrer'
-    return response
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # Call the original function to get the response
+        pre_xss_response = func(*args, **kwargs)
+
+        # If the response is not a dict, return it as-is
+        if not isinstance(pre_xss_response, dict):
+            return pre_xss_response
+
+        # Apply XSS prevention
+        response = make_response(pre_xss_response)
+        response.headers['Content-Type'] = 'application/json'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['Referrer-Policy'] = 'no-referrer'
+
+        return response
+    return wrapper

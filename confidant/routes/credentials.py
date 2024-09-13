@@ -36,6 +36,7 @@ VALUE_LENGTH = 50
 
 
 @blueprint.route('/v1/credentials', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_credential_list():
     """
@@ -128,11 +129,11 @@ def get_credential_list():
                 Credential.data_type_date_index.query('credential')
             ])
 
-        response = credentials_response_schema.dumps(credentials_response)
-        return misc.prevent_xss(response)
+        return credentials_response_schema.dumps(credentials_response)
 
 
 @blueprint.route('/v1/credentials/<id>', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_credential(id):
     """
@@ -261,8 +262,8 @@ def get_credential(id):
             include_credential_pairs=include_credential_pairs,
         )
         credential_response.permissions = permissions
-        response = credential_response_schema.dumps(credential_response)
-        return misc.prevent_xss(response)
+
+        return credential_response_schema.dumps(credential_response)
 
 
 @blueprint.route(
@@ -370,6 +371,7 @@ def diff_credential(id, old_revision, new_revision):
 
 
 @blueprint.route('/v1/archive/credentials/<id>', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_archive_credential_revisions(id):
     """
@@ -448,11 +450,11 @@ def get_archive_credential_revisions(id):
             credentialmanager.get_revision_ids_for_credential(cred)
         )
     )
-    response = revisions_response_schema.dumps(revisions_response)
-    return misc.prevent_xss(response)
+    return revisions_response_schema.dumps(revisions_response)
 
 
 @blueprint.route('/v1/archive/credentials', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_archive_credential_list():
     """
@@ -532,11 +534,11 @@ def get_archive_credential_list():
         [credential for credential in results],
         next_page=results.last_evaluated_key,
     )
-    response = credentials_response_schema.dumps(credentials_response)
-    return misc.prevent_xss(response)
+    return credentials_response_schema.dumps(credentials_response)
 
 
 @blueprint.route('/v1/credentials', methods=['POST'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -682,8 +684,7 @@ def create_credential():
             include_credential_pairs=True,
         )
         credential_response.permissions = permissions
-        response = credential_response_schema.dumps(credential_response)
-        return misc.prevent_xss(response)
+        return credential_response_schema.dumps(credential_response)
 
 
 @blueprint.route('/v1/credentials/<id>/services', methods=['GET'])
@@ -731,6 +732,7 @@ def get_credential_dependencies(id):
 
 
 @blueprint.route('/v1/credentials/<id>', methods=['PUT'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -952,11 +954,11 @@ def update_credential(id):
             include_credential_pairs=True,
         )
         credential_response.permissions = permissions
-        response = credential_response_schema.dumps(credential_response)
-        return misc.prevent_xss(response)
+        return credential_response_schema.dumps(credential_response)
 
 
 @blueprint.route('/v1/credentials/<id>/<to_revision>', methods=['PUT'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -1115,10 +1117,9 @@ def revert_credential_to_revision(id, to_revision):
         msg = msg.format(cred.name, cred.id, cred.revision)
         graphite.send_event(service_names, msg)
         webhook.send_event('credential_update', service_names, [cred.id])
-    response = credential_response_schema.dumps(
+    return credential_response_schema.dumps(
         CredentialResponse.from_credential(cred)
     )
-    return misc.prevent_xss(response)
 
 
 @blueprint.route('/v1/value_generator', methods=['GET'])
