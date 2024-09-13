@@ -36,6 +36,7 @@ VALUE_LENGTH = 50
 
 
 @blueprint.route('/v1/credentials', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_credential_list():
     """
@@ -132,6 +133,7 @@ def get_credential_list():
 
 
 @blueprint.route('/v1/credentials/<id>', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_credential(id):
     """
@@ -369,6 +371,7 @@ def diff_credential(id, old_revision, new_revision):
 
 
 @blueprint.route('/v1/archive/credentials/<id>', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_archive_credential_revisions(id):
     """
@@ -451,6 +454,7 @@ def get_archive_credential_revisions(id):
 
 
 @blueprint.route('/v1/archive/credentials', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_archive_credential_list():
     """
@@ -534,6 +538,7 @@ def get_archive_credential_list():
 
 
 @blueprint.route('/v1/credentials', methods=['POST'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -727,6 +732,7 @@ def get_credential_dependencies(id):
 
 
 @blueprint.route('/v1/credentials/<id>', methods=['PUT'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -952,6 +958,7 @@ def update_credential(id):
 
 
 @blueprint.route('/v1/credentials/<id>/<to_revision>', methods=['PUT'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode

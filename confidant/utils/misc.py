@@ -1,6 +1,8 @@
+from functools import wraps
 import importlib
 import pytz
 from datetime import datetime
+from flask import make_response
 
 
 def dict_deep_update(a, b):
@@ -54,3 +56,28 @@ def utcnow():
     """
     now = datetime.utcnow()
     return now.replace(tzinfo=pytz.utc)
+
+
+def prevent_xss_decorator(func):
+    """
+    Prevents XSS attacks:
+     1. Set content type to be application/json
+     2. Set Content Security Policy (already specified at app level)
+     3. Enable XSS Protection
+     4. Prevent MIME Type Sniffing
+     5. Limit Referrer Information
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # Call the original function to get the response
+        pre_xss_response = func(*args, **kwargs)
+
+        # Apply XSS prevention
+        response = make_response(pre_xss_response)
+        response.headers['Content-Type'] = 'application/json'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['Referrer-Policy'] = 'no-referrer'
+
+        return response
+    return wrapper

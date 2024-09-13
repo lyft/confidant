@@ -76,6 +76,7 @@ def get_iam_roles_list():
 
 
 @blueprint.route('/v1/services', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_service_list():
     """
@@ -164,10 +165,12 @@ def get_service_list():
             services_response = ServicesResponse.from_services(
                 Service.data_type_date_index.query('service'),
             )
+
         return services_response_schema.dumps(services_response)
 
 
 @blueprint.route('/v1/services/<id>', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_service(id):
     '''
@@ -334,6 +337,7 @@ def get_service(id):
 
 
 @blueprint.route('/v1/archive/services/<id>', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_archive_service_revisions(id):
     """
@@ -414,6 +418,7 @@ def get_archive_service_revisions(id):
 
 
 @blueprint.route('/v1/archive/services', methods=['GET'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 def get_archive_service_list():
     """
@@ -492,6 +497,7 @@ def get_archive_service_list():
 
 
 @blueprint.route('/v1/services/<id>', methods=['PUT'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
@@ -701,6 +707,7 @@ def map_service_credentials(id):
 
 
 @blueprint.route('/v1/services/<id>/<to_revision>', methods=['PUT'])
+@misc.prevent_xss_decorator
 @authnz.require_auth
 @authnz.require_csrf_token
 @maintenance.check_maintenance_mode
