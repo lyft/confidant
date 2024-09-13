@@ -2,7 +2,7 @@
 
 ## 6.6.2
 
-* XSS security fix
+* XSS security fix / enhancement for Flask API response
 
 ## 6.6.1
 
