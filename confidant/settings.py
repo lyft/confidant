@@ -670,6 +670,15 @@ JWT_CACHING_USE_REDIS = bool_env('JWT_CACHING_USE_REDIS', False)
 # {"staging": "some_kid", "production": "some_kid"}
 JWT_ACTIVE_SIGNING_KEYS = json.loads(str_env('JWT_ACTIVE_SIGNING_KEYS', '{}'))
 
+# CUSTOM_CA_ENCRYPTED denotes whether provided CUSTOM_CERTIFICATE_AUTHORITIES
+# is encrypted or not. If it is encrypted, it will be decrypted before use.
+# It should be encrypted for non-development environments.
+if bool_env('CUSTOM_CA_ENCRYPTED', True):
+    decrypted_custom_cas = encrypted_settings.decrypted_secrets.get(
+        'CUSTOM_CERTIFICATE_AUTHORITIES'
+    )
+else:
+    decrypted_custom_cas = str_env('CUSTOM_CERTIFICATE_AUTHORITIES')
 
 # CUSTOM_CERTIFICATE_AUTHORITIES
 # Should be in encrypted settings following this
@@ -681,19 +690,9 @@ JWT_ACTIVE_SIGNING_KEYS = json.loads(str_env('JWT_ACTIVE_SIGNING_KEYS', '{}'))
 #   "kid": "some-kid"
 # }, ...
 # ]}
-# CUSTOM_CA_ENCRYPTED denotes whether provided CUSTOM_CERTIFICATE_AUTHORITIES
-# is encrypted or not. If it is encrypted, it will be decrypted before use.
-# It should be encrypted for non-development environments.
-if bool_env('CUSTOM_CA_ENCRYPTED', True):
-    decrypted_custom_cas = encrypted_settings.decrypted_secrets.get(
-        'CUSTOM_CERTIFICATE_AUTHORITIES'
-    )
-else:
-    decrypted_custom_cas = str_env('CUSTOM_CERTIFICATE_AUTHORITIES')
-
 CUSTOM_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_custom_cas)) \
     if decrypted_custom_cas else {}
-    
+
 # provide a JSON with the following format:
 # {"staging": "some_kid", "production": "some_kid"}
 CUSTOM_CA_ACTIVE_KEYS = json.loads(str_env('CUSTOM_CA_ACTIVE_KEYS', '{}'))
