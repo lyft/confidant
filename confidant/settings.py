@@ -672,7 +672,7 @@ JWT_ACTIVE_SIGNING_KEYS = json.loads(str_env('JWT_ACTIVE_SIGNING_KEYS', '{}'))
 
 
 # CUSTOM_CERTIFICATE_AUTHORITIES
-# Should be in encrypted settings following this 
+# Should be in encrypted settings following this
 # format (where name is the name of the environment) and key ids must be unique:
 # {"<name>":[{
 #   "key": "--- RSA...",
