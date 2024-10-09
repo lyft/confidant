@@ -693,6 +693,10 @@ else:
 
 CUSTOM_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_custom_cas)) \
     if decrypted_custom_cas else {}
+    
+# provide a JSON with the following format:
+# {"staging": "some_kid", "production": "some_kid"}
+CUSTOM_CA_ACTIVE_KEYS = json.loads(str_env('CUSTOM_CA_ACTIVE_KEYS', '{}'))
 
 # Configuration validation
 _settings_failures = False
