@@ -684,7 +684,7 @@ JWT_ACTIVE_SIGNING_KEYS = json.loads(str_env('JWT_ACTIVE_SIGNING_KEYS', '{}'))
 # CUSTOM_CA_ENCRYPTED denotes whether provided CUSTOM_CERTIFICATE_AUTHORITIES
 # is encrypted or not. If it is encrypted, it will be decrypted before use.
 # It should be encrypted for non-development environments.
-if bool_env("CUSTOM_CA_ENCRYPTED", True):
+if bool_env('CUSTOM_CA_ENCRYPTED', True):
     decrypted_custom_cas = encrypted_settings.decrypted_secrets.get(
         'CUSTOM_CERTIFICATE_AUTHORITIES'
     )
