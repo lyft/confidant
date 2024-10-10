@@ -12,8 +12,8 @@ from cryptography.x509.extensions import ExtensionNotFound
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
-from confidant.services.certificates.certificate_authority import CertificateAuthority
-from confidant.services.certificates.certificatemanager import (
+from confidant.services.certificates.certificate_authority import (
+    CertificateAuthority,
     CertificateAuthorityNotFoundError,
 )
 from confidant.settings import CUSTOM_CA_ACTIVE_KEYS

@@ -1,13 +1,8 @@
 import logging
-import json
 import hashlib
 import time
-from abc import ABC, abstractmethod
-from cerberus import Validator
-from typing import List
-from enum import Enum
 from cryptography import x509
-from datetime import datetime, timedelta
+from datetime import datetime
 from cryptography.hazmat.primitives.hashes import SHA256
 from cryptography.x509.extensions import ExtensionNotFound
 from cryptography.hazmat.backends import default_backend
@@ -15,16 +10,11 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
 import confidant.clients
-from confidant.services.certificatemanager import (
+from confidant.services.certificates.certificate_authority import (
+    CertificateAuthorityNotFoundError,
     CertificateCache,
     CertificateCacheNoOp,
-    CertificateNotReadyError,
 )
-from confidant.services.certificates.certificatemanager import (
-    CertificateAuthorityNotFoundError,
-)
-from confidant.settings import CUSTOM_CA_ACTIVE_KEYS
-from confidant.settings import CUSTOM_CERTIFICATE_AUTHORITIES
 from confidant.utils import stats
 from confidant import settings
 
