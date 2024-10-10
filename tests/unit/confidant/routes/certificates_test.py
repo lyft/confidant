@@ -2,7 +2,7 @@ import json
 from pytest_mock.plugin import MockerFixture
 
 from confidant.app import create_app
-from confidant.services import certificatemanager
+from confidant.services.certificates import certificatemanager
 
 
 def test_get_certificate(mocker: MockerFixture):

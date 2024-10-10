@@ -1,12 +1,41 @@
 import datetime
 import logging
+from abc import ABC, abstractmethod
+from enum import Enum
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
 
-from confidant.services.certificates.customca import CustomCertificateAuthority
 from lru import LRU
 
 from confidant import settings
 
 logger = logging.getLogger(__name__)
+
+
+class CAType(Enum):
+    AWS_ACM_PCA = "aws_acm_pca"
+    CUSTOM_CA = "custom_ca"
+
+
+class CertificateAuthorityNotFoundError(Exception):
+    pass
+
+
+class CertificateAuthority:
+    @abstractmethod
+    def __init__(self, ca: str):
+        pass
+
+    @abstractmethod
+    def issue_certificate(self, csr, validity):
+        pass
+
+    def decode_csr(self, pem_csr):
+        """
+        Return a csr object from the pem encoded csr.
+        """
+        pem_csr = pem_csr.encode(encoding="UTF-8")
+        return x509.load_pem_x509_csr(pem_csr, default_backend())
 
 
 class CachedCertificate:
@@ -60,8 +89,7 @@ class CertificateCache:
             self.certificates[cache_id].lock = False
         else:
             logger.warning(
-                'Attempting to release a non-existent lock in the certificate'
-                ' cache.'
+                "Attempting to release a non-existent lock in the certificate" " cache."
             )
 
     def set_response(self, cache_id, response):
@@ -73,8 +101,8 @@ class CertificateCache:
         certificate cache. The current day is included in the id, to ensure
         cache invalidation (minumum validity is 1 day).
         """
-        date = datetime.datetime.today().strftime('%Y-%m-%d')
-        return '{}{}{}{}'.format(cn, validity, san, date)
+        date = datetime.datetime.today().strftime("%Y-%m-%d")
+        return "{}{}{}{}".format(cn, validity, san, date)
 
 
 class CertificateCacheNoOp:
@@ -91,7 +119,7 @@ class CertificateCacheNoOp:
         return None
 
     def get_cache_id(self, cn, validity, san):
-        return ''
+        return ""
 
 
 class CertificateAuthorityNotFoundError(Exception):
@@ -100,8 +128,6 @@ class CertificateAuthorityNotFoundError(Exception):
 
 class CertificateNotReadyError(Exception):
     pass
-
-
 
 
 _CAS = {}

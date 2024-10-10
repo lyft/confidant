@@ -680,6 +680,10 @@ if bool_env('CUSTOM_CA_ENCRYPTED', True):
 else:
     decrypted_custom_cas = str_env('CUSTOM_CERTIFICATE_AUTHORITIES')
 
+# CA_TYPE for issuing certificates, defaults to aws_acm_pca.
+# options: aws_acm_pca, custom
+CA_TYPE = str_env('CA_TYPE', "aws_acm_pca")
+
 # CUSTOM_CERTIFICATE_AUTHORITIES
 # Should be in encrypted settings following this
 # format (where name is the name of the environment) and key ids must be unique:

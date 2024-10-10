@@ -4,7 +4,7 @@ import pytest
 from pytest_mock.plugin import MockerFixture
 from cryptography.hazmat.primitives import hashes
 
-from confidant.services import certificatemanager
+from confidant.services.certificates import certificatemanager
 
 
 @pytest.fixture()

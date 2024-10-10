@@ -3,7 +3,7 @@ import logging
 from flask import blueprints, jsonify, request
 
 from confidant import authnz, settings
-from confidant.services import certificatemanager
+from confidant.services.certificates import certificatemanager
 from confidant.schema.certificates import (
     certificate_authority_response_schema,
     certificate_authorities_response_schema,
@@ -223,8 +223,7 @@ def get_certificate_from_csr(ca):
         )
     )
 
-    arn = ca_object.issue_certificate(data['csr'], validity)
-    certificate = ca_object.get_certificate_from_arn(arn)
+    certificate = ca_object.issue_certificate(data['csr'], validity)
     certificate_response = CertificateResponse(
         certificate=certificate['certificate'],
         certificate_chain=certificate['certificate_chain'],
