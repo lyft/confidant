@@ -1,10 +1,9 @@
 import datetime
 import logging
-from abc import ABC, abstractmethod
 from enum import Enum
-from cryptography import x509
-from cryptography.hazmat.backends import default_backend
 
+from confidant.services.certificates.acm_pca import ACMPrivateCertificateAuthority
+from confidant.services.certificates.customca import CustomCertificateAuthority
 from lru import LRU
 
 from confidant import settings
@@ -19,23 +18,6 @@ class CAType(Enum):
 
 class CertificateAuthorityNotFoundError(Exception):
     pass
-
-
-class CertificateAuthority:
-    @abstractmethod
-    def __init__(self, ca: str):
-        pass
-
-    @abstractmethod
-    def issue_certificate(self, csr, validity):
-        pass
-
-    def decode_csr(self, pem_csr):
-        """
-        Return a csr object from the pem encoded csr.
-        """
-        pem_csr = pem_csr.encode(encoding="UTF-8")
-        return x509.load_pem_x509_csr(pem_csr, default_backend())
 
 
 class CachedCertificate:
@@ -136,7 +118,7 @@ _CAS = {}
 def get_ca(ca):
     if ca not in _CAS:
         if settings.CA_TYPE == "aws_acm_pca":
-            _CAS[ca] = CertificateAuthority(ca)
+            _CAS[ca] = ACMPrivateCertificateAuthority(ca)
         elif settings.CA_TYPE == "custom_ca":
             _CAS[ca] = CustomCertificateAuthority(ca)
     return _CAS[ca]
