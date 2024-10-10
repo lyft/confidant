@@ -629,14 +629,14 @@ ENABLE_SAVE_LAST_DECRYPTION_TIME = bool_env('ENABLE_SAVE_LAST_DECRYPTION_TIME')
 # ]
 
 if bool_env("JWT_IS_CA_ENCRYPTED", True):
-    decrypted_cas = encrypted_settings.decrypted_secrets.get(
+    decrypted_jwt_cas = encrypted_settings.decrypted_secrets.get(
         'JWT_CERTIFICATE_AUTHORITIES'
     )
 else:
-    decrypted_cas = str_env('JWT_CERTIFICATE_AUTHORITIES')
+    decrypted_jwt_cas = str_env('JWT_CERTIFICATE_AUTHORITIES')
 
-JWT_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_cas)) \
-    if decrypted_cas else {}
+JWT_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_jwt_cas)) \
+    if decrypted_jwt_cas else {}
 
 JWT_CACHING_ENABLED = bool_env('JWT_CACHING_ENABLED', False)
 
@@ -669,6 +669,33 @@ JWT_CACHING_USE_REDIS = bool_env('JWT_CACHING_USE_REDIS', False)
 # provide a JSON with the following format:
 # {"staging": "some_kid", "production": "some_kid"}
 JWT_ACTIVE_SIGNING_KEYS = json.loads(str_env('JWT_ACTIVE_SIGNING_KEYS', '{}'))
+
+# CUSTOM_CA_ENCRYPTED denotes whether provided CUSTOM_CERTIFICATE_AUTHORITIES
+# is encrypted or not. If it is encrypted, it will be decrypted before use.
+# It should be encrypted for non-development environments.
+if bool_env('CUSTOM_CA_ENCRYPTED', True):
+    decrypted_custom_cas = encrypted_settings.decrypted_secrets.get(
+        'CUSTOM_CERTIFICATE_AUTHORITIES'
+    )
+else:
+    decrypted_custom_cas = str_env('CUSTOM_CERTIFICATE_AUTHORITIES')
+
+# CUSTOM_CERTIFICATE_AUTHORITIES
+# Should be in encrypted settings following this
+# format (where name is the name of the environment) and key ids must be unique:
+# {"<name>":[{
+#   "key": "--- RSA...",
+#   "crt": "--- CERT...",
+#   "passphrase": "some-key",
+#   "kid": "some-kid"
+# }, ...
+# ]}
+CUSTOM_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_custom_cas)) \
+    if decrypted_custom_cas else {}
+
+# provide a JSON with the following format:
+# {"staging": "some_kid", "production": "some_kid"}
+CUSTOM_CA_ACTIVE_KEYS = json.loads(str_env('CUSTOM_CA_ACTIVE_KEYS', '{}'))
 
 # Configuration validation
 _settings_failures = False
