@@ -45,6 +45,7 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         self.ca_certificate = self._load_ca_certificate(self.ca_json)
         self.root_ca_certificate = self._load_rootca_certificate(self.ca_json)
         self.ca_private_key = self._load_private_key(self.ca_json)
+        self.ca_chain = self._load_ca_chain()
 
     def _get_ca_in_json(self, ca_env: str):
         if (
@@ -78,9 +79,15 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
 
     def _load_rootca_certificate(self, ca_json):
         if "rootcrt" not in ca_json or not ca_json["rootcrt"]:
-            logger.warning("Custom CA has no root certificate provided")
+            logger.warning("Custom CA has no root CA certificate provided")
             return None
         return x509.load_pem_x509_certificate(ca_json["rootcrt"].encode("utf-8"))
+    
+    def _load_ca_chain(self):
+        # Get the certificate in PEM format
+        intermediate_ca_pem = self.encode_certificate(self.ca_certificate)
+        root_ca_pem = self.encode_certificate(self.root_ca_certificate)
+        return intermediate_ca_pem.decode('utf-8') + root_ca_pem.decode('utf-8')
 
     def _load_private_key(self, ca_json):
         private_key = serialization.load_pem_private_key(
@@ -108,11 +115,13 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
             datetime.now(datetime.timezone.utc) + timedelta(days=validity)
         )
 
-        # Add some extensions (optional)
+        # add basic constraints extension, restricted for end entity certificates
         builder = builder.add_extension(
             x509.BasicConstraints(ca=False, path_length=None),
             critical=True,
         )
+
+        # add san extension from csr
         builder = builder.add_extension(
             x509.SubjectAlternativeName(
                 csr.extensions.get_extension_for_class(
@@ -122,17 +131,40 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
             critical=False,
         )
 
+        # add key usage extension
+        # Note: this is configured to be a general purpose TLS certificate
+        builder = builder.add_extension(
+            x509.KeyUsage(
+                digital_signature=True,
+                content_commitment=False,
+                key_encipherment=True,
+                data_encipherment=False,
+                key_agreement=False,
+                key_cert_sign=False,
+                crl_sign=False,
+                encipher_only=False,
+                decipher_only=False,
+            ),
+            critical=True,
+        )
+
+        # add extended key usage extension
+        # Note: this is configured to be used for both server and client auth
+        builder = builder.add_extension(
+            x509.ExtendedKeyUsage([
+                x509.oid.ExtendedKeyUsageOID.SERVER_AUTH,
+                x509.oid.ExtendedKeyUsageOID.CLIENT_AUTH
+            ]),
+            critical=False
+        )
+
         # Sign the certificate with the CA's private key
         certificate = builder.sign(private_key=self.ca_private_key, algorithm=SHA256())
-
-        # Get the certificate in PEM format
-        intermediate_ca_pem = self.encode_certificate(self.ca_certificate)
-        root_ca_pem = self.encode_certificate(self.root_ca_certificate)
 
         # Return the certificate in PEM format
         response = {
             "certificate": certificate.public_bytes(serialization.Encoding.PEM).decode('utf-8'),
-            "certificate_chain": intermediate_ca_pem.decode('utf-8') + root_ca_pem.decode('utf-8'),
+            "certificate_chain": self.ca_chain,
         }
         return response
 
