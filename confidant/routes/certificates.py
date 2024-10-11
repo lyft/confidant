@@ -185,7 +185,7 @@ def get_certificate_from_csr(ca):
     )
     try:
         csr = ca_object.decode_csr(data['csr'])
-    except Exception:
+    except certificate_authority.InvalidCSRFormatError:
         logger.exception('Failed to decode PEM csr')
         return (
             jsonify(
@@ -209,21 +209,14 @@ def get_certificate_from_csr(ca):
         },
     ):
         msg = (
-            '{} does not have access to get certificate cn {} against' ' ca {}'
-        ).format(
-            authnz.get_logged_in_user(),
-            cn,
-            ca,
+            f"{authnz.get_logged_in_user()} does not have access to get certificate cn {cn} against"
+            " ca {ca}"
         )
         error_msg = {'error': msg, 'reference': cn}
         return jsonify(error_msg), 403
 
     logger.info(
-        'get_certificate called on id={} for ca={} by user={}'.format(
-            cn,
-            ca,
-            logged_in_user,
-        )
+        "get_certificate called on id=%s for ca=%s by user=%s", cn, ca, logged_in_user
     )
 
     certificate = ca_object.issue_certificate(data['csr'], validity)
@@ -286,7 +279,7 @@ def list_cas():
 
     cas = certificatemanager.list_cas()
 
-    logger.info('list_cas called by user={}'.format(logged_in_user))
+    logger.info("list_cas called by user=%s", logged_in_user)
 
     cas_response = CertificateAuthoritiesResponse.from_cas(cas)
     return certificate_authorities_response_schema.dumps(cas_response)
@@ -337,7 +330,7 @@ def get_ca(ca):
         return jsonify({'error': 'Provided CA not found.'}), 404
 
     logged_in_user = authnz.get_logged_in_user()
-
+    
     if not acl_module_check(
         resource_type='ca',
         action='get',
@@ -346,8 +339,8 @@ def get_ca(ca):
         msg = f'{authnz.get_logged_in_user()} does not have access to get ca {ca}'
         error_msg = {'error': msg, 'reference': ca}
         return jsonify(error_msg), 403
-
-    logger.info(f'get_ca called on id={ca} by user={logged_in_user}')
+    
+    logger.info("get_ca called on id=%s by user=%s", ca, logged_in_user)
     _ca = ca_object.get_certificate_authority_certificate()
     ca_response = CertificateAuthorityResponse(
         ca=_ca['ca'],

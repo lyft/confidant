@@ -702,6 +702,26 @@ CUSTOM_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_custom_cas)) \
 # {"staging": "some_kid", "production": "some_kid"}
 CUSTOM_CA_ACTIVE_KEYS = json.loads(str_env('CUSTOM_CA_ACTIVE_KEYS', '{}'))
 
+CUSTOM_CA_SETTINGS = {}
+CUSTOM_CA_SETTINGS["max_validity_days"] = (
+    "CUSTOM_CA_MAX_VALIDITY_DAYS",
+    120,
+)
+# A regex to match against CN and SAN values for this CA. This regex must
+# include a named group for service_name: (?P<service_name>)
+# If no named group is defined, then the default ACL will deny generation
+# of the certificate.
+# Any certificate issue attempt not matching this pattern for CN or values
+# in SAN will be denied. If this is unset, all certificate issue attempts
+# will be denied by the default_acl.
+#     Example: (?P<service_name>[\w-]+)\.example\.com
+#     Example match: test-service.example.com
+#     service_name from example: test-service
+CUSTOM_CA_SETTINGS["name_regex"] = (
+    "CUSTOM_CA_DOMAIN_REGEX",
+    None,
+)
+
 # Configuration validation
 _settings_failures = False
 if len(set(SCOPED_AUTH_KEYS.values())) != len(SCOPED_AUTH_KEYS.values()):

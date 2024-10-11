@@ -14,26 +14,39 @@ class CertificateAuthorityNotFoundError(Exception):
     """
     Exception raised when a specified certificate authority is not found.
     """
+
     def __init__(self, message="Certificate Authority not found."):
         self.message = message
         super().__init__(self.message)
+
 
 class CertificateNotReadyError(Exception):
     """
     Exception raised when a certificate is not ready.
     """
+
     def __init__(self, message="Certificate Authority not ready."):
         self.message = message
         super().__init__(self.message)
 
 
-class CertificateAuthorityBase(ABC):
-    """Base class for certificate authorities.
+class InvalidCSRFormatError(Exception):
     """
+    Exception raised when a csr is not in the correct format.
+    """
+
+    def __init__(self, message="Invalid CSR format."):
+        self.message = message
+        super().__init__(self.message)
+
+
+class CertificateAuthorityBase(ABC):
+    """Base class for certificate authorities."""
+
     @abstractmethod
     def __init__(self, ca: str):
         pass
-    
+
     @abstractmethod
     def issue_certificate(self, csr_pem, validity):
         """
@@ -42,7 +55,7 @@ class CertificateAuthorityBase(ABC):
         of the issued certificate.
         """
         pass
-    
+
     @abstractmethod
     def issue_certificate_with_key(self, cn, validity, san=None):
         """
@@ -52,7 +65,7 @@ class CertificateAuthorityBase(ABC):
         key.
         """
         pass
-    
+
     @abstractmethod
     def generate_self_signed_certificate(self, key, cn, validity, san=None):
         """
@@ -61,7 +74,7 @@ class CertificateAuthorityBase(ABC):
         and return a signed certificate object.
         """
         pass
-    
+
     @abstractmethod
     def get_certificate_authority_certificate(self):
         """
@@ -83,7 +96,7 @@ class CertificateAuthorityBase(ABC):
         attributes configured in the settings.
         """
         pass
-    
+
     def encode_csr(self, csr):
         """
         Return a PEM string encoded version of the csr object.
@@ -91,14 +104,14 @@ class CertificateAuthorityBase(ABC):
         return csr.public_bytes(
             serialization.Encoding.PEM,
         ).decode(encoding="UTF-8")
-    
+
     def decode_csr(self, pem_csr):
         """
         Return a csr object from the pem encoded csr.
         """
         pem_csr = pem_csr.encode(encoding="UTF-8")
         return x509.load_pem_x509_csr(pem_csr, default_backend())
-    
+
     def get_csr_common_name(self, csr):
         """
         From the provided csr object, return the string value of the common
@@ -125,7 +138,7 @@ class CertificateAuthorityBase(ABC):
             for dns_name in san.value:
                 dns_names.append(dns_name.value)
         return dns_names
-    
+
     def encode_san_dns_names(self, san):
         """
         Return a list of x509.DNSName attributes from a list of strings.
@@ -134,7 +147,7 @@ class CertificateAuthorityBase(ABC):
         for dns_name in san:
             dns_names.append(x509.DNSName(dns_name))
         return dns_names
-    
+
     def encode_certificate(self, cert):
         """
         Return the PEM string encoded version of the certificate object.
@@ -142,7 +155,7 @@ class CertificateAuthorityBase(ABC):
         return cert.public_bytes(
             serialization.Encoding.PEM,
         ).decode(encoding="UTF-8")
-    
+
     def encode_key(self, key):
         """
         Return the PEM encoded version of the provided private RSA key object
@@ -152,7 +165,7 @@ class CertificateAuthorityBase(ABC):
             format=serialization.PrivateFormat.TraditionalOpenSSL,
             encryption_algorithm=serialization.NoEncryption(),
         ).decode(encoding="UTF-8")
-    
+
     def generate_csr(self, key, cn, san=None):
         """
         Using the provided rsa key object, a string common name, and a list of

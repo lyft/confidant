@@ -16,6 +16,7 @@ from cryptography import x509
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.hashes import SHA256
 
+from confidant import settings
 from confidant.services.certificates.certificate_authority import (
     CertificateAuthorityBase, CertificateAuthorityNotFoundError)
 from confidant.settings import (CUSTOM_CA_ACTIVE_KEYS,
@@ -46,6 +47,7 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         self.root_ca_certificate = self._load_rootca_certificate(self.ca_json)
         self.ca_private_key = self._load_private_key(self.ca_json)
         self.ca_chain = self._load_ca_chain()
+        self.settings = settings.CUSTOM_CA_SETTINGS
 
     def _get_ca_in_json(self, ca_env: str):
         if (
@@ -82,12 +84,12 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
             logger.warning("Custom CA has no root CA certificate provided")
             return None
         return x509.load_pem_x509_certificate(ca_json["rootcrt"].encode("utf-8"))
-    
+
     def _load_ca_chain(self):
         # Get the certificate in PEM format
         intermediate_ca_pem = self.encode_certificate(self.ca_certificate)
         root_ca_pem = self.encode_certificate(self.root_ca_certificate)
-        return intermediate_ca_pem.decode('utf-8') + root_ca_pem.decode('utf-8')
+        return intermediate_ca_pem + root_ca_pem
 
     def _load_private_key(self, ca_json):
         private_key = serialization.load_pem_private_key(
@@ -111,8 +113,10 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         builder = builder.public_key(csr.public_key())
         builder = builder.serial_number(x509.random_serial_number())
         builder = builder.not_valid_before(datetime.now(datetime.timezone.utc))
+        
+        acceptable_validity = min(validity, self.settings["max_validity_days"])
         builder = builder.not_valid_after(
-            datetime.now(datetime.timezone.utc) + timedelta(days=validity)
+            datetime.now(datetime.timezone.utc) + timedelta(days=acceptable_validity)
         )
 
         # add basic constraints extension, restricted for end entity certificates
