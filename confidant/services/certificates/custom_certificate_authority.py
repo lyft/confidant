@@ -1,3 +1,13 @@
+"""
+Custom Certificate Authority Module
+
+This module provides functionality for managing Custom Certificate Authorities (CAs) 
+supplied by the user. It supports the signing of certificates for Certificate Signing 
+Requests (CSRs). 
+
+Note: This module does not provide functionality for generating keys or CSRs.
+"""
+
 import logging
 from datetime import datetime, timedelta
 
@@ -66,10 +76,9 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
     def _load_ca_certificate(self, ca_json):
         return x509.load_pem_x509_certificate(ca_json["crt"].encode("utf-8"))
 
-
     def _load_rootca_certificate(self, ca_json):
         if "rootcrt" not in ca_json or not ca_json["rootcrt"]:
-            logger.warning("Custom CA has no root certificate")
+            logger.warning("Custom CA has no root certificate provided")
             return None
         return x509.load_pem_x509_certificate(ca_json["rootcrt"].encode("utf-8"))
 
@@ -94,9 +103,10 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         builder = builder.issuer_name(self.ca_certificate.subject)  # Issued by our CA
         builder = builder.public_key(csr.public_key())
         builder = builder.serial_number(x509.random_serial_number())
-        builder = builder.not_valid_before(datetime.utcnow())
-        # TODO: replace with validity from request
-        builder = builder.not_valid_after(datetime.utcnow() + timedelta(days=30))
+        builder = builder.not_valid_before(datetime.now(datetime.timezone.utc))
+        builder = builder.not_valid_after(
+            datetime.now(datetime.timezone.utc) + timedelta(days=validity)
+        )
 
         # Add some extensions (optional)
         builder = builder.add_extension(
