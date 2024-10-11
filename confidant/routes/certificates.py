@@ -342,7 +342,9 @@ def get_ca(ca):
     except certificate_authority.CertificateAuthorityNotFoundError:
         return jsonify({"error": "Provided CA not found."}), 404
 
+    
     logged_in_user = authnz.get_logged_in_user()
+    
     if not acl_module_check(
         resource_type="ca",
         action="get",
@@ -354,14 +356,13 @@ def get_ca(ca):
         )
         error_msg = {"error": msg, "reference": ca}
         return jsonify(error_msg), 403
-
+    
     logger.info(
         "get_ca called on id={} by user={}".format(
             ca,
             logged_in_user,
         )
     )
-
     _ca = ca_object.get_certificate_authority_certificate()
     ca_response = CertificateAuthorityResponse(
         ca=_ca["ca"],

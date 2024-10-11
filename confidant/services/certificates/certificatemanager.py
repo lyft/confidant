@@ -19,6 +19,7 @@ _CAS = {}
 
 def get_ca(ca):
     if ca not in _CAS:
+        print(settings.CA_TYPE)
         if settings.CA_TYPE == "aws_acm_pca":
             _CAS[ca] = ACMPrivateCertificateAuthority(ca)
         elif settings.CA_TYPE == "custom_ca":

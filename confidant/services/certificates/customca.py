@@ -33,6 +33,8 @@ CA_SCHEMA = {
 
 class CustomCertificateAuthority(CertificateAuthority):
     def __init__(self, id: str):
+        self.id = id
+        self.active_ca_id = None
         self.ca_json = self._get_ca_in_json(id)
         self.ca_certificate = self._load_ca_certificate(self.ca_json)
         self.ca_private_key = self._load_private_key(self.ca_json)
@@ -51,6 +53,7 @@ class CustomCertificateAuthority(CertificateAuthority):
             )
         validator = Validator(CA_SCHEMA)
         active_ca_id = CUSTOM_CA_ACTIVE_KEYS[id]
+        self.active_ca_id = active_ca_id
         active_ca = [
             ca
             for ca in CUSTOM_CERTIFICATE_AUTHORITIES[id]
@@ -61,7 +64,8 @@ class CustomCertificateAuthority(CertificateAuthority):
             raise CertificateAuthorityNotFoundError(
                 f"Custom CA {id} has no matching valid active keys for {active_ca_id}"
             )
-        return json.loads(active_ca[0])
+        print(active_ca[0])
+        return active_ca[0]
 
     def _load_ca_certificate(self, ca_json):
         return x509.load_pem_x509_certificate(ca_json["crt"].encode("utf-8"))
@@ -116,3 +120,15 @@ class CustomCertificateAuthority(CertificateAuthority):
             ),
         }
         return response
+
+    def get_certificate_authority_certificate(self):
+        ca_certificate_pem = self.ca_certificate.public_bytes(
+            encoding=serialization.Encoding.PEM
+        )
+        ca_certificate_str = ca_certificate_pem.decode("utf-8")
+        return {
+            "ca": self.active_ca_id,
+            "certificate": ca_certificate_str,
+            "certificate_chain": ca_certificate_str,
+            "tags": [],
+        }
