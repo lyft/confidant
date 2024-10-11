@@ -64,7 +64,6 @@ class CustomCertificateAuthority(CertificateAuthority):
             raise CertificateAuthorityNotFoundError(
                 f"Custom CA {id} has no matching valid active keys for {active_ca_id}"
             )
-        print(active_ca[0])
         return active_ca[0]
 
     def _load_ca_certificate(self, ca_json):
