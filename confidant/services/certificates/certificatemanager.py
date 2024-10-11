@@ -24,6 +24,8 @@ def get_ca(ca):
             _CAS[ca] = ACMPrivateCertificateAuthority(ca)
         elif settings.CA_TYPE == "custom_ca":
             _CAS[ca] = CustomCertificateAuthority(ca)
+        else:
+            raise Exception(f"Unknown CA type: {settings.CA_TYPE}")
     return _CAS[ca]
 
 
