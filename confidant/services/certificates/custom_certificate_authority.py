@@ -1,29 +1,20 @@
 import logging
-import json
-import hashlib
-import time
-from abc import ABC, abstractmethod
-from cerberus import Validator
-from typing import List
-from cryptography import x509
 from datetime import datetime, timedelta
+
+from cerberus import Validator
+from cryptography import x509
+from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.hashes import SHA256
-from cryptography.x509.extensions import ExtensionNotFound
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.x509.oid import NameOID
+
 from confidant.services.certificates.certificate_authority import (
-    CertificateAuthority,
-    CertificateAuthorityNotFoundError,
-)
-from confidant.settings import CUSTOM_CA_ACTIVE_KEYS
-from confidant.settings import CUSTOM_CERTIFICATE_AUTHORITIES
-from confidant.utils import stats
-from confidant import settings
+    CertificateAuthorityBase, CertificateAuthorityNotFoundError)
+from confidant.settings import (CUSTOM_CA_ACTIVE_KEYS,
+                                CUSTOM_CERTIFICATE_AUTHORITIES)
 
 logger = logging.getLogger(__name__)
 
-CA_SCHEMA = {
+CUSTOM_CA_SCHEMA = {
+    "rootcrt": {"type": "string", "required": True, "nullable": True},
     "crt": {"type": "string", "required": True},
     "key": {"type": "string", "required": True},
     "passphrase": {"type": "string", "required": True, "nullable": True},
@@ -31,43 +22,56 @@ CA_SCHEMA = {
 }
 
 
-class CustomCertificateAuthority(CertificateAuthority):
-    def __init__(self, id: str):
-        self.id = id
+class CustomCertificateAuthority(CertificateAuthorityBase):
+    """Custom Certificate Authority
+
+    Args:
+        CertificateAuthorityBase (_type_): Base class for Certificate Authority
+    """
+    def __init__(self, ca_env: str):
+        self.ca_id = ca_env
         self.active_ca_id = None
-        self.ca_json = self._get_ca_in_json(id)
+        self.ca_json = self._get_ca_in_json(ca_env)
         self.ca_certificate = self._load_ca_certificate(self.ca_json)
+        self.root_ca_certificate = self._load_rootca_certificate(self.ca_json)
         self.ca_private_key = self._load_private_key(self.ca_json)
 
-    def _get_ca_in_json(self, id: str):
+    def _get_ca_in_json(self, ca_env: str):
         if (
             not CUSTOM_CERTIFICATE_AUTHORITIES
-            or id not in CUSTOM_CERTIFICATE_AUTHORITIES
+            or ca_env not in CUSTOM_CERTIFICATE_AUTHORITIES
         ):
-            logger.error(f"Custom CA {id} not found")
-            raise CertificateAuthorityNotFoundError(f"Custom CA {id} not found")
-        if not CUSTOM_CA_ACTIVE_KEYS or id not in CUSTOM_CA_ACTIVE_KEYS:
-            logger.error(f"Custom CA {id} has no active keys")
+            logger.error("Custom CA %s not found", ca_env)
+            raise CertificateAuthorityNotFoundError(f"Custom CA {ca_env} not found")
+        if not CUSTOM_CA_ACTIVE_KEYS or ca_env not in CUSTOM_CA_ACTIVE_KEYS:
+            logger.error("Custom CA %s has no active keys", ca_env)
             raise CertificateAuthorityNotFoundError(
-                f"Custom CA {id} has no active keys"
+                f"Custom CA {ca_env} has no active keys"
             )
-        validator = Validator(CA_SCHEMA)
-        active_ca_id = CUSTOM_CA_ACTIVE_KEYS[id]
+        validator = Validator(CUSTOM_CA_SCHEMA)
+        active_ca_id = CUSTOM_CA_ACTIVE_KEYS[ca_env]
         self.active_ca_id = active_ca_id
         active_ca = [
             ca
-            for ca in CUSTOM_CERTIFICATE_AUTHORITIES[id]
+            for ca in CUSTOM_CERTIFICATE_AUTHORITIES[ca_env]
             if validator.validate(ca) and ca["kid"] == active_ca_id
         ]
         if not active_ca:
-            logger.error(f"Custom CA {id} has no active keys")
+            logger.error("Custom CA %s has no active keys", ca_env)
             raise CertificateAuthorityNotFoundError(
-                f"Custom CA {id} has no matching valid active keys for {active_ca_id}"
+                f"Custom CA {ca_env} has no matching valid active keys for {active_ca_id}"
             )
         return active_ca[0]
 
     def _load_ca_certificate(self, ca_json):
         return x509.load_pem_x509_certificate(ca_json["crt"].encode("utf-8"))
+
+
+    def _load_rootca_certificate(self, ca_json):
+        if "rootcrt" not in ca_json or not ca_json["rootcrt"]:
+            logger.warning("Custom CA has no root certificate")
+            return None
+        return x509.load_pem_x509_certificate(ca_json["rootcrt"].encode("utf-8"))
 
     def _load_private_key(self, ca_json):
         private_key = serialization.load_pem_private_key(
@@ -111,23 +115,35 @@ class CustomCertificateAuthority(CertificateAuthority):
         # Sign the certificate with the CA's private key
         certificate = builder.sign(private_key=self.ca_private_key, algorithm=SHA256())
 
+        # Get the certificate in PEM format
+        intermediate_ca_pem = self.encode_certificate(self.ca_certificate)
+        root_ca_pem = self.encode_certificate(self.root_ca_certificate)
+
         # Return the certificate in PEM format
         response = {
-            "certificate": certificate.public_bytes(serialization.Encoding.PEM),
-            "certificate_chain": self.ca_certificate.public_bytes(
-                serialization.Encoding.PEM
-            ),
+            "certificate": certificate.public_bytes(serialization.Encoding.PEM).decode('utf-8'),
+            "certificate_chain": intermediate_ca_pem.decode('utf-8') + root_ca_pem.decode('utf-8'),
         }
         return response
 
     def get_certificate_authority_certificate(self):
-        ca_certificate_pem = self.ca_certificate.public_bytes(
-            encoding=serialization.Encoding.PEM
-        )
-        ca_certificate_str = ca_certificate_pem.decode("utf-8")
+        intermediate_ca_pem = self.encode_certificate(self.ca_certificate)
+        root_ca_pem = self.encode_certificate(self.root_ca_certificate)
         return {
             "ca": self.active_ca_id,
-            "certificate": ca_certificate_str,
-            "certificate_chain": ca_certificate_str,
+            "certificate": intermediate_ca_pem,
+            "certificate_chain": intermediate_ca_pem + root_ca_pem,
             "tags": [],
         }
+
+    def issue_certificate_with_key(self, cn, validity, san=None):
+        raise NotImplementedError("Custom CA does not support issuing certificates with key")
+
+    def generate_self_signed_certificate(self, key, cn, validity, san=None):
+        raise NotImplementedError("Custom CA does not support generating self signed certificates")
+
+    def generate_key(self):
+        raise NotImplementedError("Custom CA does not support generating keys")
+
+    def generate_x509_name(self, cn):
+        raise NotImplementedError("Custom CA does not support generating x509 names")

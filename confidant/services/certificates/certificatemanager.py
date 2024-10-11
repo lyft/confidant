@@ -1,8 +1,8 @@
 import logging
 from enum import Enum
 
-from confidant.services.certificates.acm_pca import ACMPrivateCertificateAuthority
-from confidant.services.certificates.customca import CustomCertificateAuthority
+from confidant.services.certificates.acm_private_certificate_authority import ACMPrivateCertificateAuthority
+from confidant.services.certificates.custom_certificate_authority import CustomCertificateAuthority
 
 from confidant import settings
 
@@ -19,7 +19,6 @@ _CAS = {}
 
 def get_ca(ca):
     if ca not in _CAS:
-        print(settings.CA_TYPE)
         if settings.CA_TYPE == "aws_acm_pca":
             _CAS[ca] = ACMPrivateCertificateAuthority(ca)
         elif settings.CA_TYPE == "custom_ca":
@@ -34,7 +33,14 @@ def list_cas():
     Return detailed CA information for all CAs.
     """
     cas = []
-    for ca in settings.ACM_PRIVATE_CA_SETTINGS:
-        _ca = get_ca(ca)
-        cas.append(_ca.get_certificate_authority_certificate())
+    if settings.CA_TYPE == "aws_acm_pca":
+        for ca in settings.ACM_PRIVATE_CA_SETTINGS:
+            _ca = get_ca(ca)
+            cas.append(_ca.get_certificate_authority_certificate())
+    elif settings.CA_TYPE == "custom_ca":
+        for ca in settings.CUSTOM_CERTIFICATE_AUTHORITIES:
+            _ca = get_ca(ca)
+            cas.append(_ca.get_certificate_authority_certificate())
+    else:
+        raise Exception(f"Unknown CA type: {settings.CA_TYPE}")
     return cas

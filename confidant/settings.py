@@ -689,6 +689,7 @@ CA_TYPE = str_env('CA_TYPE', "aws_acm_pca")
 # format (where name is the name of the environment) and key ids must be unique:
 # {"<name>":[{
 #   "key": "--- RSA...",
+#   "rootcrt": "--- CERT...",
 #   "crt": "--- CERT...",
 #   "passphrase": "some-key",
 #   "kid": "some-kid"

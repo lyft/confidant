@@ -70,7 +70,7 @@ def get_certificate(ca, cn):
     '''
     try:
         ca_object = certificatemanager.get_ca(ca)
-    except certificatemanager.CertificateAuthorityNotFoundError:
+    except certificate_authority.CertificateAuthorityNotFoundError:
         return jsonify({'error': 'Provided CA not found.'}), 404
     san = request.args.getlist('san')
 
@@ -94,13 +94,7 @@ def get_certificate(ca, cn):
         error_msg = {'error': msg, 'reference': cn}
         return jsonify(error_msg), 403
 
-    logger.info(
-        'get_certificate called on id={} for ca={} by user={}'.format(
-            cn,
-            ca,
-            logged_in_user,
-        )
-    )
+    logger.info('get_certificate called on id=%s for ca=%s by user=%s', cn, ca, logged_in_user)
 
     validity = request.args.get(
         'validity',
@@ -349,19 +343,11 @@ def get_ca(ca):
         action='get',
         resource_id=ca,
     ):
-        msg = '{} does not have access to get ca {}'.format(
-            authnz.get_logged_in_user(),
-            ca,
-        )
+        msg = f'{authnz.get_logged_in_user()} does not have access to get ca {ca}'
         error_msg = {'error': msg, 'reference': ca}
         return jsonify(error_msg), 403
 
-    logger.info(
-        'get_ca called on id={} by user={}'.format(
-            ca,
-            logged_in_user,
-        )
-    )
+    logger.info(f'get_ca called on id={ca} by user={logged_in_user}')
     _ca = ca_object.get_certificate_authority_certificate()
     ca_response = CertificateAuthorityResponse(
         ca=_ca['ca'],
