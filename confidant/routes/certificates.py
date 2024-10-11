@@ -58,9 +58,9 @@ def get_certificate(ca, cn):
        Content-Type: application/json
 
        {
-         'certificate': '---...BEGIN...',
-         'certificate_chain': '---...BEGIN...',
-         'key': '---...BEGIN...'
+         "certificate": "---...BEGIN...",
+         "certificate_chain": "---...BEGIN...",
+         "key": "---...BEGIN..."
        }
 
     :resheader Content-Type: application/json
@@ -162,8 +162,8 @@ def get_certificate_from_csr(ca):
        Content-Type: application/json
 
        {
-         'certificate': '---...BEGIN...',
-         'certificate_chain': '---...BEGIN...'
+         "certificate": "---...BEGIN...",
+         "certificate_chain": "---...BEGIN..."
        }
 
     :resheader Content-Type: application/json
@@ -263,12 +263,12 @@ def list_cas():
        Content-Type: application/json
 
        {
-         'cas': [
-           'example-ca': {
-             'certificate': '---...BEGIN...',
-             'certificate_chain': '---...BEGIN...',
-             'tags': {
-               'hello': 'world'
+         "cas": [
+           "example-ca": {
+             "certificate": "---...BEGIN...",
+             "certificate_chain": "---...BEGIN...",
+             "tags": {
+               "hello": "world"
             },
             ...
          ]
@@ -325,11 +325,11 @@ def get_ca(ca):
        Content-Type: application/json
 
        {
-         'example-ca': {
-           'certificate': '---...BEGIN...',
-           'certificate_chain': '---...BEGIN...',
-           'tags': {
-             'hello': 'world'
+         "example-ca": {
+           "certificate": "---...BEGIN...",
+           "certificate_chain": "---...BEGIN...",
+           "tags": {
+             "hello": "world"
           }
        }
 
