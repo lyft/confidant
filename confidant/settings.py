@@ -703,7 +703,7 @@ CUSTOM_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_custom_cas)) \
 CUSTOM_CA_ACTIVE_KEYS = json.loads(str_env('CUSTOM_CA_ACTIVE_KEYS', '{}'))
 
 CUSTOM_CA_SETTINGS = {}
-CUSTOM_CA_SETTINGS["max_validity_days"] = (
+CUSTOM_CA_SETTINGS["max_validity_days"] = int_env(
     "CUSTOM_CA_MAX_VALIDITY_DAYS",
     120,
 )
@@ -717,7 +717,7 @@ CUSTOM_CA_SETTINGS["max_validity_days"] = (
 #     Example: (?P<service_name>[\w-]+)\.example\.com
 #     Example match: test-service.example.com
 #     service_name from example: test-service
-CUSTOM_CA_SETTINGS["name_regex"] = (
+CUSTOM_CA_SETTINGS["name_regex"] = str_env(
     "CUSTOM_CA_DOMAIN_REGEX",
     None,
 )
