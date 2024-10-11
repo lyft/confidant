@@ -9,7 +9,7 @@ Note: This module does not provide functionality for generating keys or CSRs.
 """
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from cerberus import Validator
 from cryptography import x509
@@ -112,11 +112,11 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         builder = builder.issuer_name(self.ca_certificate.subject)  # Issued by our CA
         builder = builder.public_key(csr.public_key())
         builder = builder.serial_number(x509.random_serial_number())
-        builder = builder.not_valid_before(datetime.now(datetime.timezone.utc))
+        builder = builder.not_valid_before(datetime.now(timezone.utc))
         
         acceptable_validity = min(validity, self.settings["max_validity_days"])
         builder = builder.not_valid_after(
-            datetime.now(datetime.timezone.utc) + timedelta(days=acceptable_validity)
+            datetime.now(timezone.utc) + timedelta(days=acceptable_validity)
         )
 
         # add basic constraints extension, restricted for end entity certificates
