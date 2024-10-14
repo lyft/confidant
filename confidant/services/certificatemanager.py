@@ -1,10 +1,10 @@
 import logging
 from enum import Enum
 
-from confidant.services.certificates.acm_private_certificate_authority import (
+from confidant.services.certificate_authority.acm_private_certificate_authority import (
     ACMPrivateCertificateAuthority,
 )
-from confidant.services.certificates.custom_certificate_authority import (
+from confidant.services.certificate_authority.custom_certificate_authority import (
     CustomCertificateAuthority,
 )
 
@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 class CAType(Enum):
     """Enum for CA types."""
+
     AWS_ACM_PCA = "aws_acm_pca"
     CUSTOM_CA = "custom_ca"
 

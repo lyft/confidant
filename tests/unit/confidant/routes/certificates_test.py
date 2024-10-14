@@ -2,7 +2,12 @@ import json
 from pytest_mock.plugin import MockerFixture
 
 from confidant.app import create_app
-from confidant.services.certificates import certificatemanager
+from confidant.services.certificate_authority.certificate_authority_base import (
+    CertificateNotReadyError,
+)
+from confidant.services.certificate_authority.acm_private_certificate_authority import (
+    ACMPrivateCertificateAuthority,
+)
 
 
 def test_get_certificate(mocker: MockerFixture):
@@ -50,7 +55,7 @@ def test_get_certificate(mocker: MockerFixture):
         return_value=True,
     )
     mocker.patch('confidant.authnz.get_logged_in_user', return_value='test')
-    ca_object = certificatemanager.CertificateAuthority('development')
+    ca_object = ACMPrivateCertificateAuthority("development")
     mocker.patch(
         ('confidant.routes.certificates.certificatemanager.get_ca'),
         return_value=ca_object,
@@ -61,8 +66,8 @@ def test_get_certificate(mocker: MockerFixture):
         'key': 'test_key',
     }
     mocker.patch(
-        'confidant.services.certificatemanager.CertificateAuthority.issue_certificate_with_key',  # noqa: E501
-        return_value=issue_certificate_with_key_return_value
+        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority.issue_certificate_with_key",  # noqa: E501
+        return_value=issue_certificate_with_key_return_value,
     )
     ret = app.test_client().get(
         '/v1/certificates/development/test.example.com',
@@ -76,8 +81,8 @@ def test_get_certificate(mocker: MockerFixture):
         'key': 'test_key',
     }
     mocker.patch(
-        'confidant.services.certificatemanager.CertificateAuthority.issue_certificate_with_key',  # noqa: E501
-        side_effect=certificatemanager.CertificateNotReadyError(),
+        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority.issue_certificate_with_key",  # noqa: E501
+        side_effect=CertificateNotReadyError(),
     )
     ret = app.test_client().get(
         '/v1/certificates/development/test.example.com',
@@ -88,7 +93,7 @@ def test_get_certificate(mocker: MockerFixture):
 
 
 def test_get_certificate_from_csr(mocker: MockerFixture):
-    ca_object = certificatemanager.CertificateAuthority('development')
+    ca_object = ACMPrivateCertificateAuthority("development")
     key = ca_object.generate_key()
     csr = ca_object.generate_csr(key, 'test.example.com')
     pem_csr = ca_object.encode_csr(csr)
@@ -112,6 +117,10 @@ def test_get_certificate_from_csr(mocker: MockerFixture):
     )
     assert ret.status_code == 400
 
+    mocker.patch(
+        ("confidant.routes.certificates.certificatemanager.get_ca"),
+        return_value=ca_object,
+    )
     ret = app.test_client().post(
         '/v1/certificates/development',
         data=json.dumps({'csr': 'invalid_csr'}),
@@ -175,14 +184,10 @@ def test_get_certificate_from_csr(mocker: MockerFixture):
         return_value=ca_object,
     )
     mocker.patch(
-        'confidant.services.certificatemanager.CertificateAuthority.issue_certificate',  # noqa: E501
-        return_value='test-certificate-arn',
-    )
-    mocker.patch(
-        'confidant.services.certificatemanager.CertificateAuthority.get_certificate_from_arn',  # noqa: E501
+        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority.issue_certificate",  # noqa: E501
         return_value={
-            'certificate': 'test_certificate',
-            'certificate_chain': 'test_certificate_chain',
+            "certificate": "test_certificate",
+            "certificate_chain": "test_certificate_chain",
         },
     )
     ret = app.test_client().post(
@@ -271,18 +276,18 @@ def test_get_ca(mocker: MockerFixture):
         return_value=True,
     )
     mocker.patch('confidant.authnz.get_logged_in_user', return_value='test')
-    ca_object = certificatemanager.CertificateAuthority('development')
+    ca_object = ACMPrivateCertificateAuthority("development")
     mocker.patch(
         ('confidant.routes.certificates.certificatemanager.get_ca'),
         return_value=ca_object,
     )
     mocker.patch(
-        'confidant.services.certificatemanager.CertificateAuthority.get_certificate_authority_certificate',  # noqa: E501
+        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority.get_certificate_authority_certificate",  # noqa: E501
         return_value={
-            'ca': 'development',
-            'certificate': 'test_certificate',
-            'certificate_chain': 'test_certificate_chain',
-            'tags': {'environment': 'development'},
+            "ca": "development",
+            "certificate": "test_certificate",
+            "certificate_chain": "test_certificate_chain",
+            "tags": {"environment": "development"},
         },
     )
     ret = app.test_client().get('/v1/cas/development', follow_redirects=False)

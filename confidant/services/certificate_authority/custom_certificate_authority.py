@@ -17,10 +17,11 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.hashes import SHA256
 
 from confidant import settings
-from confidant.services.certificates.certificate_authority import (
-    CertificateAuthorityBase, CertificateAuthorityNotFoundError)
-from confidant.settings import (CUSTOM_CA_ACTIVE_KEYS,
-                                CUSTOM_CERTIFICATE_AUTHORITIES)
+from confidant.services.certificate_authority.certificate_authority_base import (
+    CertificateAuthorityBase,
+    CertificateAuthorityNotFoundError,
+)
+from confidant.settings import CUSTOM_CA_ACTIVE_KEYS, CUSTOM_CERTIFICATE_AUTHORITIES
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +40,7 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
     Args:
         CertificateAuthorityBase (_type_): Base class for Certificate Authority
     """
+
     def __init__(self, ca_env: str):
         self.ca_id = ca_env
         self.active_ca_id = None
@@ -113,7 +115,7 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         builder = builder.public_key(csr.public_key())
         builder = builder.serial_number(x509.random_serial_number())
         builder = builder.not_valid_before(datetime.now(timezone.utc))
-        
+
         acceptable_validity = min(validity, self.settings["max_validity_days"])
         builder = builder.not_valid_after(
             datetime.now(timezone.utc) + timedelta(days=acceptable_validity)
@@ -155,11 +157,13 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         # add extended key usage extension
         # Note: this is configured to be used for both server and client auth
         builder = builder.add_extension(
-            x509.ExtendedKeyUsage([
-                x509.oid.ExtendedKeyUsageOID.SERVER_AUTH,
-                x509.oid.ExtendedKeyUsageOID.CLIENT_AUTH
-            ]),
-            critical=False
+            x509.ExtendedKeyUsage(
+                [
+                    x509.oid.ExtendedKeyUsageOID.SERVER_AUTH,
+                    x509.oid.ExtendedKeyUsageOID.CLIENT_AUTH,
+                ]
+            ),
+            critical=False,
         )
 
         # Sign the certificate with the CA's private key
@@ -167,7 +171,9 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
 
         # Return the certificate in PEM format
         response = {
-            "certificate": certificate.public_bytes(serialization.Encoding.PEM).decode('utf-8'),
+            "certificate": certificate.public_bytes(serialization.Encoding.PEM).decode(
+                "utf-8"
+            ),
             "certificate_chain": self.ca_chain,
         }
         return response
@@ -183,10 +189,14 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         }
 
     def issue_certificate_with_key(self, cn, validity, san=None):
-        raise NotImplementedError("Custom CA does not support issuing certificates with key")
+        raise NotImplementedError(
+            "Custom CA does not support issuing certificates with key"
+        )
 
     def generate_self_signed_certificate(self, key, cn, validity, san=None):
-        raise NotImplementedError("Custom CA does not support generating self signed certificates")
+        raise NotImplementedError(
+            "Custom CA does not support generating self signed certificates"
+        )
 
     def generate_key(self):
         raise NotImplementedError("Custom CA does not support generating keys")

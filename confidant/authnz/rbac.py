@@ -1,7 +1,7 @@
 import re
 
 from confidant import authnz
-from confidant.services.certificates import certificatemanager
+from confidant.services import certificatemanager
 
 
 def default_acl(*args, **kwargs):

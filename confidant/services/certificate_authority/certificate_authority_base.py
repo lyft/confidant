@@ -30,16 +30,6 @@ class CertificateNotReadyError(Exception):
         super().__init__(self.message)
 
 
-class InvalidCSRFormatError(Exception):
-    """
-    Exception raised when a csr is not in the correct format.
-    """
-
-    def __init__(self, message="Invalid CSR format."):
-        self.message = message
-        super().__init__(self.message)
-
-
 class CertificateAuthorityBase(ABC):
     """Base class for certificate authorities."""
 

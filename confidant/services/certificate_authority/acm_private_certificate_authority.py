@@ -12,8 +12,11 @@ from lru import LRU
 
 import confidant.clients
 from confidant import settings
-from confidant.services.certificates.certificate_authority import (
-    CertificateAuthorityBase, CertificateAuthorityNotFoundError, CertificateNotReadyError)
+from confidant.services.certificate_authority.certificate_authority_base import (
+    CertificateAuthorityBase,
+    CertificateAuthorityNotFoundError,
+    CertificateNotReadyError,
+)
 from confidant.utils import stats
 
 logger = logging.getLogger(__name__)
@@ -109,6 +112,7 @@ class ACMPrivateCertificateAuthority(CertificateAuthorityBase):
     Args:
         CertificateAuthorityBase (_type_): base class for certificate authorities.
     """
+
     def __init__(self, ca):
         try:
             self.ca_name = ca
@@ -263,7 +267,7 @@ class ACMPrivateCertificateAuthority(CertificateAuthorityBase):
             "certificate_chain": certificate["CertificateChain"],
             "tags": _tags,
         }
-        
+
     def generate_x509_name(self, cn):
         """
         For the given common name string, generate and return an x509.Name, with
@@ -301,7 +305,7 @@ class ACMPrivateCertificateAuthority(CertificateAuthorityBase):
                 )
             )
         return x509.Name(name_attributes)
-    
+
     def generate_key(self):
         """
         Generate and return a private RSA key object
