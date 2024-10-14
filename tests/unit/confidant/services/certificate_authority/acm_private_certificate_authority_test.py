@@ -156,7 +156,7 @@ def test_issue_certificate(
     csr = ca_object.generate_csr(key, "test.example.com", [])
     encoded_csr = ca_object.encode_csr(csr)
     mocker.patch(
-        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority._get_certificate_from_arn",  # noqa:E501
+        "confidant.services.certificate_authority.acmpca.ACMPrivateCertificateAuthority._get_certificate_from_arn",  # noqa:E501
         return_value={
             "certificate": "test_certificate",
             "certificate_chain": "test_certificate_chain",
@@ -191,7 +191,7 @@ def test__get_cached_certificate_with_key(
         side_effect=[None, {"hello": "world"}]
     )
     mocker.patch(
-        "confidant.services.certificate_authority.acm_private_certificate_authority.CertificateCache.get",
+        "confidant.services.certificate_authority.acmpca.CertificateCache.get",
         return_value=item,
     )
     with pytest.raises(CertificateNotReadyError):
