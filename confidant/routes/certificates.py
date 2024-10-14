@@ -230,10 +230,10 @@ def get_certificate_from_csr(ca):
         logged_in_user,
     )
 
-    certificate = ca_object.issue_certificate(data['csr'], validity)
+    certificate_json = ca_object.issue_certificate(data['csr'], validity)
     certificate_response = CertificateResponse(
-        certificate=certificate['certificate'],
-        certificate_chain=certificate['certificate_chain'],
+        certificate=certificate_json['certificate'],
+        certificate_chain=certificate_json['certificate_chain'],
     )
     return certificate_response_schema.dumps(certificate_response)
 
