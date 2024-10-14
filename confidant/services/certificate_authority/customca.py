@@ -1,9 +1,9 @@
 """
 Custom Certificate Authority Module
 
-This module provides functionality for managing Custom Certificate Authorities (CAs) 
-supplied by the user. It supports the signing of certificates for Certificate Signing 
-Requests (CSRs). 
+This module provides functionality for managing Custom Certificate
+Authorities (CAs) supplied by the user. It supports the signing of
+certificates for Certificate Signing Requests (CSRs).
 
 Note: This module does not provide functionality for generating keys or CSRs.
 """
@@ -17,11 +17,14 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.hashes import SHA256
 
 from confidant import settings
-from confidant.services.certificate_authority.certificate_authority_base import (
+from confidant.services.certificate_authority.certificateauthoritybase import (
     CertificateAuthorityBase,
     CertificateAuthorityNotFoundError,
 )
-from confidant.settings import CUSTOM_CA_ACTIVE_KEYS, CUSTOM_CERTIFICATE_AUTHORITIES
+from confidant.settings import (
+    CUSTOM_CA_ACTIVE_KEYS,
+    CUSTOM_CERTIFICATE_AUTHORITIES,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +60,9 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
             or ca_env not in CUSTOM_CERTIFICATE_AUTHORITIES
         ):
             logger.error("Custom CA %s not found", ca_env)
-            raise CertificateAuthorityNotFoundError(f"Custom CA {ca_env} not found")
+            raise CertificateAuthorityNotFoundError(
+                f"Custom CA {ca_env} not found"
+            )
         if not CUSTOM_CA_ACTIVE_KEYS or ca_env not in CUSTOM_CA_ACTIVE_KEYS:
             logger.error("Custom CA %s has no active keys", ca_env)
             raise CertificateAuthorityNotFoundError(
@@ -74,7 +79,10 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         if not active_ca:
             logger.error("Custom CA %s has no active keys", ca_env)
             raise CertificateAuthorityNotFoundError(
-                f"Custom CA {ca_env} has no matching valid active keys for {active_ca_id}"
+                (
+                    f"Custom CA {ca_env} has no matching valid active keys for "
+                    f"{active_ca_id}"
+                )
             )
         return active_ca[0]
 
@@ -85,7 +93,9 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         if "rootcrt" not in ca_json or not ca_json["rootcrt"]:
             logger.warning("Custom CA has no root CA certificate provided")
             return None
-        return x509.load_pem_x509_certificate(ca_json["rootcrt"].encode("utf-8"))
+        return x509.load_pem_x509_certificate(
+            ca_json["rootcrt"].encode("utf-8")
+        )
 
     def _load_ca_chain(self):
         # Get the certificate in PEM format
@@ -111,7 +121,9 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         # Define the certificate builder using information from the CSR
         builder = x509.CertificateBuilder()
         builder = builder.subject_name(csr.subject)
-        builder = builder.issuer_name(self.ca_certificate.subject)  # Issued by our CA
+        builder = builder.issuer_name(
+            self.ca_certificate.subject
+        )  # Issued by our CA
         builder = builder.public_key(csr.public_key())
         builder = builder.serial_number(x509.random_serial_number())
         builder = builder.not_valid_before(datetime.now(timezone.utc))
@@ -121,7 +133,8 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
             datetime.now(timezone.utc) + timedelta(days=acceptable_validity)
         )
 
-        # add basic constraints extension, restricted for end entity certificates
+        # add basic constraints extension, restricted for end entity
+        # certificates
         builder = builder.add_extension(
             x509.BasicConstraints(ca=False, path_length=None),
             critical=True,
@@ -167,13 +180,15 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         )
 
         # Sign the certificate with the CA's private key
-        certificate = builder.sign(private_key=self.ca_private_key, algorithm=SHA256())
+        certificate = builder.sign(
+            private_key=self.ca_private_key, algorithm=SHA256()
+        )
 
         # Return the certificate in PEM format
         response = {
-            "certificate": certificate.public_bytes(serialization.Encoding.PEM).decode(
-                "utf-8"
-            ),
+            "certificate": certificate.public_bytes(
+                serialization.Encoding.PEM
+            ).decode("utf-8"),
             "certificate_chain": self.ca_chain,
         }
         return response
@@ -202,4 +217,6 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         raise NotImplementedError("Custom CA does not support generating keys")
 
     def generate_x509_name(self, cn):
-        raise NotImplementedError("Custom CA does not support generating x509 names")
+        raise NotImplementedError(
+            "Custom CA does not support generating x509 names"
+        )

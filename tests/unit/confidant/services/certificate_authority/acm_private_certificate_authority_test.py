@@ -4,11 +4,11 @@ import pytest
 from pytest_mock.plugin import MockerFixture
 from cryptography.hazmat.primitives import hashes
 
-from confidant.services.certificate_authority.acm_private_certificate_authority import (
+from confidant.services.certificate_authority.acmpca import (
     ACMPrivateCertificateAuthority,
     CertificateCache,
 )
-from confidant.services.certificate_authority.certificate_authority_base import (
+from confidant.services.certificate_authority.certificateauthoritybase import (
     CertificateNotReadyError,
 )
 
@@ -20,7 +20,9 @@ def ca_object(mocker: MockerFixture) -> ACMPrivateCertificateAuthority:
     ca_object.settings["csr_state_or_province_name"] = "California"
     ca_object.settings["csr_locality_name"] = "San Francisco"
     ca_object.settings["csr_organization_name"] = "Example Inc."
-    mocker.patch("confidant.services.certificatemanager.get_ca", return_value=ca_object)
+    mocker.patch(
+        "confidant.services.certificatemanager.get_ca", return_value=ca_object
+    )
     return ca_object
 
 
@@ -108,7 +110,9 @@ def test_encode_san_dns_names(ca_object: ACMPrivateCertificateAuthority):
         assert dns_name.value in san
 
 
-def test_generate_self_signed_certificate(ca_object: ACMPrivateCertificateAuthority):
+def test_generate_self_signed_certificate(
+    ca_object: ACMPrivateCertificateAuthority,
+):
     key = ca_object.generate_key()
     san = ["test1.example.com", "test2.example.com"]
     cert = ca_object.generate_self_signed_certificate(
@@ -183,7 +187,9 @@ def test__get_cached_certificate_with_key(
     cache.lock("test1")
     item = mocker.MagicMock()
     type(item).lock = mocker.PropertyMock(side_effect=[True, False])
-    type(item).response = mocker.PropertyMock(side_effect=[None, {"hello": "world"}])
+    type(item).response = mocker.PropertyMock(
+        side_effect=[None, {"hello": "world"}]
+    )
     mocker.patch(
         "confidant.services.certificate_authority.acm_private_certificate_authority.CertificateCache.get",
         return_value=item,
@@ -202,23 +208,23 @@ def test_issue_certificate_with_key(
     assert data["key"].startswith("-----BEGIN RSA PRIVATE KEY-----")
 
     mocker.patch(
-        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority._get_cached_certificate_with_key",  # noqa:E501
+        "confidant.services.certificate_authority.acmpca.ACMPrivateCertificateAuthority._get_cached_certificate_with_key",  # noqa:E501
         return_value={"hello": "world"},
     )
     data = ca_object.issue_certificate_with_key("test.example.com", 7)
     assert data == {"hello": "world"}
     mocker.patch(
-        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority._get_cached_certificate_with_key",  # noqa:E501
+        "confidant.services.certificate_authority.acmpca.ACMPrivateCertificateAuthority._get_cached_certificate_with_key",  # noqa:E501
         return_value={},
     )
 
     ca_object.settings["self_sign"] = False
     mocker.patch(
-        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority.issue_certificate",  # noqa:E501
+        "confidant.services.certificate_authority.acmpca.ACMPrivateCertificateAuthority.issue_certificate",  # noqa:E501
         return_value="test-certificate-arn",
     )
     mocker.patch(
-        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority._get_certificate_from_arn",  # noqa:E501
+        "confidant.services.certificate_authority.acmpca.ACMPrivateCertificateAuthority._get_certificate_from_arn",  # noqa:E501
         return_value={
             "certificate": "test_certificate",
             "certificate_chain": "test_certificate_chain",

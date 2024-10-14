@@ -121,7 +121,9 @@ class CertificateAuthorityBase(ABC):
         """
         dns_names = []
         try:
-            san = csr.extensions.get_extension_for_class(x509.SubjectAlternativeName)
+            san = csr.extensions.get_extension_for_class(
+                x509.SubjectAlternativeName
+            )
         except ExtensionNotFound:
             san = None
         if san:

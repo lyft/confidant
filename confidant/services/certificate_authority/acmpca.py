@@ -12,7 +12,7 @@ from lru import LRU
 
 import confidant.clients
 from confidant import settings
-from confidant.services.certificate_authority.certificate_authority_base import (
+from confidant.services.certificate_authority.certificateauthoritybase import (
     CertificateAuthorityBase,
     CertificateAuthorityNotFoundError,
     CertificateNotReadyError,
@@ -73,7 +73,8 @@ class CertificateCache:
             self.certificates[cache_id].lock = False
         else:
             logger.warning(
-                "Attempting to release a non-existent lock in the certificate" " cache."
+                "Attempting to release a non-existent lock in the certificate"
+                " cache."
             )
 
     def set_response(self, cache_id, response):
@@ -107,10 +108,13 @@ class CertificateCacheNoOp:
 
 
 class ACMPrivateCertificateAuthority(CertificateAuthorityBase):
-    """AWS ACM Private Certificate Authority implementation of CertificateAuthorityBase.
+    """
+    AWS ACM Private Certificate Authority implementation of
+    CertificateAuthorityBase.
 
     Args:
-        CertificateAuthorityBase (_type_): base class for certificate authorities.
+        CertificateAuthorityBase (_type_): base class for certificate
+        authorities.
     """
 
     def __init__(self, ca):
@@ -347,7 +351,8 @@ class ACMPrivateCertificateAuthority(CertificateAuthorityBase):
                 datetime.datetime.utcnow(),
             )
             .not_valid_after(
-                datetime.datetime.utcnow() + datetime.timedelta(days=_validity),
+                datetime.datetime.utcnow()
+                + datetime.timedelta(days=_validity),
             )
         )
         if san:

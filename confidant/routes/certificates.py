@@ -4,7 +4,7 @@ from flask import blueprints, jsonify, request
 
 from confidant import authnz, settings
 from confidant.services import certificatemanager
-from confidant.services.certificate_authority.certificate_authority_base import (
+from confidant.services.certificate_authority.certificateauthoritybase import (
     CertificateAuthorityNotFoundError,
     CertificateNotReadyError,
 )
@@ -98,7 +98,10 @@ def get_certificate(ca, cn):
         return jsonify(error_msg), 403
 
     logger.info(
-        "get_certificate called on id=%s for ca=%s by user=%s", cn, ca, logged_in_user
+        "get_certificate called on id=%s for ca=%s by user=%s",
+        cn,
+        ca,
+        logged_in_user,
     )
 
     validity = request.args.get(
@@ -214,14 +217,17 @@ def get_certificate_from_csr(ca):
         },
     ):
         msg = (
-            f"{authnz.get_logged_in_user()} does not have access to get certificate cn {cn} against"
-            " ca {ca}"
+            f"{authnz.get_logged_in_user()} does not have access to get"
+            "certificate cn {cn} against ca {ca}"
         )
         error_msg = {"error": msg, "reference": cn}
         return jsonify(error_msg), 403
 
     logger.info(
-        "get_certificate called on id=%s for ca=%s by user=%s", cn, ca, logged_in_user
+        "get_certificate called on id=%s for ca=%s by user=%s",
+        cn,
+        ca,
+        logged_in_user,
     )
 
     certificate = ca_object.issue_certificate(data["csr"], validity)
