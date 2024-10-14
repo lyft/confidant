@@ -66,7 +66,7 @@ def test_get_certificate(mocker: MockerFixture):
         "key": "test_key",
     }
     mocker.patch(
-        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority.issue_certificate_with_key",  # noqa: E501
+        "confidant.services.certificate_authority.acmpca.ACMPrivateCertificateAuthority.issue_certificate_with_key",  # noqa: E501
         return_value=issue_certificate_with_key_return_value,
     )
     ret = app.test_client().get(
@@ -81,7 +81,7 @@ def test_get_certificate(mocker: MockerFixture):
         "key": "test_key",
     }
     mocker.patch(
-        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority.issue_certificate_with_key",  # noqa: E501
+        "confidant.services.certificate_authority.acmpca.ACMPrivateCertificateAuthority.issue_certificate_with_key",  # noqa: E501
         side_effect=CertificateNotReadyError(),
     )
     ret = app.test_client().get(
@@ -188,7 +188,7 @@ def test_get_certificate_from_csr(mocker: MockerFixture):
         return_value=ca_object,
     )
     mocker.patch(
-        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority.issue_certificate",  # noqa: E501
+        "confidant.services.certificate_authority.acmpca.ACMPrivateCertificateAuthority.issue_certificate",  # noqa: E501
         return_value={
             "certificate": "test_certificate",
             "certificate_chain": "test_certificate_chain",
@@ -292,7 +292,7 @@ def test_get_ca(mocker: MockerFixture):
         return_value=ca_object,
     )
     mocker.patch(
-        "confidant.services.certificate_authority.acm_private_certificate_authority.ACMPrivateCertificateAuthority.get_certificate_authority_certificate",  # noqa: E501
+        "confidant.services.certificate_authority.acmpca.ACMPrivateCertificateAuthority.get_certificate_authority_certificate",  # noqa: E501
         return_value={
             "ca": "development",
             "certificate": "test_certificate",
