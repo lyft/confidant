@@ -347,7 +347,9 @@ def get_ca(ca):
         action="get",
         resource_id=ca,
     ):
-        msg = f"{authnz.get_logged_in_user()} does not have access to get ca {ca}"
+        msg = f"""
+        {authnz.get_logged_in_user()} does not have access to get ca {ca}
+        """
         error_msg = {"error": msg, "reference": ca}
         return jsonify(error_msg), 403
 
