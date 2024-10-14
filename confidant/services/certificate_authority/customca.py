@@ -141,6 +141,9 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         )
 
         # add san extension from csr
+        if not self.get_csr_san(csr):
+            raise ValueError("CSR does not have a SAN extension")
+
         builder = builder.add_extension(
             x509.SubjectAlternativeName(
                 csr.extensions.get_extension_for_class(
