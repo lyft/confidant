@@ -45,7 +45,7 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
     """
 
     def __init__(self, ca_env: str):
-        self.ca_id = ca_env
+        self.ca_env = ca_env
         self.active_ca_id = None
         self.ca_json = self._get_ca_in_json(ca_env)
         self.ca_certificate = self._load_ca_certificate(self.ca_json)
@@ -91,7 +91,9 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
 
     def _load_rootca_certificate(self, ca_json):
         if "rootcrt" not in ca_json or not ca_json["rootcrt"]:
-            logger.warning("Custom CA has no root CA certificate provided")
+            logger.warning(
+                "Custom CA %s has no root CA certificate provided", self.ca_env
+            )
             return None
         return x509.load_pem_x509_certificate(
             ca_json["rootcrt"].encode("utf-8")
@@ -100,6 +102,8 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
     def _load_ca_chain(self):
         # Get the certificate in PEM format
         intermediate_ca_pem = self.encode_certificate(self.ca_certificate)
+        if not self.root_ca_certificate:
+            return intermediate_ca_pem
         root_ca_pem = self.encode_certificate(self.root_ca_certificate)
         return intermediate_ca_pem + root_ca_pem
 
@@ -126,11 +130,12 @@ class CustomCertificateAuthority(CertificateAuthorityBase):
         )  # Issued by our CA
         builder = builder.public_key(csr.public_key())
         builder = builder.serial_number(x509.random_serial_number())
-        builder = builder.not_valid_before(datetime.now(timezone.utc))
+        current_time = datetime.now(timezone.utc)
+        builder = builder.not_valid_before(current_time)
 
         acceptable_validity = min(validity, self.settings["max_validity_days"])
         builder = builder.not_valid_after(
-            datetime.now(timezone.utc) + timedelta(days=acceptable_validity)
+            current_time + timedelta(days=acceptable_validity)
         )
 
         # add basic constraints extension, restricted for end entity
