@@ -680,11 +680,16 @@ if bool_env('CUSTOM_CA_ENCRYPTED', True):
 else:
     decrypted_custom_cas = str_env('CUSTOM_CERTIFICATE_AUTHORITIES')
 
+# CA_TYPE for issuing certificates, defaults to aws_acm_pca.
+# options: aws_acm_pca, custom
+CA_TYPE = str_env('CA_TYPE', "aws_acm_pca")
+
 # CUSTOM_CERTIFICATE_AUTHORITIES
 # Should be in encrypted settings following this
 # format (where name is the name of the environment) and key ids must be unique:
 # {"<name>":[{
 #   "key": "--- RSA...",
+#   "rootcrt": "--- CERT...",
 #   "crt": "--- CERT...",
 #   "passphrase": "some-key",
 #   "kid": "some-kid"
@@ -696,6 +701,26 @@ CUSTOM_CERTIFICATE_AUTHORITIES = json.loads(b64decode(decrypted_custom_cas)) \
 # provide a JSON with the following format:
 # {"staging": "some_kid", "production": "some_kid"}
 CUSTOM_CA_ACTIVE_KEYS = json.loads(str_env('CUSTOM_CA_ACTIVE_KEYS', '{}'))
+
+CUSTOM_CA_SETTINGS = {}
+CUSTOM_CA_SETTINGS["max_validity_days"] = int_env(
+    "CUSTOM_CA_MAX_VALIDITY_DAYS",
+    120,
+)
+# A regex to match against CN and SAN values for this CA. This regex must
+# include a named group for service_name: (?P<service_name>)
+# If no named group is defined, then the default ACL will deny generation
+# of the certificate.
+# Any certificate issue attempt not matching this pattern for CN or values
+# in SAN will be denied. If this is unset, all certificate issue attempts
+# will be denied by the default_acl.
+#     Example: (?P<service_name>[\w-]+)\.example\.com
+#     Example match: test-service.example.com
+#     service_name from example: test-service
+CUSTOM_CA_SETTINGS["name_regex"] = str_env(
+    "CUSTOM_CA_DOMAIN_REGEX",
+    None,
+)
 
 # Configuration validation
 _settings_failures = False
