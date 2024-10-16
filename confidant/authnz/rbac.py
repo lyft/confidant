@@ -28,6 +28,9 @@ def default_acl(*args, **kwargs):
     action = kwargs.get('action')
     resource_id = kwargs.get('resource_id')
     resource_kwargs = kwargs.get('kwargs')
+    logger.info(f"input: {resource_type} {action} {resource_id} {resource_kwargs}")
+    logger.info(f"authnz.user_is_user_type('user') = {authnz.user_is_user_type('user')}")
+    logger.info(f"authnz.user_is_user_type('service') = {authnz.user_is_user_type('service')}")
     if authnz.user_is_user_type('user'):
         if resource_type == 'certificate':
             return False
@@ -41,7 +44,7 @@ def default_acl(*args, **kwargs):
                 return True
         elif resource_type == 'ca' and action in ['list', 'get']:
             return True
-        elif resource_type == 'certificate' and action in ['get', 'post']:
+        elif resource_type == 'certificate' and action in ['get']:
             ca_object = certificatemanager.get_ca(resource_kwargs.get('ca'))
             logger.info(f'ca object settings = {ca_object.settings}')      
             # Require a name pattern
