@@ -41,7 +41,7 @@ def default_acl(*args, **kwargs):
                 return True
         elif resource_type == 'ca' and action in ['list', 'get']:
             return True
-        elif resource_type == 'certificate' and action in ['get']:
+        elif resource_type == 'certificate' and action in ['get', 'post']:
             ca_object = certificatemanager.get_ca(resource_kwargs.get('ca'))
             logger.info(f'ca object settings = {ca_object.settings}')      
             # Require a name pattern
