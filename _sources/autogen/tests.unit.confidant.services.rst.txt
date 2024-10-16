@@ -4,15 +4,6 @@ tests.unit.confidant.services package
 Submodules
 ----------
 
-tests.unit.confidant.services.certificatemanager\_test module
--------------------------------------------------------------
-
-.. automodule:: tests.unit.confidant.services.certificatemanager_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
 tests.unit.confidant.services.ciphermanager\_test module
 --------------------------------------------------------
 
