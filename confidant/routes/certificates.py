@@ -180,6 +180,10 @@ def get_certificate_from_csr(ca):
     except CertificateAuthorityNotFoundError:
         return jsonify({'error': 'Provided CA not found.'}), 404
     data = request.get_json()
+    
+    # TODO: temp, to be removed
+    logger.info(f'request data: {data}')
+    logger.info(f'request data type: {type(data)}')
     if not data or not data.get('csr'):
         return (
             jsonify(
