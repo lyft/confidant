@@ -177,6 +177,7 @@ def test_load_rootca_certificate_success():
 )
 def test_load_rootca_certificate_no_root_ca_provided():
     ca_object = CustomCertificateAuthority("test")
+    ca_object.ca_env = "test"
     response = ca_object._load_rootca_certificate({})
     assert response is None
 
