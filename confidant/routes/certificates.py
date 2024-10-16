@@ -209,6 +209,9 @@ def get_certificate_from_csr(ca):
     # for the ACL check.
     cn = ca_object.get_csr_common_name(csr)
     san = ca_object.get_csr_san(csr)
+    
+    logger.info(f'cn: {cn}')
+    logger.info(f'san: {san}')
 
     logged_in_user = authnz.get_logged_in_user()
     if not acl_module_check(
