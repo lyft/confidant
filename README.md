@@ -7,7 +7,7 @@
 As of 10/25/2024, we have made the decision to archive the Confidant project by 01/31/2025. This choice comes after careful consideration of the project’s direction, usage, and internal needs. Confidant will no longer receive updates or support, including issue triaging, pull request reviews, or feature development.
 
 
-
+----------------------------------
 Your secret keeper. Stores secrets in DynamoDB, encrypted at rest.
 
 Docs
