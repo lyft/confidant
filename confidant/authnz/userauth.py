@@ -23,6 +23,7 @@ from confidant import settings
 from confidant.lib import cryptolib
 from confidant.utils.misc import dict_deep_update
 from confidant.authnz import errors
+from confidant.services.panther import panther_client
 
 logger = logging.getLogger(__name__)
 
@@ -586,7 +587,11 @@ class SamlAuthenticator(AbstractUserAuthenticator):
 
         attributes = auth.get_attributes()
         logger.info('SAML attributes: {!r}'.format(attributes))
-
+        panther_client.send_event({
+            'event_type': 'saml_user_authenticated',
+            'id': nameid,
+            'attributes': attributes,
+        })
         # normalize attributes by flattening single-item arrays
         for key, val in attributes.items():
             if isinstance(val, list) and len(val) == 1:

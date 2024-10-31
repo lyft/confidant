@@ -22,6 +22,7 @@ from confidant.services import (
 )
 from confidant.utils import maintenance, misc, stats
 from confidant.utils.dynamodb import decode_last_evaluated_key
+from confidant.services.panther import panther_client
 
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('services', __name__)
@@ -272,6 +273,11 @@ def get_service(id):
                 f'get_service called on id={id} by '
                 f'user={logged_in_user} metadata_only={metadata_only}'
             )
+            panther_client.send_event({
+                'event_type': 'get_service_called',
+                'user': logged_in_user,
+                'metadata_only': metadata_only,
+            })
 
         with stats.timer('get_service_by_id.db_get_service'):
             try:

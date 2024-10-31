@@ -27,6 +27,7 @@ from confidant.services import (
 from confidant.services.ciphermanager import CipherManager
 from confidant.utils import maintenance, misc, stats
 from confidant.utils.dynamodb import decode_last_evaluated_key
+from confidant.services.panther import panther_client
 
 logger = logging.getLogger(__name__)
 blueprint = blueprints.Blueprint('credentials', __name__)
@@ -255,6 +256,12 @@ def get_credential(id):
                 id
             )
             logger.info(log_line)
+            panther_client.send_event({
+                'event_type': 'get_credential',
+                'user': authnz.get_logged_in_user(),
+                'credential': id,
+            })
+
 
         credential_response = CredentialResponse.from_credential(
             credential,
@@ -363,6 +370,10 @@ def diff_credential(id, old_revision, new_revision):
         logger.warning(
             'Item with id {0} does not exist.'.format(id)
         )
+        panther_client.send_event({
+            'event_type': 'get_credential',
+            'credential': id,
+        })
         return jsonify({}), 404
     if new_credential.data_type != 'archive-credential':
         msg = 'id provided is not a credential.'

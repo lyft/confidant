@@ -216,3 +216,6 @@ mypy
 # Upstream url: https://pypi.org/project/fakeredis/
 # Use: To mock redis in unit tests
 fakeredis
+
+# For persisting to Panther
+lyft-lumos-common==0.1.3

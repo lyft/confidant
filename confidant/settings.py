@@ -743,3 +743,7 @@ def get(name, default=None):
 
 # Module that will perform an external ACL check on API endpoints
 ACL_MODULE = str_env('ACL_MODULE', 'confidant.authnz.rbac:default_acl')
+
+# Panther settings
+PANTHER_BASE_URL = str_env('CREDENTIALS_PANTHER_BASE_URL', default='')
+PANTHER_BEARER_TOKEN = str_env('CREDENTIALS_PANTHER_BEARER_TOKEN', default='')
