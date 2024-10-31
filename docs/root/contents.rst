@@ -3,6 +3,11 @@ Confidant
 #########
 
 .. toctree::
+  :caption: Announcement
+
+  archiving_announcement
+
+.. toctree::
   :caption: Basics
 
   install
