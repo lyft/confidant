@@ -262,7 +262,6 @@ def get_credential(id):
                 'credential': id,
             })
 
-
         credential_response = CredentialResponse.from_credential(
             credential,
             include_credential_keys=True,
