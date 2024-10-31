@@ -218,4 +218,4 @@ mypy
 fakeredis
 
 # For persisting to Panther
-lyft-lumos-common==0.1.3
+lyft-lumos-common==0.1.4

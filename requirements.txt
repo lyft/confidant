@@ -217,5 +217,5 @@ setuptools==68.0.0
     #   -r piptools_requirements.txt
     #   zope-event
     #   zope-interface
-lyft-lumos-common==0.1.3
+lyft-lumos-common==0.1.4
     # via -r requirements.in
