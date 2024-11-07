@@ -44,19 +44,15 @@ def default_acl(*args, **kwargs):
             if not ca_object.settings['name_regex']:
                 return False
             cert_pattern = re.compile(ca_object.settings['name_regex'])
-            domains = [resource_id]
-            domains.extend(resource_kwargs.get('san', []))
-            # Ensure the CN and every value in the SAN is allowed for this
-            # user.
-            for domain in domains:
-                match = cert_pattern.match(domain)
-                if not match:
-                    return False
-                service_name = match.group('service_name')
-                if not service_name:
-                    return False
-                if not authnz.user_is_service(service_name):
-                    return False
+            domain = resource_id
+            match = cert_pattern.match(domain)
+            if not match:
+                return False
+            service_name = match.group('service_name')
+            if not service_name:
+                return False
+            if not authnz.user_is_service(service_name):
+                return False
             return True
         return False
     else:
