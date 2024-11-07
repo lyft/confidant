@@ -85,16 +85,16 @@ def test_default_acl(mocker: MockerFixture):
             kwargs={'ca': 'development'},
         ) is False
         # Test for user type is service, with certificate resource and get
-        # action, with a valid CN, but an invalid SAN
+        # action, with a valid CN
         assert rbac.default_acl(
             resource_type='certificate',
             action='get',
             resource_id='test-service.example.com',
             kwargs={
                 'ca': 'development',
-                'san': ['bad-service.example.com'],
+                'san': ['test-service.sub.example.com'],
             },
-        ) is False
+        ) is True
         # Test for user type is service, with certificate resource and get
         # action, with a valid CN, but a mix of valid and invalid SAN values
         assert rbac.default_acl(
