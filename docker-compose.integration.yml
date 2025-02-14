@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   confidant:
-    image: python:3.10.15
+    image: python:3.10.16
     init: true
     restart: "no"
     networks:

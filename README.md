@@ -1,10 +1,10 @@
 ![confidant](./confidant/public/images/confidant_text_purple.svg)
 =========
 
-[Archiving Confidant Notice](https://github.com/lyft/confidant/issues/439)
+[Archive Confidant Notice]
 ----------------------------------
 
-As of 10/25/2024, we have made the decision to archive the Confidant project by 01/31/2025. This choice comes after careful consideration of the project’s direction, usage, and internal needs. Confidant will no longer receive updates or support, including issue triaging, pull request reviews, or feature development.
+As of 02/14/2025, the repository has been marked as archived and read-only. While all existing code remains accessible, we will no longer accept new pull requests or issues. The existing releases will continue to be available for download, but no new features or updates will be developed.
 
 
 ----------------------------------

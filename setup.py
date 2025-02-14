@@ -28,7 +28,7 @@ setup(
     install_requires=reqs,
     author="Ryan Lane",
     author_email="rlane@lyft.com",
-    description="A secret management system and client.",
+    description="DEPRECATED: A secret management system and client.",
     license="apache2",
     url="https://github.com/lyft/confidant",
     entry_points={

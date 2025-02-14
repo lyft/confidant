@@ -1,4 +1,5 @@
 # Developer-local docs build
+# The public docs has been deprecated, DO NOT build
 
 ```bash
 # Just run the make target
