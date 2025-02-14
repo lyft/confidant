@@ -1,2 +1,2 @@
 # Archive Announcement
-As of 02/03/2025, the repository has been marked as archived and read-only. While all existing code remains accessible, we will no longer accept new pull requests or issues. The existing releases will continue to be available for download, but no new features or updates will be developed.
+As of 02/14/2025, the repository has been marked as archived and read-only. While all existing code remains accessible, we will no longer accept new pull requests or issues. The existing releases will continue to be available for download, but no new features or updates will be developed.
