@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.0.0 Archiving Announcement
+* Archive the OSS
+
 ## 6.6.2
 
 * XSS security fix / enhancement for Flask API response

@@ -3,7 +3,7 @@ Confidant
 #########
 
 .. toctree::
-  :caption: Announcement
+  :caption: Archiving Announcement
 
   archiving_announcement
 
